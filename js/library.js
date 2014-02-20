@@ -45,11 +45,15 @@ var Editor = function(source) {
 
         var start = base.area.selectionStart,
             end = base.area.selectionEnd,
-            text = base.area.value.substring(start, end),
+            value = base.area.value.substring(start, end),
+            before = base.area.value.substring(0, start),
+            after = base.area.value.substring(end),
             data = {
                 start: start,
                 end: end,
-                value: text
+                value: value,
+                before: before,
+                after: after
             };
 
         // console.log(data);
