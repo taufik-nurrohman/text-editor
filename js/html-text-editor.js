@@ -55,7 +55,7 @@
                 placeholder = 'Your link text goes here...';
             if (url && url !== "" && url !== 'http://') {
                 myEditor.wrap('<a href="' + url + '">' + (sel.value.length === 0 ? placeholder : ''), '</a>', function() {
-                    s = sel.start + 9 + url.length + 2;
+                    var s = sel.start + 9 + url.length + 2;
                     myEditor.select(s, s + (sel.value.length === 0 ? placeholder.length : sel.value.length));
                 });
             }
