@@ -44,7 +44,9 @@ Lorem ipsum dolor sit amet.</textarea>
       myButton_1.onclick = function() {
           var showData  = '<b>Start:</b> ' + myEditor_1.selection().start + '<br>';
               showData += '<b>End:</b> ' + myEditor_1.selection().end + '<br>';
-              showData += '<b>Selected:</b> ' + myEditor_1.selection().value;
+              showData += '<b>Selected:</b> ' + myEditor_1.selection().value + '<br>';
+              showData += '<b>Before Selected:</b> ' + myEditor_1.selection().before + '<br>';
+              showData += '<b>After Selected:</b> ' + myEditor_1.selection().after;
           document.getElementById('test-result-1').innerHTML = showData;
           return false;
       };
