@@ -27,6 +27,9 @@
         'quote': function() {
             myEditor.wrap('<blockquote>', '</blockquote>');
         },
+        'li': function() {
+            myEditor.wrap('  <li>', '</li>');
+        },
         'ul-list': function() {
             var sel = myEditor.selection();
             if (sel.value.length > 0) {
@@ -150,6 +153,22 @@
         if (e.keyCode == 9) {
             myEditor.indent('    ');
             return false;
+        }
+
+        // Press `Enter` to insert new `<li></li>` element on certain conditions
+        if (e.keyCode == 13) {
+            var sel = myEditor.selection();
+            if (sel.before.substring(sel.before.length - 5) == '</li>') {
+                myEditor.insert('\n  <li></li>', function() {
+                    var s = myEditor.selection().start - 5;
+                    myEditor.select(s, s);
+                });
+                return false;
+            }
+            if (sel.after.substring(0, 5) == '</li>') {
+                myEditor.insert('</li>\n  <li>');
+                return false;
+            }
         }
 
     };
