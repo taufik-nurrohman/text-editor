@@ -99,17 +99,16 @@ var Editor = function(source) {
         var sel = base.selection(),
             start = sel.start,
             end = sel.end,
-            val = base.area.value,
             selections = sel.value.replace(from, to);
 
-        base.area.value = val.substring(0, start) + selections + val.substring(end);
+        base.area.value = sel.before + selections + sel.after;
 
-        base.select(sel.start, sel.start + selections.length);
+        base.select(start, start + selections.length);
 
         history[undo] = {
             value: base.area.value,
             selectionStart: start,
-            selectionEnd: end
+            selectionEnd: start + selections.length
         };
 
         undo++;
@@ -133,10 +132,9 @@ var Editor = function(source) {
 
         var sel = base.selection(),
             start = sel.start,
-            end = sel.end,
-            val = base.area.value;
+            end = sel.end;
 
-        base.area.value = val.substring(0, start) + insertion + val.substring(end);
+        base.area.value = sel.before + insertion + sel.after;
 
         base.select(start + insertion.length, start + insertion.length);
 
@@ -166,12 +164,9 @@ var Editor = function(source) {
     base.wrap = function(open, close, callback) {
 
         var sel = base.selection(),
-            start = sel.start,
-            end = sel.end,
-            val = base.area.value,
             selections = sel.value,
-            before = val.substring(0, start),
-            after = val.substring(end);
+            before = sel.before,
+            after = sel.after;
 
         base.area.value = before + open + selections + close + after;
 
@@ -205,14 +200,13 @@ var Editor = function(source) {
         var sel = base.selection(),
             start = sel.start,
             end = sel.end,
-            val = base.area.value,
             selections = sel.value.split('\n');
 
         for (var i = 0, len = selections.length; i < len; ++i) {
             selections[i] = chars + selections[i];
         }
 
-        base.area.value = val.substring(0, start) + selections.join('\n') + val.substring(end);
+        base.area.value = sel.before + selections.join('\n') + sel.after;
 
         var selectEnd = end + (chars.length * selections.length);
 
@@ -307,7 +301,7 @@ var Editor = function(source) {
                 }
             }
 
-            base.area.value = val.substring(0, start) + selections.join('\n') + val.substring(end);
+            base.area.value = sel.before + selections.join('\n') + sel.after;
 
             base.select(start, (edits > 0 ? end - (chars.length * edits) : end));
 
