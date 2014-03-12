@@ -105,15 +105,15 @@ var Editor = function(source) {
 
         base.select(start, start + selections.length);
 
-        history[undo] = {
-            value: base.area.value,
-            selectionStart: start,
-            selectionEnd: start + selections.length
-        };
-
-        undo++;
-
-        if (typeof callback == "function") callback();
+        if (typeof callback == "function") {
+            callback();
+        } else {
+            base.updateHistory({
+                value: base.area.value,
+                selectionStart: start,
+                selectionEnd: start + selections.length
+            });
+        }
 
     };
 
@@ -138,15 +138,15 @@ var Editor = function(source) {
 
         base.select(start + insertion.length, start + insertion.length);
 
-        history[undo] = {
-            value: base.area.value,
-            selectionStart: start + insertion.length,
-            selectionEnd: start + insertion.length
-        };
-
-        undo++;
-
-        if (typeof callback == "function") callback();
+        if (typeof callback == "function") {
+            callback();
+        } else {
+            base.updateHistory({
+                value: base.area.value,
+                selectionStart: start + insertion.length,
+                selectionEnd: start + insertion.length
+            });
+        }
 
     };
 
@@ -172,15 +172,15 @@ var Editor = function(source) {
 
         base.select(before.length + open.length, before.length + open.length + selections.length);
 
-        history[undo] = {
-            value: base.area.value,
-            selectionStart: before.length + open.length,
-            selectionEnd: before.length + open.length + selections.length
-        };
-
-        undo++;
-
-        if (typeof callback == "function") callback();
+        if (typeof callback == "function") {
+            callback();
+        } else {
+            base.updateHistory({
+                value: base.area.value,
+                selectionStart: before.length + open.length,
+                selectionEnd: before.length + open.length + selections.length
+            });
+        }
 
     };
 
@@ -214,29 +214,31 @@ var Editor = function(source) {
 
             base.select(selectEnd, selectEnd);
 
-            history[undo] = {
-                value: base.area.value,
-                selectionStart: selectEnd,
-                selectionEnd: selectEnd
-            };
-
-            undo++;
+            if (typeof callback == "function") {
+                callback();
+            } else {
+                base.updateHistory({
+                    value: base.area.value,
+                    selectionStart: selectEnd,
+                    selectionEnd: selectEnd
+                });
+            }
 
         } else {
 
             base.select(start, selectEnd);
 
-            history[undo] = {
-                value: base.area.value,
-                selectionStart: start,
-                selectionEnd: selectEnd
-            };
-
-            undo++;
+            if (typeof callback == "function") {
+                callback();
+            } else {
+                base.updateHistory({
+                    value: base.area.value,
+                    selectionStart: start,
+                    selectionEnd: selectEnd
+                });
+            }
 
         }
-
-        if (typeof callback == "function") callback();
 
     };
 
@@ -282,13 +284,15 @@ var Editor = function(source) {
 
             base.select(selectEnd, selectEnd);
 
-            history[undo] = {
-                value: base.area.value,
-                selectionStart: selectEnd,
-                selectionEnd: selectEnd
-            };
-
-            undo++;
+            if (typeof callback == "function") {
+                callback();
+            } else {
+                base.updateHistory({
+                    value: base.area.value,
+                    selectionStart: selectEnd,
+                    selectionEnd: selectEnd
+                });
+            }
 
         } else { // Multi line
 
@@ -305,17 +309,17 @@ var Editor = function(source) {
 
             base.select(start, (edits > 0 ? end - (chars.length * edits) : end));
 
-            history[undo] = {
-                value: base.area.value,
-                selectionStart: start,
-                selectionEnd: edits > 0 ? end - (chars.length * edits) : end
-            };
-
-            undo++;
+            if (typeof callback == "function") {
+                callback();
+            } else {
+                base.updateHistory({
+                    value: base.area.value,
+                    selectionStart: start,
+                    selectionEnd: edits > 0 ? end - (chars.length * edits) : end
+                });
+            }
 
         }
-
-        if (typeof callback == "function") callback();
 
     };
 
@@ -335,6 +339,33 @@ var Editor = function(source) {
     base.callHistory = function(index) {
 
         return (typeof index == "number") ? history[index] : history;
+
+    };
+
+
+    /**
+     * Update history data
+     *
+     * <code>
+     *   var editor = new Editor(elem);
+     *   editor.area.onkeydown = function() {
+     *       editor.updateHistory();
+     *   };
+     * </code>
+     *
+     */
+
+    base.updateHistory = function(data, index) {
+
+        var value = (typeof data != "undefined") ? data : {
+            value: base.area.value,
+            selectionStart: base.selection().start,
+            selectionEnd: base.selection().end
+        };
+
+        history[typeof index == "number" ? index : undo] = value;
+
+        undo++;
 
     };
 
