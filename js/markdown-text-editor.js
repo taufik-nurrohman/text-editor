@@ -142,7 +142,17 @@
         myButton[i].href = 'javascript:;';
     }
 
-    myTextArea.onkeydown = function(e) {
+    var pressed = 0;
+
+    myEditor.area.onkeydown = function(e) {
+
+        // Update history data on every 5 key presses
+        if (pressed < 5) {
+            pressed++;
+        } else {
+            myEditor.updateHistory();
+            pressed = 0;
+        }
 
         // Press `Shift + Tab` to outdent
         if (e.shiftKey && e.keyCode == 9) {
