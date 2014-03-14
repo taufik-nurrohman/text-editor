@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>Custom Prompt Example</title>
+    <link href="css/reset.css" rel="stylesheet">
+    <link href="css/editor.css" rel="stylesheet">
+    <style>
+    .custom-modal-overlay {
+      position:fixed;
+      top:0;
+      right:0;
+      bottom:0;
+      left:0;
+      z-index:9998;
+      background-color:black;
+      opacity:.4;
+    }
+    .custom-modal {
+      position:absolute;
+      top:20%;
+      left:50%;
+      z-index:9999;
+      padding:1.2em;
+      width:300px;
+      margin-left:-150px;
+      background-color:#333;
+      border:1px solid #3c3c3c;
+      box-shadow:0 1px 2px rgba(0,0,0,.7);
+    }
+    .custom-modal-header {
+      margin:-1.2em -1.2em 0;
+      padding:.5em .7em;
+      background-color:#3c3c3c;
+      font-weight:bold;
+    }
+    .custom-modal-content {margin:1.2em 0}
+    .custom-modal input,
+    .custom-modal button {
+      background-color:#222;
+      color:inherit;
+      border:1px solid #3c3c3c;
+      padding:5px;
+    }
+    .custom-modal input {
+      display:block;
+      width:100%;
+    }
+    .custom-modal button {
+      padding-right:10px;
+      padding-left:10px;
+      background-color:#999;
+      border-color:#222;
+      color:white;
+      cursor:pointer;
+      margin:0 4px 0 0;
+    }
+    .custom-modal button:focus,
+    .custom-modal button:hover {background-color:#aaa}
+    </style>
+  </head>
+  <body spellcheck="false">
+
+    <textarea class="editor-area" id="editor-area">Lorem Ipsum
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.
+
+List item 1
+List item 2
+List item 3
+List item 4
+
+List item 1
+List item 2
+List item 3
+List item 4
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.
+
+function testFoo(bar) {
+    return baz;
+}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.</textarea>
+
+    <div class="editor-control" id="editor-control">
+      <a href="#link">Link</a>
+      <a href="#image">Image</a>
+    </div>
+
+    <script src="js/library.js"></script>
+    <script src="js/custom-prompt.js"></script>
+
+  </body>
+</html>
