@@ -27,7 +27,7 @@
                 });
             });
         },
-        'image': function() {h
+        'image': function() {
             fakePrompt('Image URL:', 'http://', true, function(r) {
                 var altText = r.substring(r.lastIndexOf('/') + 1, r.lastIndexOf('.')).replace(/[\-\_\+]+/g, " ").capitalize();
                 myEditor.insert('\n\n![' + altText + '](' + r + ')\n\n');
