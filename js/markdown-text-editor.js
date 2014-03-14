@@ -156,10 +156,11 @@
 
         // Press `Shift + Tab` to outdent
         if (e.shiftKey && e.keyCode == 9) {
-            myEditor.outdent('> '); // Outdent from quote
-            myEditor.outdent('- '); // Outdent from unordered list
-            myEditor.outdent('[0-9]+\. '); // Outdent from ordered list
-            myEditor.outdent('    '); // Outdent from code block
+            // Outdent from quote
+            // Outdent from ordered list
+            // Outdent from unordered list
+            // Outdent from code block
+            myEditor.outdent('(> |[0-9]+\. |- |    )'); 
             return false;
         }
 
