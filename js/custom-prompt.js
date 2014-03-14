@@ -30,6 +30,7 @@
         'image': function() {
             fakePrompt('Image URL:', 'http://', true, function(r) {
                 var altText = r.substring(r.lastIndexOf('/') + 1, r.lastIndexOf('.')).replace(/[\-\_\+]+/g, " ").capitalize();
+                altText = altText.indexOf('/') < 0 ? decodeURIComponent(altText) : 'Image';
                 myEditor.insert('\n\n![' + altText + '](' + r + ')\n\n');
             });
         }
@@ -74,8 +75,8 @@
         var buttonCANCEL = document.createElement('button');
             buttonCANCEL.innerHTML = 'Cancel';
             buttonCANCEL.onclick = function() {
-                overlay.style.display = "none";
-                modal.style.display = "none";
+                overlay.parentNode.removeChild(overlay);
+                modal.parentNode.removeChild(modal);
             };
         document.body.appendChild(overlay);
         document.body.appendChild(modal);
