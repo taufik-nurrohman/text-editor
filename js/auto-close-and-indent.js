@@ -17,32 +17,32 @@
 
         // Auto close for `(`
         if (e.shiftKey && e.keyCode == 57) {
-            return insert('()', sel);
+            return (sel.value) ? insert('('+sel.value+')', sel) : insert('()', sel);
         }
 
         // Auto close for `{`
         if (e.shiftKey && e.keyCode == 219) {
-            return insert('{}', sel);
+            return (sel.value) ?  insert('{'+sel.value+'}', sel): insert('{}', sel);
         }
 
         // Auto close for `[`
         if (e.keyCode == 219) {
-            return insert('[]', sel);
+            return (sel.value) ?  insert('['+sel.value+']', sel): insert('[]', sel);
         }
 
         // Auto close for `"`
         if (e.shiftKey && e.keyCode == 222) {
-            return insert('\"\"', sel);
+            return (sel.value) ?  insert('\"'+sel.value+'\"', sel): insert('\"\"', sel);
         }
 
         // Auto close for `'`
         if (e.keyCode == 222) {
-            return insert('\'\'', sel);
+            return (sel.value) ?  insert('\''+sel.value+'\'', sel): insert('\'\'', sel);
         }
 
         // Auto close for `<`
         if (e.shiftKey && e.keyCode == 188) {
-            return insert('<>', sel);
+            return (sel.value) ?  insert('<'+sel.value+'>', sel): insert('<>', sel);
         }
 
         // `Shift + Tab` to outdent
