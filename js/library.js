@@ -386,11 +386,11 @@ var Editor = function(source) {
 
             if (undo > 1) {
                 undo--;
-                var data = base.callHistory(undo - 1);
             } else {
                 undo = 1;
-                var data = base.callHistory(0);
             }
+
+            var data = base.callHistory(undo - 1);
 
             redo = undo <= 0 ? undo - 1 : undo;
 
@@ -425,11 +425,11 @@ var Editor = function(source) {
 
         if (redo !== null) {
 
+            var data = base.callHistory(redo);
+
             if (redo < history.length - 1) {
                 redo++;
-                var data = base.callHistory(redo - 1);
             } else {
-                var data = base.callHistory(redo);
                 redo = history.length - 1;
             }
 
