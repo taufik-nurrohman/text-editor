@@ -197,44 +197,25 @@ var Editor = function(source) {
 
     base.indent = function(chars, callback) {
 
-        var sel = base.selection(),
-            start = sel.start,
-            end = sel.end,
-            selections = sel.value.split('\n');
+        var sel = base.selection();
 
-        for (var i = 0, len = selections.length; i < len; ++i) {
-            selections[i] = chars + selections[i];
-        }
+        if (sel.value.length > 0) { // Multi line
 
-        base.area.value = sel.before + selections.join('\n') + sel.after;
+            base.replace(/(^|^\n)([^\n])/gm, '$1' + chars + '$2', callback);
 
-        var selectEnd = end + (chars.length * selections.length);
+        } else { // Single line
 
-        if (start == end) {
+            base.area.value = sel.before + chars + sel.value + sel.after;
 
-            base.select(selectEnd, selectEnd);
+            base.select(sel.start + chars.length, sel.start + chars.length);
 
             if (typeof callback == "function") {
                 callback();
             } else {
                 base.updateHistory({
                     value: base.area.value,
-                    selectionStart: selectEnd,
-                    selectionEnd: selectEnd
-                });
-            }
-
-        } else {
-
-            base.select(start, selectEnd);
-
-            if (typeof callback == "function") {
-                callback();
-            } else {
-                base.updateHistory({
-                    value: base.area.value,
-                    selectionStart: start,
-                    selectionEnd: selectEnd
+                    selectionStart: sel.start + chars.length,
+                    selectionEnd: sel.start + chars.length
                 });
             }
 
@@ -256,66 +237,27 @@ var Editor = function(source) {
     base.outdent = function(chars, callback) {
 
         var sel = base.selection(),
-            start = sel.start,
-            end = sel.end,
-            val = base.area.value,
-            pattern = new RegExp("^" + chars),
-            edits = 0;
+            pattern = new RegExp('^' + chars, 'gm');
+        
+        if (sel.value.length > 0) { // Multi line
 
-        if (start == end) { // Single line
+            base.replace(pattern, "", callback);
+        
+        } else { // Single line
 
-            while (start > 0) {
-                if (val.charAt(start) == '\n') {
-                    start++;
-                    break;
-                }
-                start--;
-            }
+            var before = sel.before.replace(pattern, "");
 
-            var portion = val.substring(start, end),
-                matches = portion.match(pattern);
+            base.area.value = before + sel.value + sel.after;
 
-            if (matches) {
-                base.area.value = val.substring(0, start) + portion.replace(pattern, "") + val.substring(end);
-                end--;
-            }
-
-            var selectEnd = end <= start ? end : end - chars.length + 1;
-
-            base.select(selectEnd, selectEnd);
+            base.select(before.length, before.length);
 
             if (typeof callback == "function") {
                 callback();
             } else {
                 base.updateHistory({
                     value: base.area.value,
-                    selectionStart: selectEnd,
-                    selectionEnd: selectEnd
-                });
-            }
-
-        } else { // Multi line
-
-            var selections = sel.value.split('\n');
-
-            for (var i = 0, len = selections.length; i < len; ++i) {
-                if (selections[i].match(pattern)) {
-                    edits++;
-                    selections[i] = selections[i].replace(pattern, "");
-                }
-            }
-
-            base.area.value = sel.before + selections.join('\n') + sel.after;
-
-            base.select(start, (edits > 0 ? end - (chars.length * edits) : end));
-
-            if (typeof callback == "function") {
-                callback();
-            } else {
-                base.updateHistory({
-                    value: base.area.value,
-                    selectionStart: start,
-                    selectionEnd: edits > 0 ? end - (chars.length * edits) : end
+                    selectionStart: before.length,
+                    selectionEnd: before.length
                 });
             }
 
