@@ -155,7 +155,7 @@
 
         // Press `Ctrl + Enter` to create a new paragraph
         if (e.ctrlKey && e.keyCode == 13) {
-            myEditor.wrap('\n<p>', '</p>');
+            myEditor.wrap((this.value.length > 0 ? '\n' : "") + '<p>', '</p>');
             return false;
         }
 
@@ -168,7 +168,7 @@
         // Press `Enter` to insert new `<li></li>` element on certain conditions
         if (e.keyCode == 13) {
             var sel = myEditor.selection();
-            if (sel.before.substring(sel.before.length - 5) == '</li>') {
+            if (sel.before.slice(-5) == '</li>') {
                 myEditor.insert('\n  <li></li>', function() {
                     var s = myEditor.selection().start - 5;
                     myEditor.select(s, s);
