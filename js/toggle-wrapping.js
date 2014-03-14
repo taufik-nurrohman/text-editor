@@ -59,6 +59,7 @@
             }
         } else {
             var placeholder = 'Heading Text Goes Here';
+            headingLevel = 1;
             myEditor.insert(h[headingLevel] + placeholder + '\n\n', function() {
                 s = myEditor.selection().end;
                 myEditor.select(s - placeholder.length - h[headingLevel].length, s - 2, function() {
