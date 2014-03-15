@@ -5,7 +5,7 @@
 
     var insert = function(chars, s) {
         myEditor.insert(chars, function() {
-            myEditor.select(s.start + 1 , s.start + 1);
+            myEditor.select(s.end + 1, s.end + 1);
         });
         return false;
     };
@@ -17,32 +17,32 @@
 
         // Auto close for `(`
         if (e.shiftKey && e.keyCode == 57) {
-            return (sel.value) ? insert('('+sel.value+')', sel) : insert('()', sel);
+            return insert('(' + sel.value + ')', sel);
         }
 
         // Auto close for `{`
         if (e.shiftKey && e.keyCode == 219) {
-            return (sel.value) ?  insert('{'+sel.value+'}', sel): insert('{}', sel);
+            return insert('{' + sel.value + '}', sel);
         }
 
         // Auto close for `[`
         if (e.keyCode == 219) {
-            return (sel.value) ?  insert('['+sel.value+']', sel): insert('[]', sel);
+            return insert('[' + sel.value + ']', sel);
         }
 
         // Auto close for `"`
         if (e.shiftKey && e.keyCode == 222) {
-            return (sel.value) ?  insert('\"'+sel.value+'\"', sel): insert('\"\"', sel);
+            return insert('\"' + sel.value + '\"', sel);
         }
 
         // Auto close for `'`
         if (e.keyCode == 222) {
-            return (sel.value) ?  insert('\''+sel.value+'\'', sel): insert('\'\'', sel);
+            return insert('\'' + sel.value + '\'', sel);
         }
 
         // Auto close for `<`
         if (e.shiftKey && e.keyCode == 188) {
-            return (sel.value) ?  insert('<'+sel.value+'>', sel): insert('<>', sel);
+            return insert('<' + sel.value + '>', sel);
         }
 
         // `Shift + Tab` to outdent
@@ -60,9 +60,9 @@
             // write a tag name without `<` or `>` then press your `Tab` key!
             if (sel.before.match(isTagName)) {
                 var tagName = isTagName.exec(sel.before)[2],
-                    before = sel.before.replace(isTagName, "$1");
+                    before = sel.before.replace(isTagName, '$1');
 
-                myEditor.area.value = before + '<' + tagName + ' ></' + tagName + '>' + sel.after;
+                area.value = before + '<' + tagName + ' ></' + tagName + '>' + sel.after;
                 myEditor.select(sel.start + 2, sel.start + 2);
                 return false;
             }
