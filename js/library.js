@@ -201,7 +201,7 @@ var Editor = function(source) {
 
         if (sel.value.length > 0) { // Multi line
 
-            base.replace(/(^|^\n)([^\n])/gm, '$1' + chars + '$2', callback);
+            base.replace(/(^|\n)([^\n])/gm, '$1' + chars + '$2', callback);
 
         } else { // Single line
 
@@ -236,16 +236,15 @@ var Editor = function(source) {
 
     base.outdent = function(chars, callback) {
 
-        var sel = base.selection(),
-            pattern = new RegExp('^' + chars, 'gm');
+        var sel = base.selection();
         
         if (sel.value.length > 0) { // Multi line
 
-            base.replace(pattern, "", callback);
+            base.replace(new RegExp('(^|\n)' + chars, 'gm'), '$1', callback);
         
         } else { // Single line
 
-            var before = sel.before.replace(pattern, "");
+            var before = sel.before.replace(new RegExp(chars + '$', 'gm'), "");
 
             base.area.value = before + sel.value + sel.after;
 
