@@ -237,14 +237,14 @@ var Editor = function(source) {
     base.outdent = function(chars, callback) {
 
         var sel = base.selection();
-        
+
         if (sel.value.length > 0) { // Multi line
 
             base.replace(new RegExp('(^|\n)' + chars, 'gm'), '$1', callback);
-        
+
         } else { // Single line
 
-            var before = sel.before.replace(new RegExp(chars + '$', 'gm'), "");
+            var before = sel.before.replace(new RegExp(chars + '$'), "");
 
             base.area.value = before + sel.value + sel.after;
 
