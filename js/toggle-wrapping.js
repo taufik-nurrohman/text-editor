@@ -6,23 +6,24 @@
 
     var controls = {
         'bold': function() {
-            toggleWrapping(['**', '**'], [/\*{2}$/, /^\*{2}/]);
+            toggleWrapping('**', '**');
         },
         'italic': function() {
-            toggleWrapping(['_', '_'], [/\_$/, /^\_/]);
+            toggleWrapping('_', '_');
         },
         'heading': function() {
             toggleHeading();
         }
     };
 
-    function toggleWrapping(wrapper, regex) {
+
+    function toggleWrapping(open, close) {
         var s = myEditor.selection();
-        if (!s.before.match(regex[0]) && !s.after.match(regex[1])) {
-            myEditor.wrap(wrapper[0], wrapper[1]);
+        if (s.before.slice(-open.length) != open && s.after.slice(0, close.length) != close) {
+            myEditor.wrap(open, close);
         } else {
-            var cleanB = s.before.replace(regex[0], ""),
-                cleanA = s.after.replace(regex[1], "");
+            var cleanB = s.before.substring(0, s.before.length - open.length),
+                cleanA = s.after.substring(close.length);
             myEditor.area.value = cleanB + s.value + cleanA;
             myEditor.select(cleanB.length, cleanB.length + s.value.length, function() {
                 myEditor.updateHistory();
@@ -30,7 +31,7 @@
         }
     }
 
-    var headingLevel = 0;
+    var HL = 0;
 
     function toggleHeading() {
         var h = [
@@ -43,26 +44,26 @@
                 '###### '
             ],
             s = myEditor.selection();
-        headingLevel = headingLevel < h.length - 1 ? headingLevel + 1 : 0;
+            HL = HL < h.length - 1 ? HL + 1 : 0;
         if (s.value.length > 0) {
-            if (!s.before.match(/\#+ $/) && !s.after.match(/^\n/)) {
-                myEditor.wrap(h[headingLevel], '\n\n', function() {
+            if (!s.before.match(/\#+ $/)) {
+                myEditor.wrap(h[HL], "", function() {
                     myEditor.replace(/^\#+ /, ""); // Remove leading hash inside selection
                 });
             } else {
                 var cleanB = s.before.replace(/\#+ $/, ""), // Clean text before selection without leading hash
                     cleanV = s.value.replace(/^\#+ /, ""); // Clean text selection without leading hash
-                myEditor.area.value = cleanB + h[headingLevel] + cleanV + s.after;
-                myEditor.select(cleanB.length + h[headingLevel].length, cleanB.length + h[headingLevel].length + cleanV.length, function() {
+                myEditor.area.value = cleanB + h[HL] + cleanV + s.after;
+                myEditor.select(cleanB.length + h[HL].length, cleanB.length + h[HL].length + cleanV.length, function() {
                     myEditor.updateHistory();
                 });
             }
         } else {
             var placeholder = 'Heading Text Goes Here';
-            headingLevel = 1;
-            myEditor.insert(h[headingLevel] + placeholder + '\n\n', function() {
+            HL = 1;
+            myEditor.insert(h[HL] + placeholder, function() {
                 s = myEditor.selection().end;
-                myEditor.select(s - placeholder.length - h[headingLevel].length, s - 2, function() {
+                myEditor.select(s - placeholder.length - h[HL].length + 2, s, function() {
                     myEditor.updateHistory();
                 });
             });
