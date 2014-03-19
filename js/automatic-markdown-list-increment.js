@@ -8,10 +8,13 @@
 
         // `Enter` key was pressed
         if (e.keyCode == 13) {
-            var take = /(^|\n)( *?)([0-9]+\.|[\-\+\*]) (.*?)$/.exec(sel.before),
-                list = /[0-9]+\./.test(take[3]) ? parseInt(take[3], 10) + 1 + '.' : take[3]; // <ol> or <ul> ?
-            myEditor.insert('\n' + take[2] + list + ' ');
-            return false;
+            var isListItem = /(^|\n)( *?)([0-9]+\.|[\-\+\*]) (.*?)$/;
+            if (sel.before.match(isListItem)) {
+                var take = isListItem.exec(sel.before),
+                    list = /[0-9]+\./.test(take[3]) ? parseInt(take[3], 10) + 1 + '.' : take[3]; // <ol> or <ul> ?
+                myEditor.insert('\n' + take[2] + list + ' ');
+                return false;
+            }
         }
 
         // `Backspace` was pressed
