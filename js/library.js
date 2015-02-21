@@ -1,7 +1,7 @@
 /*!
- * -------------------------------------------------------
- *  SIMPLE TEXT SELECTION LIBRARY FOR ONLINE TEXT EDITING
- * -------------------------------------------------------
+ * --------------------------------------------------------------------
+ *  SIMPLE TEXT SELECTION LIBRARY FOR ONLINE TEXT EDITING (2015-02-21)
+ * --------------------------------------------------------------------
  *
  * Author => Taufik Nurrohman
  * URL => http://www.dte.web.id, http://latitudu.com
@@ -75,9 +75,13 @@ var Editor = function(source) {
 
     base.select = function(start, end, callback) {
 
+        var scrollTop = base.area.scrollTop;
+
         base.area.focus();
 
         base.area.setSelectionRange(start, end);
+
+        base.area.scrollTop = scrollTop;
 
         if (typeof callback == "function") callback();
 
