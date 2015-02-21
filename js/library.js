@@ -12,11 +12,13 @@
 var Editor = function(source) {
 
     var base = this,
+        win = window,
+        doc = document,
         history = [],
         undo = 0,
         redo = null;
 
-    base.area = typeof source != "undefined" ? source : document.getElementsByTagName('textarea')[0];
+    base.area = typeof source != "undefined" ? source : doc.getElementsByTagName('textarea')[0];
 
     history[undo] = {
         value: base.area.value,
@@ -75,13 +77,19 @@ var Editor = function(source) {
 
     base.select = function(start, end, callback) {
 
-        var scrollTop = base.area.scrollTop;
+        var scroll = [
+            doc.documentElement.scrollTop,
+            doc.body.scrollTop,
+            base.area.scrollTop
+        ];
 
         base.area.focus();
 
         base.area.setSelectionRange(start, end);
 
-        base.area.scrollTop = scrollTop;
+        doc.documentElement.scrollTop = scroll[0];
+        doc.body.scrollTop = scroll[1];
+        base.area.scrollTop = scroll[2];
 
         if (typeof callback == "function") callback();
 
