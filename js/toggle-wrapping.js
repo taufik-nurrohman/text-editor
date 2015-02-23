@@ -19,7 +19,7 @@
 
     function toggleWrapping(open, close) {
         var s = myEditor.selection();
-        if (s.before.slice(-open.length) != open && s.after.slice(0, close.length) != close) {
+        if (s.before.slice(-open.length) != open && s.after[0] != close) {
             myEditor.wrap(open, close);
         } else {
             var cleanB = s.before.substring(0, s.before.length - open.length),

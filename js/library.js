@@ -1,6 +1,6 @@
 /*!
  * --------------------------------------------------------------------
- *  SIMPLE TEXT SELECTION LIBRARY FOR ONLINE TEXT EDITING (2015-02-21)
+ *  SIMPLE TEXT SELECTION LIBRARY FOR ONLINE TEXT EDITING (2015-02-23)
  * --------------------------------------------------------------------
  *
  * Author => Taufik Nurrohman
@@ -45,11 +45,12 @@ var Editor = function(source) {
 
     base.selection = function() {
 
-        var start = base.area.selectionStart,
+        var v = base.area.value.replace(/\r/g, ""),
+            start = base.area.selectionStart,
             end = base.area.selectionEnd,
-            value = base.area.value.substring(start, end),
-            before = base.area.value.substring(0, start),
-            after = base.area.value.substring(end),
+            value = v.substring(start, end),
+            before = v.substring(0, start),
+            after = v.substring(end),
             data = {
                 start: start,
                 end: end,
@@ -77,19 +78,28 @@ var Editor = function(source) {
 
     base.select = function(start, end, callback) {
 
-        var scroll = [
-            doc.documentElement.scrollTop,
-            doc.body.scrollTop,
-            base.area.scrollTop
-        ];
+        var sHTML = doc.documentElement.scrollTop,
+            sBODY = doc.body.scrollTop,
+            sTEXTAREA = base.area.scrollTop;
 
         base.area.focus();
 
+        // Allow moving caret position with `editor.select(7)`
+        if (typeof end == "undefined") {
+            end = start;
+        }
+
+        // Allow callback function after moving caret with `editor.select(7, function() {})`
+        if (typeof end == "function" && typeof callback == "undefined") {
+            callback = end;
+            end = start;
+        }
+
         base.area.setSelectionRange(start, end);
 
-        doc.documentElement.scrollTop = scroll[0];
-        doc.body.scrollTop = scroll[1];
-        base.area.scrollTop = scroll[2];
+        doc.documentElement.scrollTop = sHTML;
+        doc.body.scrollTop = sBODY;
+        base.area.scrollTop = sTEXTAREA;
 
         if (typeof callback == "function") callback();
 
@@ -148,7 +158,7 @@ var Editor = function(source) {
 
         base.area.value = sel.before + insertion + sel.after;
 
-        base.select(start + insertion.length, start + insertion.length);
+        base.select(start + insertion.length);
 
         if (typeof callback == "function") {
             callback();
@@ -219,7 +229,7 @@ var Editor = function(source) {
 
             base.area.value = sel.before + chars + sel.value + sel.after;
 
-            base.select(sel.start + chars.length, sel.start + chars.length);
+            base.select(sel.start + chars.length);
 
             if (typeof callback == "function") {
                 callback();
@@ -250,17 +260,17 @@ var Editor = function(source) {
 
         var sel = base.selection();
 
-        if (sel.value.length > 0) { // Multi line
+        if (sel.value.length > 0) { // multi-line
 
             base.replace(new RegExp('(^|\n)' + chars, 'gm'), '$1', callback);
 
-        } else { // Single line
+        } else { // single-line
 
             var before = sel.before.replace(new RegExp(chars + '$'), "");
 
             base.area.value = before + sel.value + sel.after;
 
-            base.select(before.length, before.length);
+            base.select(before.length);
 
             if (typeof callback == "function") {
                 callback();

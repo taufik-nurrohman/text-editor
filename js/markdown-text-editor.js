@@ -32,7 +32,7 @@
                 added = "";
             if (sel.value.length > 0) {
                 myEditor.indent('', function() {
-                    myEditor.replace(/^[^\n\r]/gm, function(str) {
+                    myEditor.replace(/^[^\n]/gm, function(str) {
                         added += '- ';
                         return str.replace(/^/, '- ');
                     });
@@ -47,13 +47,11 @@
         },
         'ol-list': function() {
             var sel = myEditor.selection(),
-                ol = 0,
-                added = "";
+                ol = 0;
             if (sel.value.length > 0) {
                 myEditor.indent('', function() {
-                    myEditor.replace(/^[^\n\r]/gm, function(str) {
+                    myEditor.replace(/^[^\n]/gm, function(str) {
                         ol++;
-                        added += ol + '. ';
                         return str.replace(/^/, ol + '. ');
                     });
                     myEditor.select(sel.start, sel.end + added.length);
@@ -150,8 +148,10 @@
         if (pressed < 5) {
             pressed++;
         } else {
-            myEditor.updateHistory();
-            pressed = 0;
+            if (!e.altKey && !e.ctrlKey && !e.shiftKey) {
+                myEditor.updateHistory();
+                pressed = 0;
+            }
         }
 
         // Press `Shift + Tab` to outdent

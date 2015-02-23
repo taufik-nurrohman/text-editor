@@ -72,7 +72,7 @@ Lorem ipsum dolor sit amet.</textarea>
       for (var i = 0, len = myButton_2.length; i < len; ++i) {
           myButton_2[i].onclick = function() {
               var s = this.getAttribute('data-selection-range').split(',');
-              myEditor_2.select(s[0], s[1]);
+              myEditor_2.select(+s[0], +s[1]);
               return false;
           };
       }
@@ -87,7 +87,7 @@ Lorem ipsum taufik dolor sit amet taUfik consectetuer Taufik.
 Lorem ipsum taufik dolor sit amet taUfik consectetuer Taufik.
 Lorem ipsum taufik dolor sit amet taUfik consectetuer Taufik.</textarea>
       <div class="editor-control" id="editor-control-3">
-        <a href="#test">Replace &rdquo;taufik&rdquo; with &rdquo;nurrohman&rdquo;</a>
+        <a href="#test">Replace &ldquo;taufik&rdquo; with &ldquo;nurrohman&rdquo;</a>
       </div>
       <script>
       var myEditor_3 = new Editor(document.getElementById('editor-area-3')),

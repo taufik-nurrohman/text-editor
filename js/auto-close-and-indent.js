@@ -5,7 +5,7 @@
 
     var insert = function(chars, s) {
         myEditor.insert(chars, function() {
-            myEditor.select(s.end + 1, s.end + 1);
+            myEditor.select(s.end + 1);
         });
         return false;
     };
@@ -63,7 +63,7 @@
                     before = sel.before.replace(isTagName, '$1');
 
                 area.value = before + '<' + tagName + ' ></' + tagName + '>' + sel.after;
-                myEditor.select(sel.start + 2, sel.start + 2);
+                myEditor.select(sel.start + 2);
                 return false;
             }
 
@@ -95,9 +95,8 @@
 
         // Right arrow was pressed
         if (e.keyCode == 39) {
-            if (sel.after.match(/^<\/.*>/)) {
-                var jump = sel.start + sel.after.indexOf('>') + 1;
-                myEditor.select(jump, jump);
+            if (sel.after.match(/^<\/.*?>/)) {
+                myEditor.select(sel.start + sel.after.indexOf('>') + 1);
                 return false;
             }
         }

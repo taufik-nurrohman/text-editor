@@ -66,7 +66,7 @@
         },
         'image': function() {
             var url = prompt('Image URL:', 'http://'),
-                alt = url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.')).replace(/[\-\_\+]+/g, " ").capitalize();
+                alt = url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.')).replace(/[-+_.]+/g, ' ').capitalize();
             alt = alt.indexOf('/') < 0 ? decodeURIComponent(alt) : 'Image';
             if (url && url !== "" && url !== 'http://') {
                 myEditor.insert('<img alt="' + alt + '" src="' + url + '">');
@@ -137,8 +137,10 @@
         if (pressed < 5) {
             pressed++;
         } else {
-            myEditor.updateHistory();
-            pressed = 0;
+            if (!e.altKey && !e.ctrlKey && !e.shiftKey) {
+                myEditor.updateHistory();
+                pressed = 0;
+            }
         }
 
         // Press `Shift + Tab` to outdent
