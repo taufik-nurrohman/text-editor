@@ -1,10 +1,12 @@
 /*!
  * --------------------------------------------------------------------
- *  SIMPLE TEXT SELECTION LIBRARY FOR ONLINE TEXT EDITING (2015-02-23)
+ *  SIMPLE TEXT SELECTION LIBRARY FOR ONLINE TEXT EDITING (2015-02-25)
  * --------------------------------------------------------------------
  *
- * Author => Taufik Nurrohman
- * URL => http://www.dte.web.id, http://latitudu.com
+ *    Author => Taufik Nurrohman
+ *    URL => http://www.dte.web.id, http://latitudu.com
+ *
+ * --------------------------------------------------------------------
  *
  */
 
@@ -14,23 +16,30 @@ var Editor = function(source) {
     var base = this,
         win = window,
         doc = document,
-        history = [],
-        undo = 0,
-        redo = null;
+        history = [];
 
+    // Index data
+    base.index = {
+        undo: 0,
+        redo: 0
+    };
+
+    // Current `<textarea>` element
     base.area = typeof source != "undefined" ? source : doc.getElementsByTagName('textarea')[0];
 
-    history[undo] = {
+    // Escapes for `RegExp`
+    base.escape = /([!$^*\(\)-=+\[\]\{\}\\|:<>,.\/?])/g;
+
+    // Load the first history data
+    history[base.index.undo] = {
         value: base.area.value,
         selectionStart: 0,
         selectionEnd: 0
     };
 
-    undo++;
-
 
     /**
-     * Collect data from selected text inside a textarea
+     * Collect data from selected text inside a `<textarea>`
      *
      * <code>
      *   var editor = new Editor(elem);
@@ -38,6 +47,8 @@ var Editor = function(source) {
      *       alert(editor.selection().start);
      *       alert(editor.selection().end);
      *       alert(editor.selection().value);
+     *       alert(editor.selection().before);
+     *       alert(editor.selection().after);
      *   };
      * </code>
      *
@@ -67,7 +78,7 @@ var Editor = function(source) {
 
 
     /**
-     * Select portion of text inside a textarea
+     * Select portion of text inside a `<textarea>`
      *
      * <code>
      *   var editor = new Editor(elem);
@@ -89,7 +100,7 @@ var Editor = function(source) {
             end = start;
         }
 
-        // Allow callback function after moving caret with `editor.select(7, function() {})`
+        // Allow callback function after moving caret position with `editor.select(7, function() {})`
         if (typeof end == "function" && typeof callback == "undefined") {
             callback = end;
             end = start;
@@ -103,15 +114,17 @@ var Editor = function(source) {
 
         if (typeof callback == "function") callback();
 
+        // NOTE: `select` method doesn't populate history data
+
     };
 
 
     /**
-     * Replace portion of selected text inside a textarea with something
+     * Replace portion of selected text inside a `<textarea>` with something
      *
      * <code>
      *   var editor = new Editor(elem);
-     *   editor.replace(/foo/, "bar");
+     *   editor.replace(/foo/g, 'bar');
      * </code>
      *
      */
@@ -121,11 +134,11 @@ var Editor = function(source) {
         var sel = base.selection(),
             start = sel.start,
             end = sel.end,
-            selections = sel.value.replace(from, to);
+            value = sel.value.replace(from, to);
 
-        base.area.value = sel.before + selections + sel.after;
+        base.area.value = sel.before + value + sel.after;
 
-        base.select(start, start + selections.length);
+        base.select(start, start + value.length);
 
         if (typeof callback == "function") {
             callback();
@@ -133,7 +146,7 @@ var Editor = function(source) {
             base.updateHistory({
                 value: base.area.value,
                 selectionStart: start,
-                selectionEnd: start + selections.length
+                selectionEnd: start + value.length
             });
         }
 
@@ -141,7 +154,7 @@ var Editor = function(source) {
 
 
     /**
-     * Replace selected text inside a textarea with something
+     * Replace selected text inside a `<textarea>` with something
      *
      * <code>
      *   var editor = new Editor(elem);
@@ -150,23 +163,23 @@ var Editor = function(source) {
      *
      */
 
-    base.insert = function(insertion, callback) {
+    base.insert = function(str, callback) {
 
         var sel = base.selection(),
             start = sel.start,
             end = sel.end;
 
-        base.area.value = sel.before + insertion + sel.after;
+        base.area.value = sel.before + str + sel.after;
 
-        base.select(start + insertion.length);
+        base.select(start + str.length);
 
         if (typeof callback == "function") {
             callback();
         } else {
             base.updateHistory({
                 value: base.area.value,
-                selectionStart: start + insertion.length,
-                selectionEnd: start + insertion.length
+                selectionStart: start + str.length,
+                selectionEnd: start + str.length
             });
         }
 
@@ -174,7 +187,7 @@ var Editor = function(source) {
 
 
     /**
-     * Wrap selected text inside a textarea with something
+     * Wrap selected text inside a `<textarea>` with something
      *
      * <code>
      *   var editor = new Editor(elem);
@@ -186,13 +199,13 @@ var Editor = function(source) {
     base.wrap = function(open, close, callback) {
 
         var sel = base.selection(),
-            selections = sel.value,
+            value = sel.value,
             before = sel.before,
             after = sel.after;
 
-        base.area.value = before + open + selections + close + after;
+        base.area.value = before + open + value + close + after;
 
-        base.select(before.length + open.length, before.length + open.length + selections.length);
+        base.select(before.length + open.length, before.length + open.length + value.length);
 
         if (typeof callback == "function") {
             callback();
@@ -200,7 +213,7 @@ var Editor = function(source) {
             base.updateHistory({
                 value: base.area.value,
                 selectionStart: before.length + open.length,
-                selectionEnd: before.length + open.length + selections.length
+                selectionEnd: before.length + open.length + value.length
             });
         }
 
@@ -208,7 +221,7 @@ var Editor = function(source) {
 
 
     /**
-     * Indent selected text inside a textarea with something
+     * Indent selected text inside a `<textarea>` with something
      *
      * <code>
      *   var editor = new Editor(elem);
@@ -217,27 +230,27 @@ var Editor = function(source) {
      *
      */
 
-    base.indent = function(chars, callback) {
+    base.indent = function(str, callback) {
 
         var sel = base.selection();
 
-        if (sel.value.length > 0) { // Multi line
+        if (sel.value.length > 0) { // multi-line
 
-            base.replace(/(^|\n)([^\n])/gm, '$1' + chars + '$2', callback);
+            base.replace(/(^|\n)([^\n])/g, '$1' + str + '$2', callback);
 
-        } else { // Single line
+        } else { // single-line
 
-            base.area.value = sel.before + chars + sel.value + sel.after;
+            base.area.value = sel.before + str + sel.value + sel.after;
 
-            base.select(sel.start + chars.length);
+            base.select(sel.start + str.length);
 
             if (typeof callback == "function") {
                 callback();
             } else {
                 base.updateHistory({
                     value: base.area.value,
-                    selectionStart: sel.start + chars.length,
-                    selectionEnd: sel.start + chars.length
+                    selectionStart: sel.start + str.length,
+                    selectionEnd: sel.start + str.length
                 });
             }
 
@@ -247,7 +260,7 @@ var Editor = function(source) {
 
 
     /**
-     * Outdent selected text inside a textarea from something
+     * Outdent selected text inside a `<textarea>` from something
      *
      * <code>
      *   var editor = new Editor(elem);
@@ -256,17 +269,19 @@ var Editor = function(source) {
      *
      */
 
-    base.outdent = function(chars, callback) {
+    base.outdent = function(str, callback, regex) {
 
-        var sel = base.selection();
+        var sel = base.selection(),
+            str_regex = str.replace(base.escape, '\\$1'),
+            regex = regex && regex !== false ? str : str_regex;
 
         if (sel.value.length > 0) { // multi-line
 
-            base.replace(new RegExp('(^|\n)' + chars, 'gm'), '$1', callback);
+            base.replace(new RegExp('(^|\n)' + regex, 'g'), '$1', callback);
 
         } else { // single-line
 
-            var before = sel.before.replace(new RegExp(chars + '$'), "");
+            var before = sel.before.replace(new RegExp(regex + '$'), "");
 
             base.area.value = before + sel.value + sel.after;
 
@@ -320,15 +335,16 @@ var Editor = function(source) {
 
     base.updateHistory = function(data, index) {
 
-        var value = (typeof data != "undefined") ? data : {
+        var sel = base.selection(),
+            value = (typeof data != "undefined") ? data : {
             value: base.area.value,
-            selectionStart: base.selection().start,
-            selectionEnd: base.selection().end
+            selectionStart: sel.start,
+            selectionEnd: sel.end
         };
 
-        history[typeof index == "number" ? index : undo] = value;
+        base.index.undo++;
 
-        undo++;
+        history[typeof index == "number" ? index : base.index.undo] = value;
 
     };
 
@@ -345,29 +361,21 @@ var Editor = function(source) {
 
     base.undo = function(callback) {
 
-        if (history.length > 1) {
-
-            if (undo > 1) {
-                undo--;
-            } else {
-                undo = 1;
-            }
-
-            var data = base.callHistory(undo - 1);
-
-            redo = undo <= 0 ? undo - 1 : undo;
-
+        if (base.index.undo > 0) {
+            base.index.undo--;
         } else {
-
-            return;
-
+            base.index.undo = 0;
         }
+
+        // console.log('undo: ' + base.index.undo);
+
+        base.index.redo = base.index.undo;
+
+        var data = history[base.index.undo];
 
         base.area.value = data.value;
 
         base.select(data.selectionStart, data.selectionEnd);
-
-        // console.log(undo);
 
         if (typeof callback == "function") callback();
 
@@ -386,29 +394,21 @@ var Editor = function(source) {
 
     base.redo = function(callback) {
 
-        if (redo !== null) {
-
-            var data = base.callHistory(redo);
-
-            if (redo < history.length - 1) {
-                redo++;
-            } else {
-                redo = history.length - 1;
-            }
-
-            undo = redo >= history.length - 1 ? redo + 1 : redo;
-
+        if (base.index.redo < history.length - 1) {
+            base.index.redo++;
         } else {
-
-            return;
-
+            base.index.redo = history.length - 1;
         }
+
+        // console.log('redo: ' + base.index.redo);
+
+        base.index.undo = base.index.redo;
+
+        var data = history[base.index.redo];
 
         base.area.value = data.value;
 
         base.select(data.selectionStart, data.selectionEnd);
-
-        // console.log(redo);
 
         if (typeof callback == "function") callback();
 
