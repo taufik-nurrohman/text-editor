@@ -1,6 +1,6 @@
 /*!
  * --------------------------------------------------------------------
- *  SIMPLE TEXT SELECTION LIBRARY FOR ONLINE TEXT EDITING (2015-02-25)
+ *  SIMPLE TEXT SELECTION LIBRARY FOR ONLINE TEXT EDITING (2015-02-28)
  * --------------------------------------------------------------------
  *
  *    Author => Taufik Nurrohman
@@ -25,7 +25,7 @@ var Editor = function(source) {
     };
 
     // Current `<textarea>` element
-    base.area = typeof source != "undefined" ? source : doc.getElementsByTagName('textarea')[0];
+    base.area = typeof source !== "undefined" ? source : doc.getElementsByTagName('textarea')[0];
 
     // Escapes for `RegExp`
     base.escape = /([!$^*\(\)-=+\[\]\{\}\\|:<>,.\/?])/g;
@@ -56,7 +56,7 @@ var Editor = function(source) {
 
     base.selection = function() {
 
-        var v = base.area.value.replace(/\r/g, ""),
+        var v = base.area.value,
             start = base.area.selectionStart,
             end = base.area.selectionEnd,
             value = v.substring(start, end),
@@ -91,17 +91,24 @@ var Editor = function(source) {
 
         var sHTML = doc.documentElement.scrollTop,
             sBODY = doc.body.scrollTop,
-            sTEXTAREA = base.area.scrollTop;
+            sTEXTAREA = base.area.scrollTop,
+            sel = base.selection();
 
         base.area.focus();
 
+        // Restore selection with `editor.select()`
+        if (arguments.length === 0) {
+            start = sel.start;
+            end = sel.end;
+        }
+
         // Allow moving caret position with `editor.select(7)`
-        if (typeof end == "undefined") {
+        if (typeof end === "undefined") {
             end = start;
         }
 
         // Allow callback function after moving caret position with `editor.select(7, function() {})`
-        if (typeof end == "function" && typeof callback == "undefined") {
+        if (typeof end === "function" && typeof callback === "undefined") {
             callback = end;
             end = start;
         }
@@ -112,7 +119,7 @@ var Editor = function(source) {
         doc.body.scrollTop = sBODY;
         base.area.scrollTop = sTEXTAREA;
 
-        if (typeof callback == "function") callback();
+        if (typeof callback === "function") callback();
 
         // NOTE: `select` method doesn't populate history data
 
@@ -140,7 +147,7 @@ var Editor = function(source) {
 
         base.select(start, start + value.length);
 
-        if (typeof callback == "function") {
+        if (typeof callback === "function") {
             callback();
         } else {
             base.updateHistory({
@@ -173,7 +180,7 @@ var Editor = function(source) {
 
         base.select(start + str.length);
 
-        if (typeof callback == "function") {
+        if (typeof callback === "function") {
             callback();
         } else {
             base.updateHistory({
@@ -207,7 +214,7 @@ var Editor = function(source) {
 
         base.select(before.length + open.length, before.length + open.length + value.length);
 
-        if (typeof callback == "function") {
+        if (typeof callback === "function") {
             callback();
         } else {
             base.updateHistory({
@@ -244,7 +251,7 @@ var Editor = function(source) {
 
             base.select(sel.start + str.length);
 
-            if (typeof callback == "function") {
+            if (typeof callback === "function") {
                 callback();
             } else {
                 base.updateHistory({
@@ -287,7 +294,7 @@ var Editor = function(source) {
 
             base.select(before.length);
 
-            if (typeof callback == "function") {
+            if (typeof callback === "function") {
                 callback();
             } else {
                 base.updateHistory({
@@ -316,7 +323,7 @@ var Editor = function(source) {
 
     base.callHistory = function(index) {
 
-        return (typeof index == "number") ? history[index] : history;
+        return (typeof index === "number") ? history[index] : history;
 
     };
 
@@ -336,7 +343,7 @@ var Editor = function(source) {
     base.updateHistory = function(data, index) {
 
         var sel = base.selection(),
-            value = (typeof data != "undefined") ? data : {
+            value = (typeof data !== "undefined") ? data : {
             value: base.area.value,
             selectionStart: sel.start,
             selectionEnd: sel.end
@@ -344,7 +351,7 @@ var Editor = function(source) {
 
         base.index.undo++;
 
-        history[typeof index == "number" ? index : base.index.undo] = value;
+        history[typeof index === "number" ? index : base.index.undo] = value;
 
     };
 
@@ -377,7 +384,7 @@ var Editor = function(source) {
 
         base.select(data.selectionStart, data.selectionEnd);
 
-        if (typeof callback == "function") callback();
+        if (typeof callback === "function") callback();
 
     };
 
@@ -410,7 +417,7 @@ var Editor = function(source) {
 
         base.select(data.selectionStart, data.selectionEnd);
 
-        if (typeof callback == "function") callback();
+        if (typeof callback === "function") callback();
 
     };
 
