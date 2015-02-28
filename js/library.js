@@ -28,7 +28,7 @@ var Editor = function(source) {
     base.area = typeof source !== "undefined" ? source : doc.getElementsByTagName('textarea')[0];
 
     // Escapes for `RegExp`
-    base.escape = /([!$^*\(\)-=+\[\]\{\}\\|:<>,.\/?])/g;
+    base.escape = /([!$^*\(\)\-=+\[\]\{\}\\|:<>,.\/?])/g;
 
     // Load the first history data
     history[base.index.undo] = {
