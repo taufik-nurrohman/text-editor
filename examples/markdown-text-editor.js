@@ -28,20 +28,13 @@
             myEditor.indent('> ');
         },
         'ul-list': function() {
-            var sel = myEditor.selection(),
-                added = "";
+            var sel = myEditor.selection();
             if (sel.value.length > 0) {
-                myEditor.indent('', function() {
-                    myEditor.replace(/^[^\n]/gm, function(str) {
-                        added += '- ';
-                        return str.replace(/^/, '- ');
-                    });
-                    myEditor.select(sel.start, sel.end + added.length);
-                });
+                myEditor.indent('- ');
             } else {
                 var placeholder = '- List Item';
-                myEditor.indent(placeholder, function() {
-                    myEditor.select(sel.start + 2, sel.start + placeholder.length);
+                myEditor.insert(placeholder, function() {
+                    myEditor.select(sel.start + 2, sel.start + placeholder.length, true);
                 });
             }
         },
@@ -49,27 +42,27 @@
             var sel = myEditor.selection(),
                 ol = 0;
             if (sel.value.length > 0) {
-                myEditor.indent('', function() {
+                myEditor.indent("", function() {
                     myEditor.replace(/^[^\n]/gm, function(str) {
                         ol++;
                         return str.replace(/^/, ol + '. ');
                     });
-                    myEditor.select(sel.start, sel.end + added.length);
+                    myEditor.select(sel.start, sel.end + ol + (2 * ol));
                 });
             } else {
                 var placeholder = '1. List Item';
                 myEditor.indent(placeholder, function() {
-                    myEditor.select(sel.start + 3, sel.start + placeholder.length);
+                    myEditor.select(sel.start + 3, sel.start + placeholder.length, true);
                 });
             }
         },
         'link': function() {
             var sel = myEditor.selection(),
-                title = prompt('Link Title:', 'Link title goes here...'),
                 url = prompt('Link URL:', 'http://'),
+                title = prompt('Link Title:', 'Link title goes here...'),
                 placeholder = 'Your link text goes here...';
             if (url && url !== "" && url !== 'http://') {
-                myEditor.wrap('[' + (sel.value.length === 0 ? placeholder : ''), '](' + url + (title !== "" ? ' \"' + title + '\"' : '') + ')', function() {
+                myEditor.wrap('[' + (sel.value.length === 0 ? placeholder : ""), '](' + url + (title !== "" ? ' \"' + title + '\"' : "") + ')', function() {
                     myEditor.select(sel.start + 1, (sel.value.length === 0 ? sel.start + placeholder.length + 1 : sel.end + 1));
                 });
             }
@@ -77,7 +70,7 @@
         },
         'image': function() {
             var url = prompt('Image URL:', 'http://'),
-                alt = url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.')).replace(/[\-\_\+]+/g, " ").capitalize();
+                alt = url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.')).replace(/[^\w]/g, ' ').capitalize();
             alt = alt.indexOf('/') < 0 ? decodeURIComponent(alt) : 'Image';
             if (url && url !== "" && url !== 'http://') {
                 myEditor.insert('\n\n![' + alt + '](' + url + ')\n\n');
@@ -140,36 +133,54 @@
         myButton[i].href = 'javascript:;';
     }
 
-    var pressed = 0;
+    var pressed = 0, shortcut = [];
 
     myEditor.area.onkeydown = function(e) {
+
+        var s = myEditor.selection(),
+            k = myEditor.key(e);
+
+        if (k.match(/^control|shift|alt$/)) {
+            shortcut = [k];
+        } else {
+            if (shortcut[shortcut.length - 1] !== k) { // prevent duplicate
+                shortcut.push(k);
+            }
+        }
 
         // Update history data on every 5 key presses
         if (pressed < 5) {
             pressed++;
         } else {
-            if (!e.altKey && !e.ctrlKey && !e.shiftKey) {
+            if (!k.match(/^control|shift|alt$/)) {
                 myEditor.updateHistory();
                 pressed = 0;
             }
         }
 
         // Press `Shift + Tab` to outdent
-        if (e.shiftKey && e.keyCode == 9) {
+        if (shortcut.join('+') === 'shift+tab') {
             // Outdent from quote
             // Outdent from ordered list
             // Outdent from unordered list
             // Outdent from code block
-            myEditor.outdent('(> |[0-9]+\. |- |    )'); 
+            myEditor.outdent('(> |\\d+\\. |\\- | {4})', null, true); 
             return false;
         }
 
         // Press `Tab` to indent
-        if (e.keyCode == 9) {
+        if (k === 'tab') {
             myEditor.indent('    ');
             return false;
         }
 
+    };
+
+    myEditor.area.onkeyup = function(e) {
+        var k = myEditor.key(e);
+        if (k.match(/^control|shift|alt$/)) {
+            shortcut = []; // clear shortcut
+        }
     };
 
 })();

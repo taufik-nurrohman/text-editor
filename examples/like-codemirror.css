@@ -18,6 +18,7 @@ p {margin:1em 0}
 
 /* CSS for code editor */
 .editor-area-wrapper {
+  display:block;
   background-color:#333;
   font:normal normal 13px/16px Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,Monospace;
   color:#ccc;
@@ -33,6 +34,7 @@ p {margin:1em 0}
   bottom:0;
   left:0;
   padding:5px 6px;
+  cursor:text;
 }
 .editor-layer pre,
 .editor-layer code,
@@ -51,7 +53,7 @@ p {margin:1em 0}
   word-wrap:break-word;
   resize:none;
   overflow:hidden;
-  cursor:text;
+  cursor:inherit;
 }
 .editor-layer textarea {margin-bottom:5px}
 .editor-layer-2,
@@ -61,7 +63,7 @@ p {margin:1em 0}
 }
 .fake-caret {
   width:0;
-  border-right:2px solid white;
+  border-right:1px solid white;
   position:relative;
   z-index:9999; /* Still cannot covering the textarea caret in Opera and IE9 :( */
 }

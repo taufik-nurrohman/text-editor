@@ -3,9 +3,61 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <title>HTML Text Editor</title>
-    <link href="css/reset.css" rel="stylesheet">
-    <link href="css/editor.css" rel="stylesheet">
+    <title>Custom Prompt Example</title>
+    <link href="test.css" rel="stylesheet">
+    <style>
+    .custom-modal-overlay {
+      position:fixed;
+      top:0;
+      right:0;
+      bottom:0;
+      left:0;
+      z-index:9998;
+      background-color:black;
+      opacity:.4;
+    }
+    .custom-modal {
+      position:absolute;
+      top:20%;
+      left:50%;
+      z-index:9999;
+      padding:1.2em;
+      width:300px;
+      margin-left:-150px;
+      background-color:white;
+      border:1px solid;
+      box-shadow:0 1px 2px rgba(0,0,0,.7);
+    }
+    .custom-modal-header {
+      margin:-1.2em -1.2em 0;
+      padding:.5em .7em;
+      font-weight:bold;
+    }
+    .custom-modal-content {margin:1.2em 0}
+    .custom-modal input,
+    .custom-modal button {
+      background-color:white;
+      color:black;
+      border:1px solid;
+      padding:5px;
+    }
+    .custom-modal input {
+      display:block;
+      width:100%;
+    }
+    .custom-modal button {
+      padding-right:10px;
+      padding-left:10px;
+      background-color:black;
+      border-color:transparent;
+      color:white;
+      cursor:pointer;
+      margin:0 4px 0 0;
+    }
+    .custom-modal button:focus,
+    .custom-modal button:hover {background-color:red}
+    .custom-modal-action {text-align:right}
+    </style>
   </head>
   <body spellcheck="false">
 
@@ -32,29 +84,12 @@ function testFoo(bar) {
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.</textarea>
 
     <div class="editor-control" id="editor-control">
-      <a href="#bold">Bold</a>
-      <a href="#italic">Italic</a>
-      <a href="#code">Code</a>
-      <a href="#code-block">Code Block</a>
-      <a href="#quote">Quote</a>
-      <a href="#li"><abbr title="List">LI</abbr></a>
-      <a href="#ul-list"><abbr title="Unordered List">UL</abbr></a>
-      <a href="#ol-list"><abbr title="Ordered List">OL</abbr></a>
       <a href="#link">Link</a>
       <a href="#image">Image</a>
-      <a href="#h1">H1</a>
-      <a href="#h2">H2</a>
-      <a href="#h3">H3</a>
-      <a href="#h4">H4</a>
-      <a href="#h5">H5</a>
-      <a href="#h6">H6</a>
-      <a href="#hr">Horizontal Rule</a>
-      <a href="#undo">Undo</a>
-      <a href="#redo">Redo</a>
     </div>
 
-    <script src="js/library.js"></script>
-    <script src="js/html-text-editor.js"></script>
+    <script src="../editor.js"></script>
+    <script src="custom-prompt.js"></script>
 
   </body>
 </html>

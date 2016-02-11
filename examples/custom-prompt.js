@@ -17,19 +17,20 @@
                 title = null,
                 url = null,
                 placeholder = 'Your link text goes here...';
-            fakePrompt('Link title:', 'Link title goes here...', false, function(r) {
-                title = r;
-                fakePrompt('URL:', 'http://', true, function(r) {
-                    url = r;
-                    myEditor.wrap('[' + (sel.value.length === 0 ? placeholder : ''), '](' + url + (title !== "" ? ' \"' + title + '\"' : '') + ')', function() {
-                        myEditor.select(sel.start + 1, (sel.value.length === 0 ? sel.start + placeholder.length + 1 : sel.end + 1));
+            fakePrompt('Link URL:', 'http://', true, function(r) {
+                url = r;
+                fakePrompt('Link Title:', 'Link title goes here...', false, function(r) {
+                    title = r;
+                    myEditor.wrap('[' + (sel.value.length === 0 ? placeholder : ""), '](' + url + (title !== "" ? ' \"' + title + '\"' : "") + ')', function() {
+                        myEditor.select(sel.start + 1, (sel.value.length === 0 ? sel.start + placeholder.length + 1 : sel.end + 1), true);
                     });
                 });
             });
         },
         'image': function() {
             fakePrompt('Image URL:', 'http://', true, function(r) {
-                var altText = r.substring(r.lastIndexOf('/') + 1, r.lastIndexOf('.')).replace(/[\-\_\+]+/g, " ").capitalize();
+                var altText = r.substring(r.lastIndexOf('/') + 1, r.lastIndexOf('.')).replace(/[^\w]/g, " ").capitalize();
+                    altText = altText.indexOf('/') < 0 ? decodeURIComponent(altText) : 'Image';
                 altText = altText.indexOf('/') < 0 ? decodeURIComponent(altText) : 'Image';
                 myEditor.insert('\n\n![' + altText + '](' + r + ')\n\n');
             });
@@ -51,12 +52,13 @@
             input.type = 'text';
             input.value = value;
             input.onkeyup = function(e) {
+                var k = myEditor.key(e);
                 if (isRequired) {
-                    if (e.keyCode == 13 && this.value !== "" && this.value !== value) {
+                    if (k === 'enter' && this.value !== "" && this.value !== value) {
                         onSuccess(this.value);
                     }
                 } else {
-                    if (e.keyCode == 13) {
+                    if (k === 'enter') {
                         onSuccess(this.value == value ? "" : this.value);
                     }
                 }

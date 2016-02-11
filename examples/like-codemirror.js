@@ -23,14 +23,10 @@
         visible = false;
         L2.className = 'editor-layer editor-layer-2';
         setTimeout(function() {
-            var sel = myEditor.selection();
+            var s = myEditor.selection();
             L1.innerHTML = '<pre class="prettyprint"><code>' + htmlEntities(myEditor.area.value) + '</code></pre>';
             prettyPrint(); // Trigger the Google Code Prettify
-            if (sel.value.length > 0) {
-                L2.innerHTML = '<pre>' + htmlEntities(myEditor.area.value) + '</pre>';
-            } else {
-                L2.innerHTML = '<pre>' + htmlEntities(sel.before) + '<span class="fake-caret"></span>' + htmlEntities(sel.after) + '</pre>';
-            }
+            L2.innerHTML = '<pre>' + htmlEntities(s.before + s.value) + '<span class="fake-caret"></span>' + htmlEntities(s.after) + '</pre>';
             autoResizeTextArea();
         }, 1);
     }
@@ -44,34 +40,35 @@
         setTimeout(blinkCaret, 400);
     }
 
-    // Typing...
+    // Typing ...
     myEditor.area.onkeydown = function(e) {
 
-        var sel = myEditor.selection();
+        var s = myEditor.selection(),
+            k = myEditor.key(e);
 
         // `Shift + Tab` to outdent
-        if (e.shiftKey && e.keyCode == 9) {
+        if (e.shiftKey && k === 'tab') {
             myEditor.outdent('  ', updateSyntaxHighlighter);
             return false;
         }
 
         // `Tab` to indent
-        if (e.keyCode == 9) {
+        if (k === 'tab') {
             myEditor.indent('  ', updateSyntaxHighlighter);
             return false;
         }
 
-        // `Backspace` was pressed
-        if (e.keyCode == 8 && sel.value.length === 0 && sel.before.match(/(  |^)$/)) {
-            var outdent = sel.before.replace(/  $/, "");
-            myEditor.area.value = outdent + sel.value + sel.after;
+        // `BackSpace` was pressed
+        if (k === 'backspace' && s.value.length === 0 && s.before.match(/(  |^)$/)) {
+            var outdent = s.before.replace(/  $/, "");
+            myEditor.area.value = outdent + s.value + s.after;
             myEditor.select(outdent.length, outdent.length, updateSyntaxHighlighter);
             return false;
         }
 
         // Auto indent
-        if (e.keyCode == 13) {
-            var getIndentBefore = /(^|\n)( +)(.*?)$/.exec(sel.before),
+        if (k === 'enter') {
+            var getIndentBefore = /(^|\n)( +)(.*?)$/.exec(s.before),
                 indentBefore = getIndentBefore ? getIndentBefore[2] : "";
             myEditor.insert('\n' + indentBefore, updateSyntaxHighlighter);
             return false;
@@ -80,7 +77,7 @@
         updateSyntaxHighlighter();
     };
 
-    myEditor.area.onmousedown = function(e) {
+    myEditor.area.onfocus = function(e) {
         L2.style.display = "block";
         updateSyntaxHighlighter();
     };
