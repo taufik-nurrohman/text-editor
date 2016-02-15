@@ -1,6 +1,6 @@
 /*!
  * --------------------------------------------------------------------
- *  SIMPLE TEXT SELECTION LIBRARY FOR ONLINE TEXT EDITING (2016-02-11)
+ *  SIMPLE TEXT SELECTION LIBRARY FOR ONLINE TEXT EDITING (2016-02-15)
  * --------------------------------------------------------------------
  *  https://github.com/tovic/simple-text-editor-library
  * --------------------------------------------------------------------
@@ -183,9 +183,9 @@ var Editor = function(source) {
             'space': ' '
         };
 
-        is = aliases[is] || is || null;
+        is = aliases[is.toLowerCase()] || is.toLowerCase() || null;
 
-        return is ? out === is.toLowerCase() : out;
+        return is ? out === is : out;
 
     };
 
