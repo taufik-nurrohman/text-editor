@@ -183,9 +183,7 @@ var Editor = function(source) {
             'space': ' '
         };
 
-        is = aliases[is.toLowerCase()] || is.toLowerCase() || null;
-
-        return is ? out === is : out;
+        return is_set(is) ? out === (aliases[is.toLowerCase()] || is.toLowerCase()) : out;
 
     };
 
