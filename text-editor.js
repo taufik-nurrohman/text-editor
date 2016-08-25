@@ -374,7 +374,7 @@ var TE = function(target) {
         var $ = r.$(),
             s = is_set(s) ? s : '\t';
         if ($.length) {
-            return r.replace(/^([^\n])/gm, s + '$1');
+            return r.replace(/^(?!$)/gm, s);
         }
         return r.set($.before + s + $.value + $.after).select($.start + s.length).record();
     };
