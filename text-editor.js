@@ -83,7 +83,7 @@ var TE = function(target) {
         44: 'printscreen', // works only on `keyup` :(
         45: 'insert',
         46: 'delete',
-        91: 'os',
+        91: 'meta', // <https://bugzilla.mozilla.org/show_bug.cgi?id=1232918>
         93: 'contextmenu',
         // function
         112: 'f1',
@@ -154,9 +154,8 @@ var TE = function(target) {
         'alternate': 'alt',
         'option': 'alt',
         'ctrl': 'control',
-        'cmd': 'control',
-        'command': 'control',
-        'meta': 'control',
+        'cmd': 'meta',
+        'command': 'meta',
         'context': 'contextmenu',
         'return': 'enter',
         'ins': 'insert',
