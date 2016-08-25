@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 1.1.1
+ *  TEXT EDITOR PLUGIN 2.0.0
  * ==========================================================
  * Author: Taufik Nurrohman <http://latitudu.com>
  * License: MIT
@@ -19,7 +19,7 @@ var TE = function(target) {
         S = {}; // storage
 
     r.x = '!$^*()-=+[]{}\\|:<>,./?'; // character(s) to escape
-    r.version = '1.1.1'; // plugin version
+    r.version = '2.0.0'; // plugin version
 
     function val() {
         return target.value;
