@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  ELEMENT MODULE FOR TEXT EDITOR PLUGIN 1.0.0
+ *  ELEMENT MODULE FOR TEXT EDITOR PLUGIN 1.0.1
  * ==========================================================
  * Author: Taufik Nurrohman <http://latitudu.com>
  * License: MIT
@@ -21,6 +21,8 @@
 
         var $ = is_node(n) ? n : d.createElement(n),
             r = this;
+
+        a = a || {};
 
         for (var i in a) {
             if (is_func(a[i])) {
@@ -57,6 +59,11 @@
                 o[a[i].name] = a[i].value;
             }
             return o;
+        };
+
+        r.remove = function() {
+            if ($.parentNode) $.parentNode.removeChild($);
+            return r;
         };
 
         r.$ = $;

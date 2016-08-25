@@ -1,8 +1,11 @@
 .text-editor {
   display:block;
-  border:1px solid;
+  border:1px solid #ddd;
+  font-family:Helmet,FreeSans,Sans-Serif;
+  color:#666;
 }
-.text-editor:after {
+.text-editor:after,
+.text-editor *:after {
   content:"";
   display:table;
   clear:both;
@@ -20,6 +23,8 @@
   padding:0;
 }
 .text-editor-field {
+  font:normal normal 100%/125% "Courier New",Courier,"Nimbus Mono L",Monospace;
+  color:inherit;
   display:block;
   width:100%;
   height:200px;
@@ -27,4 +32,43 @@
   background-color:white;
   padding:2px;
   border:0;
+}
+.text-editor-controls {
+  height:1.875em;
+  line-height:1.875em;
+  border-bottom:1px solid;
+  border-color:inherit;
+}
+.text-editor-control {
+  width:1.875em;
+  height:inherit;
+  text-align:center;
+  display:block;
+  float:left;
+  color:#4c9ed9;
+}
+.text-editor-control:focus,
+.text-editor-control:hover {background-color:#e6f1fe}
+.text-editor-modal-overlay {
+  display:block;
+  background-color:black;
+  opacity:.2;
+  position:fixed;
+  top:0;
+  right:0;
+  bottom:0;
+  left:0;
+  z-index:9999;
+}
+.text-editor-modal {
+  width:200px;
+  height:200px;
+  background-color:white;
+  position:absolute;
+  top:50%;
+  left:50%;
+  z-index:9999;
+  margin-top:-100px;
+  margin-left:-100px;
+  box-shadow:0 1px 3px rgba(0,0,0,.4);
 }

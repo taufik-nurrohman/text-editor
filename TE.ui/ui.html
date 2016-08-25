@@ -4,6 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Text Editor</title>
+    <style>
+body {
+  font:normal normal 14px/1.4 Helmet,FreeSans,Sans-Serif;
+  background-color:white;
+  color:black;
+}
+    </style>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
     <link href="../TE.ui/ui.min.css" rel="stylesheet">
     <script src="../text-editor.min.js"></script>
     <script src="../TE.el/el.min.js"></script>
@@ -12,15 +20,40 @@
   <body>
     <p><textarea></textarea></p>
     <script>
-    var editor = new TE(document.querySelector('textarea'));console.log(editor.ui());
+    var editor = new TE(document.querySelector('textarea'));
     editor.ui().controls({
         'bold': {
-            'click': function(e) {
-                x.wrap('<b>', '</b>');
-            },
-            'text': 'bold'
+            'click': function() {
+                editor.wrap('<b>', '</b>');
+            }
+        },
+        'italic': {
+            'click': function() {
+                editor.wrap('<i>', '</i>');
+            }
+        },
+        'underline': {
+            'click': function() {
+                editor.wrap('<u>', '</u>');
+            }
+        },
+        'undo': {
+            'click': editor.undo
+        },
+        'repeat': {
+            'click': editor.redo
+        },
+        'link': {
+            'click': function() {
+                editor.ui.modal('foo', 'bar', 'baz', 'qux')
+            }
         }
-    });
+    }).parent.target.onkeydown = function() {
+        var t = this;
+        setTimeout(function() {
+            t.TE.record();
+        }, 0);
+    };
     </script>
   </body>
 </html>
