@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Text Editor</title>
+    <script src="../text-editor.min.js"></script>
+    <script src="storage.min.js"></script>
+  </head>
+  <body>
+    <p><textarea></textarea></p>
+    <p>
+      <button onclick="return editor.storage.set('content', editor.get()), false;">Save</button>
+      <button onclick="return editor.set(editor.storage.get('content')), false;">Restore</button>
+    </p>
+    <script>
+    var editor = new TE(document.querySelector('textarea'));
+    </script>
+  </body>
+</html>

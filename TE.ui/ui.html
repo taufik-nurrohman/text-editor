@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Text Editor</title>
+    <link href="../TE.ui/ui.min.css" rel="stylesheet">
+    <script src="../text-editor.min.js"></script>
+    <script src="../TE.el/el.min.js"></script>
+    <script src="../TE.ui/ui.min.js"></script>
+  </head>
+  <body>
+    <p><textarea></textarea></p>
+    <script>
+    var editor = new TE(document.querySelector('textarea'));console.log(editor.ui());
+    editor.ui().controls({
+        'bold': {
+            'click': function(e) {
+                x.wrap('<b>', '</b>');
+            },
+            'text': 'bold'
+        }
+    });
+    </script>
+  </body>
+</html>
