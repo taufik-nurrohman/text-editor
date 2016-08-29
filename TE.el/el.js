@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  ELEMENT MODULE FOR TEXT EDITOR PLUGIN 1.0.1
+ *  ELEMENT MODULE FOR TEXT EDITOR PLUGIN 1.0.2
  * ==========================================================
  * Author: Taufik Nurrohman <http://latitudu.com>
  * License: MIT
@@ -12,7 +12,7 @@
     w.TE_el = function(n, a, parent) {
 
         function is_node(x) {
-            return typeof x === "object" && x.nodeName;
+            return x instanceof HTMLElement;
         }
 
         function is_func(x) {

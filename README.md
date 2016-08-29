@@ -120,12 +120,22 @@ console.log(editor.$());
 // for “test before i am selected test after”
 // with “i am selected” as the selected value
 {
-    start: 12,
-    end: 25,
-    value: 'i am selected',
-    before: 'test before ',
-    after: ' test after',
-    length: 13
+  start: 12, // selection start
+  end: 25, // selection end
+  value: 'i am selected', // selected text
+  before: 'test before ', // text before selection
+  after: ' test after', // text after selection
+  caret: [ // caret offset from text area in pixel(s)
+    { // selection start
+      x: 99,
+      y: 3
+    },
+    { // selection end
+      x: 203,
+      y: 3
+    }
+  ],
+  length: 13 // length of selected text
 }
 ~~~
 
@@ -424,6 +434,7 @@ Examples
 
  - [Basic HTML Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor.noob.html)
  - [Test for Editor Keys](https://rawgit.com/tovic/text-editor/master/text-editor.key.html)
+ - [Test for Caret Position](https://rawgit.com/tovic/text-editor/master/text-editor.$.caret.html)
 
 Modules
 -------

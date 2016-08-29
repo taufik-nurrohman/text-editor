@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.0.0
+ *  TEXT EDITOR PLUGIN 2.1.0
  * ==========================================================
  * Author: Taufik Nurrohman <http://latitudu.com>
  * License: MIT
@@ -19,7 +19,7 @@ var TE = function(target) {
         S = {}; // storage
 
     r.x = '!$^*()-=+[]{}\\|:<>,./?'; // character(s) to escape
-    r.version = '2.0.0'; // plugin version
+    r.version = '2.1.0'; // plugin version
 
     function val() {
         return target.value;
@@ -57,6 +57,90 @@ var TE = function(target) {
 
     function pattern(a, b) {
         return new RegExp(a, b);
+    }
+
+    function num(x) {
+        return parseInt(x, 10);
+    }
+
+    var DD = d.createElement('div'),
+        SS = d.createElement('span'),
+        ZZ = (function() {
+            var x = d.createElement('div'),
+                y = d.body,
+                z = x.style, w;
+            y.appendChild(x);
+            z.position = 'absolute';
+            z.top = '-9999px';
+            z.left = '-9999px';
+            z.width = z.height = '100px';
+            z.overflow = 'scroll';
+            z.visibility = 'hidden';
+            w = x.offsetWidth - x.clientWidth;
+            y.removeChild(x);
+            return w;
+        })();
+
+    // <https://github.com/component/textarea-caret-position>
+    function offset(x) {
+        var prop = [
+            'boxSizing',
+            'direction',
+            'fontFamily',
+            'fontSize',
+            'fontSizeAdjust',
+            'fontStretch',
+            'fontStyle',
+            'fontVariant',
+            'fontWeight',
+            'height',
+            'letterSpacing',
+            'lineHeight',
+            'overflowX',
+            'paddingBottom',
+            'paddingLeft',
+            'paddingRight',
+            'paddingTop',
+            'tabSize',
+            'textAlign',
+            'textDecoration',
+            'textIndent',
+            'textTransform',
+            'wordSpacing'
+        ];
+        var b = d.body,
+            n = target.nodeName,
+            i = prop.length,
+            s, t, o, width;
+        b.appendChild(DD);
+        s = DD.style;
+        t = getComputedStyle(target);
+        width = num(t.width);
+        s.whiteSpace = 'pre-wrap';
+        if (n !== 'INPUT') {
+            s.wordWrap = 'break-word';
+        }
+        s.position = 'absolute';
+        s.visibility = 'hidden';
+        while (--i) s[prop[i]] = t[prop[i]];
+        s.overflowY = target.scrollHeight > num(t.height) ? 'scroll' : 'auto';
+        if (is_set(w.mozInnerScreenX)) { // Firefox :(
+            s.width = width + 'px';
+        } else {
+            s.width = width + ZZ + 'px';
+        }
+        DD.textContent = val().substring(0, x);
+        if (n === 'INPUT') {
+            DD.textContent = DD.textContent.replace(/\s/g, '\u00a0');
+        }
+        SS.textContent = val().substring(x) || '.';
+        DD.appendChild(SS);
+        o = {
+            x: SS.offsetLeft + num(t['borderLeftWidth']),
+            y: SS.offsetTop + num(t['borderTopWidth'])
+        };
+        b.removeChild(DD);
+        return o;
     }
 
     // access editor instance from `this` scope with `this.TE`
@@ -98,7 +182,7 @@ var TE = function(target) {
         121: 'f10',
         122: 'f11',
         123: 'f12',
-        // number
+        // num
         48: ['0', ')'],
         49: ['1', '!'],
         50: ['2', '@'],
@@ -164,20 +248,21 @@ var TE = function(target) {
         'home': 'pageup',
         'end': 'pagedown',
         'left': 'arrowleft',
-        'up': 'arrowup',
         'right': 'arrowright',
+        'up': 'arrowup',
         'down': 'arrowdown',
-        'space': ' '
+        'space': ' ',
+        'plus': '+'
     };
+    function xx(x, y) {
+        return y && (!is_set(x) || is_string(x) && (r.keys_a[x] || x) === k || x === true);
+    }
     Object.defineProperty(KeyboardEvent.prototype, 'TE', {
         configurable: true,
         get: function() {
             // custom `KeyboardEvent.key` for internal use
             var t = this,
                 k = t.key || r.keys[t.which || t.keyCode];
-            function xx(x, y) {
-                return y && (!is_set(x) || is_string(x) && (r.keys_a[x] || x) === k || x === true);
-            }
             if (is_object(k)) {
                 k = t.shiftKey ? (k[1] || k[0]) : k[0];
             }
@@ -254,13 +339,15 @@ var TE = function(target) {
         var v = val().replace(/\r/g, ""),
             a = target.selectionStart,
             b = target.selectionEnd,
-            c = v.substring(a, b);
+            c = v.substring(a, b),
+            o = [offset(a), offset(b)];
         return {
             start: a,
             end: b,
             value: c,
             before: v.substring(0, a),
             after: v.substring(b),
+            caret: o,
             length: c.length
         };
     };
