@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.1.1
+ *  TEXT EDITOR PLUGIN 2.1.2
  * ==========================================================
  * Author: Taufik Nurrohman <http://latitudu.com>
  * License: MIT
@@ -27,8 +27,7 @@ var TE = function(target) {
                 z = x.style, w;
             y.appendChild(x);
             z.position = 'absolute';
-            z.top = '-9999px';
-            z.left = '-9999px';
+            z.top = z.left = '-9999px';
             z.width = z.height = '100px';
             z.overflow = 'scroll';
             z.visibility = 'hidden';
@@ -38,7 +37,7 @@ var TE = function(target) {
         })();
 
     r.x = '!$^*()-=+[]{}\\|:<>,./?'; // character(s) to escape
-    r.version = '2.1.0'; // plugin version
+    r.version = '2.1.2'; // plugin version
 
     function val() {
         return target.value;
@@ -235,13 +234,13 @@ var TE = function(target) {
         a[D] = z[0];
         b[D] = z[1];
         c[D] = z[2];
-        return r; // `select` method #1
+        return r; // `select` method does not populate history data
     };
 
     // match selection
     r.match = function(a, b) {
         var m = r.$().value.match(a);
-        return is_func(b) ? b(m || []) : !!m; // `match` method #1
+        return is_func(b) ? b(m || []) : !!m; // `match` method does not populate history data
     };
 
     // replace at selection
@@ -348,7 +347,7 @@ var TE = function(target) {
             aa = a.replace(/\s*$/, O),
             bb = b.replace(/^\s*/, C),
             cc = c.replace(/^\s*([\s\S]*?)\s*$/g, B + '$1' + E);
-        return r.set(aa + cc + bb).select(aa.length, (aa + cc).length); // `trim` method #1
+        return r.set(aa + cc + bb).select(aa.length, (aa + cc).length); // `trim` method does not populate history data
     };
 
     // toggle state
@@ -449,122 +448,126 @@ var TE = function(target) {
 
 };
 
+// Key maps for the deprecated `KeyboardEvent.keyCode`
+TE.keys = {
+    // control
+    8: 'backspace',
+    9: 'tab',
+    13: 'enter',
+    16: 'shift',
+    17: 'control',
+    18: 'alt',
+    19: 'pause',
+    20: 'capslock', // not working on `keypress`
+    27: 'escape',
+    33: 'pageup',
+    34: 'pagedown',
+    37: 'arrowleft',
+    38: 'arrowup',
+    39: 'arrowright',
+    40: 'arrowdown',
+    44: 'printscreen', // works only on `keyup` :(
+    45: 'insert',
+    46: 'delete',
+    91: 'meta', // <https://bugzilla.mozilla.org/show_bug.cgi?id=1232918>
+    93: 'contextmenu',
+    // function
+    112: 'f1',
+    113: 'f2',
+    114: 'f3',
+    115: 'f4',
+    116: 'f5',
+    117: 'f6',
+    118: 'f7',
+    119: 'f8',
+    120: 'f9',
+    121: 'f10',
+    122: 'f11',
+    123: 'f12',
+    // num
+    48: ['0', ')'],
+    49: ['1', '!'],
+    50: ['2', '@'],
+    51: ['3', '#'],
+    52: ['4', '$'],
+    53: ['5', '%'],
+    54: ['6', '^'],
+    55: ['7', '&'],
+    56: ['8', '*'],
+    57: ['9', '('],
+    // alphabet
+    65: 'a',
+    66: 'b',
+    67: 'c',
+    68: 'd',
+    69: 'e',
+    70: 'f',
+    71: 'g',
+    72: 'h',
+    73: 'i',
+    74: 'j',
+    75: 'k',
+    76: 'l',
+    77: 'm',
+    78: 'n',
+    79: 'o',
+    80: 'p',
+    81: 'q',
+    82: 'r',
+    83: 's',
+    84: 't',
+    85: 'u',
+    86: 'v',
+    87: 'w',
+    88: 'x',
+    89: 'y',
+    90: 'z',
+    // symbol
+    32: ' ',
+    59: [';', ':'],
+    61: ['=', '+'],
+    173: ['-', '_'],
+    188: [',', '<'],
+    190: ['.', '>'],
+    191: ['/', '?'],
+    192: ['`', '~'],
+    219: ['[', '{'],
+    220: ['\\', '|'],
+    221: [']', '}'],
+    222: ['\'', '"']
+};
+
+// Key alias(es)
+TE.keys_alt = {
+    alternate: 'alt',
+    option: 'alt',
+    ctrl: 'control',
+    cmd: 'meta',
+    command: 'meta',
+    os: 'meta', // <https://bugzilla.mozilla.org/show_bug.cgi?id=1232918>
+    context: 'contextmenu',
+    'return': 'enter',
+    ins: 'insert',
+    del: 'delete',
+    esc: 'escape',
+    home: 'pageup',
+    end: 'pagedown',
+    left: 'arrowleft',
+    right: 'arrowright',
+    up: 'arrowup',
+    down: 'arrowdown',
+    space: ' ',
+    plus: '+'
+};
+
 // Add `KeyboardEvent.TE` property
 Object.defineProperty(KeyboardEvent.prototype, 'TE', {
     configurable: true,
     get: function() {
-        // Key maps for the deprecated `KeyboardEvent.keyCode`
-        var keys = {
-            // control
-            8: 'backspace',
-            9: 'tab',
-            13: 'enter',
-            16: 'shift',
-            17: 'control',
-            18: 'alt',
-            19: 'pause',
-            20: 'capslock', // not working on `keypress`
-            27: 'escape',
-            33: 'pageup',
-            34: 'pagedown',
-            37: 'arrowleft',
-            38: 'arrowup',
-            39: 'arrowright',
-            40: 'arrowdown',
-            44: 'printscreen', // works only on `keyup` :(
-            45: 'insert',
-            46: 'delete',
-            91: 'meta', // <https://bugzilla.mozilla.org/show_bug.cgi?id=1232918>
-            93: 'contextmenu',
-            // function
-            112: 'f1',
-            113: 'f2',
-            114: 'f3',
-            115: 'f4',
-            116: 'f5',
-            117: 'f6',
-            118: 'f7',
-            119: 'f8',
-            120: 'f9',
-            121: 'f10',
-            122: 'f11',
-            123: 'f12',
-            // num
-            48: ['0', ')'],
-            49: ['1', '!'],
-            50: ['2', '@'],
-            51: ['3', '#'],
-            52: ['4', '$'],
-            53: ['5', '%'],
-            54: ['6', '^'],
-            55: ['7', '&'],
-            56: ['8', '*'],
-            57: ['9', '('],
-            // alphabet
-            65: 'a',
-            66: 'b',
-            67: 'c',
-            68: 'd',
-            69: 'e',
-            70: 'f',
-            71: 'g',
-            72: 'h',
-            73: 'i',
-            74: 'j',
-            75: 'k',
-            76: 'l',
-            77: 'm',
-            78: 'n',
-            79: 'o',
-            80: 'p',
-            81: 'q',
-            82: 'r',
-            83: 's',
-            84: 't',
-            85: 'u',
-            86: 'v',
-            87: 'w',
-            88: 'x',
-            89: 'y',
-            90: 'z',
-            // symbol
-            32: ' ',
-            59: [';', ':'],
-            61: ['=', '+'],
-            173: ['-', '_'],
-            188: [',', '<'],
-            190: ['.', '>'],
-            191: ['/', '?'],
-            192: ['`', '~'],
-            219: ['[', '{'],
-            220: ['\\', '|'],
-            221: [']', '}'],
-            222: ['\'', '"']
-        },
-        // alias(es)
-        alt = {
-            'alternate': 'alt',
-            'option': 'alt',
-            'ctrl': 'control',
-            'cmd': 'meta',
-            'command': 'meta',
-            'os': 'meta', // <https://bugzilla.mozilla.org/show_bug.cgi?id=1232918>
-            'context': 'contextmenu',
-            'return': 'enter',
-            'ins': 'insert',
-            'del': 'delete',
-            'esc': 'escape',
-            'home': 'pageup',
-            'end': 'pagedown',
-            'left': 'arrowleft',
-            'right': 'arrowright',
-            'up': 'arrowup',
-            'down': 'arrowdown',
-            'space': ' ',
-            'plus': '+'
-        };
+        var keys = TE.keys,
+            keys_alt = TE.keys_alt;
         function ret(x, y) {
-            return y && (!x || typeof x === "string" && (alt[x] || x) === k || x === true);
+            return y && (!x || typeof x === "string" && (keys_alt[x] || x) === k || x === true);
         }
         // custom `KeyboardEvent.key` for internal use
         var t = this,
@@ -578,7 +581,7 @@ Object.defineProperty(KeyboardEvent.prototype, 'TE', {
                 if (!x) return k;
                 if (x instanceof RegExp) return x.test(k);
                 x = x.toLowerCase();
-                return (alt[x] || x) === k;
+                return (keys_alt[x] || x) === k;
             },
             control: function(x) {
                 return ret(x, t.ctrlKey);
@@ -595,5 +598,3 @@ Object.defineProperty(KeyboardEvent.prototype, 'TE', {
         };
     }
 });
-
-// #1: ~ does not populate history data
