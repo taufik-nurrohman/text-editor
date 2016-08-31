@@ -60,7 +60,7 @@
         }
         // `CTRL + Enter` to insert HTML paragraph
         if (e.TE.control('enter')) {
-            return this.TE.trim('\n', '\n').wrap('<p>', '</p>'), false;
+            return this.TE.trim('\n', "").wrap('<p>', '</p>'), false;
         }
         // Replace **Markdown** syntax to HTML when user presses `Enter` or `Space` key
         if (e.TE.key(/^(?: |enter)$/)) {
