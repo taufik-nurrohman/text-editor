@@ -31,12 +31,12 @@
         '\u2190': /<[-=]+$/, // left arrow
         '\u00A9': /\(c\)$/i, // copyright sign
         '\n<hr>': /(^|\n\n)([*+-]\s*){2,}[*+-]$/,
-        '<h1>$1$2</h1>': /^(?:(.+?)\n={2,}|#\s+(.+?)\s*#*)$/m,
-        '<h2>$1$2</h2>': /^(?:(.+?)\n-{2,}|##\s+(.+?)\s*#*)$/m,
-        '<h3>$1</h3>': /^###\s+(.+?)\s*#*$/m,
-        '<h4>$1</h4>': /^####\s+(.+?)\s*#*$/m,
-        '<h5>$1</h5>': /^#####\s+(.+?)\s*#*$/m,
-        '<h6>$1</h6>': /^######\s+(.+?)\s*#*$/m,
+        '<h6>$1</h6>': /^######\s*(.+?)\s*#*$/m,
+        '<h5>$1</h5>': /^#####\s*(.+?)\s*#*$/m,
+        '<h4>$1</h4>': /^####\s*(.+?)\s*#*$/m,
+        '<h3>$1</h3>': /^###\s*(.+?)\s*#*$/m,
+        '<h2>$1$2</h2>': /^(?:(.+?)\n-{2,}|##\s*(.+?)\s*#*)$/m,
+        '<h1>$1$2</h1>': /^(?:(.+?)\n={2,}|#\s*(.+?)\s*#*)$/m,
         '<strong><em>$1</em></strong>': /(?:\*{2}|_{2})[*_](.+?)[*_](?:\*{2}|_{2})$/,
         '<strong>$1$2</strong>': /(?:\*{2}(.+?)\*{2}|_{2}(.+?)_{2})$/,
         '<em>$1$2</em>': /(?:\*(.+?)\*|_(.+?)_)$/,
@@ -50,6 +50,9 @@
         var $ = this.TE.$(),
             before = $.before,
             after = $.after;
+        // `CTRL + Z` to undo, `CTRL + Y` to redo
+        if (e.TE.control('z')) return this.TE.undo(), false;
+        if (e.TE.control('y')) return this.TE.redo(), false;
         // `Enter` to split HTML paragraph
         if (/^<\/p>/.test(after) && e.TE.key('enter')) { // in paragraph…
             // Escape from HTML paragraph if paragraph is empty
@@ -67,10 +70,11 @@
             for (var i in patterns) {
                 if (!patterns[i].test(before)) continue;
                 before = before.replace(patterns[i], i);
-                editor.set(before + after).select(before.length);
+                this.TE.set(before + after).select(before.length);
                 break;
             }
         }
+        this.TE.record(); // update history…
     }
 
     editor.target.onkeydown = convert;
