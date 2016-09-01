@@ -1,7 +1,7 @@
 Text Editor
 ===========
 
-> A light–weight text selection range API written in pure JavaScript, for modern browsers.
+> A text selection range API written in pure JavaScript, for modern browsers.
 
 [View Demo](https://rawgit.com/tovic/text-editor/master/text-editor.html "View Demo")
 
