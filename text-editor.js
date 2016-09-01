@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.1.2
+ *  TEXT EDITOR PLUGIN 2.1.3
  * ==========================================================
  * Author: Taufik Nurrohman <http://latitudu.com>
  * License: MIT
@@ -37,7 +37,7 @@ var TE = function(target) {
         })();
 
     r.x = '!$^*()-=+[]{}\\|:<>,./?'; // character(s) to escape
-    r.version = '2.1.2'; // plugin version
+    r.version = '2.1.3'; // plugin version
 
     function val() {
         return target.value;
@@ -448,153 +448,155 @@ var TE = function(target) {
 
 };
 
-// Key maps for the deprecated `KeyboardEvent.keyCode`
-TE.keys = {
-    // control
-    8: 'backspace',
-    9: 'tab',
-    13: 'enter',
-    16: 'shift',
-    17: 'control',
-    18: 'alt',
-    19: 'pause',
-    20: 'capslock', // not working on `keypress`
-    27: 'escape',
-    33: 'pageup',
-    34: 'pagedown',
-    37: 'arrowleft',
-    38: 'arrowup',
-    39: 'arrowright',
-    40: 'arrowdown',
-    44: 'printscreen', // works only on `keyup` :(
-    45: 'insert',
-    46: 'delete',
-    91: 'meta', // <https://bugzilla.mozilla.org/show_bug.cgi?id=1232918>
-    93: 'contextmenu',
-    // function
-    112: 'f1',
-    113: 'f2',
-    114: 'f3',
-    115: 'f4',
-    116: 'f5',
-    117: 'f6',
-    118: 'f7',
-    119: 'f8',
-    120: 'f9',
-    121: 'f10',
-    122: 'f11',
-    123: 'f12',
-    // num
-    48: ['0', ')'],
-    49: ['1', '!'],
-    50: ['2', '@'],
-    51: ['3', '#'],
-    52: ['4', '$'],
-    53: ['5', '%'],
-    54: ['6', '^'],
-    55: ['7', '&'],
-    56: ['8', '*'],
-    57: ['9', '('],
-    // alphabet
-    65: 'a',
-    66: 'b',
-    67: 'c',
-    68: 'd',
-    69: 'e',
-    70: 'f',
-    71: 'g',
-    72: 'h',
-    73: 'i',
-    74: 'j',
-    75: 'k',
-    76: 'l',
-    77: 'm',
-    78: 'n',
-    79: 'o',
-    80: 'p',
-    81: 'q',
-    82: 'r',
-    83: 's',
-    84: 't',
-    85: 'u',
-    86: 'v',
-    87: 'w',
-    88: 'x',
-    89: 'y',
-    90: 'z',
-    // symbol
-    32: ' ',
-    59: [';', ':'],
-    61: ['=', '+'],
-    173: ['-', '_'],
-    188: [',', '<'],
-    190: ['.', '>'],
-    191: ['/', '?'],
-    192: ['`', '~'],
-    219: ['[', '{'],
-    220: ['\\', '|'],
-    221: [']', '}'],
-    222: ['\'', '"']
-};
+(function(r) {
 
-// Key alias(es)
-TE.keys_alt = {
-    alternate: 'alt',
-    option: 'alt',
-    ctrl: 'control',
-    cmd: 'meta',
-    command: 'meta',
-    os: 'meta', // <https://bugzilla.mozilla.org/show_bug.cgi?id=1232918>
-    context: 'contextmenu',
-    'return': 'enter',
-    ins: 'insert',
-    del: 'delete',
-    esc: 'escape',
-    home: 'pageup',
-    end: 'pagedown',
-    left: 'arrowleft',
-    right: 'arrowright',
-    up: 'arrowup',
-    down: 'arrowdown',
-    space: ' ',
-    plus: '+'
-};
+    // Key maps for the deprecated `KeyboardEvent.keyCode`
+    r.keys = {
+        // control
+        3: 'cancel',
+        6: 'help',
+        8: 'backspace',
+        9: 'tab',
+        12: 'clear',
+        13: 'enter',
+        16: 'shift',
+        17: 'control',
+        18: 'alt',
+        19: 'pause',
+        20: 'capslock', // not working on `keypress`
+        27: 'escape',
+        28: 'convert',
+        29: 'nonconvert',
+        30: 'accept',
+        31: 'modechange',
+        33: 'pageup',
+        34: 'pagedown',
+        35: 'end',
+        36: 'home',
+        37: 'arrowleft',
+        38: 'arrowup',
+        39: 'arrowright',
+        40: 'arrowdown',
+        41: 'select',
+        42: 'print',
+        43: 'execute',
+        44: 'printscreen', // works only on `keyup` :(
+        45: 'insert',
+        46: 'delete',
+        91: 'meta', // <https://bugzilla.mozilla.org/show_bug.cgi?id=1232918>
+        93: 'contextmenu',
+        144: 'numlock',
+        145: 'scrolllock',
+        181: 'volumemute',
+        182: 'volumedown',
+        183: 'volumeup',
+        224: 'meta',
+        225: 'altgraph',
+        246: 'attn',
+        247: 'crsel',
+        248: 'exsel',
+        249: 'eraseeof',
+        250: 'play',
+        251: 'zoomout',
+        // num
+        48: ['0', ')'],
+        49: ['1', '!'],
+        50: ['2', '@'],
+        51: ['3', '#'],
+        52: ['4', '$'],
+        53: ['5', '%'],
+        54: ['6', '^'],
+        55: ['7', '&'],
+        56: ['8', '*'],
+        57: ['9', '('],
+        // symbol
+        32: ' ',
+        59: [';', ':'],
+        61: ['=', '+'],
+        173: ['-', '_'],
+        188: [',', '<'],
+        190: ['.', '>'],
+        191: ['/', '?'],
+        192: ['`', '~'],
+        219: ['[', '{'],
+        220: ['\\', '|'],
+        221: [']', '}'],
+        222: ['\'', '"']
+    };
 
-// Add `KeyboardEvent.TE` property
-Object.defineProperty(KeyboardEvent.prototype, 'TE', {
-    configurable: true,
-    get: function() {
-        var keys = TE.keys,
-            keys_alt = TE.keys_alt;
-        function ret(x, y) {
-            return y && (!x || typeof x === "string" && (keys_alt[x] || x) === k || x === true);
-        }
-        // custom `KeyboardEvent.key` for internal use
-        var t = this,
-            k = t.key || keys[t.which || t.keyCode];
-        if (typeof k === "object") {
-            k = t.shiftKey ? (k[1] || k[0]) : k[0];
-        }
-        k = k.toLowerCase();
-        return {
-            key: function(x) {
-                if (!x) return k;
-                if (x instanceof RegExp) return x.test(k);
-                x = x.toLowerCase();
-                return (keys_alt[x] || x) === k;
-            },
-            control: function(x) {
-                return ret(x, t.ctrlKey);
-            },
-            shift: function(x) {
-                return ret(x, t.shiftKey);
-            },
-            option: function(x) {
-                return ret(x, t.altKey);
-            },
-            meta: function(x) {
-                return ret(x, t.metaKey);
-            }
-        };
+    // Key alias(es)
+    r.keys_alt = {
+        'alternate': 'alt',
+        'option': 'alt',
+        'ctrl': 'control',
+        'cmd': 'meta',
+        'command': 'meta',
+        'os': 'meta', // <https://bugzilla.mozilla.org/show_bug.cgi?id=1232918>
+        'context': 'contextmenu',
+        'return': 'enter',
+        'ins': 'insert',
+        'del': 'delete',
+        'esc': 'escape',
+        'left': 'arrowleft',
+        'right': 'arrowright',
+        'up': 'arrowup',
+        'down': 'arrowdown',
+        'space': ' ',
+        'plus': '+'
+    };
+
+    // small caps
+    function scap(x) {
+        return x.toLowerCase();
     }
-});
+
+    // function
+    for (var i = 1; i < 25; ++i) {
+        r.keys[111 + i] = 'f' + i;
+    }
+
+    // alphabet
+    for (var s = "", i = 65; i < 91; ++i) {
+        r.keys[i] = scap(String.fromCharCode(i));
+    }
+
+    // Add `KeyboardEvent.TE` property
+    Object.defineProperty(KeyboardEvent.prototype, 'TE', {
+        configurable: true,
+        get: function() {
+            var keys = r.keys,
+                keys_alt = r.keys_alt;
+            // custom `KeyboardEvent.key` for internal use
+            var t = this,
+                k = t.key ? scap(t.key) : keys[t.which || t.keyCode];
+            if (typeof k === "object") {
+                k = t.shiftKey ? (k[1] || k[0]) : k[0];
+            }
+            k = scap(k);
+            function ret(x, y) {
+                if (!x || x === true) return y;
+                return x = scap(x), y && (keys_alt[x] || x) === k;
+            }
+            return {
+                key: function(x) {
+                    if (!x || x === true) return k;
+                    if (x instanceof RegExp) return x.test(k);
+                    return x = scap(x), (keys_alt[x] || x) === k;
+                },
+                control: function(x) {
+                    return ret(x, t.ctrlKey);
+                },
+                shift: function(x) {
+                    return ret(x, t.shiftKey);
+                },
+                option: function(x) {
+                    return ret(x, t.altKey);
+                },
+                meta: function(x) {
+                    return ret(x, t.metaKey);
+                }
+            };
+        }
+    });
+
+})(TE);
