@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.1.3
+ *  TEXT EDITOR PLUGIN 2.1.4
  * ==========================================================
  * Author: Taufik Nurrohman <http://latitudu.com>
  * License: MIT
@@ -37,7 +37,6 @@ var TE = function(target) {
         })();
 
     r.x = '!$^*()-=+[]{}\\|:<>,./?'; // character(s) to escape
-    r.version = '2.1.3'; // plugin version
 
     function val() {
         return target.value;
@@ -449,6 +448,9 @@ var TE = function(target) {
 };
 
 (function(r) {
+
+    // Plugin version
+    r.version = '2.1.4';
 
     // Key maps for the deprecated `KeyboardEvent.keyCode`
     r.keys = {
