@@ -38,29 +38,34 @@ c
 d</textarea>
     <script>
 
-    var editor = new TE(document.getElementById('area-1'));
-
-    function toggle(a, wrap) {
-        var b = editor.esc(a),
-            $ = editor.$(),
-            m = new RegExp('^' + b[0] + '(.*?)' + b[1] + '$'),
-            m_B = new RegExp(b[0] + '$'),
-            m_A = new RegExp('^' + b[1]);
-        editor.toggle(
+    TE.prototype.toggleWrap = function(a, b, c) {
+        A = this.esc(a);
+        B = this.esc(b);
+        var $ = this.$(),
+            m = new RegExp('^' + A + '(.*?)' + B + '$'),
+            m_A = new RegExp(A + '$'),
+            m_B = new RegExp('^' + B);
+        return this.toggle(
             // when ...
-            wrap ? !m.test($.value) : (!m_B.test($.before) && !m_A.test($.after)),
+            c ? !m.test($.value) : (!m_A.test($.before) && !m_B.test($.after)),
             // do ...
             [
                 // first toggle
                 function(r) {
-                    r.wrap(a[0], a[1], wrap);
+                    r.wrap(a, b, c);
                 },
                 // second toggle (the reset state)
                 function(r) {
-                    r.unwrap(a[0], a[1], wrap);
+                    r.unwrap(a, b, c);
                 }
             ]
         );
+    };
+
+    var editor = new TE(document.getElementById('area-1'));
+
+    function toggle(a, wrap) {
+        editor.toggleWrap(a[0], a[1], wrap);
     }
 
     function clean() {

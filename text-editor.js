@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.1.4
+ *  TEXT EDITOR PLUGIN 2.2.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -82,31 +82,34 @@ var TE = function(target) {
 
     // <https://github.com/component/textarea-caret-position>
     function offset(x) {
-        var prop = [
-            'boxSizing',
-            'direction',
-            'fontFamily',
-            'fontSize',
-            'fontSizeAdjust',
-            'fontStretch',
-            'fontStyle',
-            'fontVariant',
-            'fontWeight',
-            'height',
-            'letterSpacing',
-            'lineHeight',
-            'overflowX',
-            'paddingBottom',
-            'paddingLeft',
-            'paddingRight',
-            'paddingTop',
-            'tabSize',
-            'textAlign',
-            'textDecoration',
-            'textIndent',
-            'textTransform',
-            'wordSpacing'
-        ];
+        var font = 'font',
+            text = 'text',
+            padding = 'padding',
+            prop = [
+                'boxSizing',
+                'direction',
+                font + 'Family',
+                font + 'Size',
+                font + 'SizeAdjust',
+                font + 'Stretch',
+                font + 'Style',
+                font + 'Variant',
+                font + 'Weight',
+                'height',
+                'letterSpacing',
+                'lineHeight',
+                'overflowX',
+                padding + 'Bottom',
+                padding + 'Left',
+                padding + 'Right',
+                padding + 'Top',
+                'tabSize',
+                text + 'Align',
+                text + 'Decoration',
+                text + 'Indent',
+                text + 'Transform',
+                'wordSpacing'
+            ];
         var b = d.body,
             i = prop.length,
             s, t, o, v, width,
@@ -191,12 +194,12 @@ var TE = function(target) {
     };
 
     // get selection
-    r.$ = function() {
+    r.$ = function(O) {
         var v = val().replace(/\r/g, ""),
             a = target.selectionStart,
             b = target.selectionEnd,
             c = v.substring(a, b),
-            o = [offset(a), offset(b)];
+            o = O ? [offset(a), offset(b)] : [];
         return {
             start: a,
             end: b,
@@ -228,7 +231,7 @@ var TE = function(target) {
             }
             arg[1] = arg[0];
         }
-        target.setSelectionRange(arg[0], arg[1]); // default `r.select(7, 100)`
+        c.setSelectionRange(arg[0], arg[1]); // default `r.select(7, 100)`
         z = r.restore(id, [0, 0, 0]);
         a[D] = z[0];
         b[D] = z[1];
@@ -450,7 +453,7 @@ var TE = function(target) {
 (function(r) {
 
     // Plugin version
-    r.version = '2.1.4';
+    r.version = '2.2.0';
 
     // Key maps for the deprecated `KeyboardEvent.keyCode`
     r.keys = {

@@ -60,7 +60,7 @@ d</textarea>
     caret[1].style.visibility = 'hidden';
     caret[1].style.pointerEvents = 'none';
     function pos() {
-        var $ = editor.$(),
+        var $ = editor.$(true),
             e = editor.target;
         caret[0].style.top = (e.offsetTop + $.caret[0].y - e.scrollTop) + 'px';
         caret[0].style.left = (e.offsetLeft + $.caret[0].x - e.scrollLeft) + 'px';
@@ -79,7 +79,7 @@ d</textarea>
     };
     ['scroll', 'keydown', 'cut', 'paste', 'mouseup', 'select'].forEach(function(e) {
         editor.target['on' + e] = function() {
-            setTimeout(pos, .1);
+            setTimeout(pos, 1);
         };
     });
 

@@ -110,10 +110,10 @@ editor.blur();
 
 ### Get Selection
 
-A method to capture the current text selection:
+A method to capture the current text selection. Set the first parameter to `true` to capture the caret offset from text area in pixel(s):
 
 ~~~ .javascript
-console.log(editor.$());
+console.log(editor.$(true));
 ~~~
 
 ~~~ .javascript
