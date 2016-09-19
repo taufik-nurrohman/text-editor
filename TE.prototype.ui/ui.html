@@ -54,7 +54,7 @@
             click: function(e, $) {
                 $.ui.confirm(
                     'Confirm', // title
-                    'Are you sure?', // content
+                    'Are you sure?', // description
                     function(e, $) { // if yes ...
                         $.insert('[yes]');
                     },
@@ -81,7 +81,7 @@
     });
 
     // put the custom tool(s) to the editor toolbar
-    editor.refresh({
+    editor.update({
         tools: 'bold italic | undo redo | alert_button confirm_button prompt_button'
     });
 

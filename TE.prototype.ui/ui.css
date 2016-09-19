@@ -15,6 +15,18 @@
   -moz-box-sizing:border-box;
   box-sizing:border-box;
 }
+.text-editor ::-webkit-input-placeholder {
+  opacity:.2;
+  color:inherit;
+}
+.text-editor ::-moz-placeholder {
+  opacity:.2;
+  color:inherit;
+}
+.text-editor ::placeholder {
+  opacity:.2;
+  color:inherit;
+}
 .text-editor-header,
 .text-editor-body,
 .text-editor-footer {
@@ -31,7 +43,7 @@
   border:1px solid #eee;
   border-top-color:#ddd;
   font:inherit;
-  color:#000;
+  color:#444;
   padding:.5em;
 }
 .text-editor-textarea {
@@ -192,7 +204,5 @@
   text-align:center;
   cursor:pointer;
 }
-.text-editor-modal-x:before {
-  content:'\2715';
-}
+.text-editor-modal-x:before {content:'\2715'}
 .text-editor-preview {cursor:pointer}

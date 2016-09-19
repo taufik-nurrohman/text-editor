@@ -13,6 +13,15 @@
       font-size:16px;
       color:#000;
     }
+    pre {
+      background:#ffc;
+      padding:.5em;
+      overflow:auto;
+    }
+    mark {
+      background:#ff0;
+      color:inherit;
+    }
     .text-editor-content {height:300px}
     </style>
   </head>
@@ -20,6 +29,54 @@
     <form action="#">
       <p><textarea></textarea></p>
     </form>
+    <div>
+      <h1>Keyboard Shortcuts</h1>
+      <!-- tab: &#8677; alt: \u2325, &#8997; shift: \u21E7, &#8679; -->
+      <ul>
+        <li><kbd>&#8984;+b</kbd> &rarr; Bold</li>
+        <li><kbd>&#8984;+g</kbd> &rarr; Image</li>
+        <li><kbd>&#8984;+h</kbd> &rarr; Header</li>
+        <li><kbd>&#8984;+i</kbd> &rarr; Italic</li>
+        <li><kbd>&#8984;+k</kbd> &rarr; Code</li>
+        <li><kbd>&#8984;+l</kbd> &rarr; Link</li>
+        <li><kbd>&#8984;+q</kbd> &rarr; Quote</li>
+        <li><kbd>&#8984;+r</kbd> &rarr; Horizontal Rule</li>
+        <li><kbd>&#8984;+u</kbd> &rarr; Underline</li>
+        <li><kbd>&#8984;+y</kbd> &rarr; Redo</li>
+        <li><kbd>&#8984;+z</kbd> &rarr; Undo</li>
+        <li><kbd>&#8984;++</kbd> &rarr; List</li>
+        <li><kbd>&#8984;+-</kbd> &rarr; Bullet</li>
+        <li><kbd>&#8984;+&#10008;</kbd> &rarr; Strike</li>
+        <li><kbd>&#8984;+&darr;</kbd> &rarr; Subscript</li>
+        <li><kbd>&#8984;+&uarr;</kbd> &rarr; Superscript</li>
+        <li><kbd>&#8984;+&#8629;</kbd> &rarr; Paragraph</li>
+        <li><kbd>&#8679;+&#8629;</kbd> &rarr; Line Break</li>
+        <li><kbd>&#10008;</kbd> &rarr; Clear Format &rarr; Delete</li>
+        <li><kbd>&#8629;</kbd> &rarr; <em>Depends</em></li>
+      </ul>
+      <h2>Depends &rarr; Special Cases</h2>
+      <p>Try pressing the <kbd>&#8629;</kbd> key in these position, where <code>|</code> represent the text editor caret.</p>
+      <pre><code>&lt;p&gt;<mark>|</mark>&lt;/p&gt;</code></pre>
+      <pre><code>&lt;p class="foo"&gt;<mark>|</mark>&lt;/p&gt;</code></pre>
+      <pre><code>&lt;p&gt;foo<mark>|</mark>&lt;/p&gt;</code></pre>
+      <pre><code>&lt;p class="foo"&gt;foo<mark>|</mark>&lt;/p&gt;</code></pre>
+      <pre><code>&lt;ul&gt;
+  &lt;li&gt;<mark>|</mark>&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      <pre><code>&lt;ul&gt;
+  &lt;li class="foo"&gt;<mark>|</mark>&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      <pre><code>&lt;ul&gt;
+  &lt;li&gt;foo<mark>|</mark>&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      <pre><code>&lt;ul&gt;
+  &lt;li&gt;&lt;a href="#"&gt;foo&lt;/a&gt;<mark>|</mark>&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      <pre><code>&lt;ul&gt;
+  &lt;li class="foo"&gt;&lt;a href="#"&gt;foo&lt;/a&gt;<mark>|</mark>&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      <pre><code>    <mark>|</mark></code></pre>
+    </div>
     <script src="../text-editor.min.js"></script>
     <script src="../TE.prototype.ui/ui.min.js"></script>
     <script src="../TE.HTML/TE.HTML.min.js"></script>
