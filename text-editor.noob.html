@@ -16,7 +16,6 @@
       height:200px;
     }
     </style>
-    <script src="text-editor.min.js"></script>
   </head>
   <body>
     <h1>HTML Editor</h1>
@@ -36,11 +35,12 @@ a
 b
 c
 d</textarea>
+    <script src="text-editor.min.js"></script>
     <script>
 
     TE.prototype.toggleWrap = function(a, b, c) {
-        A = this.esc(a);
-        B = this.esc(b);
+        A = this._.esc(a);
+        B = this._.esc(b);
         var $ = this.$(),
             m = new RegExp('^' + A + '(.*?)' + B + '$'),
             m_A = new RegExp(A + '$'),

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Text Editor</title>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../TE.prototype.ui/ui.min.css" rel="stylesheet">
+    <style>
+    body {
+      background:#fff;
+      font-family:Helmet,FreeSans,Sans-Serif;
+      font-size:16px;
+      color:#000;
+    }
+    .text-editor-content {height:300px}
+    </style>
+  </head>
+  <body>
+    <form action="#">
+      <p><textarea></textarea></p>
+    </form>
+    <script src="../text-editor.min.js"></script>
+    <script src="../TE.prototype.ui/ui.min.js"></script>
+    <script src="../TE.HTML/TE.HTML.min.js"></script>
+    <script>
+
+    var editor = new TE.HTML(document.querySelector('textarea'), {
+        tab: '  '
+    });
+
+    </script>
+  </body>
+</html>

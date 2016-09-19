@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.2.0
+ *  TEXT EDITOR PLUGIN 2.3.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -14,7 +14,7 @@ var TE = function(target) {
         r = this,
         _ = 1, // cache of history length
         F = 0, // history feature is active
-        H = [[val(), 0, 0]], // load the first history data
+        H = [[val(), 0, 0, 0]], // load the first history data
         I = 0, // current state of history
         S = {}, // storage
         div = d.createElement('div'),
@@ -62,8 +62,12 @@ var TE = function(target) {
         return x instanceof RegExp && x.source ? x.source : false;
     }
 
+    function is_node(x) {
+        return x instanceof HTMLElement;
+    }
+
     function get_pattern(x) {
-        return is_pattern(x) || r.esc(x);
+        return is_pattern(x) || r._.esc(x);
     }
 
     function edge(a, b, c) {
@@ -80,35 +84,54 @@ var TE = function(target) {
         return parseInt(x, 10);
     }
 
+    function css(a, b) {
+        var o = w.getComputedStyle(a);
+        return b ? o[b.replace(/\-([a-z])/g, function(a, b) {
+            return b.toUpperCase();
+        })] : o;
+    }
+
+    function extend(a, b) {
+        b = b || {};
+        for (var i in b) {
+            if (is_object(a[i]) && !is_node(a[i])) {
+                a[i] = extend(a[i], b[i]);
+            } else {
+                a[i] = b[i];
+            }
+        }
+        return a;
+    }
+
     // <https://github.com/component/textarea-caret-position>
     function offset(x) {
-        var font = 'font',
-            text = 'text',
-            padding = 'padding',
+        var font = 'font-',
+            text = 'text-',
+            padding = 'padding-',
             prop = [
-                'boxSizing',
+                'box-sizing',
                 'direction',
-                font + 'Family',
-                font + 'Size',
-                font + 'SizeAdjust',
-                font + 'Stretch',
-                font + 'Style',
-                font + 'Variant',
-                font + 'Weight',
+                font + 'family',
+                font + 'size',
+                font + 'size-adjust',
+                font + 'stretch',
+                font + 'style',
+                font + 'variant',
+                font + 'weight',
                 'height',
-                'letterSpacing',
-                'lineHeight',
-                'overflowX',
-                padding + 'Bottom',
-                padding + 'Left',
-                padding + 'Right',
-                padding + 'Top',
-                'tabSize',
-                text + 'Align',
-                text + 'Decoration',
-                text + 'Indent',
-                text + 'Transform',
-                'wordSpacing'
+                'letter-pacing',
+                'line-height',
+                'overflow-x',
+                padding + 'bottom',
+                padding + 'left',
+                padding + 'right',
+                padding + 'top',
+                'tab-size',
+                text + 'align',
+                text + 'decoration',
+                text + 'indent',
+                text + 'transform',
+                'word-spacing'
             ];
         var b = d.body,
             i = prop.length,
@@ -116,7 +139,7 @@ var TE = function(target) {
             input = target.nodeName === 'INPUT';
         b.appendChild(div);
         s = div.style;
-        t = getComputedStyle(target);
+        t = css(target);
         width = num(t.width);
         s.whiteSpace = 'pre-wrap';
         if (!input) {
@@ -148,6 +171,16 @@ var TE = function(target) {
 
     // access editor instance from `this` scope with `this.TE`
     target.TE = r;
+
+    // scroll the editor
+    r.scroll = function(i) {
+        var current = target.scrollTop,
+            h = num(css(target, 'line-height'));
+        if (!is_set(i)) {
+            return Math.floor(current / h);
+        }
+        return target.scrollTop = h * i, r;
+    };
 
     // set value
     r.set = function(v) {
@@ -247,6 +280,10 @@ var TE = function(target) {
 
     // replace at selection
     r.replace = function(f, t) {
+        if (!is_set(t) && !is_pattern(f)) {
+            t = f;
+            f = /^[\s\S]*?$/;
+        }
         var $ = r.$(),
             a = $.start,
             b = $.end,
@@ -303,15 +340,21 @@ var TE = function(target) {
         var $ = r.$(),
             a = $.before,
             b = $.after,
-            c = $.value;
+            c = $.value,
+            A, B, before, after;
         O = get_pattern(O);
         C = get_pattern(C);
+        before = pattern(O + '$');
+        after = pattern('^' + C);
         if (wrap) {
             return r.replace(pattern('^' + O + '([\\s\\S]*?)' + C + '$'), '$1');
         }
-        var A = a.replace(pattern(O + '$'), ""),
-            B = b.replace(pattern('^' + C), "");
-        return r.set(A + c + B).select(A.length, (A + c).length).record();
+        if (before.test(a) && after.test(b)) {
+            A = a.replace(before, "");
+            B = b.replace(after, "");
+            return r.set(A + c + B).select(A.length, (A + c).length).record();
+        }
+        return r.select();
     };
 
     // indent
@@ -373,7 +416,7 @@ var TE = function(target) {
             v = val(),
             w = $.start,
             x = $.end,
-            a = is_set(a) ? a : [v, w, x];
+            a = is_set(a) ? a : [v, w, x, r.scroll()];
         if (o && is_object(o) && (
             o[0] === v &&
             o[1] === w &&
@@ -410,7 +453,7 @@ var TE = function(target) {
         I--;
         I = edge(I, 0, _ - 1);
         var a = H[I];
-        return r.set(a[0]).select(a[1], a[2]);
+        return r.set(a[0]).select(a[1], a[2]).scroll(a[3]);
     };
 
     // redo
@@ -418,18 +461,63 @@ var TE = function(target) {
         I++;
         I = edge(I, 0, _ - 1);
         var a = H[I];
-        return r.set(a[0]).select(a[1], a[2]);
+        return r.set(a[0]).select(a[1], a[2]).scroll(a[3]);
     };
 
-    // escape regex character(s)
-    r.esc = function(x) {
-        if (is_object(x)) {
-            var o = [],
-                i = x.length;
-            while (i--) o.unshift(r.esc(x[i]));
-            return o;
-        }
-        return x.replace(pattern('[' + r.x.replace(/./g, '\\$&') + ']', 'g'), '\\$&');
+    // utility ...
+    r._ = {
+        // capture current time
+        time: function() {
+            var time = new Date(),
+                year = time.getFullYear(),
+                month = time.getMonth() + 1,
+                date = time.getDate(),
+                hour = time.getHours(),
+                minute = time.getMinutes(),
+                second = time.getSeconds(),
+                millisecond = time.getMilliseconds();
+            if (month < 10) month = '0' + month;
+            if (date < 10) date = '0' + date;
+            if (hour < 10) hour = '0' + hour;
+            if (minute < 10) minute = '0' + minute;
+            if (second < 10) second = '0' + second;
+            if (millisecond < 10) millisecond = '0' + millisecond;
+            return [
+                "" + year,
+                "" + month,
+                "" + date,
+                "" + hour,
+                "" + minute,
+                "" + second,
+                "" + millisecond
+            ];
+        },
+        // escape regex character(s)
+        esc: function(x) {
+            if (is_object(x)) {
+                var o = [],
+                    i = x.length;
+                while (i--) o.unshift(r._.esc(x[i]));
+                return o;
+            }
+            return x.replace(pattern('[' + r.x.replace(/./g, '\\$&') + ']', 'g'), '\\$&');
+        },
+        // extend object ...
+        extend: extend,
+        // iterate ...
+        each: function(a, fn) {
+            var x;
+            for (var i in a) {
+                x = fn(a[i], i, a);
+                if (x === true) {
+                    continue;
+                } else if (x === false) {
+                    break;
+                }
+            }
+            return a;
+        },
+        css: css
     };
 
     // disable the history feature
@@ -453,7 +541,7 @@ var TE = function(target) {
 (function(r) {
 
     // Plugin version
-    r.version = '2.2.0';
+    r.version = '2.3.0';
 
     // Key maps for the deprecated `KeyboardEvent.keyCode`
     r.keys = {

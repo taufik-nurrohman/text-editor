@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Text Editor</title>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../TE.prototype.ui/ui.min.css" rel="stylesheet">
+    <style>
+    body {
+      background:#fff;
+      font-family:Helmet,FreeSans,Sans-Serif;
+      font-size:16px;
+      color:#000;
+    }
+    .text-editor-content {height:300px}
+    </style>
+  </head>
+  <body>
+    <form action="#">
+      <p><textarea></textarea></p>
+      <p>
+        <button onclick="return this.disabled = true, this.nextElementSibling.disabled = false, editor.create(), false;" disabled>Create</button>
+        <button onclick="return this.disabled = true, this.previousElementSibling.disabled = false, editor.destroy(), false;">Destroy</button>
+      </p>
+    </form>
+    <script src="../text-editor.min.js"></script>
+    <script src="../TE.prototype.ui/ui.min.js"></script>
+    <script>
+
+    var editor = new TE(document.querySelector('textarea')),
+        ui = editor.create({
+            tab: '  '
+        });
+
+    // add custom tool(s)
+    editor._.extend(ui.tools, {
+        bold: function(e, $) {
+            $.format('strong');
+        },
+        italic: function(e, $) {
+            $.format('em');
+        },
+        alert_button: {
+            i: 'exclamation-triangle',
+            title: 'Show Alert Modal',
+            click: function(e, $) {
+                $.ui.alert('Alert', 'Lorem ipsum dolor sit amet.');
+            }
+        },
+        confirm_button: {
+            i: 'question-circle',
+            title: 'Show Confirm Modal',
+            click: function(e, $) {
+                $.ui.confirm(
+                    'Confirm', // title
+                    'Are you sure?', // content
+                    function(e, $) { // if yes ...
+                        $.insert('[yes]');
+                    },
+                    function(e, $) { // if no ...
+                        $.insert('[no]');
+                    }
+                );
+            }
+        },
+        prompt_button: {
+            i: 'pencil',
+            title: 'Show Prompt Modal',
+            click: function(e, $) {
+                $.ui.prompt(
+                    'Name', // title
+                    'Anonymous', // placeholder
+                    true, // is required?
+                    function(e, $, value) { // if yes ...
+                        $.insert('Your name is: ' + value);
+                    }
+                );
+            }
+        }
+    });
+
+    // put the custom tool(s) to the editor toolbar
+    editor.refresh({
+        tools: 'bold italic | undo redo | alert_button confirm_button prompt_button'
+    });
+
+    // custom hook(s)
+    editor._.hook.set('on:preview', function(value, container) {
+        var mean = /<(script|iframe)(\s[^<>]*?)?>.*?<\/(script|iframe)>/gi;
+        if (mean.test(value)) {
+            container.innerHTML = value.replace(mean, '<mark>Tag <code>$1</code> is not allowed.</mark>');
+        }
+    });
+    editor._.hook.set('create', function() {
+        editor.set('create!');
+    });
+    editor._.hook.set('destroy', function() {
+        editor.set('destroy!');
+    });
+
+    </script>
+  </body>
+</html>

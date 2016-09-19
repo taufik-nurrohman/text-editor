@@ -22,7 +22,6 @@
     }
     pre:empty {display:none}
     </style>
-    <script src="text-editor.min.js"></script>
   </head>
   <body>
     <h1>Selection Test</h1>
@@ -90,10 +89,6 @@ d</textarea>
       <button onclick="return editor_1.trim(' ', ' '), false;">force a space before and after caret/selection</button>
       <button onclick="return editor_1.trim('\n\n', '\n\n'), false;">force line-break before and after caret/selection</button>
     </p>
-    <script>
-    var editor_1 = new TE(document.getElementById('area-1')),
-        dump_1 = document.getElementById('dump-1');
-    </script>
     <hr>
     <h1>History Test</h1>
     <pre id="dump-2"></pre>
@@ -107,8 +102,11 @@ d</textarea>
       <button onclick="return editor_2.loss(), false;">remove the last history</button>
       <button onclick="return editor_2.loss(1), false;">remove the 2<sup>nd</sup> history</button>
     </p>
+    <script src="text-editor.min.js"></script>
     <script>
-    var editor_2 = new TE(document.getElementById('area-2')),
+    var editor_1 = new TE(document.getElementById('area-1')),
+        editor_2 = new TE(document.getElementById('area-2')),
+        dump_1 = document.getElementById('dump-1'),
         dump_2 = document.getElementById('dump-2');
     editor_2.target.onkeydown = function(e) {
         var the = this;
