@@ -57,12 +57,11 @@ TE.HTML = function(target, o) {
                 modals: {
                     link: {
                         title: ['URL', 'Title'],
-                        placeholder: ['http://', 'link title goes here' + _u2026],
-                        text: 'link text'
+                        placeholder: ['http://', 'link title here' + _u2026]
                     },
                     image: {
                         title: ['Source URL', 'Caption'],
-                        placeholder: ['http://', 'image caption goes here' + _u2026]
+                        placeholder: ['http://', 'image caption here' + _u2026]
                     }
                 }
             },
@@ -117,6 +116,7 @@ TE.HTML = function(target, o) {
         suffix = config.suffix,
         attrs = '(?:\\s[^<>]*?)?',
         attrs_capture = '(|\\s[^<>]*?)',
+        placeholder = languages.others.placeholder,
         parent_tree;
 
     function is_node(x) {
@@ -244,7 +244,7 @@ TE.HTML = function(target, o) {
                     $.blur().ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v) {
                         title = v.replace(/"/g, '&quot;').replace(/'/g, '&apos;');
                         if (!$.$().length) {
-                            $.insert(i18n.text);
+                            $.insert(placeholder);
                         }
                         extra = x ? ' rel="nofollow" target="_blank"' : "";
                         $.gap(' ').wrap('<' + a + ' href="' + href + '"' + (title ? ' title="' + title + '"' : "") + extra + '>', '</' + get_o(a) + '>');
@@ -408,7 +408,7 @@ TE.HTML = function(target, o) {
                         return a.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
                     })[1]();
                 } else {
-                    $[0]().gap('\n\n').wrap('<' + pre + '><' + code + '>', '</' + code_o + '></' + pre_o + '>').replace(all, function(a) {
+                    $[0]().gap('\n\n').wrap('<' + pre + '><' + code + '>', '</' + code_o + '></' + pre_o + '>').insert(s.length ? s.value : placeholder).replace(all, function(a) {
                         return a.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                     })[1]();
                 }

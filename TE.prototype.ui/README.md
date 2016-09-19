@@ -36,6 +36,7 @@ Create a text editor with graphic user interface:
 
 ~~~ .javascript
 editor.create({
+    keys: true, // enable/disable keyboard shortcut feature
     tab: '  ', // indent size
     tools: 'undo redo',
     languages: {
@@ -55,7 +56,9 @@ editor.create({
             ignore: 'Ignore'
         },
         others: {
+            placeholder: 'text here…',
             preview: 'Preview',
+            _word: '%1 Word',
             _words: '%1 Words'
         }
     },
@@ -343,7 +346,7 @@ editor.ui.tools.bold = {
 };
 ~~~
 
-A tool with value as function will use that function as the `click` property:
+A tool with function value will be used as the `click` property:
 
 ~~~ .javascript
 // this…
@@ -393,7 +396,7 @@ editor.ui.key('control+b', function(e, $) { … });
 
 #### Notes
 
-A key with value as string will use that string as an object key to take a tool item from `editor.ui.tools` if any:
+A key with string value will be used to take a tool item from the `editor.ui.tools` if available:
 
 ~~~ .javascript
 // this…

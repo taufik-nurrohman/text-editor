@@ -10,6 +10,7 @@
 var TE_ui = function(o, editor) {
 
     var _u2318 = '\u2318', // command sign
+        _u2026 = '\u2026', // horizontal ellipsis
 
         win = window,
         doc = document,
@@ -41,6 +42,7 @@ var TE_ui = function(o, editor) {
                     ignore: 'Ignore'
                 },
                 others: {
+                    placeholder: 'text here' + _u2026,
                     preview: 'Preview',
                     _word: '%1 Word',
                     _words: '%1 Words'
@@ -64,7 +66,8 @@ var TE_ui = function(o, editor) {
         _FOCUS = 'focus',
         _BLUR = 'blur',
         _INPUT = 'input',
-        target_events = _BLUR + ' ' + _COPY + ' ' + _CUT + ' ' + _FOCUS + ' ' + _INPUT + ' ' + _KEYDOWN + ' ' + _PASTE;
+        target_events = _BLUR + ' ' + _COPY + ' ' + _CUT + ' ' + _FOCUS + ' ' + _INPUT + ' ' + _KEYDOWN + ' ' + _PASTE,
+        i18n = config.languages;
 
     // add `gap` method to `TE`
     editor.gap = function(a, b) {
@@ -78,7 +81,7 @@ var TE_ui = function(o, editor) {
     editor.format = function(node, wrap, gap_1, gap_2) {
         if (!is_set(gap_1)) gap_1 = ' ';
         if (!is_set(gap_2)) gap_2 = "";
-        var $ = editor.$(),
+        var s = editor[0]().$(),
             a = '<' + node + '>' + gap_2,
             b = gap_2 + '</' + node.split(' ')[0] + '>',
             A = editor._.esc(a),
@@ -87,21 +90,26 @@ var TE_ui = function(o, editor) {
             m_A = pattern(A + '$'),
             m_B = pattern('^' + B),
             gap_11 = gap_1,
-            gap_12 = gap_1;
-        if (/<[^\/<>]+?>$/.test($.before)) gap_11 = "";
-        if (/^<\/[^<>]+?>/.test($.after)) gap_12 = "";
+            gap_12 = gap_1,
+            before = s.before,
+            after = s.after;
+        if (/<[^\/<>]+?>$/.test(before)) gap_11 = "";
+        if (/^<\/[^<>]+?>/.test(after)) gap_12 = "";
+        if (!s.length) {
+            editor.insert(i18n_others.placeholder);
+        }
         return editor.toggle(
             // when ...
-            wrap ? !m.test($.value) : (!m_A.test($.before) && !m_B.test($.after)),
+            wrap ? !m.test(s.value) : (!m_A.test(before) && !m_B.test(after)),
             // do ...
             [
                 // first toggle
                 function($) {
-                    $[0]().unwrap(a, b, 1).gap(gap_11, gap_12).wrap(a, b, wrap)[1]();
+                    $.unwrap(a, b, 1).gap(gap_11, gap_12).wrap(a, b, wrap)[1]();
                 },
                 // second toggle (the reset state)
                 function($) {
-                    $[0]().unwrap(a, b, wrap)[1]();
+                    $.unwrap(a, b, wrap)[1]();
                 }
             ]
         );
@@ -282,7 +290,6 @@ var TE_ui = function(o, editor) {
 
     var c = config.classes,
         prefix = c.editor,
-        i18n = config.languages,
         i18n_tools = i18n.tools,
         i18n_buttons = i18n.buttons,
         i18n_others = i18n.others,

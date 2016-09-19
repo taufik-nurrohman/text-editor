@@ -429,50 +429,6 @@ editor.target.onkeydown = function(e) {
 };
 ~~~
 
-Utility
--------
-
-Helper functions:
-
-Get current time as an array of year, month, day, hour, minute, second and millisecond:
-
-~~~ .javascript
-console.log(editor._.time());
-~~~
-
-Escape regular expression characters:
-
-~~~ .javascript
-// should return `<div class="foo">\\n\\ncontent\\n\\n<\\/div>`
-var s = editor._.esc('<div class="foo">\n\ncontent\n\n</div>');
-var regex = new RegExp(s, 'g');
-~~~
-
-Extend two objects:
-
-~~~ .javascript
-options = editor._.extend(options, {
-    foo: 'bar',
-    baz: {
-        qux: 4
-    }
-});
-~~~
-
-Object/array iterator:
-
-~~~ .javascript
-editor._.each(array, function(value, key) {
-    // do something…
-});
-~~~
-
-Get current CSS value of a HTML element:
-
-~~~ .javascript
-var text_height = editor._.css(element, 'line-height');
-~~~
-
 Examples
 --------
 
@@ -486,3 +442,8 @@ Modules
 
  - [Persistent Storage](https://rawgit.com/tovic/text-editor/master/TE.prototype.storage/storage.html)
  - [User Interface](https://rawgit.com/tovic/text-editor/master/TE.prototype.ui/ui.html)
+
+Plugins
+-------
+
+ - [HTML Text Editor](https://rawgit.com/tovic/text-editor/master/TE.HTML/TE.HTML.html)
