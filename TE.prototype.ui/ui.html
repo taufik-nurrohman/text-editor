@@ -22,6 +22,7 @@
       <p>
         <button onclick="return this.disabled = true, this.nextElementSibling.disabled = false, editor.create(), false;" disabled>Create</button>
         <button onclick="return this.disabled = true, this.previousElementSibling.disabled = false, editor.destroy(), false;">Destroy</button>
+        <button onclick="return editor.ui.tools.bold.click(null, editor), false;">Trigger Bold Button</button>
       </p>
     </form>
     <script src="../text-editor.min.js"></script>
