@@ -117,6 +117,7 @@ TE.HTML = function(target, o) {
         suffix = config.suffix,
         attrs = '(?:\\s[^<>]*?)?',
         attrs_capture = '(|\\s[^<>]*?)',
+        content = '([\\s\\S]*?)',
         placeholder = languages.others.placeholder,
         tree_parent;
 
@@ -134,6 +135,10 @@ TE.HTML = function(target, o) {
 
     function pattern(a, b) {
         return new RegExp(a, b);
+    }
+
+    function trim(s) {
+        return s.replace(/^\s*|\s*$/g, "");
     }
 
     function get_o(s) {
@@ -197,7 +202,7 @@ TE.HTML = function(target, o) {
         [1]();
     }
 
-    function start_p(e, $) {
+    function auto_p(e, $) {
         if (!$.get(0)) {
             ui.tools.p.click(e, $);
         }
@@ -221,25 +226,25 @@ TE.HTML = function(target, o) {
         b: {
             i: 'bold',
             click: function(e, $) {
-                return start_p(e, $).format(formats.b), false;
+                return auto_p(e, $).format(formats.b), false;
             }
         },
         i: {
             i: 'italic',
             click: function(e, $) {
-                return start_p(e, $).format(formats.i), false;
+                return auto_p(e, $).format(formats.i), false;
             }
         },
         u: {
             i: 'underline',
             click: function(e, $) {
-                return start_p(e, $).format(formats.u), false;
+                return auto_p(e, $).format(formats.u), false;
             }
         },
         s: {
             i: 'strikethrough',
             click: function(e, $) {
-                return start_p(e, $).format(format(formats.s, $._.time())), false;
+                return auto_p(e, $).format(format(formats.s, $._.time())), false;
             }
         },
         a: {
@@ -248,7 +253,7 @@ TE.HTML = function(target, o) {
                 var a = formats.a,
                     i18n = languages.modals.a,
                     href, title;
-                return start_p(e, $).record().ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
+                return $.record().ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
                     href = v;
                     // automatic `rel="nofollow"` attribute
                     var host = win.location.host,
@@ -258,7 +263,7 @@ TE.HTML = function(target, o) {
                     if (/^([.\/?&#]|javascript:)/.test(href)) x = 0;
                     $.blur().ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v) {
                         title = v.replace(/"/g, '&quot;').replace(/'/g, '&apos;');
-                        if (!$.$().length) {
+                        if (!auto_p(e, $).$().length) {
                             $.insert(placeholder);
                         }
                         extra = x ? ' rel="nofollow" target="_blank"' : "";
@@ -277,7 +282,7 @@ TE.HTML = function(target, o) {
                     alt = s.value.replace(/<.*?>/g, ""),
                     i18n = languages.modals.img,
                     src, title;
-                return start_p(e, $).record().ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
+                return $.record().ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
                     src = v;
                     $.blur().ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v) {
                         title = v;
@@ -286,7 +291,7 @@ TE.HTML = function(target, o) {
                         }
                         $[0]().insert("");
                         if (!title) {
-                            $.gap(/<[^\/<>]+?>\s*$/.test(s.before) ? "" : ' ', "").insert('<' + img + ' alt="' + alt + '" src="' + src + '"' + suffix + ' ', -1);
+                            auto_p(e, $).gap(/<[^\/<>]+?>\s*$/.test(s.before) ? "" : ' ', "").insert('<' + img + ' alt="' + alt + '" src="' + src + '"' + suffix + ' ', -1);
                         } else {
                             $.gap('\n\n', "").insert('<' + figure + '>\n' + tab + '<' + img + ' alt="' + alt + '" src="' + src + '"' + suffix + '\n' + tab + '<' + figcaption + '>' + title + '</' + get_o(figcaption) + '>\n</' + get_o(figure) + '>\n\n', -1);
                         }
@@ -301,7 +306,7 @@ TE.HTML = function(target, o) {
                 var sub = formats.sub,
                     sup = formats.sup,
                     sup_o = get_o(sup);
-                return start_p(e, $)[0]()
+                return auto_p(e, $)[0]()
                     .unwrap(pattern('<' + sup_o + attrs + '>'), '</' + sup_o + '>')
                     .format(sub)
                 [1](), false;
@@ -313,7 +318,7 @@ TE.HTML = function(target, o) {
                 var sub = formats.sub,
                     sup = formats.sup,
                     sub_o = get_o(sub);
-                return start_p(e, $)[0]()
+                return auto_p(e, $)[0]()
                     .unwrap(pattern('<' + sub_o + attrs + '>'), '</' + sub_o + '>')
                     .format(sup)
                 [1](), false;
@@ -344,7 +349,7 @@ TE.HTML = function(target, o) {
                         $[0]().format(p, 0, '\n\n')[1]();
                     }
                 } else {
-                    var par = pattern('^(?:\\s*<' + p_o + attrs + '>\\s*)+([\\s\\S]*?)(?:\\s*<\\/' + p_o + '>\\s*)+$');
+                    var par = pattern('^(?:\\s*<' + p_o + attrs + '>\\s*)+' + content + '(?:\\s*<\\/' + p_o + '>\\s*)+$');
                     if (par.test(s.value)) {
                         $[0]()
                             .replace(par, '$1')
@@ -431,7 +436,7 @@ TE.HTML = function(target, o) {
                     A = '\\s*<\\/' + code_o + '>\\s*<\\/' + pre_o + '>',
                     before = pattern(B + '\\s*$'),
                     after = pattern('^\\s*' + A),
-                    any = /^[\s\S]*?$/;
+                    any = pattern('^' + content + '$');
                 function encode(a) {
                     return x ? a.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : a;
                 }
@@ -460,7 +465,7 @@ TE.HTML = function(target, o) {
                     ol_o = get_o(ol),
                     ul_o = get_o(ul),
                     s = ul_o + '|' + ol_o;
-                if ($.match(pattern('<' + s + attrs + '>([\\s\\S]*?)<\\/' + s + '>'))) {
+                if ($.match(pattern('<' + s + attrs + '>' + content + '<\\/' + s + '>'))) {
                     $[0]()
                         .replace(pattern('<' + ol_o + attrs_capture + '>', 'g'), '<' + ul_o + '$1>')
                         .replace(pattern('</' + ol_o + '>', 'g'), '</' + ul_o + '>')
@@ -479,7 +484,7 @@ TE.HTML = function(target, o) {
                     ol_o = get_o(ol),
                     ul_o = get_o(ul),
                     s = ul_o + '|' + ol_o;
-                if ($.match(pattern('<' + s + attrs + '>([\\s\\S]*?)<\\/' + s + '>'))) {
+                if ($.match(pattern('<' + s + attrs + '>' + content + '<\\/' + s + '>'))) {
                     $[0]()
                         .replace(pattern('<' + ul_o + attrs_capture + '>', 'g'), '<' + ol_o + '$1>')
                         .replace(pattern('</' + ul_o + '>', 'g'), '</' + ol_o + '>')
@@ -532,15 +537,20 @@ TE.HTML = function(target, o) {
         },
         'enter': function(e, $) {
             var s = $.$(),
+                v = $.get(),
                 p = formats.p,
                 li = formats.li,
                 p_o = get_o(p),
                 li_o = get_o(li),
-                dent = get_indent(s.before), m;
+                dent = get_indent(s.before), m, n;
             if (!s.length) {
                 if (match = s.after.match(pattern('^\\s*<\\/(' + p_o + '|' + li_o + ')>'))) {
                     m = match[1];
                     ui.tools[m === 'li' ? tree_parent : m].click(e, $);
+                } else if (trim(v).length && s.end === v.length && !pattern('^\\s*<[^\\/<>]+?>' + content + '<\\/[^<>]+?>\\s*$').test(v) && v.indexOf('\n') === -1) {
+                    v = '<' + p + '>' + $.get() + '</' + p_o + '>\n<' + p + '>';
+                    n = '</' + p_o + '>';
+                    $.set(v + n).select(v.length);
                 } else {
                     if (dent.length) {
                         $.insert('\n' + dent, -1).scroll('+');
