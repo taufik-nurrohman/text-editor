@@ -163,7 +163,7 @@ TE.HTML = function(target, o) {
             var match = before.match(pattern('<' + li_o + attrs_capture + '>.*$'));
             if (match) {
                 if (!/>\s*$/.test(before)) {
-                    editor.insert('</' + li_o + '>\n' + dent + '<' + li + '>', -1);
+                    editor.insert('</' + li_o + '>\n' + dent + '<' + li_o + match[1] + '>', -1);
                 } else {
                     if (!pattern('<\\/' + li_o + '>\\s*$').test(before)) {
                         editor.wrap('\n' + dent + tab + '<' + ul + '>\n' + dent + tab + tab + '<' + li_o + match[1] + '>', '</' + li_o + '>\n' + dent + tab + '</' + ul_o + '>\n' + dent);
@@ -548,7 +548,7 @@ TE.HTML = function(target, o) {
                     m = match[1];
                     ui.tools[m === 'li' ? tree_parent : m].click(e, $);
                 } else if (trim(v).length && s.end === v.length && !pattern('^\\s*<[^\\/<>]+?>' + content + '<\\/[^<>]+?>\\s*$').test(v) && v.indexOf('\n') === -1) {
-                    v = '<' + p + '>' + $.get() + '</' + p_o + '>\n<' + p + '>';
+                    v = '<' + p + '>' + v + '</' + p_o + '>\n<' + p + '>';
                     n = '</' + p_o + '>';
                     $.set(v + n).select(v.length);
                 } else {
