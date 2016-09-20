@@ -36,8 +36,9 @@ Create a text editor with graphic user interface:
 
 ~~~ .javascript
 editor.create({
-    keys: true, // enable/disable keyboard shortcut feature
     tab: '  ', // indent size
+    dir: 'ltr',
+    keys: true, // enable/disable keyboard shortcut feature
     tools: 'undo redo',
     languages: {
         tools: {
@@ -138,7 +139,7 @@ editor.ui.confirm(
 ~~~ .javascript
 editor.ui.prompt(
     'Link URL', // title
-    'http://' // pre-defined value
+    'http://', // pre-defined value
     true, // is required?
     function(e, $) { // if yes…
         $.insert('**yes**');
@@ -277,7 +278,7 @@ editor.ui.tools.bold = {
     title: 'Bold Text', // button title
     click: function(e, $) { // action
         // `$` maps to the `editor` so you can use it to trigger the available selection method(s)
-        $.format('strong'); // toggle HTML `<b>` to selection
+        $.format('b'); // toggle HTML `<b>` to selection
         return false; // hijack default event
     }
 };

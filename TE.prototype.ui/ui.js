@@ -23,8 +23,11 @@ var TE_ui = function(o, editor) {
         noop = function() {},
         extend = editor._.extend,
         config = extend({
+            tab: '  ',
+            dir: 'ltr',
             keys: 1,
             tools: 'undo redo',
+            css: 'html,body{background:#fff;color:#000}',
             languages: {
                 tools: {
                     undo: 'Undo (' + _u2318 + '+Z)',
@@ -51,17 +54,16 @@ var TE_ui = function(o, editor) {
             classes: {
                 editor: 'text-editor',
                 i: 'fa fa-%1'
-            },
-            tab: '  '
+            }
         }, o),
         _KEYDOWN = 'keydown',
         _KEYUP = 'keyup',
         _COPY = 'copy',
         _CUT = 'cut',
         _PASTE = 'paste',
-        _MOUSEDOWN = 'mousedown',
-        _MOUSEUP = 'mouseup',
-        _MOUSEMOVE = 'mousemove',
+        _MOUSEDOWN = 'mousedown touchstart',
+        _MOUSEUP = 'mouseup touchend',
+        _MOUSEMOVE = 'mousemove touchmove',
         _CLICK = 'click',
         _FOCUS = 'focus',
         _BLUR = 'blur',
@@ -84,8 +86,8 @@ var TE_ui = function(o, editor) {
         var s = editor[0]().$(),
             a = '<' + node + '>' + gap_2,
             b = gap_2 + '</' + node.split(' ')[0] + '>',
-            A = editor._.esc(a),
-            B = editor._.esc(b),
+            A = editor._.x(a),
+            B = editor._.x(b),
             m = pattern('^' + A + '([\\s\\S]*?)' + B + '$'),
             m_A = pattern(A + '$'),
             m_B = pattern('^' + B),
@@ -173,11 +175,13 @@ var TE_ui = function(o, editor) {
     }
 
     function event_set(id, node, fn) {
+        if (!node) return;
         node.addEventListener(id, fn, false);
         hook_set('on:' + id, fn, dom_id(node));
     }
 
     function event_reset(id, node, fn) {
+        if (!node) return;
         node.removeEventListener(id, fn, false);
         hook_reset('on:' + id, dom_id(node));
     }
@@ -257,22 +261,23 @@ var TE_ui = function(o, editor) {
     function point(node, e) {
         var x = !!e.touches ? e.touches[0].pageX : e.pageX,
             y = !!e.touches ? e.touches[0].pageY : e.pageY,
-            left = offset(node).l,
-            top = offset(node).t;
-        while (node = node.offsetParent) {
-            left += offset(node).l;
-            top += offset(node).t;
-        }
+            o = offset(node);
         return {
-            x: x - left,
-            y: y - top
+            x: x - o.l,
+            y: y - o.t
         };
     }
 
     function offset(node) {
+        var left = node.offsetLeft,
+            top = node.offsetTop;
+        while (node = node.offsetParent) {
+            left += node.offsetLeft;
+            top += node.offsetTop;
+        }
         return {
-            l: node.offsetLeft,
-            t: node.offsetTop
+            l: left,
+            t: top
         };
     }
 
@@ -302,20 +307,27 @@ var TE_ui = function(o, editor) {
         _content = target,
         _description = el_set(prefix + '-description'),
         _overlay = el_set(prefix + '-overlay'),
-        _modal = el_set(prefix + '-modal'),
-        _drop = el_set(prefix + '-drop'),
-        _bubble = el_set(prefix + '-bubble'),
+        _modal = el('div'),
+        _drop = el('div'),
+        _bubble = el('div'),
         _description_left = el_set('left', 'span'),
         _description_right = el_set('right', 'span'),
         _preview = el_set(prefix + '-preview', 'span'),
-        _p = null,
+        _p = 0,
+        _drop_target = 0,
         _button, _icon;
 
-    event_set(_CLICK, _preview, function(e) {
+    events_set(_CLICK, _preview, function(e) {
         var v = editor.get();
         if (!dom_exist(_overlay) && v.length) {
-            r.overlay(v, 0, function() {
-                event_set(_CLICK, _overlay, do_overlay_exit);
+            if (v.indexOf('</html>') === -1) {
+                v = '<!DOCTYPE html><html dir="' + config.dir + '"><head><meta charset="utf-8"><style>' + config.css + '</style></head><body>' + v + '</body></html>';
+            }
+            var frame = el('iframe', false, {
+                'class': prefix + '-portal',
+                src: 'data:text/html,' + encodeURIComponent(v)
+            });
+            r.overlay(frame, 1, function() {
                 hook_fire('on:preview', [v, _overlay.firstChild]);
             });
         } else {
@@ -480,7 +492,66 @@ var TE_ui = function(o, editor) {
         content_set(_description_right, format(i18n_others['_word' + (i === 1 ? "" : 's')], [i]));
     }
 
-    function do_update_source(e) {
+    function do_update_tools() {
+        content_reset(_tool, false);
+        var tools = is_string(config.tools) ? trim(config.tools).split(/\s+/) : config.tools,
+            c_button = prefix + '-button',
+            c_separator = prefix + '-separator',
+            _button_id, tool, icon, is_button, i, v;
+        config.tools = tools;
+        for (i in tools) {
+            v = tools[i];
+            if (!r.tools[v]) continue;
+            tool = r.tools[v];
+            if (is_function(tool)) {
+                r.tools[v].click = tool;
+            }
+            if ((icon = tool.i || v) !== '|') {
+                icon = slug(icon);
+            }
+            is_button = icon !== '|';
+            _button = el_set(is_button ? c_button : c_separator, is_button ? 'a' : 'span');
+            if (is_button) {
+                _button_id = c_button + ':' + slug(v).replace(/\s/g, "");
+                _button.href = 'javascript:;';
+                _button.id = _button_id;
+                _button.setAttribute('data-tool-id', v);
+                icon = '<i class="' + format(c.i, [icon]) + ' ' + _button_id + '"></i>';
+                if (!is_set(tool.active)) {
+                    tool.active = 1;
+                } else if (!tool.active) {
+                    class_set(_button, 'x');
+                }
+                if (tool.text) {
+                    icon = format(tool.text, [icon]);
+                }
+                content_set(_button, icon);
+                if (tool.title) {
+                    _button.title = tool.title;
+                }
+                if (is_object(tool.attributes)) {
+                    el(_button, false, tool.attributes);
+                }
+                events_set(_CLICK, _button, do_click_tool);
+            }
+            dom_set(_tool, _button);
+        }
+    }
+
+    function do_update_keys() {
+        // sort keyboard shortcut(s) ...
+        r.keys = (function() {
+            var a = Object.keys(r.keys).sort().reverse(),
+                b = {}, i;
+            for (i = 0, len = a.length; i < len; ++i) {
+                b[a[i]] = r.keys[a[i]];
+            }
+            return b;
+        })();
+        do_keys_reset(1);
+    }
+
+    function do_update_contents(e) {
         do_word_count(), hook_fire('change', [e, editor]);
     }
 
@@ -508,7 +579,8 @@ var TE_ui = function(o, editor) {
                     ++counts;
                 }
             }
-            if (counts === k.length) {
+            k = k.length;
+            if (counts === k && Object.keys(maps).length === k) {
                 if (is_string(keys[i])) {
                     keys[i] = r.tools[keys[i]].click;
                 }
@@ -522,25 +594,29 @@ var TE_ui = function(o, editor) {
         if (!is_object(e)) {
             maps = {};
         } else {
-            maps[e.TE.key()] = 0;
+            delete maps[e.TE.key()];
         }
     }
 
-    function do_update_source_debounce(e) {
+    function do_update_contents_debounce(e) {
         if (/^focus|blur$/.test(e.type)) {
             do_keys_reset(1);
         }
         timer_reset(bounce);
-        bounce = timer_set(do_update_source, 1000);
+        bounce = timer_set(do_update_contents, 1000);
     }
 
-    function do_button_click(e) {
-        var id = this.hash.replace('#', "");
-        if (r.tools[id] && r.tools[id].click) {
-            r.tools[id].click(e, editor, id);
+    function do_click_tool(e) {
+        var id = this.getAttribute('data-tool-id'),
+            tools = r.tools;
+        _drop_target = e.currentTarget || e.target;
+        if (tools[id] && tools[id].click && tools[id].active) {
+            tools[id].click(e, editor, id);
             hook_fire('change', [e, editor, id]);
-            return event_exit(e);
+        } else {
+            editor.select();
         }
+        return event_exit(e);
     }
 
     editor.create = function(o, hook) {
@@ -548,12 +624,7 @@ var TE_ui = function(o, editor) {
             config = extend(config, o);
         }
         class_set(_content, C);
-        var tools = is_string(config.tools) ? trim(config.tools).split(/\s+/) : config.tools,
-            parent = dom_exist(_content),
-            c_button = prefix + '-button',
-            c_separator = prefix + '-separator',
-            _button_id, tool, icon, is_button, i, v;
-        config.tools = tools;
+        var parent = dom_exist(_content);
         if (parent && parent.tagName.toLowerCase() === 'p') {
             dom_before(parent, _container);
             _p = parent;
@@ -561,6 +632,7 @@ var TE_ui = function(o, editor) {
         } else {
             dom_before(_content, _container);
         }
+        _container.dir = config.dir;
         dom_set(_container, _header);
         dom_set(_container, _body);
         dom_set(_container, _footer);
@@ -571,56 +643,16 @@ var TE_ui = function(o, editor) {
             dom_set(_description, _description_left);
             dom_set(_description, _description_right);
         }
-        if (config.tools) {
-            for (i in tools) {
-                v = tools[i];
-                if (!r.tools[v]) return true;
-                tool = r.tools[v];
-                if (is_function(tool)) {
-                    r.tools[v].click = tool;
-                }
-                if ((icon = tool.i || v) !== '|') {
-                    icon = slug(icon);
-                }
-                is_button = icon !== '|';
-                _button = el_set(is_button ? c_button : c_separator, is_button ? 'a' : 'span');
-                if (is_button) {
-                    _button_id = c_button + ':' + v;
-                    _button.href = '#' + v;
-                    _button.id = _button_id;
-                    icon = '<i class="' + format(c.i, [icon]) + ' ' + _button_id + '"></i>';
-                    if (tool.text) {
-                        icon = format(tool.text, [icon]);
-                    }
-                    content_set(_button, icon);
-                    if (tool.title) {
-                        _button.title = tool.title;
-                    }
-                    if (is_object(tool.attributes)) {
-                        el(_button, false, tool.attributes);
-                    }
-                    event_set(_CLICK, _button, do_button_click);
-                }
-                dom_set(_tool, _button);
-            }
-        }
         if (config.keys) {
-            // re-order hotkey(s) ...
-            r.keys = (function() {
-                var a = Object.keys(r.keys).sort().reverse(),
-                    b = {}, i;
-                for (i = 0, len = a.length; i < len; ++i) {
-                    b[a[i]] = r.keys[a[i]];
-                }
-                return b;
-            })();
-            event_set(_KEYDOWN, _content, do_keys);
-            event_set(_KEYUP, _content, do_keys_reset);
+            events_set(_KEYDOWN, _content, do_keys);
+            events_set(_KEYUP, _content, do_keys_reset);
         }
-        events_set(target_events, _content, do_update_source_debounce);
+        events_set(target_events, _content, do_update_contents_debounce);
         dom_set(_description_left, _preview);
         content_set(_preview, i18n_others.preview);
-        do_update_source();
+        do_update_contents();
+        do_update_tools();
+        do_update_keys();
         return hook !== 0 ? hook_fire('create', [editor]) : editor;
     };
 
@@ -636,14 +668,14 @@ var TE_ui = function(o, editor) {
         class_reset(_content, C);
         config.tools = config.tools.join(' ');
         if (config.keys) {
-            event_reset(_KEYDOWN, _content, do_keys);
-            event_reset(_KEYUP, _content, do_keys_reset);
+            events_reset(_KEYDOWN, _content, do_keys);
+            events_reset(_KEYUP, _content, do_keys_reset);
         }
-        events_reset(target_events, _content, do_update_source_debounce);
+        events_reset(target_events, _content, do_update_contents_debounce);
         if (_p) {
             dom_before(_container, _p);
             dom_set(_p, _content);
-            _p = null;
+            _p = 0;
         } else {
             dom_before(_container, _content);
         }
@@ -652,20 +684,20 @@ var TE_ui = function(o, editor) {
     };
 
     r.tool = function(id, data, i) {
+        config.tools = config.tools.filter(function(v) {
+            return v !== id;
+        });
         if (data === false) {
             delete r.tools[id];
-            config.tools = config.tools.filter(function(v) {
-                return v !== id;
-            });
         } else {
-            r.tools[id] = data;
+            r.tools[id] = extend((r.tools[id] || {}), data);
             if (is_number(i)) {
                 config.tools.splice(i, 0, id);
             } else {
                 config.tools.push(id);
             }
         }
-        return editor.update(0);
+        return do_update_tools(), editor;
     };
 
     r.key = function(keys, data) {
@@ -674,7 +706,7 @@ var TE_ui = function(o, editor) {
         } else {
             r.keys[keys] = data;
         }
-        return editor.update(0);
+        return do_update_keys(), editor;
     };
 
     var drag = 0,
@@ -687,14 +719,33 @@ var TE_ui = function(o, editor) {
         O = {},
         o;
 
+    function do_overlay_exit() {
+        r.exit(1);
+    }
+
+    function do_drop_exit(e) {
+        var a = _drop_target,
+            b = _drop,
+            c = (e && e.target) || 0;
+        if (!c || (c !== a && closest(c, a) !== a)) {
+            _drop_target = 0;
+            dom_content_reset(_drop);
+            events_reset(_CLICK, body, do_drop_exit);
+            r.exit(1);
+        }
+    }
+
     r.exit = function(select, k) {
         var fn = {
-            overlay: do_overlay_exit,
+            overlay: function() {
+                events_reset(_CLICK, _overlay, do_overlay_exit);
+                dom_content_reset(_overlay);
+            },
             modal: function() {
-                event_reset(_MOUSEDOWN, _body, do_modal_down);
-                event_reset(_MOUSEMOVE, _body, do_modal_move);
-                event_reset(_MOUSEUP, body, do_modal_up);
-                event_reset(_CLICK, O.x, do_modal_exit);
+                events_reset(_MOUSEDOWN, _body, do_modal_down);
+                events_reset(_MOUSEMOVE, _body, do_modal_move);
+                events_reset(_MOUSEUP, body, do_modal_up);
+                events_reset(_CLICK, O.x, do_modal_exit);
                 dom_content_reset(_modal);
             },
             drop: function() {
@@ -719,21 +770,11 @@ var TE_ui = function(o, editor) {
         return editor;
     };
 
-    function do_overlay_exit() {
-        dom_content_reset(_overlay);
-        event_reset(_CLICK, _overlay, do_overlay_exit);
-        editor.select();
-    }
-
     r.overlay = function(s, x, fn) {
         do_keys_reset(1);
-        dom_set(_body, el(_overlay, s.length ? el_set(prefix + '-overlay-content', 'div', s) : ""));
+        dom_set(_body, el(_overlay, s.length || is_node(s) ? el_set(prefix + '-overlay-content', 'div', s) : ""));
         if (x) {
-            function exit() {
-                r.exit(1);
-                event_reset(_CLICK, _overlay, exit);
-            }
-            event_set(_CLICK, _overlay, exit);
+            events_set(_CLICK, _overlay, do_overlay_exit);
         }
         if (is_function(fn)) fn(_overlay);
         return editor;
@@ -749,7 +790,7 @@ var TE_ui = function(o, editor) {
     }
 
     function do_modal_exit() {
-        event_fire(_CLICK, [], _overlay);
+        events_fire(_CLICK, [], _overlay);
     }
 
     function do_modal_down(e) {
@@ -795,6 +836,7 @@ var TE_ui = function(o, editor) {
     }
 
     r.modal = function() {
+        r.exit();
         var arg = arguments,
             k = arg[0],
             o = arg[1],
@@ -806,7 +848,9 @@ var TE_ui = function(o, editor) {
             o = arg[0];
             fn = arg[1];
         }
-        class_set(_modal, k);
+        el(_modal, false, {
+            'class': prefix + '-modal ' + k
+        });
         if (is_set(o.body)) {
             o.body = el('div', o.body, {
                 'class': F + '-content ' + k
@@ -830,12 +874,12 @@ var TE_ui = function(o, editor) {
             top: top + 'px',
             left: left + 'px'
         });
-        event_set(_CLICK, O.x, do_modal_exit);
-        event_set(_MOUSEDOWN, O.header, event_exit);
-        event_set(_MOUSEDOWN, O.resize, event_exit);
-        event_set(_MOUSEDOWN, _body, do_modal_down);
-        event_set(_MOUSEMOVE, _body, do_modal_move);
-        event_set(_MOUSEUP, body, do_modal_up);
+        events_set(_CLICK, O.x, do_modal_exit);
+        events_set(_MOUSEDOWN, O.header, event_exit);
+        events_set(_MOUSEDOWN, O.resize, event_exit);
+        events_set(_MOUSEDOWN, _body, do_modal_down);
+        events_set(_MOUSEMOVE, _body, do_modal_move);
+        events_set(_MOUSEUP, body, do_modal_up);
         if (is_function(fn)) {
             O.overlay = _overlay;
             O.modal = _modal;
@@ -850,8 +894,8 @@ var TE_ui = function(o, editor) {
 
     r.alert = function(title, content) {
         var okay = el('button', i18n_buttons.okay, button_attrs);
-        event_set(_CLICK, okay, do_modal_exit);
-        event_set(_KEYDOWN, okay, function(e) {
+        events_set(_CLICK, okay, do_modal_exit);
+        events_set(_KEYDOWN, okay, function(e) {
             var key = e.TE.key;
             if (key(/^escape|enter$/)) {
                 return do_modal_exit(), event_exit(e);
@@ -875,19 +919,21 @@ var TE_ui = function(o, editor) {
             if (is_function(n)) n(e, editor);
             return do_modal_exit(), event_exit(e);
         }
-        event_set(_CLICK, okay, yep);
-        event_set(_CLICK, cancel, nope);
-        event_set(_KEYDOWN, okay, function(e) {
+        events_set(_CLICK, okay, yep);
+        events_set(_CLICK, cancel, nope);
+        events_set(_KEYDOWN, okay, function(e) {
             key = e.TE.key;
             if (key('arrowright')) return cancel.focus(), event_exit(e);
             if (key('arrowleft')) return event_exit(e);
-            if (key(/^escape|enter$/)) return yep(e), event_exit(e);
+            if (key('enter')) return yep(e), event_exit(e);
+            if (key('escape')) return do_modal_exit(), event_exit(e);
         });
-        event_set(_KEYDOWN, cancel, function(e) {
+        events_set(_KEYDOWN, cancel, function(e) {
             key = e.TE.key;
-            if (key('arrowright')) return event_exit(e);
+            if (key(/^escape|arrowright$/)) return event_exit(e);
             if (key('arrowleft')) return okay.focus(), event_exit(e);
-            if (key(/^escape|enter$/)) return nope(e), event_exit(e);
+            if (key('enter')) return nope(e), event_exit(e);
+            if (key('escape')) return do_modal_exit(), event_exit(e);
         });
         timer_set(function() {
             cancel.focus();
@@ -921,14 +967,14 @@ var TE_ui = function(o, editor) {
         function freeze(e) {
             return event_exit(e);
         }
-        event_set(_KEYDOWN, input, function(e) {
+        events_set(_KEYDOWN, input, function(e) {
             key = e.TE.key;
             if (key('enter')) return yep(e);
             if (key('escape')) return nope(e);
             if (key('arrowup')) return freeze(e);
             if (key('arrowdown')) return okay.focus(), event_exit(e);
         });
-        event_set(_KEYDOWN, okay, function(e) {
+        events_set(_KEYDOWN, okay, function(e) {
             key = e.TE.key;
             if (key('enter')) return yep(e);
             if (key('escape')) return nope(e);
@@ -936,54 +982,76 @@ var TE_ui = function(o, editor) {
             if (key('arrowright')) return cancel.focus(), event_exit(e);
             if (key(/arrow(down|left)/)) return freeze(e);
         });
-        event_set(_KEYDOWN, cancel, function(e) {
+        events_set(_KEYDOWN, cancel, function(e) {
             key = e.TE.key;
             if (key(/^enter|escape$/)) return nope(e);
             if (key('arrowup')) return input.focus(), event_exit(e);
             if (key(/arrow(right|down)/)) return freeze(e);
             if (key('arrowleft')) return okay.focus(), event_exit(e);
         });
-        event_set(_CLICK, okay, yep);
-        event_set(_CLICK, cancel, nope);
+        events_set(_CLICK, okay, yep);
+        events_set(_CLICK, cancel, nope);
         timer_set(prepare, .4);
         return r.modal('prompt', do_modal_content(title, input, [okay, cancel]));
     };
 
-    r.drop = function(s, fn) {
-        dom_set(body, el(_drop, s));
-        r.overlay("", 1);
+    r.drop = function(k, fn) {
+        r.exit();
+        dom_set(body, el(_drop, false, {
+            'class': prefix + '-drop ' + k
+        }));
         if (is_function(fn)) {
             fn(_drop);
         }
+        var s = size(html),
+            d = size(_drop),
+            left = (s.w / 2) - (d.w / 2),
+            top = (s.h / 2) - (d.h / 2), o;
+        if (_drop_target) {
+            o = offset(_drop_target);
+            left = o.l;
+            top = o.t + size(_drop_target).h; // drop!
+        }
+        if (left + d.w > s.w) {
+            left = s.w - d.w;
+        }
+        if (top + d.h > s.h) {
+            top = s.h - d.h;
+        }
+        el_style(_drop, {
+            left: left + 'px',
+            top: top + 'px'
+        });
+        events_set(_CLICK, body, do_drop_exit);
         return editor;
     };
 
-    r.bubble = function(s, fn) {
-        dom_set(body, el(_bubble, s));
-        r.overlay("", 1);
+    r.bubble = function(k, fn) {
+        r.exit();
+        dom_set(body, el(_bubble, false, {
+            'class': prefix + '-bubble ' + k
+        }));
         if (is_function(fn)) {
             fn(_bubble);
         }
         return editor;
     };
 
-    // default toolbar(s)
+    // default tool(s)
     r.tools = {
+        '|': 1, // separator
         undo: {
             i: 'undo',
-            title: i18n_tools.undo,
             click: function(e, $) {
-                return $.undo(), false;
+                return editor.undo(), false;
             }
         },
         redo: {
             i: 'repeat',
-            title: i18n_tools.redo,
             click: function(e, $) {
-                return $.redo(), false;
+                return editor.redo(), false;
             }
-        },
-        '|': 1 // toolbar button separator
+        }
     };
 
     // default hotkey(s)

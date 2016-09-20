@@ -77,12 +77,44 @@
                     }
                 );
             }
+        },
+        drop_button: {
+            i: 'paint-brush',
+            title: 'Test Drop',
+            click: function(e, $) {
+                $.ui.drop('my-drop', function(body) {
+                    body.innerHTML = '<div style="width:10em;"></div>';
+                    var colors = ['red', 'orange', 'yellow', 'lime', 'green'],
+                        i, j, k;
+                    for (i in colors) {
+                        j = colors[i];
+                        k = $._.el('span', "", {
+                            title: j,
+                            style: {
+                                width: '2em',
+                                height: '2em',
+                                display: 'block',
+                                'float': 'left',
+                                cursor: 'pointer',
+                                background: j
+                            }
+                        });
+                        $._.event.set('click', k, function() {
+                            $[0]()
+                                .unwrap(/<span style="color:\s*.*?">/, '</span>')
+                                .format('span style="color: ' + this.title + ';"')
+                            $[1]();
+                        });
+                        body.firstChild.appendChild(k);
+                    }
+                });
+            }
         }
     });
 
     // put the custom tool(s) to the editor toolbar
     editor.update({
-        tools: 'bold italic | undo redo | alert_button confirm_button prompt_button'
+        tools: 'bold italic | undo redo | alert_button confirm_button prompt_button | drop_button'
     });
 
     // custom hook(s)

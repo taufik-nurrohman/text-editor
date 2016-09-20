@@ -19,7 +19,7 @@ var TE = function(target) {
         S = {}, // storage
         div = d.createElement('div'),
         span = d.createElement('span'),
-        nbsp = '\u00a0',
+        nbsp = '\u00A0',
         tab = '\t',
         scroll_width = (function() {
             var x = d.createElement('div'),
@@ -67,7 +67,7 @@ var TE = function(target) {
     }
 
     function get_pattern(x) {
-        return is_pattern(x) || r._.esc(x);
+        return is_pattern(x) || r._.x(x);
     }
 
     function edge(a, b, c) {
@@ -178,6 +178,8 @@ var TE = function(target) {
             h = num(css(target, 'line-height'));
         if (!is_set(i)) {
             return Math.floor(current / h);
+        } else if (is_string(i)) {
+            return r.scroll(r.scroll() + (i === '-' ? -1 : 1)), r;
         }
         return target.scrollTop = h * i, r;
     };
@@ -493,11 +495,11 @@ var TE = function(target) {
             ];
         },
         // escape regex character(s)
-        esc: function(x) {
+        x: function(x) {
             if (is_object(x)) {
                 var o = [],
                     i = x.length;
-                while (i--) o.unshift(r._.esc(x[i]));
+                while (i--) o.unshift(r._.x(x[i]));
                 return o;
             }
             return x.replace(pattern('[' + r.x.replace(/./g, '\\$&') + ']', 'g'), '\\$&');

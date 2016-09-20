@@ -38,9 +38,9 @@ d</textarea>
     <script src="text-editor.min.js"></script>
     <script>
 
-    TE.prototype.toggleWrap = function(a, b, c) {
-        A = this._.esc(a);
-        B = this._.esc(b);
+    TE.prototype.formatInline = function(a, b, c) {
+        A = this._.x(a);
+        B = this._.x(b);
         var $ = this.$(),
             m = new RegExp('^' + A + '(.*?)' + B + '$'),
             m_A = new RegExp(A + '$'),
@@ -65,7 +65,7 @@ d</textarea>
     var editor = new TE(document.getElementById('area-1'));
 
     function toggle(a, wrap) {
-        editor.toggleWrap(a[0], a[1], wrap);
+        editor.formatInline(a[0], a[1], wrap);
     }
 
     function clean() {

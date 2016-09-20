@@ -325,7 +325,11 @@ editor.record();
 Replace the second history data with custom value:
 
 ~~~ .javascript
-editor.record(['foo bar baz', 2, 4], 1); // 0–based index
+// 0: content
+// 1: selection start
+// 2: selection end
+// 3: scroll / text height
+editor.record(['foo bar baz', 2, 4, 1], 1); // 0–based index
 ~~~
 
 ### Remove History
