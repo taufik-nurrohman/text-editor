@@ -22,7 +22,15 @@
       <p>
         <button onclick="return this.disabled = true, this.nextElementSibling.disabled = false, editor.create(), false;" disabled>Create</button>
         <button onclick="return this.disabled = true, this.previousElementSibling.disabled = false, editor.destroy(), false;">Destroy</button>
+      </p>
+      <p>
         <button onclick="return editor.ui.tools.bold.click(null, editor), false;">Trigger Bold Button</button>
+        <button onclick="return editor.ui.tool('bold', {active:false}), false;">Disable Bold Button</button>
+        <button onclick="return editor.ui.tool('bold', {active:true}), false;">Enable Bold Button</button>
+        <button onclick="return editor.ui.tool('bold', {}, 1), false;">Move Bold Button to 2 from Left</button>
+        <button onclick="return editor.ui.tool('bold', {}, -1), false;">Move Bold Button to 2 from Right</button>
+        <button onclick="return editor.ui.tool('bold', {}, 0), false;">Move Bold Button to 1 From Left</button>
+        <button onclick="return editor.ui.tool('bold', {}, true), false;">Move Bold Button to 1 From Right</button>
       </p>
     </form>
     <script src="../text-editor.min.js"></script>
@@ -84,7 +92,7 @@
             title: 'Test Drop',
             click: function(e, $) {
                 $.ui.drop('my-drop', function(body) {
-                    body.innerHTML = '<div style="width:10em;"></div>';
+                    body.innerHTML = "";
                     var colors = ['red', 'orange', 'yellow', 'lime', 'green'],
                         i, j, k;
                     for (i in colors) {
@@ -106,7 +114,7 @@
                                 .format('span style="color: ' + this.title + ';"')
                             $[1]();
                         });
-                        body.firstChild.appendChild(k);
+                        body.appendChild(k);
                     }
                 });
             }
@@ -120,17 +128,48 @@
 
     // custom hook(s)
     editor._.hook.set('on:preview', function(value, container) {
-        var mean = /<(script|iframe)(\s[^<>]*?)?>.*?<\/(script|iframe)>/gi;
-        if (mean.test(value)) {
-            container.innerHTML = value.replace(mean, '<mark>Tag <code>$1</code> is not allowed.</mark>');
+        var x = /<(script|iframe)(\s[^<>]*?)?>(.*?<\/(script|iframe)>)?/gi,
+            y = x.exec(value);
+        if (y) {
+            container.innerHTML = ""; // stop XSS
+            editor.ui.alert('Forbidden Tags', 'Tag <code>&lt;' + y[1] + '&gt;</code> is not allowed.', function(e, $) {
+                $.set($.get().replace(x, ""));
+            });
         }
     });
+
+    // test bubble
+    var events = 'blur focus keyup mouseup touchend';
+    function test_bubble() {
+        setTimeout(function() {
+            if (editor.$().length) {
+                editor.ui.bubble('my-bubble', function(bubble) {
+                    bubble.innerHTML = '<a href="#">Share&hellip;</a>';
+                });
+            } else {
+                editor.ui.exit(0, 'bubble');
+            }
+        }, 1);
+    }
+
     editor._.hook.set('create', function() {
         editor.set('create!');
+        // set all "bubble" events on editor create
+        apply_bubble_on_create();
     });
+
     editor._.hook.set('destroy', function() {
         editor.set('destroy!');
+        // remove all "bubble" events on editor destroy
+        editor._.event.reset(events, editor.target, test_bubble);
     });
+
+    function apply_bubble_on_create() {
+        editor._.event.set(events, editor.target, test_bubble);
+    }
+
+    // start "bubble" events
+    apply_bubble_on_create();
 
     </script>
   </body>

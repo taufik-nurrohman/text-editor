@@ -2,6 +2,7 @@
   background:#fefefe;
   border:1px solid #ddd;
   color:#999;
+  position:relative;
 }
 .text-editor,
 .text-editor:before,
@@ -105,6 +106,7 @@
 }
 .text-editor-content {
   border-width:0;
+  resize:none;
   font-family:"Courier New",Courier,"Nimbus Mono L",Monospace;
 }
 .text-editor-body {
@@ -130,6 +132,35 @@
 }
 .text-editor .left {float:left}
 .text-editor .right {float:right}
+.text-editor-resize,
+.text-editor-x {
+  position:absolute;
+  right:0;
+  bottom:0;
+  width:1em;
+  height:1em;
+}
+.text-editor-resize.se {cursor:se-resize}
+.text-editor-resize.s {cursor:s-resize}
+.text-editor-x {
+  top:0;
+  bottom:auto;
+  width:2.5em;
+  height:2.5em;
+  line-height:2.5em;
+  text-align:center;
+  cursor:pointer;
+}
+.text-editor-x:before {content:'\2715'}
+.text-editor-resize:before {
+  content:"";
+  display:block;
+  position:absolute;
+  right:2px;
+  bottom:2px;
+  border:4px solid;
+  border-color:transparent #ddd #ddd transparent;
+}
 .text-editor-overlay {
   position:absolute;
   top:0;
@@ -164,16 +195,20 @@
   bottom:0;
   left:0;
 }
-.text-editor-modal {
+.text-editor-modal,
+.text-editor-drop,
+.text-editor-bubble {
   position:absolute;
   top:-9999px;
   left:-9999px;
   background:#fff;
   border:1px solid #ddd;
   z-index:9999;
+  box-shadow:0 0 2px rgba(0,0,0,.2);
+}
+.text-editor-modal {
   min-width:20em;
   min-height:6em;
-  box-shadow:0 0 2px rgba(0,0,0,.2);
 }
 .text-editor-modal-header,
 .text-editor-modal-footer {
@@ -210,42 +245,8 @@
   width:100%;
 }
 .text-editor-modal-footer .text-editor-button + .text-editor-button {margin-left:.25em}
-.text-editor-modal-resize,
-.text-editor-modal-x {
-  position:absolute;
-  right:0;
-  bottom:0;
-  width:1em;
-  height:1em;
-  cursor:se-resize;
-}
-.text-editor-modal-x {
-  top:0;
-  bottom:auto;
-  width:2.5em;
-  height:2.5em;
-  line-height:2.5em;
-  text-align:center;
-  cursor:pointer;
-}
-.text-editor-modal-x:before {content:'\2715'}
-.text-editor-modal-resize:before {
-  content:"";
-  display:block;
-  position:absolute;
-  right:2px;
-  bottom:2px;
-  border:4px solid;
-  border-color:transparent #ddd #ddd transparent;
-}
-.text-editor-drop {
-  position:absolute;
-  top:5px;
-  left:5px;
-  z-index:9999;
-  background:#fff;
-  border:1px solid #ddd;
+.text-editor-drop,
+.text-editor-bubble {
   padding:.25em;
-  box-shadow:0 2px 2px rgba(0,0,0,.2);
 }
 .text-editor-preview {cursor:pointer}

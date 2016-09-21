@@ -28,6 +28,7 @@ TE.HTML = function(target, o) {
         ui = editor.create(extend({
             suffix: '>',
             auto_encode_html: 1,
+            auto_p: 1,
             tools: 'clear | b i u s | sub sup | a img | p | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | align-left align-center align-right align-justify | hr | undo redo',
             languages: {
                 tools: {
@@ -202,8 +203,8 @@ TE.HTML = function(target, o) {
         [1]();
     }
 
-    function auto_p(e, $) {
-        if (!$.get(0)) {
+    function auto_p_(e, $) {
+        if (!$.get(0) && config.auto_p) {
             ui.tools.p.click(e, $);
         }
         return $;
@@ -226,25 +227,25 @@ TE.HTML = function(target, o) {
         b: {
             i: 'bold',
             click: function(e, $) {
-                return auto_p(e, $).format(formats.b), false;
+                return auto_p_(e, $).format(formats.b), false;
             }
         },
         i: {
             i: 'italic',
             click: function(e, $) {
-                return auto_p(e, $).format(formats.i), false;
+                return auto_p_(e, $).format(formats.i), false;
             }
         },
         u: {
             i: 'underline',
             click: function(e, $) {
-                return auto_p(e, $).format(formats.u), false;
+                return auto_p_(e, $).format(formats.u), false;
             }
         },
         s: {
             i: 'strikethrough',
             click: function(e, $) {
-                return auto_p(e, $).format(format(formats.s, $._.time())), false;
+                return auto_p_(e, $).format(format(formats.s, $._.time())), false;
             }
         },
         a: {
@@ -263,7 +264,7 @@ TE.HTML = function(target, o) {
                     if (/^([.\/?&#]|javascript:)/.test(href)) x = 0;
                     $.blur().ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v) {
                         title = v.replace(/"/g, '&quot;').replace(/'/g, '&apos;');
-                        if (!auto_p(e, $).$().length) {
+                        if (!auto_p_(e, $).$().length) {
                             $.insert(placeholder);
                         }
                         extra = x ? ' rel="nofollow" target="_blank"' : "";
@@ -291,7 +292,7 @@ TE.HTML = function(target, o) {
                         }
                         $[0]().insert("");
                         if (!title) {
-                            auto_p(e, $).gap(/<[^\/<>]+?>\s*$/.test(s.before) ? "" : ' ', "").insert('<' + img + ' alt="' + alt + '" src="' + src + '"' + suffix + ' ', -1);
+                            auto_p_(e, $).gap(/<[^\/<>]+?>\s*$/.test(s.before) ? "" : ' ', "").insert('<' + img + ' alt="' + alt + '" src="' + src + '"' + suffix + ' ', -1);
                         } else {
                             $.gap('\n\n', "").insert('<' + figure + '>\n' + tab + '<' + img + ' alt="' + alt + '" src="' + src + '"' + suffix + '\n' + tab + '<' + figcaption + '>' + title + '</' + get_o(figcaption) + '>\n</' + get_o(figure) + '>\n\n', -1);
                         }
@@ -306,7 +307,7 @@ TE.HTML = function(target, o) {
                 var sub = formats.sub,
                     sup = formats.sup,
                     sup_o = get_o(sup);
-                return auto_p(e, $)[0]()
+                return auto_p_(e, $)[0]()
                     .unwrap(pattern('<' + sup_o + attrs + '>'), '</' + sup_o + '>')
                     .format(sub)
                 [1](), false;
@@ -318,7 +319,7 @@ TE.HTML = function(target, o) {
                 var sub = formats.sub,
                     sup = formats.sup,
                     sub_o = get_o(sub);
-                return auto_p(e, $)[0]()
+                return auto_p_(e, $)[0]()
                     .unwrap(pattern('<' + sub_o + attrs + '>'), '</' + sub_o + '>')
                     .format(sup)
                 [1](), false;
@@ -389,8 +390,8 @@ TE.HTML = function(target, o) {
                 });
                 var tags = esc(H).join('|'),
                     tags_o = esc(H_o).join('|'),
-                    o = '\\s*<(' + tags + ')' + attrs_capture + '>\\s*',
-                    w_o = pattern('\\s*<(?:' + tags + ')' + attrs + '>\\s*'),
+                    o = '\\s*<(' + tags_o + ')' + attrs_capture + '>\\s*',
+                    w_o = pattern('\\s*<(?:' + tags_o + ')' + attrs + '>\\s*'),
                     w_c = pattern('\\s*<\\/(?:' + tags_o + ')>\\s*'),
                     match = s.value.match(pattern('^' + o));
                 if (!match) {
@@ -547,7 +548,7 @@ TE.HTML = function(target, o) {
                 if (match = s.after.match(pattern('^\\s*<\\/(' + p_o + '|' + li_o + ')>'))) {
                     m = match[1];
                     ui.tools[m === 'li' ? tree_parent : m].click(e, $);
-                } else if (trim(v).length && s.end === v.length && !pattern('^\\s*<[^\\/<>]+?>' + content + '<\\/[^<>]+?>\\s*$').test(v) && v.indexOf('\n') === -1) {
+                } else if (config.auto_p && trim(v).length && s.end === v.length && !pattern('^\\s*<[^\\/<>]+?>' + content + '<\\/[^<>]+?>\\s*$').test(v) && v.indexOf('\n') === -1) {
                     v = '<' + p + '>' + v + '</' + p_o + '>\n<' + p + '>';
                     n = '</' + p_o + '>';
                     $.set(v + n).select(v.length);
