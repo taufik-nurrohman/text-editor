@@ -64,21 +64,6 @@
       <pre><code>&lt;p class="foo"&gt;<mark>|</mark>&lt;/p&gt;</code></pre>
       <pre><code>&lt;p&gt;foo<mark>|</mark>&lt;/p&gt;</code></pre>
       <pre><code>&lt;p class="foo"&gt;foo<mark>|</mark>&lt;/p&gt;</code></pre>
-      <pre><code>&lt;ul&gt;
-  &lt;li&gt;<mark>|</mark>&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-      <pre><code>&lt;ul&gt;
-  &lt;li class="foo"&gt;<mark>|</mark>&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-      <pre><code>&lt;ul&gt;
-  &lt;li&gt;foo<mark>|</mark>&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-      <pre><code>&lt;ul&gt;
-  &lt;li&gt;&lt;a href="#"&gt;foo&lt;/a&gt;<mark>|</mark>&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-      <pre><code>&lt;ul&gt;
-  &lt;li class="foo"&gt;&lt;a href="#"&gt;foo&lt;/a&gt;<mark>|</mark>&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
       <pre><code>    <mark>|</mark></code></pre>
       <pre><code>"<mark>|</mark>"</code></pre>
       <pre><code>'<mark>|</mark>'</code></pre>
@@ -94,9 +79,10 @@
     <script src="../text-editor.min.js"></script>
     <script src="../ui/ui.min.js"></script>
     <script src="../TE.HTML/TE.HTML.min.js"></script>
+    <script src="../TE.Markdown/TE.Markdown.min.js"></script>
     <script>
 
-    var editor = new TE.HTML(document.querySelector('textarea'), {
+    var editor = new TE.Markdown(document.querySelector('textarea'), {
         tab: '  '
     });
 

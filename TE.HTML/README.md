@@ -1,7 +1,7 @@
 HTML › Text Editor
 ==================
 
-> HTML editor plugin.
+> HTML text editor plugin.
 
 ### CSS
 
@@ -52,7 +52,7 @@ var options = {
             a: 'Link (⌘+L)',
             img: 'Image (⌘+G)',
             sub: 'Subscript (⌘+↓)',
-            sup: 'Subscript (⌘+↑)',
+            sup: 'Superscript (⌘+↑)',
             p: 'Paragraph (⌘+↵)',
             'p,h1,h2,h3,h4,h5,h6': 'H1 – H6 (⌘+H)',
             'blockquote,q': 'Quote (⌘+Q)',
