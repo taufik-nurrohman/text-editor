@@ -11,7 +11,6 @@ Text Editor
   <head>
     <meta charset="utf-8">
     <title>Test</title>
-    <link href="text-editor.min.css" rel="stylesheet">
   </head>
   <body>
     <p>
@@ -444,10 +443,12 @@ Examples
 Modules
 -------
 
- - [Persistent Storage](https://rawgit.com/tovic/text-editor/master/TE.prototype.storage/storage.html)
- - [User Interface](https://rawgit.com/tovic/text-editor/master/TE.prototype.ui/ui.html)
+ - [Persistent Storage](https://rawgit.com/tovic/text-editor/master/storage/storage.html)
+ - [User Interface](https://rawgit.com/tovic/text-editor/master/ui/ui.html)
 
 Plugins
 -------
+
+![HTML Text Editor](https://cloud.githubusercontent.com/assets/1669261/18806346/373d3bb4-8254-11e6-8634-ef5bdc0d955e.png)
 
  - [HTML Text Editor](https://rawgit.com/tovic/text-editor/master/TE.HTML/TE.HTML.html)
