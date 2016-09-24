@@ -5,7 +5,7 @@ Storage › Text Editor
 
 ~~~ .html
 <script src="../text-editor.min.js"></script>
-<script src="storage.min.js"></script>
+<script src="../storage/storage.min.js"></script>
 ~~~
 
 Instance

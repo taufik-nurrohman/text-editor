@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width">
     <title>Text Editor</title>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-    <link href="../TE.prototype.ui/ui.min.css" rel="stylesheet">
+    <link href="../ui/ui.min.css" rel="stylesheet">
     <style>
     body {
       background:#fff;
       font-family:Helmet,FreeSans,Sans-Serif;
-      font-size:16px;
+      font-size:14px;
       color:#000;
     }
     pre {
@@ -31,7 +31,6 @@
     </form>
     <div>
       <h1>Keyboard Shortcuts</h1>
-      <!-- tab: &#8677; alt: \u2325, &#8997; shift: \u21E7, &#8679; -->
       <ul>
         <li><kbd>&#8984;+b</kbd> &rarr; Bold</li>
         <li><kbd>&#8984;+g</kbd> &rarr; Image</li>
@@ -52,7 +51,11 @@
         <li><kbd>&#8984;+&#8629;</kbd> &rarr; Paragraph</li>
         <li><kbd>&#8679;+&#8629;</kbd> &rarr; Line Break</li>
         <li><kbd>&#10008;</kbd> &rarr; Clear Format &rarr; Delete</li>
+        <li><kbd>&#8984;+&#8997;+v</kbd> &rarr; Preview</li>
+        <li><kbd>&#8677;</kbd> &rarr; Indent</li>
+        <li><kbd>&#8679;+&#8677;</kbd> &rarr; Outdent</li>
         <li><kbd>&#8629;</kbd> &rarr; <em>Depends</em></li>
+        <li><kbd>&#9003;</kbd> &rarr; <em>Depends</em></li>
       </ul>
       <h2>Depends &rarr; Special Cases</h2>
       <p>Try pressing the <kbd>&#8629;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
@@ -77,9 +80,112 @@
   &lt;li class="foo"&gt;&lt;a href="#"&gt;foo&lt;/a&gt;<mark>|</mark>&lt;/li&gt;
 &lt;/ul&gt;</code></pre>
       <pre><code>    <mark>|</mark></code></pre>
+      <pre><code>&lt;div&gt;<mark>|</mark>&lt;/div&gt;</code></pre>
+      <pre><code>"<mark>|</mark>"</code></pre>
+      <pre><code>'<mark>|</mark>'</code></pre>
+      <pre><code>(<mark>|</mark>)</code></pre>
+      <pre><code>{<mark>|</mark>}</code></pre>
+      <pre><code>[<mark>|</mark>]</code></pre>
+      <pre><code>&lt;<mark>|</mark>&gt;</code></pre>
+      <p>Try pressing the <kbd>&#9003;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
+      <pre><code>&lt;p class="foo"&gt;&lt/p&gt;<mark>|</mark></code></pre>
+      <pre><code>&lt;p class="foo"&gt;<mark>|</mark>&lt/p&gt;</code></pre>
+      <pre><code>    <mark>|</mark></code></pre>
+      <h1>Options</h1>
+      <pre><code>{
+    tab: '  ', // indent size
+    dir: 'ltr',
+    suffix: '&gt;', // replace with `/&gt;` to output `&lt;br/&gt;` instead of `&lt;br&gt;`
+    auto_tab: true, // press ⇥ key to indent
+    auto_close: {
+        '"': '"',
+        "'": "'",
+       '(': ')',
+       '{': '}',
+       '[': ']',
+       '&lt;': '&gt;'
+    },
+    auto_encode_html: true, // auto encode HTML tag(s) in `&lt;code&gt;` tag
+    auto_p: true, // smart paragraph insertion
+    keys: true, // enable keyboard shortcut feature
+    tools: 'clear | b i u s | sub sup | a img | p | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | align-left align-center align-right align-justify | hr | undo redo',
+    languages: {
+        tools: {
+            clear: 'Clear Format (✘)',
+            b: 'Bold (⌘+B)',
+            i: 'Italic (⌘+I)',
+            u: 'Underline (⌘+U)',
+            s: 'Strike (⌘+✘)',
+            a: 'Link (⌘+L)',
+            img: 'Image (⌘+G)',
+            sub: 'Subscript (⌘+↓)',
+            sup: 'Subscript (⌘+↑)',
+            p: 'Paragraph (⌘+↵)',
+            'p,h1,h2,h3,h4,h5,h6': 'H1 – H6 (⌘+H)',
+            'blockquote,q': 'Quote (⌘+Q)',
+            'pre,code': 'Code (⌘+K)',
+            ul: 'Unordered List (⌘+-)',
+            ol: 'Ordered List (⌘++)',
+            indent: 'Indent (⇥)',
+            outdent: 'Outdent (⇧+⇥)',
+            'align-left': 'Align Left',
+            'align-center': 'Align Center',
+            'align-right': 'Align Right',
+            'align-justify': 'Align Justify',
+            'align-top': 'Align Top',
+            'align-middle': 'Align Middle',
+            'align-bottom': 'Align Bottom',
+            hr: 'Horizontal Rule (⌘+R)'
+        },
+        modals: {
+            a: {
+                title: ['Link URL', 'Link Title'],
+                placeholder: ['http://', 'link title here…']
+            },
+            img: {
+                title: ['Image URL', 'Image Caption'],
+                placeholder: ['http://', 'image caption here…']
+            }
+        }
+    },
+    classes: {
+        formats: {
+            align: ['left', 'center', 'right', 'justify', 'top', 'middle', 'bottom', ""]
+        }
+    },
+    formats: {
+        align: 'div class="%1-%2"',
+        b: 'strong',
+        i: 'em',
+        u: 'u',
+        s: 'del datetime="%1-%2-%3"',
+        a: 'a',
+        figure: 'figure',
+        figcaption: 'figcaption',
+        img: 'img',
+        sub: 'sub',
+        sup: 'sup',
+        p: 'p',
+        br: 'br',
+        h1: 'h1',
+        h2: 'h2',
+        h3: 'h3',
+        h4: 'h4',
+        h5: 'h5',
+        h6: 'h6',
+        blockquote: 'blockquote',
+        q: 'q',
+        pre: 'pre',
+        code: 'code',
+        ul: 'ul',
+        ol: 'ol',
+        li: 'li',
+        hr: 'hr'
+    }
+}</code></pre>
     </div>
     <script src="../text-editor.min.js"></script>
-    <script src="../TE.prototype.ui/ui.min.js"></script>
+    <script src="../ui/ui.min.js"></script>
     <script src="../TE.HTML/TE.HTML.min.js"></script>
     <script>
 

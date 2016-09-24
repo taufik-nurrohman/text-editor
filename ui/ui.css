@@ -16,6 +16,14 @@
   -moz-box-sizing:border-box;
   box-sizing:border-box;
 }
+.text-editor a,
+.text-editor a:focus,
+.text-editor a:hover,
+.text-editor a:active {
+  background:0 0;
+  color:inherit;
+  text-decoration:none;
+}
 .text-editor ::-webkit-input-placeholder {
   opacity:.2;
   color:inherit;
@@ -105,11 +113,13 @@
   float:left;
 }
 .text-editor-content {
+  background:0 0;
   border-width:0;
   resize:none;
   font-family:"Courier New",Courier,"Nimbus Mono L",Monospace;
 }
 .text-editor-body {
+  background:#fafafa;
   border:0 solid #ddd;
   border-top-color:#ccc;
   border-width:1px 0;
@@ -229,9 +239,7 @@
   border-bottom:3.5em solid transparent;
   overflow:auto;
 }
-.text-editor-modal-content {
-  padding:1em;
-}
+.text-editor-modal-content {padding:1em}
 .text-editor-modal-footer {
   bottom:0;
   height:3.5em;
@@ -246,7 +254,5 @@
 }
 .text-editor-modal-footer .text-editor-button + .text-editor-button {margin-left:.25em}
 .text-editor-drop,
-.text-editor-bubble {
-  padding:.25em;
-}
+.text-editor-bubble {padding:2px}
 .text-editor-preview {cursor:pointer}
