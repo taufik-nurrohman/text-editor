@@ -11,6 +11,7 @@
       background:#fff;
       font-family:Helmet,FreeSans,Sans-Serif;
       font-size:14px;
+      line-height:1.5em;
       color:#000;
     }
     pre {
@@ -26,11 +27,12 @@
     </style>
   </head>
   <body>
+    <h1>Markdown Text Editor</h1>
     <form action="#">
       <p><textarea></textarea></p>
     </form>
     <div>
-      <h1>Keyboard Shortcuts</h1>
+      <h2>Keyboard Shortcuts</h2>
       <ul>
         <li><kbd>&#8984;+b</kbd> &rarr; Bold</li>
         <li><kbd>&#8984;+g</kbd> &rarr; Image</li>
@@ -40,24 +42,20 @@
         <li><kbd>&#8984;+l</kbd> &rarr; Link</li>
         <li><kbd>&#8984;+q</kbd> &rarr; Quote</li>
         <li><kbd>&#8984;+r</kbd> &rarr; Horizontal Rule</li>
-        <li><kbd>&#8984;+u</kbd> &rarr; Underline</li>
         <li><kbd>&#8984;+y</kbd> &rarr; Redo</li>
         <li><kbd>&#8984;+z</kbd> &rarr; Undo</li>
         <li><kbd>&#8984;++</kbd> &rarr; List</li>
         <li><kbd>&#8984;+-</kbd> &rarr; Bullet</li>
         <li><kbd>&#8984;+&#10008;</kbd> &rarr; Strike</li>
-        <li><kbd>&#8984;+&darr;</kbd> &rarr; Subscript</li>
-        <li><kbd>&#8984;+&uarr;</kbd> &rarr; Superscript</li>
         <li><kbd>&#8984;+&#8629;</kbd> &rarr; Paragraph</li>
-        <li><kbd>&#8679;+&#8629;</kbd> &rarr; Line Break</li>
-        <li><kbd>&#10008;</kbd> &rarr; Clear Format &rarr; Delete</li>
+        <li><kbd>&#8679;+&#8629;</kbd> &rarr; Line Break (Hard Break)</li>
         <li><kbd>&#8984;+&#8997;+v</kbd> &rarr; Preview</li>
         <li><kbd>&#8677;</kbd> &rarr; Indent</li>
         <li><kbd>&#8679;+&#8677;</kbd> &rarr; Outdent</li>
         <li><kbd>&#8629;</kbd> &rarr; <em>Depends</em></li>
         <li><kbd>&#9003;</kbd> &rarr; <em>Depends</em></li>
       </ul>
-      <h2>Depends &rarr; Special Cases</h2>
+      <h3>Depends &rarr; Special Cases</h3>
       <p>Try pressing the <kbd>&#8629;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
       <pre><code>lorem ipsum dolor sit amet<mark>|</mark></code></pre>
       <pre><code>&lt;p&gt;<mark>|</mark>&lt;/p&gt;</code></pre>

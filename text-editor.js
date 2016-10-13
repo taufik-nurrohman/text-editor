@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.3.0
+ *  TEXT EDITOR PLUGIN 2.3.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -383,17 +383,17 @@ var TE = function(target) {
 
     // trim white-space before and after selection range
     r.trim = function(O, C, B, E) {
-        O = O || "";
-        C = C || "";
-        B = B || "";
-        E = E || "";
+        if (O !== false) O = O || "";
+        if (C !== false) C = C || "";
+        if (B !== false) B = B || "";
+        if (E !== false) E = E || "";
         var $ = r.$(),
             a = $.before,
             b = $.after,
             c = $.value,
-            aa = a.replace(/\s*$/, O),
-            bb = b.replace(/^\s*/, C),
-            cc = c.replace(/^\s*([\s\S]*?)\s*$/g, B + '$1' + E);
+            aa = O !== false ? a.replace(/\s*$/, O) : a,
+            bb = C !== false ? b.replace(/^\s*/, C) : b,
+            cc = c.replace(/^(\s*)([\s\S]*?)(\s*)$/g, (B !== false ? B : '$1') + '$2' + (E !== false ? E : '$3'));
         return r.set(aa + cc + bb).select(aa.length, (aa + cc).length); // `trim` method does not populate history data
     };
 
@@ -543,7 +543,7 @@ var TE = function(target) {
 (function(r) {
 
     // Plugin version
-    r.version = '2.3.0';
+    r.version = '2.3.1';
 
     // Key maps for the deprecated `KeyboardEvent.keyCode`
     r.keys = {

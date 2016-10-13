@@ -121,6 +121,10 @@ TE.HTML = function(target, o) {
         auto_p = config.auto_p,
         tree_parent;
 
+    function is_set(x) {
+        return typeof x !== "undefined";
+    }
+
     function is_node(x) {
         return x instanceof HTMLElement;
     }
@@ -162,11 +166,15 @@ TE.HTML = function(target, o) {
         if (!s.length) {
             var match = before.match(pattern('<' + li_o + attrs_capture + '>.*$'));
             if (match) {
-                if (!/>\s*$/.test(before)) {
-                    editor.insert('</' + li_o + '>\n' + dent + '<' + li_o + match[1] + '>', -1);
+                if (pattern('<\\/' + li_o + '>\\s*$').test(before)) {
+                    editor.tidy('\n' + dent, false).wrap('<' + li_o + match[1] + '>', '</' + li_o + '>');
                 } else {
-                    if (!pattern('<\\/' + li_o + '>\\s*$').test(before)) {
-                        editor.wrap('\n' + dent + tab + '<' + ul + '>\n' + dent + tab + tab + '<' + li_o + match[1] + '>', '</' + li_o + '>\n' + dent + tab + '</' + ul_o + '>\n' + dent);
+                    if (!/>\s*$/.test(before)) {
+                        editor.insert('</' + li_o + '>\n' + dent + '<' + li_o + match[1] + '>', -1);
+                    } else {
+                        if (!pattern('<\\/' + li_o + '>\\s*$').test(before)) {
+                            editor.wrap('\n' + dent + tab + '<' + ul + '>\n' + dent + tab + tab + '<' + li_o + match[1] + '>', '</' + li_o + '>\n' + dent + tab + '</' + ul_o + '>\n' + dent);
+                        }
                     }
                 }
             } else {
@@ -217,11 +225,13 @@ TE.HTML = function(target, o) {
         clear: {
             i: 'eraser',
             click: function(e, $) {
-                var v = $.$().value;
+                var s = $[0]().$(),
+                    v = s.value;
                 if (!v.length) return;
-                $[0]().replace(/<[^<>]+?>/g, "").unwrap(/<[^\/<>]+?>/, /<\/[^<>]+?>/);
-                if ($.$().value === v) {
+                if (!/<[^<>]+?>/.test(v) && (s.before.slice(-1) !== '>' && s.after.slice(0, 1) !== '<')) {
                     $.insert("");
+                } else {
+                    $.replace(/<[^<>]+?>/g, "").unwrap(/<[^\/<>]+?>/, /<\/[^<>]+?>/);
                 }
                 $[1]();
                 return false;
@@ -543,70 +553,72 @@ TE.HTML = function(target, o) {
         }
     });
 
-    extend(ui.keys, {
-        'delete': 'clear',
-        'control+delete': 's',
-        'control+b': 'b',
-        'control+i': 'i',
-        'control+u': 'u',
-        'control+l': 'a',
-        'control+g': 'img',
-        'control+arrowdown': 'sub',
-        'control+arrowup': 'sup',
-        'control+enter': 'p',
-        'shift+enter': function(e, $) {
-            var dent = get_indent($.$().before);
-            return $.tidy('\n', "").insert(dent + '<' + formats.br + suffix + '\n', -1), false;
-        },
-        'enter': function(e, $) {
-            var s = $.$(),
-                v = $.get(),
-                p = formats.p,
-                li = formats.li,
-                p_o = get_o(p),
-                li_o = get_o(li),
-                dent = get_indent(s.before), m, n;
-            if (!s.length) {
-                if (match = s.after.match(pattern('^\\s*<\\/(' + p_o + '|' + li_o + ')>'))) {
-                    m = match[1];
-                    ui.tools[m === 'li' ? tree_parent : m].click(e, $);
-                } else if (auto_p && trim(v).length && s.end === v.length && /^\s*[^<\n]*?[^>]\s*$/.test(v)) {
-                    v = '<' + p + '>' + v + '</' + p_o + '>\n<' + p + '>';
-                    n = '</' + p_o + '>';
-                    $.set(v + n).select(v.length);
-                } else {
-                    return; // normal enter key ...
-                }
-                return false;
-            }
-        },
-        'backspace': function(e, $) {
-            var s = $.$(), tag,
-                before = s.before,
-                after = s.after,
-                end = '<[^<>]+?>';
-            if (!s.length) {
-                if (pattern(end + '$').test(before)) {
-                    tag = before.split('<').pop().match(/^([^\/\s]+).*?>$/);
-                    tag = (tag && tag[1]) || 0;
-                    if (tag && pattern('^\\s*<\\/' + tag + '>').test(after)) {
-                        $.unwrap(pattern('<' + tag + attrs + '>'), pattern('\\s*<\\/' + tag + '>'));
+    if (config.keys) {
+        extend(ui.keys, {
+            'delete': 'clear',
+            'control+delete': 's',
+            'control+b': 'b',
+            'control+i': 'i',
+            'control+u': 'u',
+            'control+l': 'a',
+            'control+g': 'img',
+            'control+arrowdown': 'sub',
+            'control+arrowup': 'sup',
+            'control+enter': 'p',
+            'shift+enter': function(e, $) {
+                var dent = get_indent($.$().before);
+                return $.tidy('\n', "").insert(dent + '<' + formats.br + suffix + '\n', -1), false;
+            },
+            'enter': function(e, $) {
+                var s = $.$(),
+                    v = $.get(),
+                    p = formats.p,
+                    li = formats.li,
+                    p_o = get_o(p),
+                    li_o = get_o(li),
+                    dent = get_indent(s.before), m, n;
+                if (!s.length) {
+                    if (match = s.after.match(pattern('^\\s*<\\/(' + p_o + '|' + li_o + ')>'))) {
+                        m = match[1];
+                        ui.tools[m === 'li' ? tree_parent : m].click(e, $);
+                    } else if (auto_p && trim(v).length && s.end === v.length && /^\s*[^<\n]*?[^>]\s*$/.test(v)) {
+                        v = '<' + p + '>' + v + '</' + p_o + '>\n<' + p + '>';
+                        n = '</' + p_o + '>';
+                        $.set(v + n).select(v.length);
                     } else {
-                        $.outdent(pattern(end));
+                        return; // normal enter key ...
                     }
                     return false;
                 }
-            }
-        },
-        'control+h': 'p,h1,h2,h3,h4,h5,h6',
-        'control+q': 'blockquote,q',
-        'control+k': 'pre,code',
-        'control+-': 'ul',
-        'control++': 'ol',
-        'control+=': 'ol', // alias for `control++`
-        'control+shift++': 'ol', // alias for `control++`
-        'control+r': 'hr'
-    });
+            },
+            'backspace': function(e, $) {
+                var s = $.$(), tag,
+                    before = s.before,
+                    after = s.after,
+                    end = '<[^<>]+?>';
+                if (!s.length) {
+                    if (pattern(end + '$').test(before)) {
+                        tag = before.split('<').pop().match(/^([^\/\s]+).*?>$/);
+                        tag = (tag && tag[1]) || 0;
+                        if (tag && pattern('^\\s*<\\/' + tag + '>').test(after)) {
+                            $.unwrap(pattern('<' + tag + attrs + '>'), pattern('\\s*<\\/' + tag + '>'));
+                        } else {
+                            $.outdent(pattern(end));
+                        }
+                        return false;
+                    }
+                }
+            },
+            'control+h': 'p,h1,h2,h3,h4,h5,h6',
+            'control+q': 'blockquote,q',
+            'control+k': 'pre,code',
+            'control+-': 'ul',
+            'control++': 'ol',
+            'control+=': 'ol', // alias for `control++`
+            'control+shift++': 'ol', // alias for `control++`
+            'control+r': 'hr'
+        });
+    }
 
     return editor.update();
 

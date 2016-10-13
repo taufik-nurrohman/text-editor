@@ -30,6 +30,9 @@ TE.prototype.create = function(o) {
             dir: 'ltr',
             keys: 1,
             tools: 'indent outdent | undo redo',
+            attributes: {
+                'spellcheck': 'false'
+            },
             css: 'html,body{background:#fff;color:#000}',
             auto_tab: 1,
             auto_close: {
@@ -110,12 +113,8 @@ TE.prototype.create = function(o) {
             m = pattern('^' + A + '([\\s\\S]*?)' + B + '$'),
             m_A = pattern(A + '$'),
             m_B = pattern('^' + B),
-            gap_11 = gap_1,
-            gap_12 = gap_1,
             before = s.before,
             after = s.after;
-        if (/<[^\/<>]+?>$/.test(before)) gap_11 = "";
-        if (/^<\/[^<>]+?>/.test(after)) gap_12 = "";
         if (!s.length) {
             r.insert(i18n_others.placeholder);
         }
@@ -126,7 +125,7 @@ TE.prototype.create = function(o) {
             [
                 // first toggle
                 function($) {
-                    $.unwrap(a, b, 1).tidy(gap_11, gap_12).wrap(a, b, wrap)[1]();
+                    $.unwrap(a, b, 1).tidy(/<[^\/<>]+?>$/.test(before) ? "" : gap_1, /^<\/[^<>]+?>/.test(after) ? "" : gap_1).wrap(a, b, wrap)[1]();
                 },
                 // second toggle (the reset state)
                 function($) {
@@ -329,7 +328,7 @@ TE.prototype.create = function(o) {
         _body = el_set(prefix + '-body'),
         _footer = el_set(prefix + '-footer'),
         _tool = el_set(prefix + '-tool'),
-        _content = target,
+        _content = el(target, false, config.attributes),
         _resize = el_set(prefix + '-resize s'),
         _description = el_set(prefix + '-description'),
         _overlay = el_set(prefix + '-overlay'),
@@ -518,6 +517,7 @@ TE.prototype.create = function(o) {
     }
 
     function do_word_count() {
+        if (!i18n_others._word || !i18n_others._words) return;
         var v = (_content.value || "").replace(/<[^<>]+?>/g, ""),
             i = (v.match(/(\w+)/g) || []).length;
         content_set(_description_right, format(i18n_others['_word' + (i === 1 ? "" : 's')], [i]));
@@ -718,16 +718,16 @@ TE.prototype.create = function(o) {
             dom_set(_description, _description_left);
             dom_set(_description, _description_right);
         }
-        if (config.keys) {
-            events_set(_KEYDOWN, _content, do_keys);
-            events_set(_KEYUP, _content, do_keys_reset);
-        }
+        events_set(_KEYDOWN, _content, do_keys);
+        events_set(_KEYUP, _content, do_keys_reset);
         events_set(target_events, _content, do_update_contents_debounce);
         events_set(_MOUSEDOWN, _resize, do_resize_down);
         events_set(_MOUSEMOVE, body, do_resize_move);
         events_set(_MOUSEUP, body, do_resize_up);
-        dom_set(_description_left, _preview);
-        content_set(_preview, i18n_others.preview);
+        if (i18n_others.preview) {
+            dom_set(_description_left, _preview);
+            content_set(_preview, i18n_others.preview);
+        }
         do_update_contents();
         do_update_tools();
         do_update_keys();
@@ -745,7 +745,7 @@ TE.prototype.create = function(o) {
         if (!class_exist(_content, C)) return r;
         r.ui.exit(0, 0, 0);
         class_reset(_content, C);
-        config.tools = config.tools.join(' ');
+        if (is_object(config.tools)) config.tools = config.tools.join(' ');
         if (config.keys) {
             events_reset(_KEYDOWN, _content, do_keys);
             events_reset(_KEYUP, _content, do_keys_reset);
@@ -1178,6 +1178,7 @@ TE.prototype.create = function(o) {
     };
 
     r.ui.key = function(keys, data) {
+        if (!config.keys) return r;
         if (data === false) {
             delete r.ui.keys[keys];
         } else {
