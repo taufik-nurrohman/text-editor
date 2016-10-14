@@ -240,7 +240,7 @@ TE.Markdown = function(target, o) {
                     setext = config.enable_setext_header,
                     setext_esc = esc(formats.h1[0] + formats.h2[0]),
                     clean_B = s.before.replace(/[#\s]+$/, ""),
-                    clean_V = s.length ? s.value.replace(/\s+/g, ' ').replace(/^[#\s]+|[#\s]+$/g, "").replace(pattern('^\\s?[' + setext_esc + ']+\\s*'), "") : placeholder,
+                    clean_V = s.length ? s.value.replace(/\s+/g, ' ').replace(/^[#\s]+|[#\s]+$/g, "").replace(pattern('\\s?[' + setext_esc + ']+\\s*$'), "") : placeholder,
                     clean_A = s.after.replace(/^[#\s]+/, "").replace(pattern('^\\s?[' + setext_esc + ']+\\s*'), ""),
                     H = [
                         "",
