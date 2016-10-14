@@ -46,6 +46,7 @@
         <li><kbd>&#8984;+z</kbd> &rarr; Undo</li>
         <li><kbd>&#8984;++</kbd> &rarr; List</li>
         <li><kbd>&#8984;+-</kbd> &rarr; Bullet</li>
+        <li><kbd>&#8984;+&darr;</kbd> &rarr; Footnote</li>
         <li><kbd>&#8984;+&#10008;</kbd> &rarr; Strike</li>
         <li><kbd>&#8984;+&#8629;</kbd> &rarr; Paragraph</li>
         <li><kbd>&#8679;+&#8629;</kbd> &rarr; Line Break (Hard Break)</li>
@@ -57,21 +58,23 @@
       </ul>
       <h3>Depends &rarr; Special Cases</h3>
       <p>Try pressing the <kbd>&#8629;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
-      <pre><code>lorem ipsum dolor sit amet<mark>|</mark></code></pre>
-      <pre><code>&lt;p&gt;<mark>|</mark>&lt;/p&gt;</code></pre>
-      <pre><code>&lt;p class="foo"&gt;<mark>|</mark>&lt;/p&gt;</code></pre>
-      <pre><code>&lt;p&gt;foo<mark>|</mark>&lt;/p&gt;</code></pre>
-      <pre><code>&lt;p class="foo"&gt;foo<mark>|</mark>&lt;/p&gt;</code></pre>
       <pre><code>    <mark>|</mark></code></pre>
+      <pre><code>&gt; abc<mark>|</mark></code></pre>
+      <pre><code>&gt; &gt; abc<mark>|</mark></code></pre>
+      <pre><code>&gt; <mark>|</mark></code></pre>
+      <pre><code>&gt; &gt; <mark>|</mark></code></pre>
+      <pre><code> - abc<mark>|</mark></code></pre>
+      <pre><code> - <mark>|</mark></code></pre>
+      <pre><code> 1. abc<mark>|</mark></code></pre>
+      <pre><code> 1. <mark>|</mark></code></pre>
       <pre><code>"<mark>|</mark>"</code></pre>
       <pre><code>'<mark>|</mark>'</code></pre>
       <pre><code>(<mark>|</mark>)</code></pre>
       <pre><code>{<mark>|</mark>}</code></pre>
       <pre><code>[<mark>|</mark>]</code></pre>
       <pre><code>&lt;<mark>|</mark>&gt;</code></pre>
+      <pre><code>`<mark>|</mark>`</code></pre>
       <p>Try pressing the <kbd>&#9003;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
-      <pre><code>&lt;p class="foo"&gt;&lt/p&gt;<mark>|</mark></code></pre>
-      <pre><code>&lt;p class="foo"&gt;<mark>|</mark>&lt/p&gt;</code></pre>
       <pre><code>    <mark>|</mark></code></pre>
     </div>
     <script src="../text-editor.min.js"></script>
@@ -80,9 +83,7 @@
     <script src="../TE.Markdown/TE.Markdown.min.js"></script>
     <script>
 
-    var editor = new TE.Markdown(document.querySelector('textarea'), {
-        tab: '  '
-    });
+    var editor = new TE.Markdown(document.querySelector('textarea'));
 
     </script>
   </body>

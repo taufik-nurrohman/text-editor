@@ -44,16 +44,18 @@
   color:inherit;
   position:relative;
 }
+.text-editor-header {min-height:2px}
+
 .text-editor-input,
 .text-editor-select,
 .text-editor-textarea {
   display:inline-block;
   background:#fafafa;
-  border:1px solid #eee;
-  border-top-color:#ddd;
+  border:1px solid #ddd;
+  border-top-color:#ccc;
   font:inherit;
-  color:#444;
-  padding:.5em;
+  color:#666;
+  padding:.25em .5em;
 }
 .text-editor-textarea {
   width:100%;
@@ -73,6 +75,8 @@
   text-shadow:none;
   color:inherit;
   cursor:pointer;
+  box-shadow:none;
+  border-radius:0;
 }
 .text-editor-button::-moz-focus-inner {
   margin:0;
@@ -103,6 +107,8 @@
   cursor:default;
   opacity:.4;
 }
+.text-editor-button.text {width:auto}
+.text-editor-button.text span {padding:0 .5em}
 .text-editor-tool .text-editor-separator {
   width:0;
   height:1.5em;
@@ -113,13 +119,13 @@
   float:left;
 }
 .text-editor-content {
-  background:0 0;
   border-width:0;
+  min-height:3em;
   resize:none;
   font-family:"Courier New",Courier,"Nimbus Mono L",Monospace;
+  display:block;
 }
 .text-editor-body {
-  background:#fafafa;
   border:0 solid #ddd;
   border-top-color:#ccc;
   border-width:1px 0;
@@ -129,6 +135,7 @@
   text-transform:uppercase;
   text-align:right;
   line-height:1.5em;
+  min-height:14px;
 }
 .text-editor-description {
   font-size:.65em;
@@ -140,6 +147,7 @@
   display:table;
   clear:both;
 }
+.text-editor-description .right {padding-right:4px}
 .text-editor .left {float:left}
 .text-editor .right {float:right}
 .text-editor-resize,

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.3.1
+ *  TEXT EDITOR PLUGIN 2.3.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -94,7 +94,7 @@ var TE = function(target) {
     function extend(a, b) {
         b = b || {};
         for (var i in b) {
-            if (is_object(a[i]) && !is_node(a[i])) {
+            if (is_object(a[i]) && is_object(b[i]) && !is_node(a[i])) {
                 a[i] = extend(a[i], b[i]);
             } else {
                 a[i] = b[i];
@@ -171,6 +171,9 @@ var TE = function(target) {
 
     // access editor instance from `this` scope with `this.TE`
     target.TE = r;
+
+    // store editor instance to `TE.$`
+    TE.__instance__.push(r);
 
     // scroll the editor
     r.scroll = function(i) {
@@ -543,7 +546,10 @@ var TE = function(target) {
 (function(r) {
 
     // Plugin version
-    r.version = '2.3.1';
+    r.version = '2.3.2';
+
+    // Collect all instance(s)
+    r.__instance__ = [];
 
     // Key maps for the deprecated `KeyboardEvent.keyCode`
     r.keys = {

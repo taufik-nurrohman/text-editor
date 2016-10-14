@@ -11,8 +11,6 @@ TE.HTML = function(target, o) {
 
     var _u2013 = '\u2013', // N-dash
         _u2026 = '\u2026', // horizontal ellipsis
-        _u2190 = '\u2190', // leftwards arrow
-        _u2192 = '\u2192', // rightwards arrow
         _u2191 = '\u2191', // upwards arrow
         _u2193 = '\u2193', // downwards arrow
         _u21B5 = '\u21B5', // carriage return arrow
@@ -120,6 +118,8 @@ TE.HTML = function(target, o) {
         placeholder = languages.others.placeholder,
         auto_p = config.auto_p,
         tree_parent;
+
+    TE.HTML.__instance__.push(editor);
 
     function is_set(x) {
         return typeof x !== "undefined";
@@ -620,6 +620,9 @@ TE.HTML = function(target, o) {
         });
     }
 
-    return editor.update();
+    return editor.update({}, 0);
 
 };
+
+// Collect all editor instance(s)
+TE.HTML.__instance__ = [];

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 0.0.9
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.0.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -555,7 +555,7 @@ TE.prototype.create = function(o) {
                     class_set(_button, 'x');
                 }
                 if (tool.text) {
-                    icon = format(tool.text, [icon]);
+                    icon = format('<span>' + tool.text + '</span>', [icon]);
                     class_set(_button, 'text');
                 }
                 content_set(_button, icon);
@@ -624,7 +624,7 @@ TE.prototype.create = function(o) {
                 if (is_string(keys[i])) {
                     keys[i] = r.ui.tools[keys[i]].click;
                 }
-                l = keys[i](e, r);
+                l = keys[i] && keys[i](e, r);
                 if (l === false) event_exit(e);
             }
         }
@@ -632,6 +632,8 @@ TE.prototype.create = function(o) {
             if (n === 'backspace' && pattern(esc(tab) + '$').test(s.before)) {
                 r.outdent(tab);
                 return event_exit(e);
+            } else if (n === 'enter' && pattern('(^|\\n)(' + esc(tab) + ')+$').test(s.before)) {
+                return r.insert('\n' + dent, -1), event_exit(e);
             }
         }
         if (auto_close) {
@@ -1217,8 +1219,8 @@ TE.prototype.create = function(o) {
         'control+option+v': function(e, $) {
             return do_click_preview(e), false;
         },
-        'shift+tab': auto_tab ? 'outdent' : noop,
-        'tab': auto_tab ? 'indent' : noop,
+        'shift+tab': auto_tab ? 'outdent' : 0,
+        'tab': auto_tab ? 'indent' : 0,
         'escape': function(e, $) {
             return _preview.focus(), false;
         }
