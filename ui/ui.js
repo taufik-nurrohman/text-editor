@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.0.0
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.1.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -88,7 +88,8 @@ TE.prototype.create = function(o) {
         i18n = config.languages,
         tab = config.tab,
         auto_tab = config.auto_tab,
-        auto_close = config.auto_close;
+        auto_close = config.auto_close,
+        data_tool_id = 'data-tool-id';
 
     // add `ui` method to `TE`
     r.ui = {};
@@ -96,9 +97,14 @@ TE.prototype.create = function(o) {
     // add `tidy` method to `TE`
     r.tidy = function(a, b) {
         var $ = r.$(),
-            B = $.before.length ? a : "",
-            A = $.after.length ? (is_set(b) ? b : a) : "";
+            B = $.before ? a : "",
+            A = $.after ? (is_set(b) ? b : a) : "";
         return r.trim(B, A);
+    };
+
+    // helper: force inline
+    r.i = function() {
+        return editor.replace(/\s+/g, ' ');
     };
 
     // add `format` method to `TE`
@@ -117,6 +123,8 @@ TE.prototype.create = function(o) {
             after = s.after;
         if (!s.length) {
             r.insert(i18n_others.placeholder);
+        } else {
+            gap_1 = false;
         }
         return r.toggle(
             // when ...
@@ -346,17 +354,17 @@ TE.prototype.create = function(o) {
     _preview.title = i18n_tools.preview;
 
     function do_click_preview(e) {
-        var v = r.get();
-        if (!dom_exist(_overlay) && v.length) {
+        var v = r.get(), w;
+        if (!dom_exist(_overlay) && v) {
             if (v.indexOf('</html>') === -1) {
-                v = '<!DOCTYPE html><html dir="' + config.dir + '"><head><meta charset="utf-8"><style>' + config.css + '</style></head><body>' + v + '</body></html>';
+                w = '<!DOCTYPE html><html dir="' + config.dir + '"><head><meta charset="utf-8"><style>' + config.css + '</style></head><body>' + v + '</body></html>';
             }
             var frame = el('iframe', false, {
                 'class': prefix + '-portal',
-                src: 'data:text/html,' + encodeURIComponent(v)
+                src: 'data:text/html,' + encodeURIComponent(w)
             });
             r.ui.overlay(frame, 1, function() {
-                hook_fire('enter.overlay.preview', [e, r, v, _overlay.firstChild]);
+                hook_fire('enter.overlay.preview', [e, r, [v, w], _overlay.firstChild]);
             });
         } else {
             do_overlay_exit();
@@ -547,7 +555,7 @@ TE.prototype.create = function(o) {
                 _button.href = "";
                 _button.id = _button_id;
                 _button.tabIndex = -1;
-                _button.setAttribute('data-tool-id', v);
+                _button.setAttribute(data_tool_id, v);
                 icon = '<i class="' + format(c.i, [icon]) + ' ' + _button_id + '"></i>';
                 if (!is_set(tool.active)) {
                     tool.active = 1;
@@ -555,7 +563,7 @@ TE.prototype.create = function(o) {
                     class_set(_button, 'x');
                 }
                 if (tool.text) {
-                    icon = format('<span>' + tool.text + '</span>', [icon]);
+                    icon = format('<span class="' + prefix + '-text">' + tool.text + '</span>', [icon]);
                     class_set(_button, 'text');
                 }
                 content_set(_button, icon);
@@ -683,7 +691,7 @@ TE.prototype.create = function(o) {
 
     function do_click_tool(e) {
         r.ui.exit(0, 0, 0);
-        var id = this.getAttribute('data-tool-id'),
+        var id = this.getAttribute(data_tool_id),
             tools = r.ui.tools;
         _drop_target = e.currentTarget || e.target;
         if (tools[id] && tools[id].click && tools[id].active) {
@@ -1030,7 +1038,7 @@ TE.prototype.create = function(o) {
         return r.ui.modal('confirm', do_modal_dom_set(title, content, [okay, cancel]), fn);
     };
 
-    r.ui.prompt = function(title, value, required, y, fn) {
+    r.ui.prompt = function(title, value, required, y, type, fn) {
         var okay = el('button', i18n_buttons.okay, button_attrs),
             cancel = el('button', i18n_buttons.cancel, button_attrs),
             input = el('input', false, {
@@ -1038,17 +1046,38 @@ TE.prototype.create = function(o) {
                 value: value,
                 placeholder: value,
                 'class': prefix + '-input block'
-            }), key;
+            }), key, options = [], i, j;
+        if (is_function(type)) {
+            fn = type;
+            type = 0;
+        }
+        if (type === 1) {
+            input = el('textarea', value, {
+                placeholder: value.split('\n')[0],
+                'class': prefix + '-textarea block'
+            });
+        } else if (type === 2) {
+            for (i in value) {
+                options.push(el('option', value[i], {
+                    value: i,
+                    selected: i === required || null
+                }));
+            }
+            input = el('select', options, {
+                'class': prefix + '-select block'
+            });
+        }
         y = y || noop;
         function prepare() {
             input.focus();
-            input.select();
+            if ('placeholder' in input) input.select();
         }
         function yep(e) {
-            if (required && (!trim(input.value).length || input.value === value)) {
+            j = input.value;
+            if (required && (!trim(j) || j === value)) {
                 return prepare(), freeze(e);
             }
-            return nope(e), y(e, r, input.value);
+            return nope(e), y(e, r, j);
         }
         function nope(e) {
             return do_modal_exit(), event_exit(e);
@@ -1059,7 +1088,7 @@ TE.prototype.create = function(o) {
         events_set(_KEYDOWN, input, function(e) {
             key = e.TE.key;
             if (key('enter')) return yep(e);
-            if (key('escape')) return nope(e);
+            if (key('escape') || key('backspace') && !this.value) return nope(e);
             if (key('arrowup')) return freeze(e);
             if (key('arrowdown')) return okay.focus(), event_exit(e);
         });
@@ -1118,6 +1147,42 @@ TE.prototype.create = function(o) {
         hook_fire('enter.drop.' + k, [r]);
         hook_fire('enter.drop', [r]);
         return r;
+    };
+
+    r.ui.menu = function(id, str, data, i) {
+        if (str === false) {
+            return r.ui.tool(id, str);
+        }
+        var current = '<span class="' + prefix + '-current menu">%1</span>';
+        return r.ui.tool(id, {
+            text: format(current, [str]),
+            click: function(e) {
+                var attr = {
+                    'class': prefix + '-button'
+                }, h, i, j, k;
+                r.ui.drop('menu', function(drop) {
+                    content_reset(drop);
+                    for (i in data) {
+                        attr[data_tool_id] = i;
+                        h = el('span', i, attr);
+                        if (data[i]) {
+                            events_set(_CLICK, h, function(e) {
+                                k = data[this.getAttribute(data_tool_id)];
+                                if (is_string(k)) {
+                                    k = r.ui.tools[k].click;
+                                }
+                                j = k && k(e, r);
+                                if (_drop_target) {
+                                    content_set(_drop_target.firstChild || _drop_target, format(current, [this.innerHTML]));
+                                }
+                                if (j === false) return event_exit(e);
+                            });
+                        }
+                        dom_set(drop, h);
+                    }
+                });
+            }
+        }, i), hook_fire('update.menus', [r]), r;
     };
 
     r.ui.bubble = function() {

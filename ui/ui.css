@@ -1,4 +1,6 @@
-.text-editor {
+.text-editor,
+.text-editor-bubble,
+.text-editor-drop {
   background:#fefefe;
   border:1px solid #ddd;
   color:#999;
@@ -108,7 +110,8 @@
   opacity:.4;
 }
 .text-editor-button.text {width:auto}
-.text-editor-button.text span {padding:0 .5em}
+.text-editor-button.text .text-editor-text {padding:0 .5em}
+.text-editor-button.text .text-editor-text i {display:inline-block}
 .text-editor-tool .text-editor-separator {
   width:0;
   height:1.5em;
@@ -264,3 +267,24 @@
 .text-editor-drop,
 .text-editor-bubble {padding:2px}
 .text-editor-preview {cursor:pointer}
+.text-editor-drop.menu {
+  min-width:12em;
+  padding:0;
+}
+.text-editor-drop.menu .text-editor-button {
+  display:block;
+  text-align:left;
+  background:0 0;
+}
+.text-editor-drop.menu .text-editor-button:focus,
+.text-editor-drop.menu .text-editor-button:hover {background:#f5f5f5}
+.text-editor-current.menu:after {
+  content:"";
+  display:inline-block;
+  vertical-align:middle;
+  width:0;
+  height:0;
+  border:.25em solid transparent;
+  border-top-color:inherit;
+  margin:.125em 0 0 .25em;
+}

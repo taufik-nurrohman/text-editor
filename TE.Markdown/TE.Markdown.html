@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Text Editor</title>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <title>Markdown Text Editor</title>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
     <link href="../ui/ui.min.css" rel="stylesheet">
     <style>
     body {
@@ -34,6 +34,7 @@
     <div>
       <h2>Keyboard Shortcuts</h2>
       <ul>
+        <li><kbd>&#8984;+?</kbd> &rarr; Abbreviation</li>
         <li><kbd>&#8984;+b</kbd> &rarr; Bold</li>
         <li><kbd>&#8984;+g</kbd> &rarr; Image</li>
         <li><kbd>&#8984;+h</kbd> &rarr; Header</li>
@@ -51,8 +52,8 @@
         <li><kbd>&#8984;+&#8629;</kbd> &rarr; Paragraph</li>
         <li><kbd>&#8679;+&#8629;</kbd> &rarr; Line Break (Hard Break)</li>
         <li><kbd>&#8984;+&#8997;+v</kbd> &rarr; Preview</li>
-        <li><kbd>&#8677;</kbd> &rarr; Indent</li>
-        <li><kbd>&#8679;+&#8677;</kbd> &rarr; Outdent</li>
+        <li><kbd>&#8677;</kbd> &rarr; Indent &amp; Depends</li>
+        <li><kbd>&#8679;+&#8677;</kbd> &rarr; Outdent &amp; Depends</li>
         <li><kbd>&#8629;</kbd> &rarr; <em>Depends</em></li>
         <li><kbd>&#9003;</kbd> &rarr; <em>Depends</em></li>
       </ul>
@@ -74,6 +75,18 @@
       <pre><code>[<mark>|</mark>]</code></pre>
       <pre><code>&lt;<mark>|</mark>&gt;</code></pre>
       <pre><code>`<mark>|</mark>`</code></pre>
+      <p>Try pressing the <kbd>&#8677;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
+      <pre><code> 1. <mark>|</mark></code></pre>
+      <pre><code> - <mark>|</mark></code></pre>
+      <pre><code> + <mark>|</mark></code></pre>
+      <pre><code> * <mark>|</mark></code></pre>
+      <pre><code>&gt; <mark>|</mark></code></pre>
+      <p>Try pressing the <kbd>&#8679;+&#8677;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
+      <pre><code>    1. <mark>|</mark></code></pre>
+      <pre><code>   - <mark>|</mark></code></pre>
+      <pre><code>   + <mark>|</mark></code></pre>
+      <pre><code>   * <mark>|</mark></code></pre>
+      <pre><code>&gt; &gt; <mark>|</mark></code></pre>
       <p>Try pressing the <kbd>&#9003;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
       <pre><code>    <mark>|</mark></code></pre>
     </div>
@@ -84,6 +97,18 @@
     <script>
 
     var editor = new TE.Markdown(document.querySelector('textarea'));
+
+    </script>
+    <script src="https://cdn.rawgit.com/showdownjs/showdown/1.4.2/dist/showdown.min.js"></script>
+    <script>
+
+    // Using <https://github.com/showdownjs/showdown> library to create proper HTML preview.
+    editor._.hook.set('enter.overlay.preview', function(e, $, value, container) {
+        var html = value[1].replace(/<body(?:\s[^<>]*?)?>([\s\S]*?)<\/body>/, function(a, b) {
+            return (new showdown.Converter()).makeHtml(b);
+        });
+        container.firstChild.src = 'data:text/html,' + encodeURIComponent(html);
+    });
 
     </script>
   </body>

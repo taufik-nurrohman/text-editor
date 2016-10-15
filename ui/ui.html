@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Text Editor</title>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
     <link href="../ui/ui.min.css" rel="stylesheet">
     <style>
     body {
@@ -14,6 +14,11 @@
       color:#000;
     }
     .text-editor-content {height:300px}
+    .text-h1 {font-size:175%}
+    .text-h2 {font-size:150%}
+    .text-h3 {font-size:115%}
+    .text-em {font-style:italic}
+    .text-editor-current.menu * {font-size:100%}
     </style>
   </head>
   <body>
@@ -126,10 +131,27 @@
         tools: 'bold italic | indent outdent | undo redo | alert_button confirm_button prompt_button | drop_button'
     });
 
+    // test menu button(s)
+    editor.ui.menu('styles', '<span class="text-p">Paragraph</span>', {
+        '<span class="text-h1">Heading 1</span>': function(e, $) {
+            $.unwrap(/<.*?>/, /<.*?>/).format('h1');
+        },
+        '<span class="text-h2">Heading 2</span>': function(e, $) {
+            $.unwrap(/<.*?>/, /<.*?>/).format('h2');
+        },
+        '<span class="text-h3">Heading 3</span>': function(e, $) {
+            $.unwrap(/<.*?>/, /<.*?>/).format('h3');
+        },
+        '<span class="text-p">Paragraph</span>': function(e, $) {
+            $.unwrap(/<.*?>/, /<.*?>/).format('p');
+        },
+        '<span class="text-em">Test Italic</span>': 'italic'
+    });
+
     // custom hook(s)
     editor._.hook.set('enter.overlay.preview', function(e, $, value, container) {
         var x = /<(script|iframe)(\s[^<>]*?)?>(.*?<\/(script|iframe)>)?/gi,
-            y = x.exec(value);
+            y = x.exec(value[0]);
         if (y) {
             container.innerHTML = ""; // stop XSS
             $.ui.alert('Forbidden Tags', 'Tag <code>&lt;' + y[1] + '&gt;</code> is not allowed.', function(e, $) {

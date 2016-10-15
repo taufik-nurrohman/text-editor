@@ -33,15 +33,18 @@ var options = {
     auto_close: {
         '"': '"',
         "'": "'",
-       '(': ')',
-       '{': '}',
-       '[': ']',
-       '<': '>'
+        '(': ')',
+        '{': '}',
+        '[': ']',
+        '<': '>'
     },
     auto_encode_html: true, // auto encode HTML tag(s) in `<code>` tag
     auto_p: true, // smart paragraph insertion
     keys: true, // enable keyboard shortcut feature
     tools: 'clear | b i u s | sub sup | a img | p | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | align-left align-center align-right align-justify | hr | undo redo',
+    attributes: {
+        'spellcheck': 'false'
+    },
     languages: {
         tools: {
             clear: 'Clear Format (✘)',
@@ -126,7 +129,7 @@ var editor = new TE.HTML(document.querySelector('textarea'), options);
 editor.destroy();
 ~~~
 
-### Trigger Editor Toolbars
+### Trigger Editor Tools
 
 ~~~ .javascript
 editor.ui.tools.b.click(null, editor);

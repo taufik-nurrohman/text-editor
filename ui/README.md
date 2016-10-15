@@ -40,11 +40,24 @@ editor.create({
     dir: 'ltr',
     keys: true, // enable/disable keyboard shortcut feature
     tools: 'indent outdent | undo redo',
+    attributes: {
+        'spellcheck': 'false'
+    },
     css: 'body{background:#fff;color:#000}', // CSS for iframe content
+    auto_tab: 1,
+    auto_close: {
+        '"': '"',
+        "'": "'",
+        '(': ')',
+        '{': '}',
+        '[': ']',
+        '<': '>'
+    },
     languages: {
         tools: {
             undo: 'Undo (⌘+Z)',
-            redo: 'Redo (⌘+Y)'
+            redo: 'Redo (⌘+Y)',
+            preview: 'Preview (⌘+⌥+V)'
         },
         buttons: {
             okay: 'OK',
@@ -246,9 +259,24 @@ editor.ui.prompt(
     // if yes…
     function(e, $, value) {
         $.insert(value);
-    }
+    },
+    0 // input type: (0: text input, 1: text area, 2: select box)
 );
 ~~~
+
+> ##### Notes
+>
+> If _input type_ parameter is set to `2`, use _default value_ as the select box option(s) container, and set the default value in _is required?_ parameter:
+>
+> ~~~ .javascript
+> editor.ui.prompt('Choose', {
+>     'red': 'Red',
+>     'green': 'Green',
+>     'blue': 'Blue'
+> }, function(e, $, value) {
+>     $.insert(value);
+> }, 2);
+> ~~~
 
 ### Overlay
 
@@ -300,8 +328,8 @@ editor.ui.exit(true); // restore selection
 editor.ui.exit(true, 'drop'); // restore selection, exit drop only
 ~~~
 
-Toolbars
---------
+Tools
+-----
 
 ### Add
 
@@ -319,7 +347,7 @@ editor.ui.tools.bold = {
     }
 };
 
-// [2]. put button to the toolbar list
+// [2]. put button to the tools list
 editor.config.tools = 'bold undo redo';
 
 // [3]. update the editor
@@ -355,7 +383,7 @@ editor.update();
 #### Method 3
 
 ~~~ .javascript
-var position = 1; // button position in the toolbar
+var position = 1; // button position in the tools bar
 editor.ui.tool('bold', {
     title: 'Bold Text',
     click: function(e, $) {
@@ -381,7 +409,7 @@ editor.ui.tool('bold', {
 > };
 > ~~~
 >
-> A tool with function value will be used as the `click` property:
+> A tool with function value will use that function as the `click` property:
 >
 > ~~~ .javascript
 > // this…
@@ -389,6 +417,7 @@ editor.ui.tool('bold', {
 >
 > // is equal to this…
 > editor.ui.tools.bold = {
+>     i: 'bold',
 >     click: function(e, $) { … }
 > };
 > ~~~
@@ -469,6 +498,31 @@ editor.ui.key('control+b', function(e, $) { … });
 editor.ui.key('control+b', false);
 ~~~
 
+Menus
+-----
+
+### Add
+
+~~~ .javascript
+editor.ui.menu('my-menu', 'Arial', {
+    'Arial': function(e, $) {
+        return $.wrap('<span style="font-family: Arial;">', '</span>'), false;
+    },
+    'Times New Roman': function(e, $) { … },
+    'Test': 'italic'
+});
+~~~
+
+> #### Notes
+>
+> A key with string value will be used to take a tool item from the `editor.ui.tools` if available.
+
+### Remove
+
+~~~ .javascript
+editor.ui.menu('my-menu', false);
+~~~
+
 Hooks
 -----
 
@@ -476,6 +530,7 @@ Hooks
  - `update`
  - `update.tools`
  - `update.keys`
+ - `update.menus`
  - `destroy`
  - `enter`
  - `enter.overlay`

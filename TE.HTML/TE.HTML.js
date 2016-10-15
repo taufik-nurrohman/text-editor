@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.0.0
+ *  HTML TEXT EDITOR PLUGIN 1.1.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -156,6 +156,7 @@ TE.HTML = function(target, o) {
 
     function tree(e, parent, child) {
         var s = editor.$(),
+            v = s.value,
             before = s.before,
             ul = formats[parent],
             li = formats[child] || child,
@@ -163,7 +164,7 @@ TE.HTML = function(target, o) {
             li_o = get_o(li),
             dent = get_indent(before);
         tree_parent = ul;
-        if (!s.length) {
+        if (!v) {
             var match = before.match(pattern('<' + li_o + attrs_capture + '>.*$'));
             if (match) {
                 if (pattern('<\\/' + li_o + '>\\s*$').test(before)) {
@@ -192,7 +193,6 @@ TE.HTML = function(target, o) {
             }
             editor[1]();
         }
-        return editor;
     }
 
     function align(e, $, id) {
@@ -218,8 +218,16 @@ TE.HTML = function(target, o) {
     }
 
     function attr_value(s) {
-        return s.replace(/<.*?>/g, "").replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+        return force_i(s).replace(/<.*?>/g, "").replace(/"/g, '&quot;').replace(/'/g, '&apos;');
     }
+
+    function force_i(s) {
+        return trim(s.replace(/\s+/g, ' '));
+    }
+
+    editor.i = function() {
+        return editor.replace(/\s+/g, ' ');
+    };
 
     extend(ui.tools, {
         clear: {
@@ -227,7 +235,7 @@ TE.HTML = function(target, o) {
             click: function(e, $) {
                 var s = $[0]().$(),
                     v = s.value;
-                if (!v.length) return;
+                if (!v) return;
                 if (!/<[^<>]+?>/.test(v) && (s.before.slice(-1) !== '>' && s.after.slice(0, 1) !== '<')) {
                     $.insert("");
                 } else {
@@ -240,25 +248,25 @@ TE.HTML = function(target, o) {
         b: {
             i: 'bold',
             click: function(e, $) {
-                return auto_p_(e, $).format(formats.b), false;
+                return auto_p_(e, $).i().format(formats.b), false;
             }
         },
         i: {
             i: 'italic',
             click: function(e, $) {
-                return auto_p_(e, $).format(formats.i), false;
+                return auto_p_(e, $).i().format(formats.i), false;
             }
         },
         u: {
             i: 'underline',
             click: function(e, $) {
-                return auto_p_(e, $).format(formats.u), false;
+                return auto_p_(e, $).i().format(formats.u), false;
             }
         },
         s: {
             i: 'strikethrough',
             click: function(e, $) {
-                return auto_p_(e, $).format(format(formats.s, $._.time())), false;
+                return auto_p_(e, $).i().format(format(formats.s, $._.time())), false;
             }
         },
         a: {
@@ -268,6 +276,7 @@ TE.HTML = function(target, o) {
                     i18n = languages.modals.a,
                     href, title;
                 return $.record().ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
+                    v = force_i(v);
                     href = v;
                     // automatic `rel="nofollow"` attribute
                     var host = win.location.host,
@@ -281,7 +290,7 @@ TE.HTML = function(target, o) {
                             $.insert(placeholder);
                         }
                         extra = x ? ' rel="nofollow" target="_blank"' : "";
-                        $.format(a + ' href="' + href + '"' + (title ? ' title="' + title + '"' : "") + extra);
+                        $.i().format(a + ' href="' + href + '"' + (title ? ' title="' + title + '"' : "") + extra);
                     });
                 }), false;
             }
@@ -297,10 +306,11 @@ TE.HTML = function(target, o) {
                     i18n = languages.modals.img,
                     src, title;
                 return $.record().ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
+                    v = force_i(v);
                     src = v;
                     $.blur().ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v) {
-                        title = v;
-                        if (!alt.length) {
+                        title = attr_value(v);
+                        if (!alt) {
                             alt = src.split(/[\/\\\\]/).pop();
                         }
                         alt = attr_value(alt);
@@ -326,6 +336,7 @@ TE.HTML = function(target, o) {
                     sup_o = get_o(sup);
                 return auto_p_(e, $)[0]()
                     .unwrap(pattern('<' + sup_o + attrs + '>'), '</' + sup_o + '>')
+                    .i()
                     .format(sub)
                 [1](), false;
             }
@@ -338,6 +349,7 @@ TE.HTML = function(target, o) {
                     sub_o = get_o(sub);
                 return auto_p_(e, $)[0]()
                     .unwrap(pattern('<' + sub_o + attrs + '>'), '</' + sub_o + '>')
+                    .i()
                     .format(sup)
                 [1](), false;
             }
@@ -346,6 +358,7 @@ TE.HTML = function(target, o) {
             i: 'paragraph',
             click: function(e, $) {
                 var s = $.$(),
+                    v = s.value,
                     p = formats.p,
                     br = formats.br,
                     p_o = get_o(p),
@@ -353,7 +366,7 @@ TE.HTML = function(target, o) {
                     before = s.before,
                     after = s.after,
                     dent = get_indent(before);
-                if (!s.length || s.value.indexOf('\n') === -1) {
+                if (!v || v.indexOf('\n') === -1) {
                     if (pattern('^\\s*<\\/' + p_o + '>').test(after)) {
                         if (pattern('<' + p_o + attrs + '>\\s*$').test(before)) {
                             $[0]()
@@ -417,9 +430,9 @@ TE.HTML = function(target, o) {
                 var attr = match[2] || "",
                     i = +((match[1] || 'h0').slice(1));
                 return $[0]()
-                    .replace(/\s+/g, ' ')
                     .unwrap(w_o, w_c)
                     .unwrap(w_o, w_c, 1)
+                    .i()
                     .format(i > 5 ? H_o[0] + attr : H_o[i + 1] + attr, 0, '\n\n')
                 [1](), false;
             }
@@ -428,6 +441,7 @@ TE.HTML = function(target, o) {
             i: 'quote-left',
             click: function(e, $) {
                 var s = $.$(),
+                    v = s.value,
                     blockquote = formats.blockquote,
                     q = formats.q,
                     p = formats.p,
@@ -440,7 +454,7 @@ TE.HTML = function(target, o) {
                     }
                     $[0]().format(blockquote, 0, '\n\n', '\n');
                     if (auto_p) {
-                        if (!s.length || $.match(/^[^<\n]*?[^>]$/)) {
+                        if (!v || $.match(/^[^<\n]*?[^>]$/)) {
                             $.wrap(tab + '<' + p + '>', '</' + p_o + '>');
                         } else {
                             $[pattern('((^|\\n)' + tab + ')+').test(s.value) ? 'outdent' : 'indent'](tab);
@@ -449,7 +463,7 @@ TE.HTML = function(target, o) {
                     $[1]();
                 // span
                 } else {
-                    $.format(q);
+                    $.i().format(q);
                 }
                 return false;
             }
@@ -458,6 +472,7 @@ TE.HTML = function(target, o) {
             i: 'code',
             click: function(e, $) {
                 var s = $.$(),
+                    v = s.value,
                     x = config.auto_encode_html,
                     pre = formats.pre,
                     code = formats.code,
@@ -479,12 +494,12 @@ TE.HTML = function(target, o) {
                     if (before.test(s.before) && after.test(s.after)) {
                         $[0]().unwrap(pattern(before), pattern(after)).replace(any, decode)[1]();
                     } else {
-                        $[0]().tidy('\n\n').wrap('<' + pre + '><' + code + '>', '</' + code_o + '></' + pre_o + '>').insert(s.length ? s.value : placeholder).replace(any, encode)[1]();
+                        $[0]().tidy('\n\n').wrap('<' + pre + '><' + code + '>', '</' + code_o + '></' + pre_o + '>').insert(v || placeholder).replace(any, encode)[1]();
                     }
                 // span
                 } else {
                     $[0]().format(code).loss().replace(any, function(a) {
-                        return pattern('^<\\/' + code_o + '>').test($.$().after) ? encode(a) : decode(a);
+                        return force_i(pattern('^<\\/' + code_o + '>').test($.$().after) ? encode(a) : decode(a));
                     })[1]();
                 }
                 return false;
@@ -571,20 +586,21 @@ TE.HTML = function(target, o) {
             },
             'enter': function(e, $) {
                 var s = $.$(),
-                    v = $.get(),
+                    v = s.value,
+                    w = $.get(),
                     p = formats.p,
                     li = formats.li,
                     p_o = get_o(p),
                     li_o = get_o(li),
                     dent = get_indent(s.before), m, n;
-                if (!s.length) {
+                if (!v) {
                     if (match = s.after.match(pattern('^\\s*<\\/(' + p_o + '|' + li_o + ')>'))) {
                         m = match[1];
                         ui.tools[m === 'li' ? tree_parent : m].click(e, $);
-                    } else if (auto_p && trim(v).length && s.end === v.length && /^\s*[^<\n]*?[^>]\s*$/.test(v)) {
-                        v = '<' + p + '>' + v + '</' + p_o + '>\n<' + p + '>';
+                    } else if (auto_p && trim(w) && s.end === w.length && /^\s*[^<\n]*?[^>]\s*$/.test(w)) {
+                        w = '<' + p + '>' + w + '</' + p_o + '>\n<' + p + '>';
                         n = '</' + p_o + '>';
-                        $.set(v + n).select(v.length);
+                        $.set(w + n).select(w.length);
                     } else {
                         return; // normal enter key ...
                     }
@@ -592,11 +608,12 @@ TE.HTML = function(target, o) {
                 }
             },
             'backspace': function(e, $) {
-                var s = $.$(), tag,
+                var s = $.$(),
+                    v = s.value, tag,
                     before = s.before,
                     after = s.after,
                     end = '<[^<>]+?>';
-                if (!s.length) {
+                if (!v) {
                     if (pattern(end + '$').test(before)) {
                         tag = before.split('<').pop().match(/^([^\/\s]+).*?>$/);
                         tag = (tag && tag[1]) || 0;
