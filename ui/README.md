@@ -269,13 +269,19 @@ editor.ui.prompt(
 > If _input type_ parameter is set to `2`, use _default value_ as the select box option(s) container, and set the default value in _is required?_ parameter:
 >
 > ~~~ .javascript
-> editor.ui.prompt('Choose', {
->     'red': 'Red',
->     'green': 'Green',
->     'blue': 'Blue'
-> }, function(e, $, value) {
->     $.insert(value);
-> }, 2);
+> editor.ui.prompt(
+>     'Choose',
+>     {
+>         'red': 'Red',
+>         'green': 'Green',
+>         'blue': 'Blue'
+>     },
+>     'green',
+>     function(e, $, value) {
+>         $.insert(value);
+>     },
+>     2
+> );
 > ~~~
 
 ### Overlay
