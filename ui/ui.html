@@ -148,6 +148,9 @@
         '<span class="text-em">Test Italic</span>': 'italic'
     });
 
+    // test tool separator
+    editor.ui.tool('|', -1);
+
     // custom hook(s)
     editor._.hook.set('enter.overlay.preview', function(e, $, value, container) {
         var x = /<(script|iframe)(\s[^<>]*?)?>(.*?<\/(script|iframe)>)?/gi,
@@ -166,7 +169,7 @@
         setTimeout(function() {
             if (editor.$().length) {
                 editor.ui.bubble('my-bubble', function(bubble) {
-                    bubble.innerHTML = '<a href="#">Share&hellip;</a>';
+                    bubble.innerHTML = '<a href="#">Test bubble&hellip;</a>';
                 });
             } else {
                 editor.ui.exit(0, 'bubble');

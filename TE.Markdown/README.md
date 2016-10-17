@@ -3,6 +3,8 @@ Markdown › Text Editor
 
 > Markdown text editor plugin.
 
+[View Demo](https://rawgit.com/tovic/text-editor/master/TE.Markdown/TE.Markdown.html)
+
 ### CSS
 
 ~~~ .html
@@ -30,6 +32,7 @@ var options = {
     tab: '  ', // indent size
     dir: 'ltr',
     auto_tab: true, // press ⇥ key to indent
+    extra: true, // enable **Markdown Extra** feature
     auto_close: {
         '"': '"',
         "'": "'",
@@ -50,21 +53,32 @@ var options = {
         },
         img: {
             'test': ['../foo.jpg', 'Test Reference Image']
+        },
+        abbr: {
+            'CSS': 'Cascading Style Sheet'
         }
     },
     languages: {
         tools: { … },
         modals: { … }
     },
-    enable_setext_header: true,
-    enable_closed_atx_header: false,
-    enable_fenced_code_block: true, // replace with `true` or `~~~ .my-class` to enable fenced code block syntax in **Markdown Extra**
-    enable_hard_break: 1, // press `⇧+↵` to do a hard break
+    advance_br: true, // press `⇧+↵` to do a hard break
+    'advance_h1,h2': true, // enable **SEText** header style
+    'advance_pre,code': true, // replace with `true` or `%1 .foo` to enable fenced code block syntax in **Markdown Extra**
+    'close_h1,h2,h3,h4,h5,h6': false, // replace with `true` for `### heading 3 ###`
+    close_tr: false, // enable closed table pipe
     formats: {
         b: '**',
         i: '_',
         s: '~~',
+        h1: ['=', '#'],
+        h2: ['-', '##'],
+        h3: '###',
+        h4: '####',
+        h5: '#####',
+        h6: '######',
         blockquote: '>',
+        code: ['`', '~'],
         ul: '-',
         ol: '%1.',
         hr: '---'
@@ -86,18 +100,26 @@ editor.destroy();
 editor.ui.tools.b.click(null, editor);
 ~~~
 
+### Methods
+
+#### Mark
+
+~~~ .javascript
+editor.mark(['**', '**']); // strong text
+~~~
+
 HTML Preview
 ------------
 
-Using <https://github.com/showdownjs/showdown> library to create proper HTML preview.
+Using <https://github.com/tanakahisateru/js-markdown-extra> library to create proper HTML preview.
 
 ~~~ .html
-<script src="https://cdn.rawgit.com/showdownjs/showdown/1.4.2/dist/showdown.min.js"></script>
+<script src="https://cdn.rawgit.com/tanakahisateru/js-markdown-extra/1.2.4/js-markdown-extra.js"></script>
 <script>
 
 editor._.hook.set('enter.overlay.preview', function(e, $, value, container) {
     var html = value[1].replace(/<body(?:\s[^<>]*?)?>([\s\S]*?)<\/body>/, function(a, b) {
-        return (new showdown.Converter()).makeHtml(b);
+        return Markdown(b).replace(/<table>/g, '<table border="1">');
     });
     container.firstChild.src = 'data:text/html,' + encodeURIComponent(html);
 });

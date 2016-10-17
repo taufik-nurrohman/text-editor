@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.1.0
+ *  HTML TEXT EDITOR PLUGIN 1.1.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -29,8 +29,11 @@ TE.HTML = function(target, o) {
             suffix: '>',
             auto_encode_html: 1,
             auto_p: 1,
-            tools: 'clear | b i u s | sub sup | a img | p | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | align-left align-center align-right align-justify | hr | undo redo',
-            css: 'html,body{background:#fff;color:#000}.align-left{text-align:left}.align-center{text-align:center}.align-right{text-align:right}.align-justify{text-align:justify}',
+            tools: 'clear | b i u s | sub sup | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
+            states: {
+                tr: [1, 20], // minimum and maximum table row(s)
+                td: [1, 20] // minimum and maximum table column(s)
+            },
             languages: {
                 tools: {
                     clear: 'Clear Format (' + _u2718 + ')',
@@ -50,13 +53,7 @@ TE.HTML = function(target, o) {
                     ol: 'Ordered List (' + _u2318 + '++)',
                     indent: 'Indent (' + _u21E5 + ')',
                     outdent: 'Outdent (' + _u21E7 + '+' + _u21E5 + ')',
-                    'align-left': 'Align Left',
-                    'align-center': 'Align Center',
-                    'align-right': 'Align Right',
-                    'align-justify': 'Align Justify',
-                    'align-top': 'Align Top',
-                    'align-middle': 'Align Middle',
-                    'align-bottom': 'Align Bottom',
+                    table: 'Table (' + _u2318 + '+T)',
                     hr: 'Horizontal Rule (' + _u2318 + '+R)'
                 },
                 modals: {
@@ -65,18 +62,22 @@ TE.HTML = function(target, o) {
                         placeholder: ['http://', 'link title here' + _u2026]
                     },
                     img: {
-                        title: ['Image URL', 'Image Caption'],
-                        placeholder: ['http://', 'image caption here' + _u2026]
+                        title: ['Image URL', 'Image Title', 'Image Caption'],
+                        placeholder: ['http://', 'image title here' + _u2026, 'image caption here' + _u2026]
+                    },
+                    table: {
+                        title: ['Number of Columns', 'Number of Rows', 'Table Caption'],
+                        placeholder: ['3', '3', 'table caption here' + _u2026]
                     }
+                },
+                placeholders: {
+                    table: ['Table Head %1.%2', 'Table Data %1.%2', 'Table Foot %1.%2']
                 }
             },
-            classes: {
-                formats: {
-                    align: ['left', 'center', 'right', 'justify', 'top', 'middle', 'bottom', ""]
-                }
-            },
+            classes: {},
+            advance_img: 1, // insert image with a `<figure>` element if title field is defined
+            advance_table: 1, // include `<thead>`, `<tbody>` and `<tfoot>` markup
             formats: {
-                align: 'div class="%1-%2"',
                 b: 'strong',
                 i: 'em',
                 u: 'u',
@@ -102,11 +103,20 @@ TE.HTML = function(target, o) {
                 ul: 'ul',
                 ol: 'ol',
                 li: 'li',
+                table: 'table border="1"',
+                caption: 'caption',
+                thead: 'thead',
+                tbody: 'tbody',
+                tfoot: 'tfoot',
+                tr: 'tr',
+                th: 'th',
+                td: 'td',
                 hr: 'hr'
             }
         }, o)),
         format = editor._.format,
         config = editor.config,
+        states = config.states,
         languages = config.languages,
         formats = config.formats,
         classes = config.classes,
@@ -115,11 +125,12 @@ TE.HTML = function(target, o) {
         attrs = '(?:\\s[^<>]*?)?',
         attrs_capture = '(|\\s[^<>]*?)',
         content = '([\\s\\S]*?)',
-        placeholder = languages.others.placeholder,
+        placeholder = languages.placeholders[""],
         auto_p = config.auto_p,
         tree_parent;
 
-    TE.HTML.__instance__.push(editor);
+    // define editor type
+    editor.type = 'HTML';
 
     function is_set(x) {
         return typeof x !== "undefined";
@@ -137,12 +148,22 @@ TE.HTML = function(target, o) {
         return typeof x === "object";
     }
 
+    function is_number(x) {
+        return typeof x === "number";
+    }
+
     function pattern(a, b) {
         return new RegExp(a, b);
     }
 
     function trim(s) {
         return s.replace(/^\s*|\s*$/g, "");
+    }
+
+    function edge(a, b, c) {
+        if (a < b) return b;
+        if (a > c) return c;
+        return a;
     }
 
     function get_o(s) {
@@ -195,21 +216,6 @@ TE.HTML = function(target, o) {
         }
     }
 
-    function align(e, $, id) {
-        var s = $.$(),
-            div = formats.align,
-            div_o = get_o(div),
-            a, b;
-        id = id.split('-');
-        a = pattern('<' + format(esc(div), [id[0], '(?:' + classes.formats.align.join('|') + ')']) + '>\\s*');
-        b = pattern('\\s*<\\/' + div_o + '>');
-        $[0]()
-            .unwrap(a, b)
-            .unwrap(a, b, 1)
-            .format(format(div, id), 0, '\n\n', '\n')
-        [1]();
-    }
-
     function auto_p_(e, $) {
         if (!$.get(0) && auto_p) {
             ui.tools.p.click(e, $);
@@ -235,14 +241,13 @@ TE.HTML = function(target, o) {
             click: function(e, $) {
                 var s = $[0]().$(),
                     v = s.value;
-                if (!v) return;
+                if (!v) return $.select(), false;
                 if (!/<[^<>]+?>/.test(v) && (s.before.slice(-1) !== '>' && s.after.slice(0, 1) !== '<')) {
                     $.insert("");
                 } else {
                     $.replace(/<[^<>]+?>/g, "").unwrap(/<[^\/<>]+?>/, /<\/[^<>]+?>/);
                 }
-                $[1]();
-                return false;
+                return $[1](), false;
             }
         },
         b: {
@@ -304,24 +309,25 @@ TE.HTML = function(target, o) {
                     figcaption = formats.figcaption,
                     alt = s.value,
                     i18n = languages.modals.img,
+                    advance = config.advance_img,
                     src, title;
-                return $.record().ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
+                return $.ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
                     v = force_i(v);
                     src = v;
-                    $.blur().ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v) {
+                    $.blur().ui.prompt(i18n.title[advance ? 2 : 1], i18n.placeholder[advance ? 2 : 1], 0, function(e, $, v) {
                         title = attr_value(v);
                         if (!alt) {
                             alt = src.split(/[\/\\\\]/).pop();
                         }
                         alt = attr_value(alt);
                         $[0]().insert("");
-                        if (!title) {
-                            auto_p_(e, $).tidy(/<[^\/<>]+?>\s*$/.test($.$().before) ? "" : ' ', "").insert('<' + img + ' alt="' + alt + '" src="' + src + '"' + suffix + ' ', -1);
-                        } else {
+                        if (advance && title) {
                             $.tidy('\n\n', "").insert('<' + figure + '>\n' + tab + '<' + img + ' alt="' + alt + '" src="' + src + '"' + suffix + '\n' + tab + '<' + figcaption + '>' + title + '</' + get_o(figcaption) + '>\n</' + get_o(figure) + '>\n\n', -1);
                             if (auto_p) {
                                 ui.tools.p.click(e, editor);
                             }
+                        } else {
+                            auto_p_(e, $).tidy(/<[^\/<>]+?>\s*$/.test($.$().before) ? "" : ' ', "").insert('<' + img + ' alt="' + alt + '" src="' + src + '"' + (title ? ' title="' + title + '"' : "") + suffix + ' ', -1);
                         }
                         $[1]();
                     });
@@ -543,10 +549,69 @@ TE.HTML = function(target, o) {
                 return false;
             }
         },
-        'align-left': align,
-        'align-center': align,
-        'align-right': align,
-        'align-justify': align,
+        table: function(e, $) {
+            var str = states.tr,
+                std = states.td,
+                i18n = languages.modals.table,
+                p = languages.placeholders.table,
+                q = format(p[0], [1, 1]),
+                advance = config.advance_table ? tab : "",
+                table = formats.table,
+                caption = formats.caption,
+                thead = formats.thead,
+                tbody = formats.tbody,
+                tfoot = formats.tfoot,
+                tr = formats.tr,
+                th = formats.th,
+                td = formats.td,
+                table_o = get_o(table),
+                caption_o = get_o(caption),
+                thead_o = get_o(thead),
+                tbody_o = get_o(tbody),
+                tfoot_o = get_o(tfoot),
+                tr_o = get_o(tr),
+                th_o = get_o(th),
+                td_o = get_o(td),
+                o = [], s, c, r, title;
+            if ($.$().value === q) return $.select(), false;
+            return $[0]().insert("").ui.prompt(i18n.title[0], i18n.placeholder[0], 0, function(e, $, v, w) {
+                c = edge(parseInt(v, 10) || w, std[0], std[1]);
+                $.blur().ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v, w) {
+                    r = edge(parseInt(v, 10) || w, str[0], str[1]);
+                    $.blur().ui.prompt(i18n.title[2], i18n.placeholder[2], 0, function(e, $, v) {
+                        var tfoot_html = "",
+                            i, j, k, l, m, n;
+                        title = force_i(v);
+                        for (i = 0; i < r; ++i) {
+                            s = advance + tab + '<' + tr + '>\n';
+                            for (j = 0; j < c; ++j) {
+                                s += advance + tab + tab + '<' + td + '>' + format(p[1], [i + 1, j + 1]) + '</' + td_o + '>\n';
+                            }
+                            s += advance + tab + '</' + tr_o + '>';
+                            o.push(s);
+                        }
+                        o = o.join('\n');
+                        s = tab + (advance ? '<' + thead + '>\n' + tab + tab + '<' + tr + '>' : '<' + tr_o + '>') + '\n';
+                        for (k = 0; k < r; ++k) {
+                            s += advance + tab + tab + '<' + th + '>' + format(p[0], [1, k + 1]) + '</' + th_o + '>\n';
+                        }
+                        if (advance) {
+                            tfoot_html += tab + '<' + tfoot + '>\n';
+                            for (k = 0; k < r; ++k) {
+                                tfoot_html += tab + tab + '<' + td + '>' + format(p[2], [1, k + 1]) + '</' + td_o + '>\n';
+                            }
+                            tfoot_html += tab + '</' + tfoot_o + '>\n';
+                        }
+                        s += advance + tab + '</' + tr_o + '>' + (advance ? '\n' + tab + '</' + thead_o + '>\n' + tfoot_html + tab + '<' + tbody + '>' : "") + '\n';
+                        o = s + o + (advance ? '\n' + tab + '</' + tbody_o + '>' : "") + '\n';
+                        $.tidy('\n\n').insert('<' + table + '>\n' + (title ? tab + '<' + caption + '>' + title + '</' + caption_o + '>\n' : "") + o + '</' + table_o + '>', 1);
+                        m = $.$();
+                        n = m.start + m.after.indexOf(q);
+                        $.select(n, n + q.length)[1]();
+                    });
+                });
+            }), false;
+        },
         hr: {
             i: 'ellipsis-h',
             click: function(e, $) {
@@ -633,6 +698,7 @@ TE.HTML = function(target, o) {
             'control++': 'ol',
             'control+=': 'ol', // alias for `control++`
             'control+shift++': 'ol', // alias for `control++`
+            'control+t': 'table',
             'control+r': 'hr'
         });
     }
@@ -640,6 +706,3 @@ TE.HTML = function(target, o) {
     return editor.update({}, 0);
 
 };
-
-// Collect all editor instance(s)
-TE.HTML.__instance__ = [];

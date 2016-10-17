@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.1.0
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.1.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -60,8 +60,10 @@ TE.prototype.create = function(o) {
                     close: 'Close',
                     ignore: 'Ignore'
                 },
+                placeholders: {
+                    "": 'text here' + _u2026
+                },
                 others: {
-                    placeholder: 'text here' + _u2026,
                     preview: 'Preview',
                     _word: '%1 Word',
                     _words: '%1 Words'
@@ -122,7 +124,7 @@ TE.prototype.create = function(o) {
             before = s.before,
             after = s.after;
         if (!s.length) {
-            r.insert(i18n_others.placeholder);
+            r.insert(i18n.placeholders[""]);
         } else {
             gap_1 = false;
         }
@@ -603,13 +605,15 @@ TE.prototype.create = function(o) {
 
     function do_keys(e) {
         var s = r.$(),
-            before = s.before.slice(-1),
-            after = s.after[0],
+            s_before = s.before,
+            s_after = s.after,
+            before = s_before.slice(-1),
+            after = s_after[0],
             length = s.length,
             key = e.TE.key,
             keys = r.ui.keys,
             keys_a = TE.keys_alt,
-            dent = (s.before.match(/(?:^|\n)([\t ]*).*$/) || [""]).pop(),
+            dent = (s_before.match(/(?:^|\n)([\t ]*).*$/) || [""]).pop(),
             i, j, k, l, m, n = key();
         function explode(s) {
             return s.replace(/\+/g, '\n').replace(/\n\n/g, '\n+').split('\n');
@@ -636,14 +640,6 @@ TE.prototype.create = function(o) {
                 if (l === false) event_exit(e);
             }
         }
-        if (auto_tab && !length) {
-            if (n === 'backspace' && pattern(esc(tab) + '$').test(s.before)) {
-                r.outdent(tab);
-                return event_exit(e);
-            } else if (n === 'enter' && pattern('(^|\\n)(' + esc(tab) + ')+$').test(s.before)) {
-                return r.insert('\n' + dent, -1), event_exit(e);
-            }
-        }
         if (auto_close) {
             for (i in auto_close) {
                 m = auto_close[i];
@@ -661,7 +657,7 @@ TE.prototype.create = function(o) {
                     return event_exit(e);
                 }
                 if (before === i && after === m) {
-                    if (n === 'backspace' && s.before.slice(-2) !== '\\' + i) {
+                    if (n === 'backspace' && s_before.slice(-2) !== '\\' + i) {
                         r.unwrap(i, m);
                         return event_exit(e);
                     } else if (n === 'enter' && auto_tab) {
@@ -669,6 +665,14 @@ TE.prototype.create = function(o) {
                         return event_exit(e);
                     }
                 }
+            }
+        }
+        if (auto_tab && !length) {
+            if (n === 'backspace' && pattern(esc(tab) + '$').test(s_before)) {
+                r.outdent(tab);
+                return event_exit(e);
+            } else if (n === 'enter' && pattern('(^|\\n)(' + esc(tab) + ')+.*$').test(s_before)) {
+                return r.insert(s_after.slice(0, 2) === '</' ? "" : '\n' + dent, -1), event_exit(e);
             }
         }
     }
@@ -1077,7 +1081,7 @@ TE.prototype.create = function(o) {
             if (required && (!trim(j) || j === value)) {
                 return prepare(), freeze(e);
             }
-            return nope(e), y(e, r, j);
+            return nope(e), y(e, r, j !== value ? j : "", value);
         }
         function nope(e) {
             return do_modal_exit(), event_exit(e);
@@ -1150,12 +1154,18 @@ TE.prototype.create = function(o) {
     };
 
     r.ui.menu = function(id, str, data, i) {
+        var current = '<span class="' + prefix + '-current menu">%1</span>',
+            icon = "";
         if (str === false) {
             return r.ui.tool(id, str);
+        } else if (is_object(str)) {
+            icon = str[0];
+            str = str[1];
+            current = '<i class="' + format(c.i, [icon]) + '"></i> ' + current;
         }
-        var current = '<span class="' + prefix + '-current menu">%1</span>';
         return r.ui.tool(id, {
-            text: format(current, [str]),
+            i: icon,
+            text: format(current, [str, icon]),
             click: function(e) {
                 var attr = {
                     'class': prefix + '-button'
@@ -1173,7 +1183,7 @@ TE.prototype.create = function(o) {
                                 }
                                 j = k && k(e, r);
                                 if (_drop_target) {
-                                    content_set(_drop_target.firstChild || _drop_target, format(current, [this.innerHTML]));
+                                    content_set(_drop_target.firstChild || _drop_target, format(current, [this.innerHTML, icon]));
                                 }
                                 if (j === false) return event_exit(e);
                             });
@@ -1220,20 +1230,28 @@ TE.prototype.create = function(o) {
 
     r.ui.tool = function(id, data, i) {
         var ii = "";
-        config.tools = config.tools.filter(function(v, i) {
-            if (v === id) {
-                ii = i;
-                return false;
-            } else {
-                return true;
-            }
-        });
+        if (id !== '|') {
+            config.tools = config.tools.filter(function(v, i) {
+                if (v === id) {
+                    ii = i;
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+        }
         if (data === false) {
             delete r.ui.tools[id];
         } else {
-            r.ui.tools[id] = extend((r.ui.tools[id] || {}), data);
-            if (!is_set(i) && ii !== "") {
-                i = ii;
+            // separator detected
+            if (id === '|') {
+                i = data;
+                data = {};
+            } else {
+                r.ui.tools[id] = extend((r.ui.tools[id] || {}), data);
+                if (!is_set(i) && ii !== "") {
+                    i = ii;
+                }
             }
             if (is_number(i)) {
                 config.tools.splice(i, 0, id);
@@ -1291,8 +1309,7 @@ TE.prototype.create = function(o) {
         }
     };
 
-    r.ui.parent = r;
-    r.ui.dom = {
+    r.ui.el = {
         container: _container,
         header: _header,
         body: _body,
@@ -1337,7 +1354,8 @@ TE.prototype.create = function(o) {
         event: {
             set: events_set,
             reset: events_reset,
-            fire: events_fire
+            fire: events_fire,
+            x: event_exit
         },
         hooks: hooks,
         hook: {

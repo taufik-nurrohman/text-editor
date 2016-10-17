@@ -3,6 +3,8 @@ HTML › Text Editor
 
 > HTML text editor plugin.
 
+[View Demo](https://rawgit.com/tovic/text-editor/master/TE.HTML/TE.HTML.html)
+
 ### CSS
 
 ~~~ .html
@@ -41,9 +43,13 @@ var options = {
     auto_encode_html: true, // auto encode HTML tag(s) in `<code>` tag
     auto_p: true, // smart paragraph insertion
     keys: true, // enable keyboard shortcut feature
-    tools: 'clear | b i u s | sub sup | a img | p | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | align-left align-center align-right align-justify | hr | undo redo',
+    tools: 'clear | b i u s | sub sup | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
     attributes: {
         'spellcheck': 'false'
+    },
+    states: {
+        tr: [1, 20], // minimum and maximum table row(s)
+        td: [1, 20] // minimum and maximum table column(s)
     },
     languages: {
         tools: {
@@ -64,13 +70,7 @@ var options = {
             ol: 'Ordered List (⌘++)',
             indent: 'Indent (⇥)',
             outdent: 'Outdent (⇧+⇥)',
-            'align-left': 'Align Left',
-            'align-center': 'Align Center',
-            'align-right': 'Align Right',
-            'align-justify': 'Align Justify',
-            'align-top': 'Align Top',
-            'align-middle': 'Align Middle',
-            'align-bottom': 'Align Bottom',
+            table: 'Table (⌘+T)',
             hr: 'Horizontal Rule (⌘+R)'
         },
         modals: {
@@ -79,18 +79,24 @@ var options = {
                 placeholder: ['http://', 'link title here…']
             },
             img: {
-                title: ['Image URL', 'Image Caption'],
-                placeholder: ['http://', 'image caption here…']
+                title: ['Image URL', 'Image Title', 'Image Caption'],
+                placeholder: ['http://', 'image title here…', 'image caption here…']
+            },
+            table: {
+                title: ['Number of Columns', 'Number of Rows', 'Table Caption'],
+                placeholder: ['3', '3', 'table caption here…']
             }
+        },
+        placeholders: {
+            table: ['Table Head %1.%2', 'Table Data %1.%2', 'Table Foot %1.%2']
         }
     },
     classes: {
-        formats: {
-            align: ['left', 'center', 'right', 'justify', 'top', 'middle', 'bottom', ""]
-        }
+        formats: {}
     },
+    advance_img: true, // insert image with a `<figure>` element if title field is defined
+    advance_table: true, // include `<thead>`, `<tbody>` and `<tfoot>` markup
     formats: {
-        align: 'div class="%1-%2"',
         b: 'strong',
         i: 'em',
         u: 'u',
@@ -116,6 +122,14 @@ var options = {
         ul: 'ul',
         ol: 'ol',
         li: 'li',
+        table: 'table border="1"',
+        caption: 'caption',
+        thead: 'thead',
+        tbody: 'tbody',
+        tfoot: 'tfoot',
+        tr: 'tr',
+        th: 'th',
+        td: 'td',
         hr: 'hr'
     }
 };
@@ -133,4 +147,12 @@ editor.destroy();
 
 ~~~ .javascript
 editor.ui.tools.b.click(null, editor);
+~~~
+
+### Methods
+
+#### Force Inline
+
+~~~ .javascript
+editor.i(); // is equal to `editor.trim(false, false).replace(/\s+/g, ' ');
 ~~~

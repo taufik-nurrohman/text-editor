@@ -1,7 +1,12 @@
 .text-editor,
+.text-editor-modal,
 .text-editor-bubble,
-.text-editor-drop {
-  background:#fefefe;
+.text-editor-drop,
+.text-editor-overlay-content,
+.text-editor-input,
+.text-editor-select,
+.text-editor-textarea {
+  background:#fff;
   border:1px solid #ddd;
   color:#999;
   position:relative;
@@ -53,7 +58,6 @@
 .text-editor-textarea {
   display:inline-block;
   background:#fafafa;
-  border:1px solid #ddd;
   border-top-color:#ccc;
   font:inherit;
   color:#666;
@@ -80,6 +84,7 @@
   box-shadow:none;
   border-radius:0;
 }
+.text-editor-separator + .text-editor-separator {display:none} /* remove empty separator(s) without content */
 .text-editor-button::-moz-focus-inner {
   margin:0;
   padding:0;
@@ -199,7 +204,7 @@
   bottom:0;
   left:0;
   padding:2em;
-  background:#fff;
+  border-width:0;
   box-shadow:0 0 2px rgba(0,0,0,.2);
 }
 .text-editor-portal {
@@ -222,8 +227,6 @@
   position:absolute;
   top:-9999px;
   left:-9999px;
-  background:#fff;
-  border:1px solid #ddd;
   z-index:9999;
   box-shadow:0 0 2px rgba(0,0,0,.2);
 }

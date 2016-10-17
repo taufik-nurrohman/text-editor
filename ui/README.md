@@ -3,6 +3,8 @@ UI › Text Editor
 
 > User interface module for text editor plugin.
 
+[View Demo](https://rawgit.com/tovic/text-editor/master/ui/ui.html)
+
 ### CSS
 
 ~~~ .html
@@ -70,8 +72,10 @@ editor.create({
             close: 'Close',
             ignore: 'Ignore'
         },
+        placeholders: {
+            "": 'text here…'
+        },
         others: {
-            placeholder: 'text here…',
             preview: 'Preview',
             _word: '%1 Word',
             _words: '%1 Words'
@@ -221,13 +225,13 @@ editor.ui.modal('my-modal', {
 });
 ~~~
 
-#### Alert › Modal
+### Alert › Modal
 
 ~~~ .javascript
 editor.ui.alert('Alert Title', 'Alert content.');
 ~~~
 
-#### Confirm › Modal
+### Confirm › Modal
 
 ~~~ .javascript
 editor.ui.confirm(
@@ -246,7 +250,7 @@ editor.ui.confirm(
 );
 ~~~
 
-#### Prompt › Modal
+### Prompt › Modal
 
 ~~~ .javascript
 editor.ui.prompt(
@@ -257,32 +261,30 @@ editor.ui.prompt(
     // is required?
     true,
     // if yes…
-    function(e, $, value) {
+    function(e, $, value, placeholder) { // `placeholder` is the default value
         $.insert(value);
     },
     0 // input type: (0: text input, 1: text area, 2: select box)
 );
 ~~~
 
-> ##### Notes
->
-> If _input type_ parameter is set to `2`, use _default value_ as the select box option(s) container, and set the default value in _is required?_ parameter:
->
-> ~~~ .javascript
-> editor.ui.prompt(
->     'Choose',
->     {
->         'red': 'Red',
->         'green': 'Green',
->         'blue': 'Blue'
->     },
->     'green',
->     function(e, $, value) {
->         $.insert(value);
->     },
->     2
-> );
-> ~~~
+If _input type_ parameter is set to `2`, use _default value_ as the select box option(s) container, and set the default value in _is required?_ parameter:
+
+~~~ .javascript
+editor.ui.prompt(
+    'Choose',
+    {
+        'red': 'Red',
+        'green': 'Green',
+        'blue': 'Blue'
+    },
+    'green',
+    function(e, $, value, placeholder) {
+        $.insert(value);
+    },
+    2
+);
+~~~
 
 ### Overlay
 
@@ -339,94 +341,43 @@ Tools
 
 ### Add
 
-#### Method 1
-
 ~~~ .javascript
-// [1]. register new button to the `editor.ui.tools` object
-editor.ui.tools.bold = {
-    i: 'bold', // icon ID for `fa fa-%1`
-    title: 'Bold Text', // button title
-    click: function(e, $) { // action
-        // `$` maps to the `editor` so you can use it to trigger the available selection method(s)
-        $.format('b'); // toggle HTML `<b>` to selection
-        return false; // hijack default event
-    }
-};
-
-// [2]. put button to the tools list
-editor.config.tools = 'bold undo redo';
-
-// [3]. update the editor
-editor.update();
-~~~
-
-#### Method 2
-
-~~~ .javascript
-// register
-editor._.extend(editor.ui.tools, {
-    bold: { … },
-    italic: { … },
-    underline: { … },
-    link: {
-        title: 'Insert Link',
-        click: function(e, $) {
-            $.ui.prompt('URL', 'http://', true, function(e, $, value) {
-                $.wrap('<a href="' + value + '">', '</a>');
-            });
-            return false;
-        }
-    }
-});
-
-// put
-editor.config.tools = 'bold italic underline | link | undo redo';
-
-// update
-editor.update();
-~~~
-
-#### Method 3
-
-~~~ .javascript
-var position = 1; // button position in the tools bar
+var pos = 1; // tool position in the tools bar (use negative number to order from the back)
 editor.ui.tool('bold', {
     title: 'Bold Text',
     click: function(e, $) {
         return $.format('strong'), false;
     }
-}, position);
+}, pos);
 ~~~
 
-> #### Notes
->
-> A tool without `i` property will use the button key as the icon ID:
->
-> ~~~ .javascript
-> // this…
-> editor.ui.tools.bold = {
->     click: function(e, $) { … }
-> };
->
-> // is equal to this…
-> editor.ui.tools.bold = {
->     i: 'bold',
->     click: function(e, $) { … }
-> };
-> ~~~
->
-> A tool with function value will use that function as the `click` property:
->
-> ~~~ .javascript
-> // this…
-> editor.ui.tools.bold = function(e, $) { … };
->
-> // is equal to this…
-> editor.ui.tools.bold = {
->     i: 'bold',
->     click: function(e, $) { … }
-> };
-> ~~~
+A tool without `i` property will use the tool key as the icon ID:
+
+~~~ .javascript
+// this…
+editor.ui.tool('bold', {
+    click: function(e, $) { … }
+}, 1);
+
+// is equal to this…
+editor.ui.tool('bold', {
+    i: 'bold',
+    click: function(e, $) { … }
+});
+~~~
+
+A tool with function value will use that function as the `click` property:
+
+~~~ .javascript
+// this…
+editor.ui.tool('bold', function(e, $) { … });
+
+// is equal to this…
+editor.ui.tool('bold', {
+    i: 'bold',
+    click: function(e, $) { … }
+});
+~~~
 
 ### Remove
 
@@ -442,61 +393,43 @@ editor.ui.tool('bold', {
 });
 ~~~
 
+### Properties
+
+Here are all of the available properties for `editor.ui.tool`:
+
+ - `title` → the tool title
+ - `i` → icon identifier
+ - `click` → function that will be executed on click event
+ - `text` → use text instead of icon?
+ - `active` → `true` by default, it means that the tool is active and can be operated
+ - `attributes` → extra HTML attributes for the tool markup
+
+Separator › Tools
+-----------------
+
+~~~ .javascript
+var pos = 4; // tool separator position in the tools bar (use negative number to order from the back)
+editor.ui.tool('|', pos);
+~~~
+
 Keyboard Shortcuts
 ------------------
 
 ### Add
 
-#### Method 1
-
-~~~ .javascript
-// [1]. register new shortcut to the `editor.ui.keys` object
-editor.ui.keys['control+f'] = function(e, $) {
-    $.ui.prompt('Search', "", true, function(e, $, value) {
-        // do something…
-    });
-};
-
-// [2]. update the editor
-editor.update();
-~~~
-
-#### Method 2
-
-~~~ .javascript
-// register
-editor._.extend(editor.ui.keys, {
-    'control+b': function(e, $) { … },
-    'control+i': function(e, $) { … },
-    'control+u': function(e, $) { … }
-});
-
-// update
-editor.update();
-~~~
-
-#### Method 3
-
 ~~~ .javascript
 editor.ui.key('control+b', function(e, $) { … });
 ~~~
 
-> #### Notes
+A key with string value will be used to take a tool item from the `editor.ui.tools` if available:
+
+~~~ .javascript
+// this…
+editor.ui.key('control+b', 'bold');
 >
-> A key with string value will be used to take a tool item from the `editor.ui.tools` if available:
->
-> ~~~ .javascript
-> // this…
-> editor.ui.keys['control+b'] = 'bold';
->
-> // is equal to this…
-> editor.ui.keys['control+b'] = editor.ui.tools.bold;
->
-> // or this…
-> editor.ui.keys['control+b'] = function(e, $) {
->     return editor.ui.tools.bold(e, $);
-> });
-> ~~~
+// is equal to this…
+editor.ui.key('control+b', editor.ui.tools.bold);
+~~~
 
 ### Remove
 
@@ -519,9 +452,26 @@ editor.ui.menu('my-menu', 'Arial', {
 });
 ~~~
 
-> #### Notes
->
-> A key with string value will be used to take a tool item from the `editor.ui.tools` if available.
+Text with icon…
+
+~~~ .javascript
+editor.ui.menu('my-menu', ['user', 'Arial'], { … });
+~~~
+
+A key with string value will be used to take a tool item from the `editor.ui.tools` if available:
+
+~~~ .javascript
+// this…
+editor.ui.menu('my-menu', 'Arial', {
+    'Test': 'italic'
+});
+
+// is equal to this…
+// this…
+editor.ui.menu('my-menu', 'Arial', {
+    'Test': editor.ui.tools.italic
+});
+~~~
 
 ### Remove
 

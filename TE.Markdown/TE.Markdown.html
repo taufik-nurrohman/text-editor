@@ -43,6 +43,7 @@
         <li><kbd>&#8984;+l</kbd> &rarr; Link</li>
         <li><kbd>&#8984;+q</kbd> &rarr; Quote</li>
         <li><kbd>&#8984;+r</kbd> &rarr; Horizontal Rule</li>
+        <li><kbd>&#8984;+t</kbd> &rarr; Table</li>
         <li><kbd>&#8984;+y</kbd> &rarr; Redo</li>
         <li><kbd>&#8984;+z</kbd> &rarr; Undo</li>
         <li><kbd>&#8984;++</kbd> &rarr; List</li>
@@ -96,16 +97,33 @@
     <script src="../TE.Markdown/TE.Markdown.min.js"></script>
     <script>
 
-    var editor = new TE.Markdown(document.querySelector('textarea'));
+    var editor = new TE.Markdown(document.querySelector('textarea'), {
+        extra: true,
+        states: {
+            a: {
+                1: ['http://example.com', 'Example Site Title'],
+                2: ['http://example.com']
+            },
+            img: {
+                1: ['http://example.com/image.jpg', 'Example Site Image Title'],
+                2: ['http://example.com/image.jpg']
+            },
+            abbr: {
+                'CSS': 'Cascading Style Sheet',
+                'HTML': 'Hyper Text Markup Language',
+                'JS': 'JavaScript'
+            }
+        }
+    });
 
     </script>
-    <script src="https://cdn.rawgit.com/showdownjs/showdown/1.4.2/dist/showdown.min.js"></script>
+    <script src="https://cdn.rawgit.com/tanakahisateru/js-markdown-extra/1.2.4/js-markdown-extra.js"></script>
     <script>
 
-    // Using <https://github.com/showdownjs/showdown> library to create proper HTML preview.
+    // Using <https://github.com/tanakahisateru/js-markdown-extra> library to create proper HTML preview.
     editor._.hook.set('enter.overlay.preview', function(e, $, value, container) {
         var html = value[1].replace(/<body(?:\s[^<>]*?)?>([\s\S]*?)<\/body>/, function(a, b) {
-            return (new showdown.Converter()).makeHtml(b);
+            return Markdown(b).replace(/<table>/g, '<table border="1">');
         });
         container.firstChild.src = 'data:text/html,' + encodeURIComponent(html);
     });

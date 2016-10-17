@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.3.2
+ *  TEXT EDITOR PLUGIN 2.4.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -94,7 +94,7 @@ var TE = function(target) {
     function extend(a, b) {
         b = b || {};
         for (var i in b) {
-            if (is_object(a[i]) && is_object(b[i]) && !is_node(a[i])) {
+            if (is_object(a[i]) && is_object(b[i]) && !is_node(a[i]) && !is_node(b[i])) {
                 a[i] = extend(a[i], b[i]);
             } else {
                 a[i] = b[i];
@@ -172,8 +172,8 @@ var TE = function(target) {
     // access editor instance from `this` scope with `this.TE`
     target.TE = r;
 
-    // store editor instance to `TE.$`
-    TE.__instance__.push(r);
+    // store editor instance to `TE.__instance__`
+    TE.__instance__[target.id || target.name || Object.keys(TE.__instance__).length] = r;
 
     // scroll the editor
     r.scroll = function(i) {
@@ -546,10 +546,19 @@ var TE = function(target) {
 (function(r) {
 
     // Plugin version
-    r.version = '2.3.2';
+    r.version = '2.4.0';
 
     // Collect all instance(s)
-    r.__instance__ = [];
+    r.__instance__ = {};
+
+    // Plug to all instance(s)
+    r.plug = function(x) {
+        var ins = r.__instance__;
+        for (var i in ins) {
+            x(ins[i]);
+        }
+        return r;
+    };
 
     // Key maps for the deprecated `KeyboardEvent.keyCode`
     r.keys = {
