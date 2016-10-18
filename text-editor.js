@@ -39,7 +39,7 @@ var TE = function(target) {
     r.x = '!$^*()-=+[]{}\\|:<>,./?'; // character(s) to escape
 
     function val() {
-        return target.value;
+        return target.value.replace(/\r/g, "");
     }
 
     function is_set(x) {

@@ -29,10 +29,11 @@ TE.HTML = function(target, o) {
             suffix: '>',
             auto_encode_html: 1,
             auto_p: 1,
-            tools: 'clear | b i u s | sub sup | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
+            tools: 'clear | b i u s | sub sup | abbr | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
             states: {
                 tr: [1, 20], // minimum and maximum table row(s)
-                td: [1, 20] // minimum and maximum table column(s)
+                td: [1, 20], // minimum and maximum table column(s)
+                abbr: {}
             },
             languages: {
                 tools: {
@@ -45,6 +46,7 @@ TE.HTML = function(target, o) {
                     img: 'Image (' + _u2318 + '+G)',
                     sub: 'Subscript (' + _u2318 + '+' + _u2193 + ')',
                     sup: 'Superscript (' + _u2318 + '+' + _u2191 + ')',
+                    abbr: 'Abbreviation (' + _u2318 + '+' + _u21E7 + '+?)',
                     p: 'Paragraph (' + _u2318 + '+' + _u21B5 + ')',
                     'p,h1,h2,h3,h4,h5,h6': 'H1 ' + _u2013 + ' H6 (' + _u2318 + '+H)',
                     'blockquote,q': 'Quote (' + _u2318 + '+Q)',
@@ -65,6 +67,10 @@ TE.HTML = function(target, o) {
                         title: ['Image URL', 'Image Title', 'Image Caption'],
                         placeholder: ['http://', 'image title here' + _u2026, 'image caption here' + _u2026]
                     },
+                    abbr: {
+                        title: 'Abbreviation',
+                        placeholder: 'meaning here' + _u2026
+                    },
                     table: {
                         title: ['Number of Columns', 'Number of Rows', 'Table Caption'],
                         placeholder: ['3', '3', 'table caption here' + _u2026]
@@ -75,6 +81,7 @@ TE.HTML = function(target, o) {
                 }
             },
             classes: {},
+            advance_a: 1, // detect external URL and automatically adds `rel="nofollow" target="_blank"` attribute to the link markup
             advance_img: 1, // insert image with a `<figure>` element if title field is defined
             advance_table: 1, // include `<thead>`, `<tbody>` and `<tfoot>` markup
             formats: {
@@ -88,6 +95,7 @@ TE.HTML = function(target, o) {
                 img: 'img',
                 sub: 'sub',
                 sup: 'sup',
+                abbr: 'abbr',
                 p: 'p',
                 br: 'br',
                 h1: 'h1',
@@ -186,6 +194,9 @@ TE.HTML = function(target, o) {
             dent = get_indent(before);
         tree_parent = ul;
         if (!v) {
+            if (pattern('\\s+<\\/' + get_o(formats.ul) + '|' + get_o(formats.ol) + '>\\s*').test(before)) {
+                return editor.select(), false;
+            }
             var match = before.match(pattern('<' + li_o + attrs_capture + '>.*$'));
             if (match) {
                 if (pattern('<\\/' + li_o + '>\\s*$').test(before)) {
@@ -205,7 +216,7 @@ TE.HTML = function(target, o) {
         } else {
             editor[0]()
                 .tidy('\n\n', "")
-                .replace(/\n/g, '</' + li_o + '>\n' + tab + '<' + li + '>')
+                .replace(/[\t ]*\n[\t ]*/g, '</' + li_o + '>\n' + tab + '<' + li + '>')
                 .wrap('<' + ul + '>\n' + tab + '<' + li + '>', '</' + li_o + '>\n</' + ul_o + '>\n\n', 1)
                 .replace(pattern('\\n' + tab + '<' + li + '>\\s*<\\/' + li_o + '>\\n', 'g'), '\n</' + ul_o + '>\n\n<' + ul + '>\n')
                 .select(editor.$().end);
@@ -241,13 +252,12 @@ TE.HTML = function(target, o) {
             click: function(e, $) {
                 var s = $[0]().$(),
                     v = s.value;
-                if (!v) return $.select(), false;
-                if (!/<[^<>]+?>/.test(v) && (s.before.slice(-1) !== '>' && s.after.slice(0, 1) !== '<')) {
+                if (!/<[^<>]+?>/.test(v) && (s.before.slice(-1) !== '>' && s.after[0] !== '<')) {
                     $.insert("");
                 } else {
                     $.replace(/<[^<>]+?>/g, "").unwrap(/<[^\/<>]+?>/, /<\/[^<>]+?>/);
                 }
-                return $[1](), false;
+                return $[1](), !!s.after;
             }
         },
         b: {
@@ -280,7 +290,7 @@ TE.HTML = function(target, o) {
                 var a = formats.a,
                     i18n = languages.modals.a,
                     href, title;
-                return $.record().ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
+                return $.record().ui.prompt(['a[href]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
                     v = force_i(v);
                     href = v;
                     // automatic `rel="nofollow"` attribute
@@ -289,12 +299,12 @@ TE.HTML = function(target, o) {
                     if (href.indexOf('://') !== -1) x = 1;
                     if (host !== "" && href.indexOf('://' + host) !== -1) x = 0;
                     if (/^([.\/?&#]|javascript:)/.test(href)) x = 0;
-                    $.blur().ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v) {
+                    $.blur().ui.prompt(['a[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
                         title = attr_value(v);
                         if (!auto_p_(e, $).$().length) {
                             $.insert(placeholder);
                         }
-                        extra = x ? ' rel="nofollow" target="_blank"' : "";
+                        extra = config.advance_a && x ? ' rel="nofollow" target="_blank"' : "";
                         $.i().format(a + ' href="' + href + '"' + (title ? ' title="' + title + '"' : "") + extra);
                     });
                 }), false;
@@ -311,10 +321,10 @@ TE.HTML = function(target, o) {
                     i18n = languages.modals.img,
                     advance = config.advance_img,
                     src, title;
-                return $.ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
+                return $.ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
                     v = force_i(v);
                     src = v;
-                    $.blur().ui.prompt(i18n.title[advance ? 2 : 1], i18n.placeholder[advance ? 2 : 1], 0, function(e, $, v) {
+                    $.blur().ui.prompt(['img[title]', i18n.title[advance ? 2 : 1]], i18n.placeholder[advance ? 2 : 1], 0, function(e, $, v) {
                         title = attr_value(v);
                         if (!alt) {
                             alt = src.split(/[\/\\\\]/).pop();
@@ -358,6 +368,41 @@ TE.HTML = function(target, o) {
                     .i()
                     .format(sup)
                 [1](), false;
+            }
+        },
+        abbr: {
+            i: 'question',
+            click: function(e, $) {
+                var s = $.$(),
+                    x = trim(s.value),
+                    i18n = languages.modals.abbr,
+                    g = $.get(),
+                    abbr_content = trim(x || placeholder),
+                    abbr = formats.abbr,
+                    abbr_o = get_o(abbr),
+                    abbr_begin = '<' + esc(abbr) + attrs_capture + '>',
+                    abbr_begin_alt = '<' + esc(abbr) + attrs + '>',
+                    abbr_end = '<\\/' + abbr_o + '>',
+                    abbr_html = pattern(abbr_begin + content + abbr_end), state, i;
+                g.replace(abbr_html, function(a, b, c) {
+                    if (c = trim(c)) states.abbr[c] = (b.match(/\s+title="\s*(.*?)\s*"/i) || ["", ""])[1];
+                });
+                state = states.abbr;
+                if (x && state[x]) {
+                    return $.i().format(abbr + ' title="' + state[x] + '"'), false;
+                }
+                return $.record().ui.prompt(['abbr[title]', i18n.title], state[abbr_content] || i18n.placeholder, !state[x], function(e, $, v, w) {
+                    v = trim(v || w);
+                    $[0]();
+                    // find object key by value
+                    for (i in state) {
+                        if (state[i] === v) {
+                            $.insert(i);
+                            break;
+                        }
+                    }
+                    $.unwrap(pattern(abbr_begin_alt), pattern(abbr_end)).unwrap(pattern(abbr_begin_alt), pattern(abbr_end), 1).i().format(abbr + ' title="' + v + '"')[1]();
+                }), false;
             }
         },
         p: {
@@ -518,7 +563,7 @@ TE.HTML = function(target, o) {
                     ul = formats.ul,
                     ol_o = get_o(ol),
                     ul_o = get_o(ul),
-                    s = ul_o + '|' + ol_o;
+                    s = '(' + esc(ul_o) + '|' + esc(ol_o) + ')';
                 if ($.match(pattern('<' + s + attrs + '>' + content + '<\\/' + s + '>'))) {
                     $[0]()
                         .replace(pattern('<' + ol_o + attrs_capture + '>', 'g'), '<' + ul_o + '$1>')
@@ -537,7 +582,7 @@ TE.HTML = function(target, o) {
                     ul = formats.ul,
                     ol_o = get_o(ol),
                     ul_o = get_o(ul),
-                    s = ul_o + '|' + ol_o;
+                    s = '(' + esc(ul_o) + '|' + esc(ol_o) + ')';
                 if ($.match(pattern('<' + s + attrs + '>' + content + '<\\/' + s + '>'))) {
                     $[0]()
                         .replace(pattern('<' + ul_o + attrs_capture + '>', 'g'), '<' + ol_o + '$1>')
@@ -574,11 +619,11 @@ TE.HTML = function(target, o) {
                 td_o = get_o(td),
                 o = [], s, c, r, title;
             if ($.$().value === q) return $.select(), false;
-            return $[0]().insert("").ui.prompt(i18n.title[0], i18n.placeholder[0], 0, function(e, $, v, w) {
+            return $[0]().insert("").ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
                 c = edge(parseInt(v, 10) || w, std[0], std[1]);
-                $.blur().ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v, w) {
+                $.blur().ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
                     r = edge(parseInt(v, 10) || w, str[0], str[1]);
-                    $.blur().ui.prompt(i18n.title[2], i18n.placeholder[2], 0, function(e, $, v) {
+                    $.blur().ui.prompt(['table>caption', i18n.title[2]], i18n.placeholder[2], 0, function(e, $, v) {
                         var tfoot_html = "",
                             i, j, k, l, m, n;
                         title = force_i(v);
@@ -644,6 +689,7 @@ TE.HTML = function(target, o) {
             'control+g': 'img',
             'control+arrowdown': 'sub',
             'control+arrowup': 'sup',
+            'control+shift+?': 'abbr',
             'control+enter': 'p',
             'shift+enter': function(e, $) {
                 var dent = get_indent($.$().before);
@@ -671,6 +717,16 @@ TE.HTML = function(target, o) {
                     }
                     return false;
                 }
+            },
+            'tab': function(e, $) {
+                var s = $.$(),
+                    li = formats.li,
+                    li_o = get_o(li),
+                    dent = get_indent(s.before);
+                if (pattern('<\\/' + li + '>').test(s.after)) {
+                    return $.wrap('\n' + dent + tab + '<' + (formats[tree_parent] || tree_parent) + '>\n' + dent + tab + tab + '<' + li + '>', '</' + li_o + '>\n' + dent + tab + '</' + tree_parent + '>\n' + dent), false;
+                }
+                return $.ui.tools.indent.click(e, $);
             },
             'backspace': function(e, $) {
                 var s = $.$(),

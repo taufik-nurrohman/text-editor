@@ -27,7 +27,7 @@ Instance
 --------
 
 ~~~ .javascript
-var options = {
+var config = {
     tab: '  ', // indent size
     dir: 'ltr',
     suffix: '>', // replace with `/>` to output `<br/>` instead of `<br>`
@@ -49,7 +49,8 @@ var options = {
     },
     states: {
         tr: [1, 20], // minimum and maximum table row(s)
-        td: [1, 20] // minimum and maximum table column(s)
+        td: [1, 20], // minimum and maximum table column(s)
+        abbr: {}
     },
     languages: {
         tools: {
@@ -62,6 +63,7 @@ var options = {
             img: 'Image (⌘+G)',
             sub: 'Subscript (⌘+↓)',
             sup: 'Superscript (⌘+↑)',
+            abbr: 'Abbreviation (⌘+⇧+?)',
             p: 'Paragraph (⌘+↵)',
             'p,h1,h2,h3,h4,h5,h6': 'H1 – H6 (⌘+H)',
             'blockquote,q': 'Quote (⌘+Q)',
@@ -94,6 +96,7 @@ var options = {
     classes: {
         formats: {}
     },
+    advance_a: 1, // detect external URL and automatically adds `rel="nofollow" target="_blank"` attribute to the link markup
     advance_img: true, // insert image with a `<figure>` element if title field is defined
     advance_table: true, // include `<thead>`, `<tbody>` and `<tfoot>` markup
     formats: {
@@ -134,7 +137,7 @@ var options = {
     }
 };
 
-var editor = new TE.HTML(document.querySelector('textarea'), options);
+var editor = new TE.HTML(document.querySelector('textarea'), config);
 ~~~
 
 ### Destroy Editor
@@ -149,10 +152,44 @@ editor.destroy();
 editor.ui.tools.b.click(null, editor);
 ~~~
 
-### Methods
+Methods
+-------
 
-#### Force Inline
+### Force Inline
 
 ~~~ .javascript
-editor.i(); // is equal to `editor.trim(false, false).replace(/\s+/g, ' ');
+editor.i(); // is equal to `editor.trim(false, false).replace(/\s+/g, ' ');`
 ~~~
+
+Hooks
+-----
+
+ - `enter.modal.prompt:a[href]`
+ - `enter.modal.prompt:a[title]`
+
+ - `exit.modal.prompt:a[href].y`
+ - `exit.modal.prompt:a[title].y`
+
+ - `exit.modal.prompt:a[href].n`
+ - `exit.modal.prompt:a[title].n`
+
+ - `enter.modal.prompt:img[src]`
+ - `enter.modal.prompt:img[title]`
+
+ - `exit.modal.prompt:img[src].y`
+ - `exit.modal.prompt:img[title].y`
+
+ - `exit.modal.prompt:img[src].n`
+ - `exit.modal.prompt:img[title].n`
+
+ - `enter.modal.prompt:table>td`
+ - `enter.modal.prompt:table>tr`
+ - `enter.modal.prompt:table>caption`
+
+ - `exit.modal.prompt:table>td.y`
+ - `exit.modal.prompt:table>tr.y`
+ - `exit.modal.prompt:table>caption.y`
+
+ - `exit.modal.prompt:table>td.n`
+ - `exit.modal.prompt:table>tr.n`
+ - `exit.modal.prompt:table>caption.n`

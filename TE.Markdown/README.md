@@ -28,7 +28,7 @@ Instance
 --------
 
 ~~~ .javascript
-var options = {
+var config = {
     tab: '  ', // indent size
     dir: 'ltr',
     auto_tab: true, // press ⇥ key to indent
@@ -43,7 +43,7 @@ var options = {
         '`': '`'
     },
     keys: true, // enable keyboard shortcut feature
-    tools: 'b i | a img | footnote abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | hr | undo redo',
+    tools: 'b i | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | hr | undo redo',
     attributes: {
         'spellcheck': 'false'
     },
@@ -85,7 +85,7 @@ var options = {
     }
 };
 
-var editor = new TE.Markdown(document.querySelector('textarea'), options);
+var editor = new TE.Markdown(document.querySelector('textarea'), config);
 ~~~
 
 ### Destroy Editor
@@ -100,13 +100,56 @@ editor.destroy();
 editor.ui.tools.b.click(null, editor);
 ~~~
 
-### Methods
+Methods
+-------
 
-#### Mark
+### Mark
 
 ~~~ .javascript
 editor.mark(['**', '**']); // strong text
 ~~~
+
+Hooks
+-----
+
+ - `enter.modal.prompt:a[href]`
+ - `enter.modal.prompt:a[title]`
+
+ - `exit.modal.prompt:a[href].y`
+ - `exit.modal.prompt:a[title].y`
+
+ - `exit.modal.prompt:a[href].n`
+ - `exit.modal.prompt:a[title].n`
+
+ - `enter.modal.prompt:img[src]`
+ - `enter.modal.prompt:img[title]`
+
+ - `exit.modal.prompt:img[src].y`
+ - `exit.modal.prompt:img[title].y`
+
+ - `exit.modal.prompt:img[src].n`
+ - `exit.modal.prompt:img[title].n`
+
+ - `enter.modal.prompt:sup[id]`
+
+ - `exit.modal.prompt:sup[id].y`
+
+ - `exit.modal.prompt:sup[id].n`
+
+ - `enter.modal.prompt:abbr[title]`
+
+ - `exit.modal.prompt:abbr[title].y`
+
+ - `exit.modal.prompt:abbr[title].n`
+
+ - `enter.modal.prompt:table>td`
+ - `enter.modal.prompt:table>tr`
+
+ - `exit.modal.prompt:table>td.y`
+ - `exit.modal.prompt:table>tr.y`
+
+ - `exit.modal.prompt:table>td.n`
+ - `exit.modal.prompt:table>tr.n`
 
 HTML Preview
 ------------

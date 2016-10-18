@@ -28,6 +28,12 @@
   </head>
   <body>
     <h1>HTML Text Editor</h1>
+    <div>
+      <h2>Tips</h2>
+      <ol>
+        <li>Default abbreviations can be defined in the <code>config.states.abbr</code> (see the source code of this page).</li>
+      </ol>
+    </div>
     <form action="#">
       <p><textarea></textarea></p>
     </form>
@@ -52,10 +58,11 @@
         <li><kbd>&#8984;+&darr;</kbd> &rarr; Subscript</li>
         <li><kbd>&#8984;+&uarr;</kbd> &rarr; Superscript</li>
         <li><kbd>&#8984;+&#8629;</kbd> &rarr; Paragraph</li>
+        <li><kbd>&#8984;+&#8679;+?</kbd> &rarr; Abbreviation</li>
         <li><kbd>&#8679;+&#8629;</kbd> &rarr; Line Break</li>
         <li><kbd>&#10008;</kbd> &rarr; Clear Format &rarr; Delete</li>
         <li><kbd>&#8984;+&#8997;+v</kbd> &rarr; Preview</li>
-        <li><kbd>&#8677;</kbd> &rarr; Indent</li>
+        <li><kbd>&#8677;</kbd> &rarr; Indent &amp; <em>Depends</em></li>
         <li><kbd>&#8679;+&#8677;</kbd> &rarr; Outdent</li>
         <li><kbd>&#8629;</kbd> &rarr; <em>Depends</em></li>
         <li><kbd>&#9003;</kbd> &rarr; <em>Depends</em></li>
@@ -89,6 +96,8 @@
       <pre><code>{<mark>|</mark>}</code></pre>
       <pre><code>[<mark>|</mark>]</code></pre>
       <pre><code>&lt;<mark>|</mark>&gt;</code></pre>
+      <p>Try pressing the <kbd>&#8677;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
+      <pre><code>&lt;li&gt;abc<mark>|</mark>&lt;/li&gt;</code></pre>
       <p>Try pressing the <kbd>&#9003;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
       <pre><code>&lt;p class="foo"&gt;&lt/p&gt;<mark>|</mark></code></pre>
       <pre><code>&lt;p class="foo"&gt;<mark>|</mark>&lt/p&gt;</code></pre>
@@ -99,7 +108,15 @@
     <script src="../TE.HTML/TE.HTML.min.js"></script>
     <script>
 
-    var editor = new TE.HTML(document.querySelector('textarea'));
+    var editor = new TE.HTML(document.querySelector('textarea'), {
+        states: {
+            abbr: {
+                'CSS': 'Cascading Style Sheet',
+                'HTML': 'Hyper Text Markup Language',
+                'JS': 'JavaScript'
+            }
+        }
+    });
 
     </script>
   </body>

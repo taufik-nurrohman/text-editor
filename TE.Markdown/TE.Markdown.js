@@ -23,15 +23,13 @@ TE.Markdown = function(target, o) {
             },
             states: {
                 a: {
-                    "": true // implicit link name (do not remove!)
+                    "": [""] // implicit link name shortcut (do not remove!)
                 },
-                img: {},
-                abbr: {}
+                img: {}
             },
             languages: {
                 tools: {
-                    footnote: 'Footnote (' + _u2318 + '+' + _u2193 + ')',
-                    abbr: 'Abbreviation (' + _u2318 + '+?)'
+                    sup: 'Footnote (' + _u2318 + '+' + _u2193 + ')'
                 },
                 modals: {
                     a: {
@@ -40,12 +38,8 @@ TE.Markdown = function(target, o) {
                     img: {
                         title: ['Image URL/Reference ID']
                     },
-                    footnote: {
+                    sup: {
                         title: 'Footnote ID'
-                    },
-                    abbr: {
-                        title: 'Abbreviation',
-                        placeholder: 'meaning here' + _u2026
                     }
                 }
             },
@@ -218,6 +212,7 @@ TE.Markdown = function(target, o) {
                     n = /^ {0,3}\[[^\^]+?\]:/.test(g.split('\n').pop()) ? '\n' : '\n\n',
                     links = g.match(/^ {0,3}\[[^\^]+?\]:/gm) || [],
                     i18n = languages.modals.a,
+                    http = i18n.placeholder[0],
                     state, href, title, index, start, end, i;
                 // automatic link
                 if (/^([a-z]+:\/\/\S+|<[a-z]+:\/\/\S+>)$/.test(x)) {
@@ -229,7 +224,8 @@ TE.Markdown = function(target, o) {
                     states.a[i] = 1;
                 }
                 state = states.a;
-                return $.record().ui.prompt(i18n.title[0], i18n.placeholder[0], 0, function(e, $, v) {
+                return $.record().ui.prompt(['a[href]', i18n.title[0]], http, 0, function(e, $, v) {
+                    var implicit = v === "";
                     v = force_i(v);
                     $[0]();
                     if (state[v]) {
@@ -240,12 +236,12 @@ TE.Markdown = function(target, o) {
                             b = s.before;
                             start = s.start;
                             end = s.end;
-                            $.set(b + s.value + trim_right(s.after) + n + ' [' + (v || trim(x)) + ']: ' + (state[v] !== true ? state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "") : "")).select(start, end);
-                            if (!v) $.focus(true).insert(i18n.placeholder[0]);
+                            $.set(b + s.value + trim_right(s.after) + n + ' [' + (v || trim(x) || placeholder) + ']: ' + (!implicit ? state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "") : "")).select(start, end);
+                            if (implicit) $.focus(true).insert(http);
                         }
                     } else {
                         href = v;
-                        $.blur().ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v) {
+                        $.blur().ui.prompt(['a[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
                             title = attr_value(v);
                             if (!x) {
                                 $.insert(placeholder);
@@ -277,7 +273,7 @@ TE.Markdown = function(target, o) {
                     !states.img[i] && (states.img[i] = 1);
                 }
                 state = states.img;
-                return $.ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
+                return $.ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
                     v = force_i(v);
                     src = v;
                     if (!alt) {
@@ -297,7 +293,7 @@ TE.Markdown = function(target, o) {
                             $.set(b + s.value + s.after + (A ? n : "") + ' [' + v + ']: ' + state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "")).select(start, end);
                         }
                     } else {
-                        $.blur().ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v) {
+                        $.blur().ui.prompt(['img[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
                             title = attr_value(v);
                             $.insert('![' + alt + '](' + src + (title ? ' "' + title + '"' : "") + ')\n\n', -1);
                             if (keep) $.select($.$().start);
@@ -307,13 +303,14 @@ TE.Markdown = function(target, o) {
                 }), false;
             }
         },
-        footnote: extra ? {
+        sub: 0,
+        sup: extra ? {
             i: 'thumb-tack',
             click: function(e, $) {
                 var s = $.$(),
                     b = s.before,
                     a = s.after,
-                    i18n = languages.modals.footnote,
+                    i18n = languages.modals.sup,
                     g = $.get(),
                     n = /^ {0,3}\[\^.+?\]:/.test(g.split('\n').pop()) ? '\n' : '\n\n',
                     notes = g.match(/^ {0,3}\[\^.+?\]:/gm) || [],
@@ -322,7 +319,7 @@ TE.Markdown = function(target, o) {
                     notes[i] = ' ' + trim(notes[i]);
                 }
                 i = notes.length + 1;
-                return $.ui.prompt(i18n.title, s.value || i18n.placeholder || i, 0, function(e, $, v) {
+                return $.ui.prompt(['sup[id]', i18n.title], s.value || i18n.placeholder || i, 0, function(e, $, v) {
                     v = trim(v) || i;
                     index = notes.indexOf(' [^' + v + ']:');
                     if (index !== -1) {
@@ -338,10 +335,10 @@ TE.Markdown = function(target, o) {
             i: 'question',
             click: function(e, $) {
                 var s = $.$(),
-                    x = s.value,
+                    x = trim(s.value),
                     i18n = languages.modals.abbr,
                     g = $.get(),
-                    abbr = x || placeholder,
+                    abbr = trim(x || placeholder),
                     n = /^ {0,3}\*\[.+?\]:/.test(g.split('\n').pop()) ? '\n' : '\n\n',
                     abbrs = g.match(/^ {0,3}\*\[.+?\]:/gm) || [],
                     state = states.abbr,
@@ -354,9 +351,9 @@ TE.Markdown = function(target, o) {
                     i = g.indexOf(abbrs[i]) + 3;
                     return $.select(i, i + abbr.length), false;
                 }
-                return $.record().ui.prompt(i18n.title, state[abbr] || i18n.placeholder, !state[x], function(e, $, v) {
+                return $.record().ui.prompt(['abbr[title]', i18n.title], state[abbr] || i18n.placeholder, !state[x], function(e, $, v, w) {
                     v = trim(v);
-                    $.set(trim_right($.get()) + (s.before || x ? n : "") + ' *[' + abbr + ']: ').focus(true).insert(v);
+                    $.set(trim_right($.get()) + (s.before || x ? n : "") + ' *[' + abbr + ']: ').focus(true).insert(v || w);
                     if (abbr === placeholder) {
                         var a = $.$().start;
                         $.select(a - 3 - abbr.length, a - 3);
@@ -364,8 +361,6 @@ TE.Markdown = function(target, o) {
                 }), false;
             }
         } : 0,
-        sub: 0,
-        sup: 0,
         p: {
             i: 'paragraph',
             click: function(e, $) {
@@ -500,7 +495,7 @@ TE.Markdown = function(target, o) {
                         $[0]().replace(bullet_s, '$1');
                     // plain text ...
                     } else {
-                        $.replace(/^(\s*)(\S+)$/gm, '$1 ' + ul + ' $2');
+                        $.replace(/^(\s*)(\S.*)$/gm, '$1 ' + ul + ' $2');
                     }
                     return false;
                 }
@@ -552,7 +547,7 @@ TE.Markdown = function(target, o) {
                         $[0]().replace(list_s, '$1');
                     // plain text ...
                     } else {
-                        $.replace(/^(\s*)(\S+)$/gm, function(a, b, c) {
+                        $.replace(/^(\s*)(\S.*)$/gm, function(a, b, c) {
                             return ++i, b + ' ' + format(ol, [i]) + ' ' + c;
                         });
                     }
@@ -560,10 +555,6 @@ TE.Markdown = function(target, o) {
                 }
             }
         },
-        'align-left': 0,
-        'align-center': 0,
-        'align-right': 0,
-        'align-justify': 0,
         table: extra ? function(e, $) {
             var str = states.tr,
                 std = states.td,
@@ -572,9 +563,9 @@ TE.Markdown = function(target, o) {
                 q = format(p[0], [1, 1]),
                 o = [], s, c, r;
             if ($.$().value === q) return $.select(), false;
-            return $[0]().insert("").ui.prompt(i18n.title[0], i18n.placeholder[0], 0, function(e, $, v, w) {
+            return $[0]().insert("").ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
                 c = edge(parseInt(v, 10) || w, std[0], std[1]);
-                $.blur().ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v, w) {
+                $.blur().ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
                     r = edge(parseInt(v, 10) || w, str[0], str[1]);
                     var i, j, k, l, m, n;
                     for (i = 0; i < r; ++i) {
@@ -627,8 +618,8 @@ TE.Markdown = function(target, o) {
 
     extend(ui.keys, {
         'control+u': 0,
-        'control+arrowup': 0,
-        'control+arrowdown': 'footnote',
+        'control+arrowup': 'sup',
+        'control+arrowdown': 'sup',
         'control+shift+?': 'abbr',
         'shift+enter': function(e, $) {
             var br = config.advance_br;
@@ -709,7 +700,7 @@ TE.Markdown = function(target, o) {
     });
 
     return editor.update(extend({
-        tools: 'b i s | a img | footnote abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo'
+        tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo'
     }, o), 0);
 
 };

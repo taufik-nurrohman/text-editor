@@ -28,13 +28,23 @@
   </head>
   <body>
     <h1>Markdown Text Editor</h1>
+    <div>
+      <h2>Tips</h2>
+      <ol>
+        <li>To create implicit link name shortcut, select some text, click the link button, remove all placeholder in the prompt value, then submit.</li>
+        <li>To create reference&ndash;style links, select some text, click the link button, type a link ID in the prompt value, then submit.</li>
+        <li>To create reference&ndash;style images, select some text, click the image button, type an image ID in the prompt value, then submit.</li>
+        <li>To create automatic link syntax, select some text started with <code>http://</code> or <code>https://</code>, then click the link button.</li>
+        <li>Default abbreviations can be defined in the <code>config.states.abbr</code>.</li>
+        <li>Default reference links and images can be defined in the <code>config.states.a</code> and <code>config.states.img</code> (see the source code of this page).</li>
+      </ol>
+    </div>
     <form action="#">
       <p><textarea></textarea></p>
     </form>
     <div>
       <h2>Keyboard Shortcuts</h2>
       <ul>
-        <li><kbd>&#8984;+?</kbd> &rarr; Abbreviation</li>
         <li><kbd>&#8984;+b</kbd> &rarr; Bold</li>
         <li><kbd>&#8984;+g</kbd> &rarr; Image</li>
         <li><kbd>&#8984;+h</kbd> &rarr; Header</li>
@@ -51,9 +61,10 @@
         <li><kbd>&#8984;+&darr;</kbd> &rarr; Footnote</li>
         <li><kbd>&#8984;+&#10008;</kbd> &rarr; Strike</li>
         <li><kbd>&#8984;+&#8629;</kbd> &rarr; Paragraph</li>
+        <li><kbd>&#8984;+&#8679;+?</kbd> &rarr; Abbreviation</li>
         <li><kbd>&#8679;+&#8629;</kbd> &rarr; Line Break (Hard Break)</li>
         <li><kbd>&#8984;+&#8997;+v</kbd> &rarr; Preview</li>
-        <li><kbd>&#8677;</kbd> &rarr; Indent &amp; Depends</li>
+        <li><kbd>&#8677;</kbd> &rarr; Indent &amp; <em>Depends</em></li>
         <li><kbd>&#8679;+&#8677;</kbd> &rarr; Outdent &amp; Depends</li>
         <li><kbd>&#8629;</kbd> &rarr; <em>Depends</em></li>
         <li><kbd>&#9003;</kbd> &rarr; <em>Depends</em></li>

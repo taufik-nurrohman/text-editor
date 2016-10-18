@@ -184,7 +184,9 @@ TE.prototype.create = function(o) {
     }
 
     function hook_fire(ev, a, id) {
-        if (!is_set(hooks[ev])) return r;
+        if (!is_set(hooks[ev])) {
+            return hooks[ev] = {}, r;
+        }
         if (!is_set(id)) {
             for (var i in hooks[ev]) {
                 hooks[ev][i].apply(r, a);
@@ -618,7 +620,7 @@ TE.prototype.create = function(o) {
         function explode(s) {
             return s.replace(/\+/g, '\n').replace(/\n\n/g, '\n+').split('\n');
         }
-        maps[key()] = 1;
+        maps[n] = 1;
         timer_set(function() {
             r.record();
         }, 1);
@@ -637,14 +639,14 @@ TE.prototype.create = function(o) {
                     keys[i] = r.ui.tools[keys[i]].click;
                 }
                 l = keys[i] && keys[i](e, r);
-                if (l === false) event_exit(e);
+                if (l === false) return event_exit(e);
             }
         }
         if (auto_close) {
             for (i in auto_close) {
                 m = auto_close[i];
-                if (!m) continue;
-                if (after === n) {
+                if (m === false) continue;
+                if (after === n && is_set(auto_close[n])) {
                     if (before === '\\') {
                         r.insert(n, -1);
                         return event_exit(e);
@@ -660,7 +662,7 @@ TE.prototype.create = function(o) {
                     if (n === 'backspace' && s_before.slice(-2) !== '\\' + i) {
                         r.unwrap(i, m);
                         return event_exit(e);
-                    } else if (n === 'enter' && auto_tab) {
+                    } else if (auto_tab && n === 'enter' && i !== m) {
                         r.tidy('\n' + dent + tab, '\n' + dent);
                         return event_exit(e);
                     }
@@ -672,7 +674,7 @@ TE.prototype.create = function(o) {
                 r.outdent(tab);
                 return event_exit(e);
             } else if (n === 'enter' && pattern('(^|\\n)(' + esc(tab) + ')+.*$').test(s_before)) {
-                return r.insert(s_after.slice(0, 2) === '</' ? "" : '\n' + dent, -1), event_exit(e);
+                return r.insert('\n' + dent, -1), event_exit(e);
             }
         }
     }
@@ -690,7 +692,9 @@ TE.prototype.create = function(o) {
             do_keys_reset(1);
         }
         timer_reset(bounce);
-        bounce = timer_set(do_update_contents, 1000);
+        bounce = timer_set(function() {
+            do_update_contents(e);
+        }, 1000);
     }
 
     function do_click_tool(e) {
@@ -742,7 +746,7 @@ TE.prototype.create = function(o) {
             dom_set(_description_left, _preview);
             content_set(_preview, i18n_others.preview);
         }
-        do_update_contents();
+        do_update_contents(null);
         do_update_tools();
         do_update_keys();
         return hook !== 0 ? hook_fire('create', [r]) : r;
@@ -820,8 +824,11 @@ TE.prototype.create = function(o) {
         H = o.h;
     }
 
-    function do_modal_exit() {
-        events_fire(_CLICK, [], _overlay);
+    function do_modal_exit(e, id) {
+        if (id) {
+            hook_fire('exit.modal.' + id, [r]);
+        }
+        events_fire(_CLICK, [e], _overlay);
     }
 
     function do_modal_down(e) {
@@ -991,10 +998,15 @@ TE.prototype.create = function(o) {
     }
 
     r.ui.alert = function(title, content, y, fn) {
-        var okay = el('button', i18n_buttons.okay, button_attrs);
+        var okay = el('button', i18n_buttons.okay, button_attrs),
+            id = 'alert';
         y = y || noop;
+        if (is_object(title)) {
+            id += ':' + title[0];
+            title = title[1] || title[0];
+        }
         events_set(_CLICK, okay, function(e) {
-            return y(e, r), do_modal_exit(), event_exit(e);
+            return y(e, r), do_modal_exit(e, id + '.y'), event_exit(e);
         });
         events_set(_KEYDOWN, okay, function(e) {
             var key = e.TE.key;
@@ -1005,20 +1017,24 @@ TE.prototype.create = function(o) {
         timer_set(function() {
             okay.focus();
         }, 1);
-        return r.ui.modal('alert', do_modal_dom_set(title, content, okay), fn);
+        return r.ui.modal(id, do_modal_dom_set(title, content, okay), fn);
     };
 
     r.ui.confirm = function(title, content, y, n, fn) {
         var okay = el('button', i18n_buttons.okay, button_attrs),
             cancel = el('button', i18n_buttons.cancel, button_attrs),
-            key;
+            id = 'confirm', key;
+        if (is_object(title)) {
+            id += ':' + title[0];
+            title = title[1] || title[0];
+        }
         function yep(e) {
             if (is_function(y)) y(e, r);
-            return do_modal_exit(), event_exit(e);
+            return do_modal_exit(e, id + '.y'), event_exit(e);
         }
         function nope(e) {
             if (is_function(n)) n(e, r);
-            return do_modal_exit(), event_exit(e);
+            return do_modal_exit(e, id + '.n'), event_exit(e);
         }
         events_set(_CLICK, okay, yep);
         events_set(_CLICK, cancel, nope);
@@ -1027,19 +1043,19 @@ TE.prototype.create = function(o) {
             if (key('arrowright')) return cancel.focus(), event_exit(e);
             if (key('arrowleft')) return event_exit(e);
             if (key('enter')) return yep(e), event_exit(e);
-            if (key('escape')) return do_modal_exit(), event_exit(e);
+            if (key('escape')) return do_modal_exit(e, id + '.y'), event_exit(e);
         });
         events_set(_KEYDOWN, cancel, function(e) {
             key = e.TE.key;
             if (key('arrowright')) return event_exit(e);
             if (key('arrowleft')) return okay.focus(), event_exit(e);
             if (key('enter')) return nope(e), event_exit(e);
-            if (key('escape')) return do_modal_exit(), event_exit(e);
+            if (key('escape')) return do_modal_exit(e, id + '.n'), event_exit(e);
         });
         timer_set(function() {
             cancel.focus();
         }, 1);
-        return r.ui.modal('confirm', do_modal_dom_set(title, content, [okay, cancel]), fn);
+        return r.ui.modal(id, do_modal_dom_set(title, content, [okay, cancel]), fn);
     };
 
     r.ui.prompt = function(title, value, required, y, type, fn) {
@@ -1050,7 +1066,12 @@ TE.prototype.create = function(o) {
                 value: value,
                 placeholder: value,
                 'class': prefix + '-input block'
-            }), key, options = [], i, j;
+            }),
+            id = 'prompt', key, options = [], i, j;
+        if (is_object(title)) {
+            id += ':' + title[0];
+            title = title[1] || title[0];
+        }
         if (is_function(type)) {
             fn = type;
             type = 0;
@@ -1081,10 +1102,10 @@ TE.prototype.create = function(o) {
             if (required && (!trim(j) || j === value)) {
                 return prepare(), freeze(e);
             }
-            return nope(e), y(e, r, j !== value ? j : "", value);
+            return do_modal_exit(e, id + '.y'), event_exit(e), y(e, r, j !== value ? j : "", value);
         }
         function nope(e) {
-            return do_modal_exit(), event_exit(e);
+            return do_modal_exit(e, id + '.n'), event_exit(e);
         }
         function freeze(e) {
             return event_exit(e);
@@ -1114,7 +1135,7 @@ TE.prototype.create = function(o) {
         events_set(_CLICK, okay, yep);
         events_set(_CLICK, cancel, nope);
         timer_set(prepare, .4);
-        return r.ui.modal('prompt', do_modal_dom_set(title, input, [okay, cancel]), fn);
+        return r.ui.modal(id, do_modal_dom_set(title, input, [okay, cancel]), fn);
     };
 
     r.ui.drop = function() {

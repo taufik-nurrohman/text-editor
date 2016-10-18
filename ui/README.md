@@ -509,3 +509,6 @@ Hooks
  - `exit.drop`
  - `exit.bubble`
  - `on:change`
+ - `on:click`
+ - `on:focus`
+ - …
