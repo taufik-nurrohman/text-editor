@@ -37,7 +37,7 @@ TE.Markdown = function(target, o) {
         },
         languages: {
             tools: {
-                sup: ['Footnote']
+                sup: ['Footnote', editor.config.languages.tools.sub[1]]
             },
             modals: {
                 a: {

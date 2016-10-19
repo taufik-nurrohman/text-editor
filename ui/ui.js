@@ -370,13 +370,16 @@ TE.prototype.create = function(o) {
             src: 'data:text/html,' + encodeURIComponent(w)
         });
         function frame_resize() {
-            var o = size(_overlay.firstChild);
-            el(frame, false, {
-                'style': {
-                    'width': o.w + 'px',
-                    'height': o.h + 'px'
-                }
-            });
+            var o = _overlay.firstChild;
+            if (o) {
+                o = size(o);
+                el(frame, false, {
+                    'style': {
+                        'width': o.w + 'px',
+                        'height': o.h + 'px'
+                    }
+                });
+            }
         }
         if (!dom_exist(_overlay) && v) {
             r.ui.overlay(frame, 1, function() {

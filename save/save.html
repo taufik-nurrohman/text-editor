@@ -8,11 +8,11 @@
   <body>
     <p><textarea></textarea></p>
     <p>
-      <button onclick="return editor.storage.set('content', editor.get()), false;">Save</button>
-      <button onclick="return editor.set(editor.storage.get('content')), false;">Restore</button>
+      <button onclick="return editor.save('content', editor.get()), false;">Save</button>
+      <button onclick="return editor.set(editor.restore('content')), false;">Restore</button>
     </p>
     <script src="../text-editor.min.js"></script>
-    <script src="../storage/storage.min.js"></script>
+    <script src="../save/save.min.js"></script>
     <script>
     var editor = new TE(document.querySelector('textarea'));
     </script>

@@ -443,7 +443,7 @@ Examples
 Modules
 -------
 
- - [Persistent Storage](https://rawgit.com/tovic/text-editor/master/storage/storage.html)
+ - [Persistent Storage](https://rawgit.com/tovic/text-editor/master/save/save.html)
  - [User Interface](https://rawgit.com/tovic/text-editor/master/ui/ui.html)
    - [Internationalization](https://rawgit.com/tovic/text-editor/master/ui/language/language.html)
 

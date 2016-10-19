@@ -19,7 +19,7 @@ var TE = function(target) {
         S = {}, // storage
         div = d.createElement('div'),
         span = d.createElement('span'),
-        nbsp = '\u00A0',
+        nbsp = '\xa0',
         tab = '\t',
         scroll_width = (function() {
             var x = d.createElement('div'),
@@ -209,7 +209,7 @@ var TE = function(target) {
     // restore state
     r.restore = function(k, f) {
         if (!is_set(k)) return S; // read all storage with `r.restore()`
-        return is_set(S[k]) ? S[k] : (is_set(f) ? f : false);
+        return is_set(S[k]) ? S[k] : (is_set(f) ? f : "");
     };
 
     // focus the editor
@@ -557,7 +557,7 @@ var TE = function(target) {
         return setTimeout(function() {
             var ins = r.__instance__, i;
             for (i in ins) {
-                fn(ins[i]);
+                fn(ins[i], i);
             }
         }, t === 0 ? 0 : (t || 1)), r;
     };
