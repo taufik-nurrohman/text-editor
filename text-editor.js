@@ -36,6 +36,7 @@ var TE = function(target) {
             return w;
         })();
 
+    r.type = ""; // default editor type
     r.x = '!$^*()-=+[]{}\\|:<>,./?'; // character(s) to escape
 
     function val() {
@@ -553,11 +554,12 @@ var TE = function(target) {
 
     // Plug to all instance(s)
     r.each = function(fn, t) {
-        var ins = r.__instance__, i;
-        for (i in ins) {
-            fn(ins[i]);
-        }
-        return r;
+        return setTimeout(function() {
+            var ins = r.__instance__, i;
+            for (i in ins) {
+                fn(ins[i]);
+            }
+        }, t === 0 ? 0 : (t || 1)), r;
     };
 
     // Key maps for the deprecated `KeyboardEvent.keyCode`

@@ -26,7 +26,6 @@ TE.HTML = function(target, o) {
         each = editor._.each,
         esc = editor._.x,
         ui = editor.create(extend({
-            type: 'HTML', // editor type
             suffix: '>',
             auto_encode_html: 1,
             auto_p: 1,
@@ -137,6 +136,9 @@ TE.HTML = function(target, o) {
         placeholders = languages.placeholders,
         auto_p = config.auto_p,
         tree_parent;
+
+    // define editor type
+    editor.type = 'HTML';
 
     function is_set(x) {
         return typeof x !== "undefined";

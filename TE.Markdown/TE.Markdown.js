@@ -27,7 +27,6 @@ TE.Markdown = function(target, o) {
         TAB = '\t';
 
     editor.update(extend({
-        type: 'Markdown', // editor type
         extra: 0, // enable **Markdown Extra** feature
         auto_p: 0, // disable automatic paragraph feature from `TE.HTML` by default
         auto_close: {
@@ -78,6 +77,9 @@ TE.Markdown = function(target, o) {
             hr: ['---', '+++', '***'] // --ibid
         }
     }, o), 0);
+
+    // define editor type
+    editor.type = 'Markdown';
 
     function is_set(x) {
         return typeof x !== "undefined";
