@@ -68,8 +68,8 @@ var config = {
     'close_h1,h2,h3,h4,h5,h6': false, // replace with `true` for `### heading 3 ###`
     close_tr: false, // enable closed table pipe
     formats: {
-        b: '**',
-        i: '_',
+        b: ['**', '__'],
+        i: ['_', '*'],
         s: '~~',
         h1: ['=', '#'],
         h2: ['-', '##'],
@@ -79,9 +79,9 @@ var config = {
         h6: '######',
         blockquote: '>',
         code: ['`', '~'],
-        ul: '-',
+        ul: ['-', '+', '*'],
         ol: '%1.',
-        hr: '---'
+        hr: ['---', '+++', '***']
     }
 };
 

@@ -26,6 +26,7 @@ TE.HTML = function(target, o) {
         each = editor._.each,
         esc = editor._.x,
         ui = editor.create(extend({
+            type: 'HTML', // editor type
             suffix: '>',
             auto_encode_html: 1,
             auto_p: 1,
@@ -133,12 +134,9 @@ TE.HTML = function(target, o) {
         attrs = '(?:\\s[^<>]*?)?',
         attrs_capture = '(|\\s[^<>]*?)',
         content = '([\\s\\S]*?)',
-        placeholder = languages.placeholders[""],
+        placeholders = languages.placeholders,
         auto_p = config.auto_p,
         tree_parent;
-
-    // define editor type
-    editor.type = 'HTML';
 
     function is_set(x) {
         return typeof x !== "undefined";
@@ -302,7 +300,7 @@ TE.HTML = function(target, o) {
                     $.blur().ui.prompt(['a[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
                         title = attr_value(v);
                         if (!auto_p_(e, $).$().length) {
-                            $.insert(placeholder);
+                            $.insert(placeholders[""]);
                         }
                         extra = config.advance_a && x ? ' rel="nofollow" target="_blank"' : "";
                         $.i().format(a + ' href="' + href + '"' + (title ? ' title="' + title + '"' : "") + extra);
@@ -377,7 +375,7 @@ TE.HTML = function(target, o) {
                     x = trim(s.value),
                     i18n = languages.modals.abbr,
                     g = $.get(),
-                    abbr_content = trim(x || placeholder),
+                    abbr_content = trim(x || placeholders[""]),
                     abbr = formats.abbr,
                     abbr_o = get_o(abbr),
                     abbr_begin = '<' + esc(abbr) + attrs_capture + '>',
@@ -500,7 +498,7 @@ TE.HTML = function(target, o) {
                     para = '<' + p_o + attrs + '>';
                 // block
                 if (pattern('(^|\\n|' + para + ')$').test(s.before)) {
-                    if (auto_p && (s.value === placeholder || pattern('(' + para + ')$').test(s.before))) {
+                    if (auto_p && (s.value === placeholders[""] || pattern('(' + para + ')$').test(s.before))) {
                         return $.select(), false;
                     }
                     $[0]().format(blockquote, 0, '\n\n', '\n');
@@ -545,7 +543,7 @@ TE.HTML = function(target, o) {
                     if (before.test(s.before) && after.test(s.after)) {
                         $[0]().unwrap(pattern(before), pattern(after)).replace(any, decode)[1]();
                     } else {
-                        $[0]().tidy('\n\n').wrap('<' + pre + '><' + code + '>', '</' + code_o + '></' + pre_o + '>').insert(v || placeholder).replace(any, encode)[1]();
+                        $[0]().tidy('\n\n').wrap('<' + pre + '><' + code + '>', '</' + code_o + '></' + pre_o + '>').insert(v || placeholders[""]).replace(any, encode)[1]();
                     }
                 // span
                 } else {
@@ -599,7 +597,7 @@ TE.HTML = function(target, o) {
                 std = states.td,
                 i18n = languages.modals.table,
                 p = languages.placeholders.table,
-                q = format(p[0], [1, 1]),
+                q = trim(format(p[0], [1, 1])),
                 advance = config.advance_table ? tab : "",
                 table = formats.table,
                 caption = formats.caption,
@@ -630,20 +628,20 @@ TE.HTML = function(target, o) {
                         for (i = 0; i < r; ++i) {
                             s = advance + tab + '<' + tr + '>\n';
                             for (j = 0; j < c; ++j) {
-                                s += advance + tab + tab + '<' + td + '>' + format(p[1], [i + 1, j + 1]) + '</' + td_o + '>\n';
+                                s += advance + tab + tab + '<' + td + '>' + trim(format(p[1], [i + 1, j + 1])) + '</' + td_o + '>\n';
                             }
                             s += advance + tab + '</' + tr_o + '>';
                             o.push(s);
                         }
                         o = o.join('\n');
                         s = tab + (advance ? '<' + thead + '>\n' + tab + tab + '<' + tr + '>' : '<' + tr_o + '>') + '\n';
-                        for (k = 0; k < r; ++k) {
-                            s += advance + tab + tab + '<' + th + '>' + format(p[0], [1, k + 1]) + '</' + th_o + '>\n';
+                        for (k = 0; k < c; ++k) {
+                            s += advance + tab + tab + '<' + th + '>' + trim(format(p[0], [1, k + 1])) + '</' + th_o + '>\n';
                         }
                         if (advance) {
                             tfoot_html += tab + '<' + tfoot + '>\n';
-                            for (k = 0; k < r; ++k) {
-                                tfoot_html += tab + tab + '<' + td + '>' + format(p[2], [1, k + 1]) + '</' + td_o + '>\n';
+                            for (k = 0; k < c; ++k) {
+                                tfoot_html += tab + tab + '<' + td + '>' + trim(format(p[2], [1, k + 1])) + '</' + td_o + '>\n';
                             }
                             tfoot_html += tab + '</' + tfoot_o + '>\n';
                         }
@@ -663,18 +661,6 @@ TE.HTML = function(target, o) {
                 var dent = get_indent($.$().before);
                 return $.tidy('\n\n', "").insert(dent + '<' + formats.hr + suffix + '\n\n', -1), false;
             }
-        }
-    });
-
-    each(ui.tools, function(v, i) {
-        var title = languages.tools[i] || "";
-        if (is_function(v)) {
-            ui.tools[i] = {
-                title: title,
-                click: v
-            }
-        } else {
-            if (!v.title) v.title = title;
         }
     });
 

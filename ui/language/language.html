@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Test Internationalization</title>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../../ui/ui.min.css" rel="stylesheet">
+    <style>
+    .text-editor {margin:0 0 1em}
+    .text-editor-content {height:200px}
+    </style>
+  </head>
+  <body>
+    <h1>Language: Indonesian</h1>
+    <form action="#">
+      <p><textarea></textarea></p>
+      <p><textarea></textarea></p>
+    </form>
+    <script src="../../text-editor.min.js"></script>
+    <script src="../../ui/ui.min.js"></script>
+    <script src="../../TE.HTML/TE.HTML.min.js"></script>
+    <script src="../../TE.Markdown/TE.Markdown.min.js"></script>
+    <script src="../../ui/language/id-id.min.js"></script>
+    <script>
+
+    var area = document.querySelectorAll('textarea'),
+        editor_1 = new TE.HTML(area[0]),
+        editor_2 = new TE.Markdown(area[1], {extra: true});
+
+    </script>
+  </body>
+</html>

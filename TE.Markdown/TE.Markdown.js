@@ -15,56 +15,7 @@ TE.Markdown = function(target, o) {
 
         win = window,
         doc = document,
-        editor = new TE.HTML(target, {
-            extra: 0, // enable **Markdown Extra** feature
-            auto_p: 0, // disable automatic paragraph feature from `TE.HTML` by default
-            auto_close: {
-                '`': '`'
-            },
-            states: {
-                a: {
-                    "": [""] // implicit link name shortcut (do not remove!)
-                },
-                img: {}
-            },
-            languages: {
-                tools: {
-                    sup: 'Footnote (' + _u2318 + '+' + _u2193 + ')'
-                },
-                modals: {
-                    a: {
-                        title: ['Link URL/Reference ID']
-                    },
-                    img: {
-                        title: ['Image URL/Reference ID']
-                    },
-                    sup: {
-                        title: 'Footnote ID'
-                    }
-                }
-            },
-            advance_br: 1, // press `⇧+↵` to do a hard break
-            'advance_h1,h2': 1, // enable **SEText** header style
-            'advance_pre,code': 1, // replace with `true` or `%1 .foo` to enable fenced code block syntax in **Markdown Extra**
-            'close_h1,h2,h3,h4,h5,h6': 0, // replace with `true` for `### heading 3 ###`
-            close_tr: 0, // enable closed table pipe
-            formats: {
-                b: '**',
-                i: '_',
-                s: '~~',
-                h1: ['=', '#'],
-                h2: ['-', '##'],
-                h3: '###',
-                h4: '####',
-                h5: '#####',
-                h6: '######',
-                blockquote: '>',
-                code: ['`', '~'],
-                ul: '-',
-                ol: '%1.',
-                hr: '---'
-            }
-        }),
+        editor = new TE.HTML(target),
         ui = editor.ui,
         extend = editor._.extend,
         each = editor._.each,
@@ -75,24 +26,58 @@ TE.Markdown = function(target, o) {
         content = '([\\s\\S]*?)',
         TAB = '\t';
 
-    // define editor type
-    editor.type = 'Markdown';
-
-    var config = extend(editor.config, o),
-        states = config.states,
-        languages = config.languages,
-        formats = config.formats,
-        classes = config.classes,
-        tab = config.tab,
-        suffix = config.suffix,
-        placeholder = languages.placeholders[""],
-        header_step = 0,
-        extra = config.extra,
-        bullet_any = '( +[' + esc(formats.ul + '*+-') + '] )';
-
-    if (!extra) {
-        config['advance_pre,code'] = 0;
-    }
+    editor.update(extend({
+        type: 'Markdown', // editor type
+        extra: 0, // enable **Markdown Extra** feature
+        auto_p: 0, // disable automatic paragraph feature from `TE.HTML` by default
+        auto_close: {
+            '`': '`'
+        },
+        tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
+        states: {
+            a: {
+                "": [""] // implicit link name shortcut (do not remove!)
+            },
+            img: {}
+        },
+        languages: {
+            tools: {
+                sup: 'Footnote (' + _u2318 + '+' + _u2193 + ')'
+            },
+            modals: {
+                a: {
+                    title: ['Link URL/Reference ID']
+                },
+                img: {
+                    title: ['Image URL/Reference ID']
+                },
+                sup: {
+                    title: 'Footnote ID'
+                }
+            }
+        },
+        advance_br: 1, // press `⇧+↵` to do a hard break
+        'advance_h1,h2': 1, // enable **SEText** header style
+        'advance_pre,code': 1, // replace with `true` or `%1 .foo` to enable fenced code block syntax in **Markdown Extra**
+        'close_h1,h2,h3,h4,h5,h6': 0, // replace with `true` for `### heading 3 ###`
+        close_tr: 0, // enable closed table pipe
+        formats: {
+            b: ['**', '__'], // first array will be used by default
+            i: ['_', '*'], // --ibid
+            s: '~~',
+            h1: ['=', '#'], // --ibid
+            h2: ['-', '##'], // --ibid
+            h3: '###',
+            h4: '####',
+            h5: '#####',
+            h6: '######',
+            blockquote: '>',
+            code: ['`', '~'], // --ibid
+            ul: ['-', '+', '*'], // --ibid
+            ol: '%1.',
+            hr: ['---', '+++', '***'] // --ibid
+        }
+    }, o), 0);
 
     function is_set(x) {
         return typeof x !== "undefined";
@@ -144,6 +129,21 @@ TE.Markdown = function(target, o) {
         return trim(s.replace(/\s+/g, ' '));
     }
 
+    var config = editor.config,
+        states = config.states,
+        languages = config.languages,
+        formats = config.formats,
+        classes = config.classes,
+        tab = config.tab,
+        placeholders = languages.placeholders,
+        header_step = 0,
+        extra = config.extra,
+        bullet_any = '( +[' + esc(formats.ul).join("") + '] )';
+
+    if (!extra) {
+        config['advance_pre,code'] = 0;
+    }
+
     editor.mark = function(str, wrap, gap_1, gap_2) {
         if (!is_object(str)) str = [str];
         if (!is_set(gap_1)) gap_1 = ' ';
@@ -160,7 +160,7 @@ TE.Markdown = function(target, o) {
             before = s.before,
             after = s.after;
         if (!c) {
-            editor.insert(placeholder);
+            editor.insert(placeholders[""]);
         } else {
             gap_1 = false;
         }
@@ -185,13 +185,13 @@ TE.Markdown = function(target, o) {
         b: {
             i: 'bold',
             click: function(e, $) {
-                return $.i().mark(formats.b), false;
+                return $.i().mark(formats.b[0]), false;
             }
         },
         i: {
             i: 'italic',
             click: function(e, $) {
-                return $.i().mark(formats.i), false;
+                return $.i().mark(formats.i[0]), false;
             }
         },
         u: 0,
@@ -236,7 +236,7 @@ TE.Markdown = function(target, o) {
                             b = s.before;
                             start = s.start;
                             end = s.end;
-                            $.set(b + s.value + trim_right(s.after) + n + ' [' + (v || trim(x) || placeholder) + ']: ' + (!implicit ? state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "") : "")).select(start, end);
+                            $.set(b + s.value + trim_right(s.after) + n + ' [' + (v || trim(x) || placeholders[""]) + ']: ' + (!implicit ? state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "") : "")).select(start, end);
                             if (implicit) $.focus(true).insert(http);
                         }
                     } else {
@@ -244,7 +244,7 @@ TE.Markdown = function(target, o) {
                         $.blur().ui.prompt(['a[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
                             title = attr_value(v);
                             if (!x) {
-                                $.insert(placeholder);
+                                $.insert(placeholders[""]);
                             }
                             $.i().trim(trim(b) ? ' ' : "", !trim(a) ? "" : (/^\n+ {0,3}\*?\[/.test(a) ? '\n\n ' : ' ')).wrap('[', '](' + href + (title ? ' "' + title + '"' : "") + ')');
                         });
@@ -326,7 +326,7 @@ TE.Markdown = function(target, o) {
                         i = g.indexOf(notes[index]) + 3;
                         $.select(i, i + v.length);
                     } else {
-                        $.trim(trim(b) ? ' ' : "", !trim(a) || /^\n+ {0,3}\*?\[/.test(a) ? '\n\n ' : ' ').insert('[^' + v + ']').set(trim_right($.get()) + n + ' [^' + v + ']: ').focus(true).insert(placeholder);
+                        $.trim(trim(b) ? ' ' : "", !trim(a) || /^\n+ {0,3}\*?\[/.test(a) ? '\n\n ' : ' ').insert('[^' + v + ']').set(trim_right($.get()) + n + ' [^' + v + ']: ').focus(true).insert(placeholders[""]);
                     }
                 }), false;
             }
@@ -338,7 +338,7 @@ TE.Markdown = function(target, o) {
                     x = trim(s.value),
                     i18n = languages.modals.abbr,
                     g = $.get(),
-                    abbr = trim(x || placeholder),
+                    abbr = trim(x || placeholders[""]),
                     n = /^ {0,3}\*\[.+?\]:/.test(g.split('\n').pop()) ? '\n' : '\n\n',
                     abbrs = g.match(/^ {0,3}\*\[.+?\]:/gm) || [],
                     state = states.abbr,
@@ -354,7 +354,7 @@ TE.Markdown = function(target, o) {
                 return $.record().ui.prompt(['abbr[title]', i18n.title], state[abbr] || i18n.placeholder, !state[x], function(e, $, v, w) {
                     v = trim(v);
                     $.set(trim_right($.get()) + (s.before || x ? n : "") + ' *[' + abbr + ']: ').focus(true).insert(v || w);
-                    if (abbr === placeholder) {
+                    if (abbr === placeholders[""]) {
                         var a = $.$().start;
                         $.select(a - 3 - abbr.length, a - 3);
                     }
@@ -364,7 +364,7 @@ TE.Markdown = function(target, o) {
         p: {
             i: 'paragraph',
             click: function(e, $) {
-                return $.tidy('\n\n').insert(placeholder), false;
+                return $.tidy('\n\n').insert(placeholders[""]), false;
             }
         },
         'p,h1,h2,h3,h4,h5,h6': {
@@ -380,7 +380,7 @@ TE.Markdown = function(target, o) {
                     setext_esc = '\\s?[' + esc(formats.h1[0] + formats.h2[0]) + ']+\\s*',
                     h1 = esc(formats.h1[1]),
                     clean_B = s.before.replace(pattern('[' + h1 + '\\s]+$'), ""),
-                    clean_V = force_i(s.value).replace(pattern('^[' + h1 + '\\s]+|[' + h1 + '\\s]+$', 'g'), "").replace(pattern(setext_esc + '$'), "") || placeholder,
+                    clean_V = force_i(s.value).replace(pattern('^[' + h1 + '\\s]+|[' + h1 + '\\s]+$', 'g'), "").replace(pattern(setext_esc + '$'), "") || placeholders[""],
                     clean_A = s.after.replace(pattern('^[' + h1 + '\\s]+'), "").replace(pattern('^' + setext_esc), ""),
                     H = [
                         "",
@@ -408,11 +408,11 @@ TE.Markdown = function(target, o) {
                 var s = $.$(),
                     v = s.value,
                     blockquote = formats.blockquote;
-                if (v === placeholder) {
+                if (v === placeholders[""]) {
                     return $.select(), false;
                 }
                 if (!v) {
-                    return $[0]().tidy('\n\n').insert(blockquote + ' ', -1).insert(placeholder)[1](), false;
+                    return $[0]().tidy('\n\n').insert(blockquote + ' ', -1).insert(placeholders[""])[1](), false;
                 }
                 return $.tidy(pattern(blockquote + ' $').test(s.before) ? false : '\n\n')[pattern('^' + blockquote).test(v) ? 'outdent' : 'indent'](blockquote + ' '), false;
             }
@@ -442,9 +442,9 @@ TE.Markdown = function(target, o) {
                     if (!v) {
                         $[0]().tidy('\n\n');
                         var t = $.$().start,
-                            str = pre + placeholder;
+                            str = pre + placeholders[""];
                         return $.insert(str).select(t + pre.length, t + str.length)[1](), false;
-                    } else if(v === placeholder && pattern(dents + '$').test(b)) {
+                    } else if(v === placeholders[""] && pattern(dents + '$').test(b)) {
                         return $.select(s.start - pre.length, s.end), false;
                     }
                     return $.tidy('\n\n')[pattern('^' + dents).test(v) ? 'outdent' : 'indent'](pre), false;
@@ -460,7 +460,7 @@ TE.Markdown = function(target, o) {
                     v = s.value,
                     b = s.before, B,
                     a = s.after,
-                    ul = formats.ul,
+                    ul = formats.ul[0],
                     ol = formats.ol,
                     esc_ul = esc(ul),
                     esc_ol = format(esc(ol), ['\\d+']),
@@ -482,10 +482,10 @@ TE.Markdown = function(target, o) {
                         }
                         return $.set(B + a).select(B.length), false;
                     }
-                    return $[0]().tidy('\n\n').insert(' ' + ul + ' ', -1).insert(placeholder)[1](), false;
+                    return $[0]().tidy('\n\n').insert(' ' + ul + ' ', -1).insert(placeholders[""])[1](), false;
                 } else {
                     // start ...
-                    if (v === placeholder) {
+                    if (v === placeholders[""]) {
                         $.select();
                     // ordered list detected
                     } else if (list_s.test(v)) {
@@ -508,7 +508,7 @@ TE.Markdown = function(target, o) {
                     v = s.value,
                     b = s.before, B,
                     a = s.after,
-                    ul = formats.ul,
+                    ul = formats.ul[0],
                     ol = formats.ol,
                     ol_first = format(ol, [1]),
                     esc_ul = esc(ul),
@@ -532,10 +532,10 @@ TE.Markdown = function(target, o) {
                         }
                         return $.set(B + a).select(B.length), false;
                     }
-                    return $[0]().tidy('\n\n').insert(' ' + ol_first + ' ', -1).insert(placeholder)[1](), false;
+                    return $[0]().tidy('\n\n').insert(' ' + ol_first + ' ', -1).insert(placeholders[""])[1](), false;
                 } else {
                     // start ...
-                    if (v === placeholder) {
+                    if (v === placeholders[""]) {
                         $.select();
                     // unordered list detected
                     } else if (bullet_s.test(v)) {
@@ -577,12 +577,12 @@ TE.Markdown = function(target, o) {
                     }
                     o = o.join('\n');
                     s = '|';
-                    for (k = 0; k < r; ++k) {
+                    for (k = 0; k < c; ++k) {
                         s += ' ' + format(p[0], [k + 1, k + 1]).replace(/./g, '-') + ' |';
                     }
                     o = s + '\n' + o;
                     s = '|';
-                    for (l = 0; l < r; ++l) {
+                    for (l = 0; l < c; ++l) {
                         s += ' ' + format(p[0], [1, l + 1]) + ' |';
                     }
                     o = s + '\n' + o;
@@ -599,20 +599,8 @@ TE.Markdown = function(target, o) {
         hr: {
             i: 'ellipsis-h',
             click: function(e, $) {
-                return $.tidy('\n\n', "").insert(formats.hr + '\n\n', -1), false;
+                return $.tidy('\n\n', "").insert(formats.hr[0] + '\n\n', -1), false;
             }
-        }
-    });
-
-    each(ui.tools, function(v, i) {
-        var title = languages.tools[i] || "";
-        if (is_function(v)) {
-            ui.tools[i] = {
-                title: title,
-                click: v
-            }
-        } else {
-            if (!v.title) v.title = title;
         }
     });
 
@@ -631,7 +619,7 @@ TE.Markdown = function(target, o) {
         'enter': function(e, $) {
             var s = $.$(),
                 blockquote = formats.blockquote,
-                ul = formats.ul,
+                ul = formats.ul[0],
                 ol = formats.ol,
                 esc_ol = format(esc(ol), ['\\d+']),
                 regex = '((' + esc(blockquote) + ' )+|' + bullet_any + '| +(' + esc_ol + ') )',
@@ -699,8 +687,6 @@ TE.Markdown = function(target, o) {
         }
     });
 
-    return editor.update(extend({
-        tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo'
-    }, o), 0);
+    return editor;
 
 };

@@ -86,6 +86,7 @@ TE.prototype.create = function(o) {
         _FOCUS = 'focus',
         _BLUR = 'blur',
         _INPUT = 'input',
+        _RESIZE = 'resize orientationchange',
         target_events = _BLUR + ' ' + _COPY + ' ' + _CUT + ' ' + _FOCUS + ' ' + _INPUT + ' ' + _KEYDOWN + ' ' + _PASTE,
         i18n = config.languages,
         tab = config.tab,
@@ -99,8 +100,8 @@ TE.prototype.create = function(o) {
     // add `tidy` method to `TE`
     r.tidy = function(a, b) {
         var $ = r.$(),
-            B = $.before ? a : "",
-            A = $.after ? (is_set(b) ? b : a) : "";
+            B = trim($.before) ? a : "",
+            A = trim($.after) ? (is_set(b) ? b : a) : "";
         return r.trim(B, A);
     };
 
@@ -354,23 +355,33 @@ TE.prototype.create = function(o) {
         _drop_target = 0,
         _button, _icon;
 
-    _preview.href = "";
-    _preview.title = i18n_tools.preview;
-
     function do_click_preview(e) {
-        var v = r.get(), w;
-        if (!dom_exist(_overlay) && v) {
-            if (v.indexOf('</html>') === -1) {
-                w = '<!DOCTYPE html><html dir="' + config.dir + '"><head><meta charset="utf-8"><style>' + config.css + '</style></head><body>' + v + '</body></html>';
-            }
-            var frame = el('iframe', false, {
-                'class': prefix + '-portal',
-                src: 'data:text/html,' + encodeURIComponent(w)
+        var v = r.get(),
+            w = "", frame;
+        if (v.indexOf('</html>') === -1) {
+            w = '<!DOCTYPE html><html dir="' + config.dir + '"><head><meta charset="utf-8"><style>' + config.css + '</style></head><body>' + v + '</body></html>';
+        }
+        frame = el('iframe', false, {
+            'class': prefix + '-portal',
+            src: 'data:text/html,' + encodeURIComponent(w)
+        });
+        function frame_resize() {
+            var o = size(_overlay.firstChild);
+            el(frame, false, {
+                'style': {
+                    'width': o.w + 'px',
+                    'height': o.h + 'px'
+                }
             });
+        }
+        if (!dom_exist(_overlay) && v) {
             r.ui.overlay(frame, 1, function() {
+                frame_resize();
+                events_set(_RESIZE, win, frame_resize);
                 hook_fire('enter.overlay.preview', [e, r, [v, w], _overlay.firstChild]);
             });
         } else {
+            events_reset(_RESIZE, win, frame_resize);
             do_overlay_exit();
         }
         return event_exit(e);
@@ -549,6 +560,7 @@ TE.prototype.create = function(o) {
             if (is_function(tool)) {
                 r.ui.tools[v].click = tool;
             }
+            r.ui.tools[v].title = i18n_tools[v] || "";
             if ((icon = tool.i || v) !== '|') {
                 icon = slug(icon);
             }
@@ -713,7 +725,7 @@ TE.prototype.create = function(o) {
 
     r.create = function(o, hook) {
         if (is_object(o)) {
-            config = extend(config, o);
+            r.config = config = extend(config, o);
         }
         class_set(_content, C);
         var parent = dom_exist(_content);
@@ -743,6 +755,8 @@ TE.prototype.create = function(o) {
         events_set(_MOUSEMOVE, body, do_resize_move);
         events_set(_MOUSEUP, body, do_resize_up);
         if (i18n_others.preview) {
+            _preview.href = "";
+            _preview.title = i18n_tools.preview;
             dom_set(_description_left, _preview);
             content_set(_preview, i18n_others.preview);
         }

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.4.0
+ *  TEXT EDITOR PLUGIN 2.4.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -546,16 +546,16 @@ var TE = function(target) {
 (function(r) {
 
     // Plugin version
-    r.version = '2.4.0';
+    r.version = '2.4.1';
 
     // Collect all instance(s)
     r.__instance__ = {};
 
     // Plug to all instance(s)
-    r.plug = function(x) {
-        var ins = r.__instance__;
-        for (var i in ins) {
-            x(ins[i]);
+    r.each = function(fn, t) {
+        var ins = r.__instance__, i;
+        for (i in ins) {
+            fn(ins[i]);
         }
         return r;
     };
