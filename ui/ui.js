@@ -12,6 +12,8 @@ TE.prototype.create = function(o) {
     var _u2318 = '\u2318', // command sign
         _u2026 = '\u2026', // horizontal ellipsis
         _u2325 = '\u2325', // option sign
+        _u21E5 = '\u21E5', // indent sign
+        _u21E7 = '\u21E7', // shift sign
 
         win = window,
         doc = document,
@@ -45,9 +47,11 @@ TE.prototype.create = function(o) {
             },
             languages: {
                 tools: {
-                    undo: 'Undo (' + _u2318 + '+Z)',
-                    redo: 'Redo (' + _u2318 + '+Y)',
-                    preview: 'Preview (' + _u2318 + '+' + _u2325 + '+V)'
+                    undo: ['Undo', _u2318 + '+Z'],
+                    redo: ['Redo', _u2318 + '+Y'],
+                    indent: ['Indent',  _u21E5],
+                    outdent: ['Outdent',  _u21E7 + '+' + _u21E5],
+                    preview: ['Preview', _u2318 + '+' + _u2325 + '+V']
                 },
                 buttons: {
                     okay: 'OK',
@@ -584,7 +588,8 @@ TE.prototype.create = function(o) {
                 }
                 content_set(_button, icon);
                 if (tool.title) {
-                    _button.title = tool.title;
+                    var t = tool.title;
+                    _button.title = is_object(t) ? t[0] + (t[1] ? ' (' + t[1] + ')' : "") : t;
                 }
                 if (is_object(tool.attributes)) {
                     el(_button, false, tool.attributes);
@@ -755,8 +760,9 @@ TE.prototype.create = function(o) {
         events_set(_MOUSEMOVE, body, do_resize_move);
         events_set(_MOUSEUP, body, do_resize_up);
         if (i18n_others.preview) {
+            var t = i18n_tools.preview;
             _preview.href = "";
-            _preview.title = i18n_tools.preview;
+            _preview.title = is_object(t) ? t[0] + (t[1] ? ' (' + t[1] + ')' : "") : t;
             dom_set(_description_left, _preview);
             content_set(_preview, i18n_others.preview);
         }

@@ -58,10 +58,7 @@ var config = {
             'CSS': 'Cascading Style Sheet'
         }
     },
-    languages: {
-        tools: { … },
-        modals: { … }
-    },
+    languages: { … },
     advance_br: true, // press `⇧+↵` to do a hard break
     'advance_h1,h2': true, // enable **SEText** header style
     'advance_pre,code': true, // replace with `true` or `%1 .foo` to enable fenced code block syntax in **Markdown Extra**

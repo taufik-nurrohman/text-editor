@@ -55,32 +55,7 @@ editor.create({
         '[': ']',
         '<': '>'
     },
-    languages: {
-        tools: {
-            undo: 'Undo (⌘+Z)',
-            redo: 'Redo (⌘+Y)',
-            preview: 'Preview (⌘+⌥+V)'
-        },
-        buttons: {
-            okay: 'OK',
-            cancel: 'Cancel',
-            yes: 'Yes',
-            no: 'No',
-            enter: 'Enter',
-            exit: 'Exit',
-            open: 'Open',
-            close: 'Close',
-            ignore: 'Ignore'
-        },
-        placeholders: {
-            "": 'text here…'
-        },
-        others: {
-            preview: 'Preview',
-            _word: '%1 Word',
-            _words: '%1 Words'
-        }
-    },
+    languages: { … },
     classes: {
         editor: 'text-editor',
         i: 'fa fa-%1'

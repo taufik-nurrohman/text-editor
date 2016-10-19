@@ -16,7 +16,6 @@ TE.HTML = function(target, o) {
         _u21B5 = '\u21B5', // carriage return arrow
         _u2318 = '\u2318', // command sign
         _u2718 = '\u2718', // delete sign
-        _u21E5 = '\u21E5', // indent sign
         _u21E7 = '\u21E7', // shift sign
 
         win = window,
@@ -37,26 +36,24 @@ TE.HTML = function(target, o) {
             },
             languages: {
                 tools: {
-                    clear: 'Clear Format (' + _u2718 + ')',
-                    b: 'Bold (' + _u2318 + '+B)',
-                    i: 'Italic (' + _u2318 + '+I)',
-                    u: 'Underline (' + _u2318 + '+U)',
-                    s: 'Strike (' + _u2318 + '+' + _u2718 + ')',
-                    a: 'Link (' + _u2318 + '+L)',
-                    img: 'Image (' + _u2318 + '+G)',
-                    sub: 'Subscript (' + _u2318 + '+' + _u2193 + ')',
-                    sup: 'Superscript (' + _u2318 + '+' + _u2191 + ')',
-                    abbr: 'Abbreviation (' + _u2318 + '+' + _u21E7 + '+?)',
-                    p: 'Paragraph (' + _u2318 + '+' + _u21B5 + ')',
-                    'p,h1,h2,h3,h4,h5,h6': 'H1 ' + _u2013 + ' H6 (' + _u2318 + '+H)',
-                    'blockquote,q': 'Quote (' + _u2318 + '+Q)',
-                    'pre,code': 'Code (' + _u2318 + '+K)',
-                    ul: 'Unordered List (' + _u2318 + '+-)',
-                    ol: 'Ordered List (' + _u2318 + '++)',
-                    indent: 'Indent (' + _u21E5 + ')',
-                    outdent: 'Outdent (' + _u21E7 + '+' + _u21E5 + ')',
-                    table: 'Table (' + _u2318 + '+T)',
-                    hr: 'Horizontal Rule (' + _u2318 + '+R)'
+                    clear: ['Clear Format', _u2718],
+                    b: ['Bold', _u2318 + '+B'],
+                    i: ['Italic', _u2318 + '+I'],
+                    u: ['Underline',  _u2318 + '+U'],
+                    s: ['Strike',  _u2318 + '+' + _u2718],
+                    a: ['Link',  _u2318 + '+L'],
+                    img: ['Image',  _u2318 + '+G'],
+                    sub: ['Subscript',  _u2318 + '+' + _u2193],
+                    sup: ['Superscript',  _u2318 + '+' + _u2191],
+                    abbr: ['Abbreviation',  _u2318 + '+' + _u21E7 + '+?'],
+                    p: ['Paragraph',  _u2318 + '+' + _u21B5],
+                    'p,h1,h2,h3,h4,h5,h6': ['H1 ' + _u2013 + ' H6',  _u2318 + '+H'],
+                    'blockquote,q': ['Quote',  _u2318 + '+Q'],
+                    'pre,code': ['Code',  _u2318 + '+K'],
+                    ul: ['Unordered List',  _u2318 + '+-'],
+                    ol: ['Ordered List',  _u2318 + '++'],
+                    table: ['Table',  _u2318 + '+T'],
+                    hr: ['Horizontal Rule',  _u2318 + '+R']
                 },
                 modals: {
                     a: {

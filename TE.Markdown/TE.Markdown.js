@@ -9,11 +9,7 @@
 
 TE.Markdown = function(target, o) {
 
-    var _u2026 = '\u2026', // horizontal ellipsis
-        _u2193 = '\u2193', // downwards arrow
-        _u2318 = '\u2318', // command sign
-
-        win = window,
+    var win = window,
         doc = document,
         editor = new TE.HTML(target),
         ui = editor.ui,
@@ -41,7 +37,7 @@ TE.Markdown = function(target, o) {
         },
         languages: {
             tools: {
-                sup: 'Footnote (' + _u2318 + '+' + _u2193 + ')'
+                sup: ['Footnote']
             },
             modals: {
                 a: {
@@ -689,6 +685,6 @@ TE.Markdown = function(target, o) {
         }
     });
 
-    return editor;
+    return editor.update({}, 0);
 
 };

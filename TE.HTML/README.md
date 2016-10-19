@@ -52,47 +52,7 @@ var config = {
         td: [1, 20], // minimum and maximum table column(s)
         abbr: {}
     },
-    languages: {
-        tools: {
-            clear: 'Clear Format (✘)',
-            b: 'Bold (⌘+B)',
-            i: 'Italic (⌘+I)',
-            u: 'Underline (⌘+U)',
-            s: 'Strike (⌘+✘)',
-            a: 'Link (⌘+L)',
-            img: 'Image (⌘+G)',
-            sub: 'Subscript (⌘+↓)',
-            sup: 'Superscript (⌘+↑)',
-            abbr: 'Abbreviation (⌘+⇧+?)',
-            p: 'Paragraph (⌘+↵)',
-            'p,h1,h2,h3,h4,h5,h6': 'H1 – H6 (⌘+H)',
-            'blockquote,q': 'Quote (⌘+Q)',
-            'pre,code': 'Code (⌘+K)',
-            ul: 'Unordered List (⌘+-)',
-            ol: 'Ordered List (⌘++)',
-            indent: 'Indent (⇥)',
-            outdent: 'Outdent (⇧+⇥)',
-            table: 'Table (⌘+T)',
-            hr: 'Horizontal Rule (⌘+R)'
-        },
-        modals: {
-            a: {
-                title: ['Link URL', 'Link Title'],
-                placeholder: ['http://', 'link title here…']
-            },
-            img: {
-                title: ['Image URL', 'Image Title', 'Image Caption'],
-                placeholder: ['http://', 'image title here…', 'image caption here…']
-            },
-            table: {
-                title: ['Number of Columns', 'Number of Rows', 'Table Caption'],
-                placeholder: ['3', '3', 'table caption here…']
-            }
-        },
-        placeholders: {
-            table: ['Table Head %1.%2', 'Table Data %1.%2', 'Table Foot %1.%2']
-        }
-    },
+    languages: { … },
     classes: {
         formats: {}
     },
