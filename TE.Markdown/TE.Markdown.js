@@ -278,9 +278,9 @@ TE.Markdown = function(target, o) {
                         alt = src.split(/[\/\\\\]/).pop();
                     }
                     alt = attr_value(alt);
-                    $[0]().trim(trim(b) ? '\n\n' : "", keep).insert("");
+                    $[0]().trim(trim(b) ? '\n\n' : "", keep);
                     if (state[v]) {
-                        $.insert('![' + alt + '][' + v + ']\n\n', -1);
+                        $.insert("").insert('![' + alt + '][' + v + ']\n\n', -1);
                         if (keep) $.select($.$().start);
                         index = images.indexOf(' [' + v + ']:');
                         if (index === -1) {
@@ -293,7 +293,7 @@ TE.Markdown = function(target, o) {
                     } else {
                         $.blur().ui.prompt(['img[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
                             title = attr_value(v);
-                            $.insert('![' + alt + '](' + src + (title ? ' "' + title + '"' : "") + ')\n\n', -1);
+                            $.insert("").insert('![' + alt + '](' + src + (title ? ' "' + title + '"' : "") + ')\n\n', -1);
                             if (keep) $.select($.$().start);
                         });
                     }
@@ -336,7 +336,7 @@ TE.Markdown = function(target, o) {
                     x = trim(s.value),
                     i18n = languages.modals.abbr,
                     g = $.get(),
-                    abbr = trim(x || placeholders[""]),
+                    abbr = force_i(x || placeholders[""]),
                     n = /^ {0,3}\*\[.+?\]:/.test(g.split('\n').pop()) ? '\n' : '\n\n',
                     abbrs = g.match(/^ {0,3}\*\[.+?\]:/gm) || [],
                     state = states.abbr,
@@ -561,7 +561,7 @@ TE.Markdown = function(target, o) {
                 q = format(p[0], [1, 1]),
                 o = [], s, c, r;
             if ($.$().value === q) return $.select(), false;
-            return $[0]().insert("").ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
+            return $[0]().ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
                 c = edge(parseInt(v, 10) || w, std[0], std[1]);
                 $.blur().ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
                     r = edge(parseInt(v, 10) || w, str[0], str[1]);
@@ -587,7 +587,7 @@ TE.Markdown = function(target, o) {
                     if (!config.close_tr) {
                         o = o.replace(/^\|\s*|\s*\|$/gm, "");
                     }
-                    $.tidy('\n\n').insert(o, 1);
+                    $.tidy('\n\n').insert("").insert(o, 1);
                     m = $.$();
                     n = m.start + m.after.indexOf(q);
                     $.select(n, n + q.length)[1]();

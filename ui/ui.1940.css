@@ -8,8 +8,8 @@
 .text-editor-select,
 .text-editor-textarea {
   background:#fff;
-  border:1px solid #ddd;
-  color:#999;
+  border:1px solid;
+  color:#000;
   position:relative;
 }
 .text-editor *:focus {outline:0}
@@ -58,10 +58,8 @@
 .text-editor-select,
 .text-editor-textarea {
   display:inline-block;
-  background:#fafafa;
-  border-top-color:#ccc;
+  background:#ffa;
   font:inherit;
-  color:#666;
   padding:.25em .5em;
 }
 .text-editor-textarea {
@@ -71,7 +69,7 @@
 .text-editor-button,
 .text-editor-separator {
   display:inline-block;
-  background:#eee;
+  background:#000;
   border:0;
   font:inherit;
   height:2em;
@@ -80,7 +78,7 @@
   text-align:center;
   text-decoration:none;
   text-shadow:none;
-  color:inherit;
+  color:#fff;
   cursor:pointer;
   box-shadow:none;
   border-radius:0;
@@ -100,7 +98,8 @@
   text-align:center;
 }
 .text-editor-button:focus,
-.text-editor-button:hover {background:#e5e5e5}
+.text-editor-button:hover {background:#00f}
+.text-editor-button:active {background:#f00}
 .text-editor-tool {border-color:inherit}
 .text-editor-tool .text-editor-button {
   background:0 0;
@@ -108,7 +107,7 @@
   float:left;
   width:2em;
 }
-.text-editor-tool .text-editor-button:active {background:#f5f5f5}
+.text-editor-tool .text-editor-button:active {color:#00f}
 .text-editor-button.x,
 .text-editor-button[disabled] { /* disabled */
   cursor:default;
@@ -134,8 +133,7 @@
   display:block;
 }
 .text-editor-body {
-  border:0 solid #ddd;
-  border-top-color:#ccc;
+  border:0 solid;
   border-width:1px 0;
   overflow:auto;
 }
@@ -186,8 +184,8 @@
   bottom:2px;
   border:4px solid;
   border-color:transparent;
-  border-right-color:#ddd;
-  border-bottom-color:#ddd;
+  border-right-color:inherit;
+  border-bottom-color:inherit;
 }
 .text-editor-overlay {
   position:absolute;
@@ -196,7 +194,6 @@
   bottom:0;
   left:0;
   z-index:9998;
-  background:rgba(255,255,255,.5);
   overflow:auto;
 }
 .text-editor-overlay-content {
@@ -261,7 +258,6 @@
   bottom:0;
   height:3.5em;
   line-height:3.5em;
-  background:#fafafa;
   text-align:right;
 }
 .text-editor-modal-footer .text-editor-button {margin:.75em 0 0}
@@ -283,7 +279,7 @@
   background:0 0;
   color:inherit;
 }
-.text-editor-drop.menu .text-editor-button:active {background:#f5f5f5}
+.text-editor-drop.menu .text-editor-button:active {color:#00f}
 .text-editor-current.menu:after {
   content:"";
   display:inline-block;

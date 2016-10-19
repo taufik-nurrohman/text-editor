@@ -617,7 +617,7 @@ TE.HTML = function(target, o) {
                 td_o = get_o(td),
                 o = [], s, c, r, title;
             if ($.$().value === q) return $.select(), false;
-            return $[0]().insert("").ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
+            return $[0]().ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
                 c = edge(parseInt(v, 10) || w, std[0], std[1]);
                 $.blur().ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
                     r = edge(parseInt(v, 10) || w, str[0], str[1]);
@@ -647,7 +647,7 @@ TE.HTML = function(target, o) {
                         }
                         s += advance + tab + '</' + tr_o + '>' + (advance ? '\n' + tab + '</' + thead_o + '>\n' + tfoot_html + tab + '<' + tbody + '>' : "") + '\n';
                         o = s + o + (advance ? '\n' + tab + '</' + tbody_o + '>' : "") + '\n';
-                        $.tidy('\n\n').insert('<' + table + '>\n' + (title ? tab + '<' + caption + '>' + title + '</' + caption_o + '>\n' : "") + o + '</' + table_o + '>', 1);
+                        $.tidy('\n\n').insert("").insert('<' + table + '>\n' + (title ? tab + '<' + caption + '>' + title + '</' + caption_o + '>\n' : "") + o + '</' + table_o + '>', 1);
                         m = $.$();
                         n = m.start + m.after.indexOf(q);
                         $.select(n, n + q.length)[1]();
