@@ -64,6 +64,8 @@
   color:#666;
   padding:.25em .5em;
 }
+.text-editor-select,
+.text-editor-toggle {cursor:pointer}
 .text-editor-textarea {
   width:100%;
   resize:vertical;
@@ -270,6 +272,7 @@
   width:100%;
 }
 .text-editor-modal-footer .text-editor-button + .text-editor-button {margin-left:.25em}
+.text-editor-modal .block + .block {margin-top:.5em}
 .text-editor-drop,
 .text-editor-bubble {padding:2px}
 .text-editor-preview {cursor:pointer}

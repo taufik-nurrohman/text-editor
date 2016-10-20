@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width">
     <title>Text Editor</title>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-    <link href="../ui/ui.min.css" rel="stylesheet">
     <style>
     body {
       background:#fff;
@@ -19,10 +18,21 @@
     .text-h3 {font-size:115%}
     .text-em {font-style:italic}
     .text-editor-current.menu * {font-size:100%}
+    input,
+    button,
+    select,
+    textarea {font:inherit}
     </style>
   </head>
   <body>
     <form action="#">
+      <p>
+        <strong>Theme:</strong>
+        <select>
+          <option value="../ui/ui.min.css">Default</option>
+          <option value="../ui/ui.1960.min.css">1940</option>
+        </select>
+      </p>
       <p><textarea></textarea></p>
       <p>
         <button onclick="return this.disabled = true, this.nextElementSibling.disabled = false, editor.create(), false;" disabled>Create</button>
@@ -37,6 +47,22 @@
         <button onclick="return editor.ui.tool('bold', {}, 0), false;">Move Bold Button to 1 From Left</button>
         <button onclick="return editor.ui.tool('bold', {}, true), false;">Move Bold Button to 1 From Right</button>
       </p>
+      <script>
+      // dynamic stylesheet
+      var css = document.querySelector('select');
+      function select_css() {
+          var link = document.createElement('link'), o;
+          link.id = 'the-css';
+          link.rel = 'stylesheet';
+          link.href = this.value || css.value;
+          if (o = document.querySelector('#the-css')) {
+              o.parentNode.removeChild(o);
+          }
+          document.querySelector('head').appendChild(link);
+      }
+      select_css();
+      css.onchange = select_css;
+      </script>
     </form>
     <script src="../text-editor.min.js"></script>
     <script src="../ui/ui.min.js"></script>
