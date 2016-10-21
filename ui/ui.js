@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.1.1
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.1.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -51,7 +51,7 @@ TE.prototype.create = function(o) {
                     redo: ['Redo', _u2318 + '+Y'],
                     indent: ['Indent',  _u21E5],
                     outdent: ['Outdent',  _u21E7 + '+' + _u21E5],
-                    preview: ['Preview', _u2318 + '+' + _u2325 + '+V']
+                    preview: ['Preview', 'F5']
                 },
                 buttons: {
                     okay: 'OK',
@@ -373,11 +373,9 @@ TE.prototype.create = function(o) {
             var o = _overlay.firstChild;
             if (o) {
                 o = size(o);
-                el(frame, false, {
-                    'style': {
-                        'width': o.w + 'px',
-                        'height': o.h + 'px'
-                    }
+                el_style({
+                    'width': o.w + 'px',
+                    'height': o.h + 'px'
                 });
             }
         }
@@ -671,30 +669,25 @@ TE.prototype.create = function(o) {
                         r.insert(n, -1);
                         return event_exit(e);
                     }
-                    r.select(s.end + 1);
-                    return event_exit(e);
+                    return r.select(s.end + 1), event_exit(e);
                 }
                 if (i === n) {
-                    r.wrap(i, m);
-                    return event_exit(e);
+                    return r.wrap(i, m), event_exit(e);
                 }
                 if (before === i && after === m) {
                     if (n === 'backspace' && s_before.slice(-2) !== '\\' + i) {
-                        r.unwrap(i, m);
-                        return event_exit(e);
+                        return r.unwrap(i, m), event_exit(e);
                     } else if (auto_tab && n === 'enter' && i !== m) {
-                        r.tidy('\n' + dent + tab, '\n' + dent);
-                        return event_exit(e);
+                        return r.tidy('\n' + dent + tab, '\n' + dent).scroll('+1'), event_exit(e);
                     }
                 }
             }
         }
         if (auto_tab && !length) {
             if (n === 'backspace' && pattern(esc(tab) + '$').test(s_before)) {
-                r.outdent(tab);
-                return event_exit(e);
+                return r.outdent(tab), event_exit(e);
             } else if (n === 'enter' && pattern('(^|\\n)(' + esc(tab) + ')+.*$').test(s_before)) {
-                return r.insert('\n' + dent, -1), event_exit(e);
+                return r.insert('\n' + dent, -1, 1).scroll('+1'), event_exit(e);
             }
         }
     }
@@ -735,12 +728,12 @@ TE.prototype.create = function(o) {
         if (is_object(o)) {
             r.config = config = extend(config, o);
         }
+        var _parent = dom_exist(_content);
         class_set(_content, C);
-        var parent = dom_exist(_content);
-        if (parent && parent.tagName.toLowerCase() === 'p') {
-            dom_before(parent, _container);
-            _p = parent;
-            dom_reset(parent, false);
+        if (_parent && _parent.tagName.toLowerCase() === 'p') {
+            dom_before(_parent, _container);
+            _p = _parent;
+            dom_reset(_parent, false);
         } else {
             dom_before(_content, _container);
         }
@@ -1343,7 +1336,7 @@ TE.prototype.create = function(o) {
     r.ui.keys = {
         'control+y': 'redo',
         'control+z': 'undo',
-        'control+option+v': function(e, $) {
+        'f5': function(e, $) {
             return do_click_preview(e), false;
         },
         'shift+tab': auto_tab ? 'outdent' : 0,

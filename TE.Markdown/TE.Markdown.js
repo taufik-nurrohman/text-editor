@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  MARKDOWN TEXT EDITOR PLUGIN 1.1.1
+ *  MARKDOWN TEXT EDITOR PLUGIN 1.1.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -280,7 +280,7 @@ TE.Markdown = function(target, o) {
                     alt = attr_value(alt);
                     $[0]().trim(trim(b) ? '\n\n' : "", keep);
                     if (state[v]) {
-                        $.insert("").insert('![' + alt + '][' + v + ']\n\n', -1);
+                        $.insert('![' + alt + '][' + v + ']\n\n', -1, 1);
                         if (keep) $.select($.$().start);
                         index = images.indexOf(' [' + v + ']:');
                         if (index === -1) {
@@ -293,7 +293,7 @@ TE.Markdown = function(target, o) {
                     } else {
                         $.blur().ui.prompt(['img[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
                             title = attr_value(v);
-                            $.insert("").insert('![' + alt + '](' + src + (title ? ' "' + title + '"' : "") + ')\n\n', -1);
+                            $.insert('![' + alt + '](' + src + (title ? ' "' + title + '"' : "") + ')\n\n', -1, 1);
                             if (keep) $.select($.$().start);
                         });
                     }
@@ -587,9 +587,9 @@ TE.Markdown = function(target, o) {
                     if (!config.close_tr) {
                         o = o.replace(/^\|\s*|\s*\|$/gm, "");
                     }
-                    $.tidy('\n\n').insert("").insert(o, 1);
+                    $.tidy('\n\n').insert(o);
                     m = $.$();
-                    n = m.start + m.after.indexOf(q);
+                    n = m.start + m.value.indexOf(q);
                     $.select(n, n + q.length)[1]();
                 });
             }), false;

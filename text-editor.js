@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.4.1
+ *  TEXT EDITOR PLUGIN 2.4.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -179,13 +179,14 @@ var TE = function(target) {
     // scroll the editor
     r.scroll = function(i) {
         var current = target.scrollTop,
-            h = num(css(target, 'line-height'));
+            h = num(css(target, 'line-height')),
+            s = num(css(target, 'font-size'));
         if (!is_set(i)) {
             return Math.floor(current / h);
         } else if (is_string(i)) {
             return r.scroll(r.scroll() + (i === '-' ? -1 : 1)), r;
         }
-        return target.scrollTop = h * i, r;
+        return target.scrollTop = (h * i) + (h - s), r;
     };
 
     // set value
@@ -298,11 +299,11 @@ var TE = function(target) {
     };
 
     // insert/replace at caret
-    r.insert = function(s, x) {
+    r.insert = function(s, x, clear) {
         var $ = r.$(),
             a = $.start,
             b = $.end,
-            c = $.value,
+            c = clear ? "" : $.value,
             d = $.before,
             e = $.after,
             f = d + s + e,
@@ -320,13 +321,13 @@ var TE = function(target) {
     };
 
     // insert before selection
-    r.insertBefore = function(s) {
-        return r.insert(s, -1);
+    r.insertBefore = function(s, clear) {
+        return r.insert(s, -1, clear);
     };
 
     // insert after selection
     r.insertAfter = function(s) {
-        return r.insert(s, 1);
+        return r.insert(s, 1, clear);
     };
 
     // wrap selection
@@ -547,7 +548,7 @@ var TE = function(target) {
 (function(r) {
 
     // Plugin version
-    r.version = '2.4.1';
+    r.version = '2.4.2';
 
     // Collect all instance(s)
     r.__instance__ = {};

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.1.1
+ *  HTML TEXT EDITOR PLUGIN 1.1.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -188,31 +188,32 @@ TE.HTML = function(target, o) {
             li = formats[child] || child,
             ul_o = get_o(ul),
             li_o = get_o(li),
-            dent = get_indent(before);
+            dent = get_indent(before),
+            placeholder = placeholders[""], match;
         tree_parent = ul;
-        if (!v) {
-            if (pattern('\\s+<\\/' + get_o(formats.ul) + '|' + get_o(formats.ol) + '>\\s*').test(before)) {
-                return editor.select(), false;
-            }
-            var match = before.match(pattern('<' + li_o + attrs_capture + '>.*$'));
-            if (match) {
+        editor[0]();
+        if (!v || v === placeholder) {
+            if (match = before.match(pattern('(?:^|\\n)[\\t ]+<(\\/?)(?:' + get_o(formats.ul) + '|' + get_o(formats.ol) + ')' + attrs + '>\\s*$'))) {
+                editor.insert('\n' + dent + (match[1] ? "" : tab), -1);
+            } else if (match = before.match(pattern('<' + li_o + attrs_capture + '>.*?$'))) {
                 if (pattern('<\\/' + li_o + '>\\s*$').test(before)) {
-                    editor.tidy('\n' + dent, false).wrap('<' + li_o + match[1] + '>', '</' + li_o + '>');
+                    editor.tidy('\n' + dent, false).insert(placeholder).wrap('<' + li_o + match[1] + '>', '</' + li_o + '>');
                 } else {
                     if (!/>\s*$/.test(before)) {
-                        editor.insert('</' + li_o + '>\n' + dent + '<' + li_o + match[1] + '>', -1);
+                        editor.insert('</' + li_o + '>\n' + dent + '<' + li_o + match[1] + '>', -1).insert(placeholder);
                     } else {
-                        if (!pattern('<\\/' + li_o + '>\\s*$').test(before)) {
-                            editor.wrap('\n' + dent + tab + '<' + ul + '>\n' + dent + tab + tab + '<' + li_o + match[1] + '>', '</' + li_o + '>\n' + dent + tab + '</' + ul_o + '>\n' + dent);
-                        }
+                        editor.insert(placeholder).wrap('\n' + dent + tab + '<' + ul + '>\n' + dent + tab + tab + '<' + li_o + match[1] + '>', '</' + li_o + '>\n' + dent + tab + '</' + ul_o + '>\n' + dent);
                     }
                 }
             } else {
-                editor.tidy('\n\n', "").wrap('<' + ul + '>\n' + tab + '<' + li + '>', '</' + li_o + '>\n</' + ul_o + '>');
+                if (pattern('<\\/' + li_o + '>\\s*$').test(before)) {
+                    editor.insert(placeholder).wrap('\n' + dent + '<' + li + '>', '</' + li_o + '>');
+                } else {
+                    editor.tidy('\n\n', "").insert(placeholder).wrap('<' + ul + '>\n' + tab + '<' + li + '>', '</' + li_o + '>\n</' + ul_o + '>');
+                }
             }
         } else {
-            editor[0]()
-                .tidy('\n\n', "")
+            editor.tidy('\n\n', "")
                 .replace(/[\t ]*\n[\t ]*/g, '</' + li_o + '>\n' + tab + '<' + li + '>')
                 .wrap('<' + ul + '>\n' + tab + '<' + li + '>', '</' + li_o + '>\n</' + ul_o + '>\n\n', 1)
                 .replace(pattern('\\n' + tab + '<' + li + '>\\s*<\\/' + li_o + '>\\n', 'g'), '\n</' + ul_o + '>\n\n<' + ul + '>\n')
@@ -220,7 +221,7 @@ TE.HTML = function(target, o) {
             if (auto_p) {
                 ui.tools.p.click(e, editor);
             }
-            editor[1]();
+            return editor[1](), false;
         }
     }
 
@@ -327,14 +328,14 @@ TE.HTML = function(target, o) {
                             alt = src.split(/[\/\\\\]/).pop();
                         }
                         alt = attr_value(alt);
-                        $[0]().insert("");
+                        $[0]();
                         if (advance && title) {
-                            $.tidy('\n\n', "").insert('<' + figure + '>\n' + tab + '<' + img + ' alt="' + alt + '" src="' + src + '"' + suffix + '\n' + tab + '<' + figcaption + '>' + title + '</' + get_o(figcaption) + '>\n</' + get_o(figure) + '>\n\n', -1);
+                            $.tidy('\n\n', "").insert('<' + figure + '>\n' + tab + '<' + img + ' alt="' + alt + '" src="' + src + '"' + suffix + '\n' + tab + '<' + figcaption + '>' + title + '</' + get_o(figcaption) + '>\n</' + get_o(figure) + '>\n\n', -1, 1);
                             if (auto_p) {
                                 ui.tools.p.click(e, editor);
                             }
                         } else {
-                            auto_p_(e, $).tidy(/<[^\/<>]+?>\s*$/.test($.$().before) ? "" : ' ', "").insert('<' + img + ' alt="' + alt + '" src="' + src + '"' + (title ? ' title="' + title + '"' : "") + suffix + ' ', -1);
+                            auto_p_(e, $).tidy(/<[^\/<>]+?>\s*$/.test($.$().before) ? "" : ' ', "").insert('<' + img + ' alt="' + alt + '" src="' + src + '"' + (title ? ' title="' + title + '"' : "") + suffix + ' ', -1, 1);
                         }
                         $[1]();
                     });
@@ -413,40 +414,35 @@ TE.HTML = function(target, o) {
                     br_o = get_o(br),
                     before = s.before,
                     after = s.after,
-                    dent = get_indent(before);
+                    dent = get_indent(before),
+                    placeholder = placeholders[""];
+                $[0]();
                 if (!v || v.indexOf('\n') === -1) {
                     if (pattern('^\\s*<\\/' + p_o + '>').test(after)) {
                         if (pattern('<' + p_o + attrs + '>\\s*$').test(before)) {
-                            $[0]()
-                                .unwrap(pattern('\\s*<' + p_o + attrs + '>\\s*'), pattern('\\s*<\\/' + p_o + '>'))
-                                .tidy('\n', '\n' + dent)
-                            [1]();
-                        } else if (match = before.match(pattern('<' + p_o + attrs_capture + '>.*$'))) {
-                            $.wrap('</' + p_o + '>\n' + dent + '<' + p_o + match[1] + '>', "");
+                            $.unwrap(pattern('\\s*<' + p_o + attrs + '>\\s*'), pattern('\\s*<\\/' + p_o + '>')).replace(placeholder, "").tidy('\n', '\n' + dent);
+                        } else if (match = before.match(pattern('<' + p_o + attrs_capture + '>.*?$'))) {
+                            $.wrap('</' + p_o + '>\n' + dent + '<' + p_o + match[1] + '>', "").insert(placeholder);
                         }
                     } else {
-                        $[0]().format(p, 0, '\n\n')[1]();
+                        $.format(p, 0, '\n\n');
                     }
                 } else {
                     var par = pattern('^(?:\\s*<' + p_o + attrs + '>\\s*)+' + content + '(?:\\s*<\\/' + p_o + '>\\s*)+$');
                     if (par.test(s.value)) {
-                        $[0]()
-                            .replace(par, '$1')
+                        $.replace(par, '$1')
                             .replace(pattern('\\s*<\\/' + p_o + '>\\s*<' + p_o + attrs + '>\\s*', 'g'), '\n\n')
-                            .replace(pattern('\\s*<' + br_o + attrs + '>\\s*', 'g'), '\n')
-                        [1]();
+                            .replace(pattern('\\s*<' + br_o + attrs + '>\\s*', 'g'), '\n');
                     } else {
-                        $[0]()
-                            .replace(/\n/g, '\n<' + br + suffix + '\n')
+                        $.replace(/\n/g, '\n<' + br + suffix + '\n')
                             .replace(pattern('(\\s*<' + br_o + attrs + suffix + '\\s*){2,}', 'g'), '</' + p_o + '>\n<' + p + '>')
                             .wrap('<' + p + '>', '</' + p_o + '>', 1)
                             .replace(pattern('(<' + p_o + attrs + '>)+', 'g'), '$1')
                             .replace(pattern('(<\\/' + p_o + '>)+', 'g'), '$1')
-                            .tidy('\n')
-                        [1]();
+                            .tidy('\n');
                     }
                 }
-                return false;
+                return $[1](), false;
             }
         },
         'p,h1,h2,h3,h4,h5,h6': {
@@ -647,9 +643,9 @@ TE.HTML = function(target, o) {
                         }
                         s += advance + tab + '</' + tr_o + '>' + (advance ? '\n' + tab + '</' + thead_o + '>\n' + tfoot_html + tab + '<' + tbody + '>' : "") + '\n';
                         o = s + o + (advance ? '\n' + tab + '</' + tbody_o + '>' : "") + '\n';
-                        $.tidy('\n\n').insert("").insert('<' + table + '>\n' + (title ? tab + '<' + caption + '>' + title + '</' + caption_o + '>\n' : "") + o + '</' + table_o + '>', 1);
+                        $.tidy('\n\n').insert('<' + table + '>\n' + (title ? tab + '<' + caption + '>' + title + '</' + caption_o + '>\n' : "") + o + '</' + table_o + '>', 0);
                         m = $.$();
-                        n = m.start + m.after.indexOf(q);
+                        n = m.start + m.value.indexOf(q);
                         $.select(n, n + q.length)[1]();
                     });
                 });
@@ -689,15 +685,16 @@ TE.HTML = function(target, o) {
                     li = formats.li,
                     p_o = get_o(p),
                     li_o = get_o(li),
-                    dent = get_indent(s.before), m, n;
-                if (!v) {
+                    dent = get_indent(s.before),
+                    placeholder = placeholders[""], m, n;
+                if (!v || v === placeholder) {
                     if (match = s.after.match(pattern('^\\s*<\\/(' + p_o + '|' + li_o + ')>'))) {
                         m = match[1];
                         ui.tools[m === 'li' ? tree_parent : m].click(e, $);
                     } else if (auto_p && trim(w) && s.end === w.length && /^\s*[^<\n]*?[^>]\s*$/.test(w)) {
                         w = '<' + p + '>' + w + '</' + p_o + '>\n<' + p + '>';
-                        n = '</' + p_o + '>';
-                        $.set(w + n).select(w.length);
+                        n = placeholder + '</' + p_o + '>';
+                        $.set(w + n).select(w.length, (w + placeholder).length);
                     } else {
                         return; // normal enter key ...
                     }
@@ -720,17 +717,15 @@ TE.HTML = function(target, o) {
                     before = s.before,
                     after = s.after,
                     end = '<[^<>]+?>';
-                if (!v) {
-                    if (pattern(end + '$').test(before)) {
-                        tag = before.split('<').pop().match(/^([^\/\s]+).*?>$/);
-                        tag = (tag && tag[1]) || 0;
-                        if (tag && pattern('^\\s*<\\/' + tag + '>').test(after)) {
-                            $.unwrap(pattern('<' + tag + attrs + '>'), pattern('\\s*<\\/' + tag + '>'));
-                        } else {
-                            $.outdent(pattern(end));
-                        }
-                        return false;
+                if (!v && pattern(end + '$').test(before)) {
+                    tag = before.split('<').pop().match(/^([^\/\s]+).*?>$/);
+                    tag = (tag && tag[1]) || 0;
+                    if (tag && pattern('^\\s*<\\/' + tag + '>').test(after)) {
+                        $.unwrap(pattern('<' + tag + attrs + '>'), pattern('\\s*<\\/' + tag + '>'));
+                    } else {
+                        $.outdent(pattern(end));
                     }
+                    return false;
                 }
             },
             'control+h': 'p,h1,h2,h3,h4,h5,h6',

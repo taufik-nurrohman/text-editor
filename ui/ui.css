@@ -58,6 +58,7 @@
 .text-editor-select,
 .text-editor-textarea {
   display:inline-block;
+  vertical-align:middle;
   background:#fafafa;
   border-top-color:#ccc;
   font:inherit;
@@ -68,11 +69,13 @@
 .text-editor-toggle {cursor:pointer}
 .text-editor-textarea {
   width:100%;
+  overflow:auto;
   resize:vertical;
 }
 .text-editor-button,
 .text-editor-separator {
   display:inline-block;
+  vertical-align:middle;
   background:#eee;
   border:0;
   font:inherit;
@@ -262,7 +265,6 @@
 .text-editor-modal-footer {
   bottom:0;
   height:3.5em;
-  line-height:3.5em;
   background:#fafafa;
   text-align:right;
 }

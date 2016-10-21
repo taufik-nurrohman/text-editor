@@ -26,30 +26,17 @@
   </head>
   <body>
     <form action="#">
+      <p><textarea></textarea></p>
       <p>
         <strong>Theme:</strong>
-        <select>
+        <select id="select-css">
           <option value="../ui/ui.min.css">Default</option>
           <option value="../ui/ui.1960.min.css">1960</option>
         </select>
       </p>
-      <p><textarea></textarea></p>
-      <p>
-        <button onclick="return this.disabled = true, this.nextElementSibling.disabled = false, editor.create(), false;" disabled>Create</button>
-        <button onclick="return this.disabled = true, this.previousElementSibling.disabled = false, editor.destroy(), false;">Destroy</button>
-      </p>
-      <p>
-        <button onclick="return editor.ui.tools.bold.click(null, editor), false;">Trigger Bold Button</button>
-        <button onclick="return editor.ui.tool('bold', {active:false}), false;">Disable Bold Button</button>
-        <button onclick="return editor.ui.tool('bold', {active:true}), false;">Enable Bold Button</button>
-        <button onclick="return editor.ui.tool('bold', {}, 1), false;">Move Bold Button to 2 from Left</button>
-        <button onclick="return editor.ui.tool('bold', {}, -1), false;">Move Bold Button to 2 from Right</button>
-        <button onclick="return editor.ui.tool('bold', {}, 0), false;">Move Bold Button to 1 From Left</button>
-        <button onclick="return editor.ui.tool('bold', {}, true), false;">Move Bold Button to 1 From Right</button>
-      </p>
       <script>
       // dynamic stylesheet
-      var css = document.querySelector('select');
+      var css = document.querySelector('#select-css');
       function select_css() {
           var link = document.createElement('link'), o;
           link.id = 'the-css';
@@ -63,6 +50,20 @@
       select_css();
       css.onchange = select_css;
       </script>
+      <h2>Tests</h2>
+      <p>
+        <button onclick="return this.disabled = true, this.nextElementSibling.disabled = false, editor.create(), false;" disabled>Create</button>
+        <button onclick="return this.disabled = true, this.previousElementSibling.disabled = false, editor.destroy(), false;">Destroy</button>
+      </p>
+      <p>
+        <button onclick="return editor.ui.tools.bold.click(null, editor), false;">Trigger Bold Button</button>
+        <button onclick="return editor.ui.tool('bold', {active:false}), false;">Disable Bold Button</button>
+        <button onclick="return editor.ui.tool('bold', {active:true}), false;">Enable Bold Button</button>
+        <button onclick="return editor.ui.tool('bold', {}, 1), false;">Move Bold Button to 2 from Left</button>
+        <button onclick="return editor.ui.tool('bold', {}, -1), false;">Move Bold Button to 2 from Right</button>
+        <button onclick="return editor.ui.tool('bold', {}, 0), false;">Move Bold Button to 1 From Left</button>
+        <button onclick="return editor.ui.tool('bold', {}, true), false;">Move Bold Button to 1 From Right</button>
+      </p>
     </form>
     <script src="../text-editor.min.js"></script>
     <script src="../ui/ui.min.js"></script>

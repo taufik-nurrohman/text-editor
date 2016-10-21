@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width">
     <title>Markdown Text Editor</title>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-    <link href="../ui/ui.1960.min.css" rel="stylesheet">
     <style>
     body {
       background:#fff;
@@ -13,10 +12,10 @@
       font-size:14px;
       line-height:1.5em;
       color:#000;
-      padding:5%;
+      padding:5em;
     }
     pre {
-      background:#ffa;
+      background:#eef;
       padding:.5em;
       overflow:auto;
     }
@@ -42,6 +41,29 @@
     </div>
     <form action="#">
       <p><textarea></textarea></p>
+      <p>
+        <strong>Theme:</strong>
+        <select id="select-css">
+          <option value="../ui/ui.min.css">Default</option>
+          <option value="../ui/ui.1960.min.css">1960</option>
+        </select>
+      </p>
+      <script>
+      // dynamic stylesheet
+      var css = document.querySelector('#select-css');
+      function select_css() {
+          var link = document.createElement('link'), o;
+          link.id = 'the-css';
+          link.rel = 'stylesheet';
+          link.href = this.value || css.value;
+          if (o = document.querySelector('#the-css')) {
+              o.parentNode.removeChild(o);
+          }
+          document.querySelector('head').appendChild(link);
+      }
+      select_css();
+      css.onchange = select_css;
+      </script>
     </form>
     <div>
       <h2>Keyboard Shortcuts</h2>
