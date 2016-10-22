@@ -175,9 +175,6 @@
         '<span class="text-em">Test Italic</span>': 'italic'
     });
 
-    // test tool separator
-    editor.ui.tool('|', -1);
-
     // custom hook(s)
     editor._.hook.set('enter.overlay.preview', function(e, $, value, container) {
         var x = /<(script|iframe)(\s[^<>]*?)?>(.*?<\/(script|iframe)>)?/gi,

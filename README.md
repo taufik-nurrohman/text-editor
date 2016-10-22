@@ -158,12 +158,28 @@ Restore selection after editor’s blur event:
 editor.select();
 ~~~
 
-### Replace Selection
+### Replace at Selection
 
 Replace selected text with something:
 
 ~~~ .javascript
 editor.replace(/foo/g, 'bar');
+~~~
+
+### Replace Before Caret/Selection
+
+Replace something before caret/selection with something:
+
+~~~ .javascript
+editor.replaceBefore(/foo/g, 'bar');
+~~~
+
+### Replace Before Caret/Selection
+
+Replace something after caret/selection with something:
+
+~~~ .javascript
+editor.replaceAfter(/foo/g, 'bar');
 ~~~
 
 ### Match Selection

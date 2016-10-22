@@ -136,7 +136,6 @@
   min-height:3em;
   resize:none;
   font-family:"Courier New",Courier,"Nimbus Mono L",Monospace;
-  display:block;
 }
 .text-editor-body {
   border:0 solid #ddd;
@@ -212,7 +211,6 @@
   left:0;
   padding:2em;
   border-width:0;
-  box-shadow:0 0 2px rgba(0,0,0,.2);
 }
 .text-editor-portal {
   display:block;

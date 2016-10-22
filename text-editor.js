@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.4.2
+ *  TEXT EDITOR PLUGIN 2.5.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -40,7 +40,7 @@ var TE = function(target) {
     r.x = '!$^*()-=+[]{}\\|:<>,./?'; // character(s) to escape
 
     function val() {
-        return target.value.replace(/\r/g, "");
+        return target.value.replace(//g, "");
     }
 
     function is_set(x) {
@@ -286,38 +286,46 @@ var TE = function(target) {
     };
 
     // replace at selection
-    r.replace = function(f, t) {
-        if (!is_set(t) && !is_pattern(f)) {
-            t = f;
-            f = /^[\s\S]*?$/;
-        }
+    r.replace = function(f, t, x) {
         var $ = r.$(),
-            a = $.start,
-            b = $.end,
-            c = $.value.replace(f, t);
-        return r.set($.before + c + $.after).select(a, a + c.length).record();
+            a = $.before,
+            b = $.after,
+            c = $.value, d, e;
+        if (x === -1) { // replace before
+            a = a.replace(f, t);
+        } else if (x === 1) { // replace after
+            b = b.replace(f, t);
+        } else {
+            c = c.replace(f, t);
+        }
+        d = a.length;
+        e = d + c.length;
+        return r.set(a + c + b).select(d, e).record();
+    };
+
+    // replace before selection
+    r.replaceBefore = function(f, t) {
+        return r.replace(f, t, -1, 1);
+    };
+
+    // replace after selection
+    r.replaceAfter = function(f, t) {
+        return r.replace(f, t, 1, 1);
     };
 
     // insert/replace at caret
     r.insert = function(s, x, clear) {
-        var $ = r.$(),
-            a = $.start,
-            b = $.end,
-            c = clear ? "" : $.value,
-            d = $.before,
-            e = $.after,
-            f = d + s + e,
-            g = s.length;
-        if (x === -1) { // insert before
-            f = d + s + c + e;
-            a += g;
-            b += g;
-        } else if (x === 1) { // insert after
-            f = d + c + s + e;
-        } else {
-            b = a + g;
+        var f = /^[\s\S]*?$/;
+        r[0]();
+        if (clear) {
+            r.replace(f, ""); // force to delete selection on insert before/after?
         }
-        return r.set(f).select(a, b).record();
+        if (x === -1) { // insert before
+            f = /$/;
+        } else if (x === 1) { // insert after
+            f = /^/;
+        }
+        return r.replace(f, s, x)[1]();
     };
 
     // insert before selection
@@ -326,7 +334,7 @@ var TE = function(target) {
     };
 
     // insert after selection
-    r.insertAfter = function(s) {
+    r.insertAfter = function(s, clear) {
         return r.insert(s, 1, clear);
     };
 
@@ -548,7 +556,7 @@ var TE = function(target) {
 (function(r) {
 
     // Plugin version
-    r.version = '2.4.2';
+    r.version = '2.5.0';
 
     // Collect all instance(s)
     r.__instance__ = {};
@@ -638,7 +646,7 @@ var TE = function(target) {
     };
 
     // Key alias(es)
-    r.keys_alt = {
+    r.keys_alias = {
         'alternate': 'alt',
         'option': 'alt',
         'ctrl': 'control',
@@ -678,7 +686,7 @@ var TE = function(target) {
         configurable: true,
         get: function() {
             var keys = r.keys,
-                keys_alt = r.keys_alt;
+                keys_alias = r.keys_alias;
             // custom `KeyboardEvent.key` for internal use
             var t = this,
                 k = t.key ? scap(t.key) : keys[t.which || t.keyCode];
@@ -688,13 +696,13 @@ var TE = function(target) {
             k = scap(k);
             function ret(x, y) {
                 if (!x || x === true) return y;
-                return x = scap(x), y && (keys_alt[x] || x) === k;
+                return x = scap(x), y && (keys_alias[x] || x) === k;
             }
             return {
                 key: function(x) {
                     if (!x || x === true) return k;
                     if (x instanceof RegExp) return x.test(k);
-                    return x = scap(x), (keys_alt[x] || x) === k;
+                    return x = scap(x), (keys_alias[x] || x) === k;
                 },
                 control: function(x) {
                     return ret(x, t.ctrlKey);

@@ -120,7 +120,7 @@ TE.prototype.create = function(o) {
         if (!is_set(gap_2)) gap_2 = "";
         var s = r[0]().$(),
             a = '<' + node + '>' + gap_2,
-            b = gap_2 + '</' + node.split(' ')[0] + '>',
+            b = gap_2 + '</' + node.split(/\s+/)[0] + '>',
             A = esc(a),
             B = esc(b),
             m = pattern('^' + A + '([\\s\\S]*?)' + B + '$'),
@@ -339,7 +339,7 @@ TE.prototype.create = function(o) {
         i18n_tools = i18n.tools,
         i18n_buttons = i18n.buttons,
         i18n_others = i18n.others,
-        C = prefix + '-textarea ' + prefix + '-content',
+        C = prefix + '-textarea ' + prefix + '-content block',
         _container = el_set(prefix),
         _header = el_set(prefix + '-header'),
         _body = el_set(prefix + '-body'),
@@ -632,7 +632,7 @@ TE.prototype.create = function(o) {
             length = s.length,
             key = e.TE.key,
             keys = r.ui.keys,
-            keys_a = TE.keys_alt,
+            keys_a = TE.keys_alias,
             dent = (s_before.match(/(?:^|\n)([\t ]*).*$/) || [""]).pop(),
             i, j, k, l, m, n = key();
         function explode(s) {
@@ -726,7 +726,7 @@ TE.prototype.create = function(o) {
 
     r.create = function(o, hook) {
         if (is_object(o)) {
-            r.config = config = extend(config, o);
+            config = extend(config, o);
         }
         var _parent = dom_exist(_content);
         class_set(_content, C);
@@ -990,8 +990,8 @@ TE.prototype.create = function(o) {
         var top = (H / 2) - (h / 2),
             left = (W / 2) - (w / 2);
         el_style(_modal, {
-            top: top + 'px',
-            left: left + 'px'
+            top: edge(top, 0) + 'px',
+            left: edge(left, 0) + 'px'
         });
         events_set(_CLICK, O.x, do_modal_exit);
         events_set(_MOUSEDOWN, O.header, event_exit);
@@ -1081,6 +1081,7 @@ TE.prototype.create = function(o) {
                 type: 'text',
                 value: value,
                 placeholder: value,
+                spellcheck: 'false',
                 'class': prefix + '-input block'
             }),
             id = 'prompt', key, options = [], i, j;

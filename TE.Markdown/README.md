@@ -144,8 +144,8 @@ Using <https://github.com/tanakahisateru/js-markdown-extra> library to create pr
 <script>
 
 editor._.hook.set('enter.overlay.preview', function(e, $, value, container) {
-    var html = value[1].replace(/<body(?:\s[^<>]*?)?>([\s\S]*?)<\/body>/, function(a, b) {
-        return Markdown(b).replace(/<table>/g, '<table border="1">');
+    var html = value[1].replace(/<body(|\s[^<>]*?)>([\s\S]*?)<\/body>/, function(a, b, c) {
+        return '<body' + b + '>' + Markdown(c).replace(/<table>/g, '<table border="1">') + '</body>';
     });
     container.firstChild.src = 'data:text/html,' + encodeURIComponent(html);
 });

@@ -67,6 +67,8 @@ d</textarea>
       <button onclick="return editor_1.select(100), false;">move caret to 100</button>
       <br>
       <button onclick="return editor_1.replace(/ /g, '*'), false;">replace all space in selection with an <code>*</code></button>
+      <button onclick="return editor_1.replaceBefore(/ /g, '*'), false;">replace all space before selection with an <code>*</code></button>
+      <button onclick="return editor_1.replaceAfter(/ /g, '*'), false;">replace all space after selection with an <code>*</code></button>
       <br>
       <button onclick="return editor_1.insert('*insert*'), false;">insert <code>*insert*</code> at caret/selection</button>
       <button onclick="return editor_1.insertBefore('*insert.before*'), false;">insert <code>*insert.before*</code> before caret/selection</button>

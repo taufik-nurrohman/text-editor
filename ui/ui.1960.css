@@ -143,7 +143,6 @@
   float:left;
 }
 .text-editor-content {
-  display:block;
   border-width:0;
   min-height:3em;
   resize:none;
@@ -221,7 +220,6 @@
   left:0;
   padding:2em;
   border-width:0;
-  box-shadow:0 0 2px rgba(0,0,0,.2);
 }
 .text-editor-portal {
   display:block;
@@ -245,7 +243,7 @@
   top:-9999px;
   left:-9999px;
   z-index:9999;
-  box-shadow:0 0 2px rgba(0,0,0,.2);
+  box-shadow:0 1px 2px rgba(0,0,0,.4);
 }
 .text-editor-modal {
   min-width:20em;
