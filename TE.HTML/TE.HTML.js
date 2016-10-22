@@ -707,7 +707,7 @@ TE.HTML = function(target, o) {
                     li_o = get_o(li),
                     dent = get_indent(s.before);
                 if (pattern('<\\/' + li + '>').test(s.after)) {
-                    return $.wrap('\n' + dent + tab + '<' + (formats[tree_parent] || tree_parent) + '>\n' + dent + tab + tab + '<' + li + '>', '</' + li_o + '>\n' + dent + tab + '</' + tree_parent + '>\n' + dent), false;
+                    return $[0]().wrap('\n' + dent + tab + '<' + (formats[tree_parent] || tree_parent) + '>\n' + dent + tab + tab + '<' + li + '>', '</' + li_o + '>\n' + dent + tab + '</' + tree_parent + '>\n' + dent).insert(placeholders[""])[1](), false;
                 }
                 return $.ui.tools.indent.click(e, $);
             },
