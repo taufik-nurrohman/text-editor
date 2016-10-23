@@ -869,9 +869,10 @@ TE.prototype.create = function(o) {
             });
         } else if (drag === resize) {
             o = point(_modal, e);
+            s = size(resize);
             el_style(_modal, {
-                width: o.x + 'px',
-                height: o.y + 'px'
+                width: (o.x + (s.w / 4)) + 'px',
+                height: (o.y + (s.h / 4)) + 'px'
             });
         }
     }

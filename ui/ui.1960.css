@@ -290,7 +290,7 @@
   background:0 0;
   color:inherit;
 }
-.text-editor-drop.menu .text-editor-button:active {color:#006}
+.text-editor-drop.menu .text-editor-button:active {color:#00a}
 .text-editor-current.menu:after {
   content:"";
   display:inline-block;
