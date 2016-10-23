@@ -481,32 +481,6 @@ var TE = function(target) {
 
     // utility ...
     r._ = {
-        // capture current time
-        time: function() {
-            var time = new Date(),
-                year = time.getFullYear(),
-                month = time.getMonth() + 1,
-                date = time.getDate(),
-                hour = time.getHours(),
-                minute = time.getMinutes(),
-                second = time.getSeconds(),
-                millisecond = time.getMilliseconds();
-            if (month < 10) month = '0' + month;
-            if (date < 10) date = '0' + date;
-            if (hour < 10) hour = '0' + hour;
-            if (minute < 10) minute = '0' + minute;
-            if (second < 10) second = '0' + second;
-            if (millisecond < 10) millisecond = '0' + millisecond;
-            return [
-                "" + year,
-                "" + month,
-                "" + date,
-                "" + hour,
-                "" + minute,
-                "" + second,
-                "" + millisecond
-            ];
-        },
         // escape regex character(s)
         x: function(x) {
             if (is_object(x)) {
