@@ -37,7 +37,7 @@ Methods
 Create a text editor with graphic user interface:
 
 ~~~ .javascript
-editor.create({
+editor.ui({
     tab: '  ', // indent size
     dir: 'ltr',
     keys: true, // enable/disable keyboard shortcut feature
@@ -82,6 +82,19 @@ Destroy the graphic user interface of text editor:
 
 ~~~ .javascript
 editor.destroy();
+~~~
+
+### Create
+
+Recreate the graphic user interface of text editor after destroyed:
+
+~~~ .javascript
+editor.create({
+    tab: '\t',
+    classes: {
+        editor: 'text-editor-dark text-editor'
+    }
+});
 ~~~
 
 ### Utility

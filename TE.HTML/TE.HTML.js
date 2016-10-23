@@ -24,7 +24,7 @@ TE.HTML = function(target, o) {
         extend = editor._.extend,
         each = editor._.each,
         esc = editor._.x,
-        ui = editor.create(extend({
+        ui = editor.ui(extend({
             suffix: '>',
             auto_encode_html: 1,
             auto_p: 1,

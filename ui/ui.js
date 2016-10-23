@@ -1,13 +1,13 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.1.2
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.2.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
  * ----------------------------------------------------------
  */
 
-TE.prototype.create = function(o) {
+TE.prototype.ui = function(o) {
 
     var _u2318 = '\u2318', // command sign
         _u2026 = '\u2026', // horizontal ellipsis
@@ -98,7 +98,7 @@ TE.prototype.create = function(o) {
         auto_close = config.auto_close,
         data_tool_id = 'data-tool-id';
 
-    // add `ui` method to `TE`
+    // replace `ui` function with empty object
     r.ui = {};
 
     // add `tidy` method to `TE`
@@ -992,7 +992,10 @@ TE.prototype.create = function(o) {
             left = (W / 2) - (w / 2);
         el_style(_modal, {
             top: edge(top, 0) + 'px',
-            left: edge(left, 0) + 'px'
+            left: edge(left, 0) + 'px',
+            'min-width': w + 'px',
+            'min-height': h + 'px',
+            visibility: 'visible'
         });
         events_set(_CLICK, O.x, do_modal_exit);
         events_set(_MOUSEDOWN, O.header, event_exit);
@@ -1184,7 +1187,8 @@ TE.prototype.create = function(o) {
         }
         el_style(_drop, {
             left: edge(left, 0, a.w - b.w) + 'px',
-            top: edge(top, 0, a.h - b.h) + 'px'
+            top: edge(top, 0, a.h - b.h) + 'px',
+            visibility: 'visible'
         });
         events_set(_CLICK, body, do_drop_exit);
         hook_fire('enter.drop.' + k, [r]);
@@ -1260,7 +1264,8 @@ TE.prototype.create = function(o) {
         bs = size(_bubble);
         el_style(_bubble, {
             left: edge(left, o.l, o.l + size(_body).w - bs.w) + 'px',
-            top: edge(top, o.t, offset(_footer).t - bs.h) + 'px'
+            top: edge(top, o.t, offset(_footer).t - bs.h) + 'px',
+            visibility: 'visible'
         });
         hook_fire('enter.bubble.' + k, [r]);
         hook_fire('enter.bubble', [r]);

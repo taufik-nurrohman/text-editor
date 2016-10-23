@@ -21,6 +21,7 @@
 .text-editor *:after {
   margin:0;
   padding:0;
+  line-height:1.5;
   -webkit-box-sizing:border-box;
   -moz-box-sizing:border-box;
   box-sizing:border-box;
@@ -60,6 +61,7 @@
   position:relative;
 }
 .text-editor-header {min-height:2px}
+.text-editor-button,
 .text-editor-input,
 .text-editor-select,
 .text-editor-textarea {
@@ -86,9 +88,6 @@
   background:#000;
   border:0;
   font:inherit;
-  height:2em;
-  line-height:2em;
-  padding:0 .5em;
   text-align:center;
   text-decoration:none;
   text-shadow:none;
@@ -120,6 +119,7 @@
   padding:0;
   float:left;
   width:2em;
+  line-height:2em;
 }
 .text-editor-tool .text-editor-button:active {
   background:#def;
@@ -156,12 +156,11 @@
 .text-editor-footer {
   text-transform:uppercase;
   text-align:right;
-  line-height:1.5em;
   min-height:14px;
 }
 .text-editor-description {
   font-size:.65em;
-  padding:0 .75em;
+  padding:.25em .75em;
 }
 .text-editor-tool:after,
 .text-editor-description:after {
@@ -208,6 +207,7 @@
   bottom:0;
   left:0;
   z-index:9998;
+  background:rgba(0,0,0,.1);
   background:repeating-linear-gradient(-45deg,rgba(0,0,0,.1),rgba(0,0,0,.1) 5px,rgba(0,0,0,.2) 5px,rgba(0,0,0,.2) 10px);
   background-position:50% 50%;
   overflow:auto;
@@ -240,10 +240,9 @@
 .text-editor-drop,
 .text-editor-bubble {
   position:absolute;
-  top:-9999px;
-  left:-9999px;
   z-index:9999;
   box-shadow:0 1px 2px rgba(0,0,0,.4);
+  visibility:hidden;
 }
 .text-editor-modal {
   min-width:20em;
@@ -272,6 +271,7 @@
 .text-editor-modal-footer {
   bottom:0;
   height:3.5em;
+  line-height:inherit;
   text-align:right;
 }
 .text-editor-modal-footer .text-editor-button {margin:.75em 0 0}
