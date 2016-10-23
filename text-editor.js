@@ -40,7 +40,7 @@ var TE = function(target) {
     r.x = '!$^*()-=+[]{}\\|:<>,./?'; // character(s) to escape
 
     function val() {
-        return target.value.replace(//g, "");
+        return target.value.replace(/\r/g, "");
     }
 
     function is_set(x) {
@@ -305,12 +305,12 @@ var TE = function(target) {
 
     // replace before selection
     r.replaceBefore = function(f, t) {
-        return r.replace(f, t, -1, 1);
+        return r.replace(f, t, -1);
     };
 
     // replace after selection
     r.replaceAfter = function(f, t) {
-        return r.replace(f, t, 1, 1);
+        return r.replace(f, t, 1);
     };
 
     // insert/replace at caret
@@ -521,8 +521,8 @@ var TE = function(target) {
         extend: extend,
         // iterate ...
         each: function(a, fn) {
-            var x;
-            for (var i in a) {
+            var x, i;
+            for (i in a) {
                 x = fn(a[i], i, a);
                 if (x === true) {
                     continue;
