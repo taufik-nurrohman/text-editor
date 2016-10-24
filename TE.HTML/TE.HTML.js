@@ -209,7 +209,7 @@ TE.HTML = function(target, o) {
                 if (pattern('<\\/' + li_o + '>\\s*$').test(before)) {
                     editor.insert(placeholder).wrap('\n' + dent + '<' + li + '>', '</' + li_o + '>');
                 } else {
-                    editor.tidy('\n\n', "").insert(placeholder).wrap('<' + ul + '>\n' + tab + '<' + li + '>', '</' + li_o + '>\n</' + ul_o + '>');
+                    editor.tidy('\n\n').insert(placeholder).wrap('<' + ul + '>\n' + tab + '<' + li + '>', '</' + li_o + '>\n</' + ul_o + '>');
                 }
             }
         } else {
@@ -239,10 +239,6 @@ TE.HTML = function(target, o) {
     function force_i(s) {
         return trim(s.replace(/\s+/g, ' '));
     }
-
-    editor.i = function() {
-        return editor.replace(/\s+/g, ' ');
-    };
 
     extend(ui.tools, {
         clear: {

@@ -98,13 +98,14 @@ var TE = function(target) {
     }
 
     function css(a, b) {
-        var o = w.getComputedStyle(a, null), i, j = {}, k;
+        var o = w.getComputedStyle(a, null),
+            h = {}, i, j;
         return b ? (i = o[camelize(b)], j = num(i), j === 0 ? 0 : (j || i)) : (function() {
             for (i in o) {
-                k = num(o[i]);
-                j[dasherize(i)] = k === 0 ? 0 : (k || o[i]);
+                j = num(o[i]);
+                h[dasherize(i)] = j === 0 ? 0 : (j || o[i]);
             }
-            return j;
+            return h;
         })();
     }
 
