@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.5.0
+ *  TEXT EDITOR PLUGIN 2.5.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -85,11 +85,27 @@ var TE = function(target) {
         return parseInt(x, 10);
     }
 
-    function css(a, b) {
-        var o = w.getComputedStyle(a);
-        return b ? o[b.replace(/\-([a-z])/g, function(a, b) {
+    function camelize(s) {
+        return s.replace(/\-([a-z])/g, function(a, b) {
             return b.toUpperCase();
-        })] : o;
+        });
+    }
+  
+    function dasherize(s) {
+        return s.replace(/([A-Z])/g, function(a, b) {
+            return '-' + b.toLowerCase();
+        });
+    }
+
+    function css(a, b) {
+        var o = w.getComputedStyle(a, null), i, j = {}, k;
+        return b ? (i = o[camelize(b)], j = num(i), j === 0 ? 0 : (j || i)) : (function() {
+            for (i in o) {
+                k = num(o[i]);
+                j[dasherize(i)] = k === 0 ? 0 : (k || o[i]);
+            }
+            return j;
+        })();
     }
 
     function extend(a, b) {
@@ -109,6 +125,7 @@ var TE = function(target) {
         var font = 'font-',
             text = 'text-',
             padding = 'padding-',
+            border = 'border-',
             prop = [
                 'box-sizing',
                 'direction',
@@ -120,7 +137,7 @@ var TE = function(target) {
                 font + 'variant',
                 font + 'weight',
                 'height',
-                'letter-pacing',
+                'letter-spacing',
                 'line-height',
                 'overflow-x',
                 padding + 'bottom',
@@ -140,16 +157,19 @@ var TE = function(target) {
             input = target.nodeName === 'INPUT';
         b.appendChild(div);
         s = div.style;
-        t = css(target);
-        width = num(t.width);
+        t = css(target);console.log(t)
+        width = t.width;
         s.whiteSpace = 'pre-wrap';
         if (!input) {
             s.wordWrap = 'break-word';
         }
         s.position = 'absolute';
         s.visibility = 'hidden';
-        while (--i) s[prop[i]] = t[prop[i]];
-        s.overflowY = target.scrollHeight > num(t.height) ? 'scroll' : 'auto';
+        while (--i) {
+            v = t[prop[i]];
+            s[camelize(prop[i])] = is_string(v) ? v : v + 'px';
+        }
+        s.overflowY = target.scrollHeight > t.height ? 'scroll' : 'auto';
         if (is_set(w.mozInnerScreenX)) { // Firefox :(
             s.width = width + 'px';
         } else {
@@ -163,8 +183,8 @@ var TE = function(target) {
         div.textContent = v;
         div.appendChild(span);
         o = {
-            x: span.offsetLeft + num(t.borderLeftWidth),
-            y: span.offsetTop + num(t.borderTopWidth)
+            x: span.offsetLeft + t[border + 'left-width'],
+            y: span.offsetTop + t[border + 'top-width']
         };
         b.removeChild(div);
         return o;
@@ -179,8 +199,8 @@ var TE = function(target) {
     // scroll the editor
     r.scroll = function(i) {
         var current = target.scrollTop,
-            h = num(css(target, 'line-height')),
-            s = num(css(target, 'font-size'));
+            h = css(target, 'line-height'),
+            s = css(target, 'font-size');
         if (!is_set(i)) {
             return Math.floor(current / h);
         } else if (is_string(i)) {
@@ -530,7 +550,7 @@ var TE = function(target) {
 (function(r) {
 
     // Plugin version
-    r.version = '2.5.0';
+    r.version = '2.5.1';
 
     // Collect all instance(s)
     r.__instance__ = {};

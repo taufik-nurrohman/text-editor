@@ -730,7 +730,7 @@ TE.prototype.ui = function(o) {
         }
         var _parent = dom_exist(_content);
         class_set(_content, C);
-        if (_parent && _parent.tagName.toLowerCase() === 'p') {
+        if (_parent && _parent.nodeName === 'P') {
             dom_before(_parent, _container);
             _p = _parent;
             dom_reset(_parent, false);
@@ -1245,7 +1245,7 @@ TE.prototype.ui = function(o) {
             fn = arg[1],
             s = r.$(1),
             o = offset(_content),
-            h = parseInt(css(_content, 'line-height'), 10),
+            h = css(_content, 'line-height'),
             left, top, bs;
         if (arg.length === 1) {
             k = 'default';
