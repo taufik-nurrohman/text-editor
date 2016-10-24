@@ -161,16 +161,16 @@
     // test menu button(s)
     editor.ui.menu('styles', '<span class="text-p">Paragraph</span>', {
         '<span class="text-h1">Heading 1</span>': function(e, $) {
-            $.unwrap(/<.*?>/, /<.*?>/).format('h1');
+            $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('h1');
         },
         '<span class="text-h2">Heading 2</span>': function(e, $) {
-            $.unwrap(/<.*?>/, /<.*?>/).format('h2');
+            $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('h2');
         },
         '<span class="text-h3">Heading 3</span>': function(e, $) {
-            $.unwrap(/<.*?>/, /<.*?>/).format('h3');
+            $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('h3');
         },
         '<span class="text-p">Paragraph</span>': function(e, $) {
-            $.unwrap(/<.*?>/, /<.*?>/).format('p');
+            $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('p');
         },
         '<span class="text-em">Test Italic</span>': 'italic'
     });

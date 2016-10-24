@@ -329,7 +329,7 @@ TE.prototype.ui = function(o) {
     }
 
     function closest(a, b) {
-        while ((a = a.parentElement) && a !== b);
+        while ((a = dom_parent(a)) && a !== b);
         return a;
     }
 
