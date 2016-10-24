@@ -632,9 +632,11 @@ TE.HTML = function(target, o) {
                         }
                         if (advance) {
                             tfoot_html += tab + '<' + tfoot + '>\n';
+                            tfoot_html += tab + tab + '<' + tr + '>\n';
                             for (k = 0; k < c; ++k) {
-                                tfoot_html += tab + tab + '<' + td + '>' + trim(format(p[2], [1, k + 1])) + '</' + td_o + '>\n';
+                                tfoot_html += tab + tab + tab + '<' + td + '>' + trim(format(p[2], [1, k + 1])) + '</' + td_o + '>\n';
                             }
+                            tfoot_html += tab + tab + '</' + tr + '>\n';
                             tfoot_html += tab + '</' + tfoot_o + '>\n';
                         }
                         s += advance + tab + '</' + tr_o + '>' + (advance ? '\n' + tab + '</' + thead_o + '>\n' + tfoot_html + tab + '<' + tbody + '>' : "") + '\n';
