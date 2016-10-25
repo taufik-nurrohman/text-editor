@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.2.0
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.2.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -73,7 +73,7 @@ TE.prototype.ui = function(o) {
                 }
             },
             classes: {
-                editor: 'text-editor',
+                editor: 'TE',
                 i: 'fa fa-%1'
             }
         }, o),
@@ -222,8 +222,15 @@ TE.prototype.ui = function(o) {
         return r;
     }
 
-    function event_fire(id, data, node) {
-        hook_fire('on:' + id, data, dom_id(node));
+    function event_fire(id, node, data) {
+        if ('createEvent' in doc) {
+            var e = doc.createEvent('HTMLEvents');
+            e.data = data;
+            e.initEvent(id, true, false);
+            node.dispatchEvent(e);
+        } else {
+            hook_fire('on:' + id, data, dom_id(node));
+        }
         return r;
     }
 
@@ -852,7 +859,7 @@ TE.prototype.ui = function(o) {
         if (id) {
             hook_fire('exit.modal.' + id, [r]);
         }
-        events_fire(_CLICK, [e], _overlay);
+        events_fire(_CLICK, _overlay, [e]);
     }
 
     function do_modal_down(e) {
@@ -1039,7 +1046,7 @@ TE.prototype.ui = function(o) {
         events_set(_KEYDOWN, okay, function(e) {
             var key = e.TE.key;
             if (key(/^escape|enter$/)) {
-                return events_fire(_CLICK, [e, r], okay);
+                return events_fire(_CLICK, okay, [e, r]);
             }
         });
         timer_set(function() {
@@ -1254,7 +1261,9 @@ TE.prototype.ui = function(o) {
             s = r.$(1),
             o = offset(_content),
             h = css(_content, 'line-height'),
-            left, top, bs;
+            left, top, ts, bs, tb_v, tb_h,
+            border = 'border-',
+            width = '-width';
         if (arg.length === 1) {
             k = 'default';
             fn = arg[0];
@@ -1267,12 +1276,15 @@ TE.prototype.ui = function(o) {
         dom_set(body, el(_bubble, false, {
             'class': prefix + '-bubble ' + k
         }));
-        left = s.caret[0].x + o.l;
+        left = s.caret[0].x + o.l - _content.scrollLeft;
         top = s.caret[1].y + o.t + h - _content.scrollTop;
+        ts = size(_body);
         bs = size(_bubble);
+        tb_v = css(_body, border + 'top' + width) + css(_body, border + 'bottom' + width);
+        tb_h = css(_body, border + 'left' + width) + css(_body, border + 'right' + width);
         dom_css(_bubble, {
-            left: edge(left, o.l, o.l + size(_body).w - bs.w) + 'px',
-            top: edge(top, o.t, offset(_footer).t - bs.h) + 'px',
+            left: edge(left, o.l, o.l + ts.w - bs.w - tb_h) + 'px',
+            top: edge(top, o.t, o.t + ts.h - bs.h - tb_v) + 'px',
             visibility: 'visible'
         });
         hook_fire('enter.bubble.' + k, [r]);

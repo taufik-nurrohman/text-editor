@@ -14,7 +14,6 @@ TE.Markdown = function(target, o) {
         editor = new TE.HTML(target),
         ui = editor.ui,
         extend = editor._.extend,
-        each = editor._.each,
         esc = editor._.x,
         format = editor._.format,
         attrs = '(?:\\s[^<>]*?)?',

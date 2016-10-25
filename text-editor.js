@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.5.1
+ *  TEXT EDITOR PLUGIN 2.5.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -19,7 +19,6 @@ var TE = function(target) {
         S = {}, // storage
         div = d.createElement('div'),
         span = d.createElement('span'),
-        nbsp = '\xa0',
         tab = '\t',
         scroll_width = (function() {
             var x = d.createElement('div'),
@@ -154,16 +153,13 @@ var TE = function(target) {
             ];
         var b = d.body,
             i = prop.length,
-            s, t, o, v, width,
-            input = target.nodeName === 'INPUT';
+            s, t, o, v, width;
         b.appendChild(div);
         s = div.style;
-        t = css(target);console.log(t)
+        t = css(target);
         width = t.width;
         s.whiteSpace = 'pre-wrap';
-        if (!input) {
-            s.wordWrap = 'break-word';
-        }
+        s.wordWrap = 'break-word';
         s.position = 'absolute';
         s.visibility = 'hidden';
         while (--i) {
@@ -178,9 +174,6 @@ var TE = function(target) {
         }
         span.textContent = val().substring(x) || '.';
         v = val().substring(0, x);
-        if (input) {
-            v = v.replace(/\s/g, nbsp);
-        }
         div.textContent = v;
         div.appendChild(span);
         o = {
@@ -551,7 +544,7 @@ var TE = function(target) {
 (function(r) {
 
     // Plugin version
-    r.version = '2.5.1';
+    r.version = '2.5.2';
 
     // Collect all instance(s)
     r.__instance__ = {};

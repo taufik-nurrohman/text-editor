@@ -11,7 +11,7 @@ HTML › Text Editor
 <link href="font-awesome.min.css" rel="stylesheet">
 <link href="../ui/ui.min.css" rel="stylesheet">
 <style>
-.text-editor-content {height:300px} /* adjust editor height */
+.TE-content {height:300px} /* adjust editor height */
 </style>
 ~~~
 

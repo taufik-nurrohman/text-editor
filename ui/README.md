@@ -11,7 +11,7 @@ UI › Text Editor
 <link href="font-awesome.min.css" rel="stylesheet">
 <link href="../ui/ui.min.css" rel="stylesheet">
 <style>
-.text-editor-content {height:300px} /* adjust editor height */
+.TE-content {height:300px} /* adjust editor height */
 </style>
 ~~~
 
@@ -32,9 +32,9 @@ var editor = new TE(document.querySelector('textarea'));
 Methods
 -------
 
-### Create
+### UI
 
-Create a text editor with graphic user interface:
+Enable graphic user interface feature in text editor:
 
 ~~~ .javascript
 editor.ui({
@@ -57,7 +57,7 @@ editor.ui({
     },
     languages: { … },
     classes: {
-        editor: 'text-editor',
+        editor: 'TE',
         i: 'fa fa-%1'
     }
 });
