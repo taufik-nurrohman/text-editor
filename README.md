@@ -459,9 +459,9 @@ Examples
 Modules
 -------
 
- - [Persistent Storage](https://rawgit.com/tovic/text-editor/master/save/save.html)
- - [User Interface](https://rawgit.com/tovic/text-editor/master/ui/ui.html)
-   - [Internationalization](https://rawgit.com/tovic/text-editor/master/ui/language/language.html)
+ - [Persistent Storage](https://rawgit.com/tovic/text-editor/master/text-editor/save/save.html)
+ - [User Interface](https://rawgit.com/tovic/text-editor/master/text-editor/ui/ui.html)
+   - [Internationalization](https://rawgit.com/tovic/text-editor/master/text-editor/ui/language/language.html)
 
 Plugins
 -------
