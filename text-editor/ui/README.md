@@ -3,7 +3,7 @@ UI › Text Editor
 
 > User interface module for text editor plugin.
 
-[View Demo](https://rawgit.com/tovic/text-editor/master/ui/ui.html)
+[View Demo](https://rawgit.com/tovic/text-editor/master/text-editor/ui/ui.html)
 
 ### CSS
 
