@@ -8,8 +8,8 @@ Markdown › Text Editor
 ### CSS
 
 ~~~ .html
-<link href="font-awesome.min.css" rel="stylesheet">
-<link href="../ui/ui.min.css" rel="stylesheet">
+<link href="../font-awesome.min.css" rel="stylesheet">
+<link href="../text-editor/ui/ui.min.css" rel="stylesheet">
 <style>
 .TE-content {height:300px} /* adjust editor height */
 </style>
@@ -19,7 +19,7 @@ Markdown › Text Editor
 
 ~~~ .html
 <script src="../text-editor.min.js"></script>
-<script src="../ui/ui.min.js"></script>
+<script src="../text-editor/ui/ui.min.js"></script>
 <script src="../TE.HTML/TE.HTML.min.js"></script>
 <script src="../TE.Markdown/TE.Markdown.min.js"></script>
 ~~~
