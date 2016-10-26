@@ -249,7 +249,7 @@ TE.Textile = function(target, o) {
                     a = s.after,
                     i18n = languages.modals.sup,
                     g = $.get(),
-                    n = /^fn\d+\^?\. /.test(g.split('\n').pop()) ? '\n' : '\n\n',
+                    n = /^fn\d+\^?\. /.test(trim(g).split('\n').pop()) ? '\n' : '\n\n',
                     notes = g.match(/^fn\d+\^?\. /gm) || [],
                     i = 0, index;
                 i = notes.length + 1;
@@ -260,7 +260,7 @@ TE.Textile = function(target, o) {
                         i = g.indexOf(notes[index]) + 2;
                         $.select(i, i + v.length);
                     } else {
-                        $.trim("", !trim(a) || /^\n+(fn\d+\^?\. |\[)/.test(a) ? '\n\n ' : ' ').insert('[' + v + ']').set(trim_right($.get()) + n + 'fn' + v + '. ').focus(true).insert(placeholders[""]);
+                        $.trim("", !trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[' + v + ']').set(trim_right($.get()) + n + 'fn' + v + '. ').focus(true).insert(placeholders[""]);
                     }
                 }), false;
             }
