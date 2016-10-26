@@ -312,21 +312,21 @@ TE.Markdown = function(target, o) {
                     a = s.after,
                     i18n = languages.modals.sup,
                     g = $.get(),
-                    n = /^ {0,3}\[\^.+?\]:/.test(g.split('\n').pop()) ? '\n' : '\n\n',
+                    n = /^ {0,3}\[\^.+?\]:/.test(trim(g).split('\n').pop()) ? '\n' : '\n\n',
                     notes = g.match(/^ {0,3}\[\^.+?\]:/gm) || [],
                     i = 0, index;
                 for (i in notes) {
                     notes[i] = ' ' + trim(notes[i]);
                 }
                 i = notes.length + 1;
-                return $.ui.prompt(['sup[id]', i18n.title], s.value || i18n.placeholder || i, 0, function(e, $, v) {
-                    v = trim(v) || i;
+                return $.ui.prompt(['sup[id]', i18n.title], s.value || i18n.placeholder || i, 0, function(e, $, v, w) {
+                    v = trim(v || w) || i;
                     index = notes.indexOf(' [^' + v + ']:');
                     if (index !== -1) {
                         i = g.indexOf(notes[index]) + 3;
                         $.select(i, i + v.length);
                     } else {
-                        $.trim(trim(b) ? ' ' : "", !trim(a) || /^\n+ {0,3}\*?\[/.test(a) ? '\n\n ' : ' ').insert('[^' + v + ']').set(trim_right($.get()) + n + ' [^' + v + ']: ').focus(true).insert(placeholders[""]);
+                        $.trim(trim(b) ? ' ' : "", !trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[^' + v + ']').set(trim_right($.get()) + n + ' [^' + v + ']: ').focus(true).insert(placeholders[""]);
                     }
                 }), false;
             }
