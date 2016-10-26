@@ -1,6 +1,6 @@
 TE.each(function($) {
 
-    var markdown = $.type === 'Markdown',
+    var syntax = $.type !== 'HTML',
         _u2026 = '\u2026',
         _u2013 = '\u2013';
 
@@ -15,7 +15,7 @@ TE.each(function($) {
                 a: ['Tautan'],
                 img: ['Gambar'],
                 sub: ['Subskrip'],
-                sup: [markdown ? 'Catatan Kaki' : 'Superskrip'],
+                sup: [syntax ? 'Catatan Kaki' : 'Superskrip'],
                 abbr: ['Singkatan'],
                 p: ['Paragraf'],
                 'p,h1,h2,h3,h4,h5,h6': ['H1 ' + _u2013 + ' H6'],
@@ -33,11 +33,11 @@ TE.each(function($) {
             },
             modals: {
                 a: {
-                    title: [markdown ? 'URL/Referensi Tautan' : 'URL Tautan', 'Judul Tautan'],
+                    title: [syntax ? 'URL/Referensi Tautan' : 'URL Tautan', 'Judul Tautan'],
                     placeholder: ['http://', 'judul tautan di sini' + _u2026]
                 },
                 img: {
-                    title: [markdown ? 'URL/Referensi Gambar' : 'URL Gambar', 'Judul Gambar', 'Keterangan Gambar'],
+                    title: [syntax ? 'URL/Referensi Gambar' : 'URL Gambar', 'Judul Gambar', 'Keterangan Gambar'],
                     placeholder: ['http://', 'judul gambar di sini' + _u2026, 'keterangan gambar di sini' + _u2026]
                 },
                 sup: {

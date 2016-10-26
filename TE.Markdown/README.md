@@ -11,7 +11,7 @@ Markdown › Text Editor
 <link href="../font-awesome.min.css" rel="stylesheet">
 <link href="../text-editor/ui/ui.min.css" rel="stylesheet">
 <style>
-.TE-content {height:300px} /* adjust editor height */
+.text-editor-content {height:300px} /* adjust editor height */
 </style>
 ~~~
 

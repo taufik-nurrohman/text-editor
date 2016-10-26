@@ -73,8 +73,8 @@ TE.prototype.ui = function(o) {
                 }
             },
             classes: {
-                editor: 'TE',
-                i: 'fa fa-%1'
+                "": 'text-editor',
+                i: 'icon icon-%1 fa fa-%1'
             }
         }, o),
         _KEYDOWN = 'keydown',
@@ -96,58 +96,6 @@ TE.prototype.ui = function(o) {
         auto_tab = config.auto_tab,
         auto_close = config.auto_close,
         data_tool_id = 'data-tool-id';
-
-    // add `ui` method(s) to `TE`
-    var ui = r.ui = {};
-
-    // add `tidy` method to `TE`
-    r.tidy = function(a, b) {
-        var $ = r.$(),
-            B = trim($.before) ? a : "",
-            A = trim($.after) ? (is_set(b) ? b : a) : "";
-        return r.trim(B, A);
-    };
-
-    // helper: force inline
-    r.i = function() {
-        return r.replace(/\s+/g, ' ');
-    };
-
-    // add `format` method to `TE`
-    r.format = function(node, wrap, gap_1, gap_2) {
-        if (!is_set(gap_1)) gap_1 = ' ';
-        if (!is_set(gap_2)) gap_2 = "";
-        var s = r[0]().$(),
-            a = '<' + node + '>' + gap_2,
-            b = gap_2 + '</' + node.split(/\s+/)[0] + '>',
-            A = esc(a),
-            B = esc(b),
-            m = pattern('^' + A + '([\\s\\S]*?)' + B + '$'),
-            m_A = pattern(A + '$'),
-            m_B = pattern('^' + B),
-            before = s.before,
-            after = s.after;
-        if (!s.length) {
-            r.insert(i18n.placeholders[""]);
-        } else {
-            gap_1 = false;
-        }
-        return r.toggle(
-            // when ...
-            wrap ? !m.test(s.value) : (!m_A.test(before) && !m_B.test(after)),
-            // do ...
-            [
-                // first toggle
-                function($) {
-                    $.unwrap(a, b, 1).tidy(/<[^\/<>]+?>$/.test(before) ? "" : gap_1, /^<\/[^<>]+?>/.test(after) ? "" : gap_1).wrap(a, b, wrap)[1]();
-                },
-                // second toggle (the reset state)
-                function($) {
-                    $.unwrap(a, b, wrap)[1]();
-                }
-            ]
-        );
-    };
 
     function is_node(x) {
         return x instanceof HTMLElement;
@@ -259,11 +207,11 @@ TE.prototype.ui = function(o) {
     }
 
     function timer_set(fn, i) {
-        win.setTimeout(fn, i);
+        return setTimeout(fn, i);
     }
 
     function timer_reset(timer_set_fn) {
-        win.clearTimeout(timer_set_fn);
+        return clearTimeout(timer_set_fn);
     }
 
     function trim(s) {
@@ -340,8 +288,60 @@ TE.prototype.ui = function(o) {
         return a;
     }
 
+    // add `ui` method(s) to `TE`
+    var ui = r.ui = {};
+
+    // add `tidy` method to `TE`
+    r.tidy = function(a, b) {
+        var $ = r.$(),
+            B = trim($.before) ? a : "",
+            A = trim($.after) ? (is_set(b) ? b : a) : "";
+        return r.trim(B, A);
+    };
+
+    // helper: force inline
+    r.i = function() {
+        return trim(r.replace(/\s+/g, ' '));
+    };
+
+    // add `format` method to `TE`
+    r.format = function(node, wrap, gap_1, gap_2) {
+        if (!is_set(gap_1)) gap_1 = ' ';
+        if (!is_set(gap_2)) gap_2 = "";
+        var s = r[0]().$(),
+            a = '<' + node + '>' + gap_2,
+            b = gap_2 + '</' + node.split(/\s+/)[0] + '>',
+            A = esc(a),
+            B = esc(b),
+            m = pattern('^' + A + '([\\s\\S]*?)' + B + '$'),
+            m_A = pattern(A + '$'),
+            m_B = pattern('^' + B),
+            before = s.before,
+            after = s.after;
+        if (!s.length) {
+            r.insert(i18n.placeholders[""]);
+        } else {
+            gap_1 = false;
+        }
+        return r.toggle(
+            // when ...
+            wrap ? !m.test(s.value) : (!m_A.test(before) && !m_B.test(after)),
+            // do ...
+            [
+                // first toggle
+                function($) {
+                    $.unwrap(a, b, 1).tidy(/<[^\/<>]+?>$/.test(before) ? "" : gap_1, /^<\/[^<>]+?>/.test(after) ? "" : gap_1).wrap(a, b, wrap)[1]();
+                },
+                // second toggle (the reset state)
+                function($) {
+                    $.unwrap(a, b, wrap)[1]();
+                }
+            ]
+        );
+    };
+
     var c = config.classes,
-        prefix = c.editor,
+        prefix = c[""],
         i18n_tools = i18n.tools,
         i18n_buttons = i18n.buttons,
         i18n_others = i18n.others,
@@ -380,8 +380,8 @@ TE.prototype.ui = function(o) {
             if (o) {
                 o = size(o);
                 dom_css({
-                    'width': o.w + 'px',
-                    'height': o.h + 'px'
+                    width: o.w + 'px',
+                    height: o.h + 'px'
                 });
             }
         }

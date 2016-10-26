@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width">
     <title>Test Internationalization</title>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-    <link href="../../../text-editor/ui/ui.min.css" rel="stylesheet">
     <style>
-    .TE {margin:0 0 1em}
-    .TE-content {height:150px}
+    body {
+      font-family:Helmet,FreeSans,Sans-Serif;
+      font-size:14px;
+    }
+    .text-editor + .text-editor {margin-top:.5em}
+    .text-editor-content {height:180px}
     </style>
   </head>
   <body>
@@ -17,6 +20,30 @@
       <p><textarea></textarea></p>
       <p><textarea></textarea></p>
       <p>Just a test.</p>
+      <p>
+        <strong>Theme:</strong>
+        <select id="select-css">
+          <option value="../../../text-editor/ui/ui.min.css">Default</option>
+          <option value="../../../text-editor/ui/ui.1960.min.css">1960</option>
+          <option value="../../../text-editor/ui/ui.fam-fam-fam.min.css">Fam Fam Fam</option>
+        </select>
+      </p>
+      <script>
+      // dynamic stylesheet
+      var css = document.querySelector('#select-css');
+      function select_css() {
+          var link = document.createElement('link'), o;
+          link.id = 'the-css';
+          link.rel = 'stylesheet';
+          link.href = this.value || css.value;
+          if (o = document.querySelector('#the-css')) {
+              o.parentNode.removeChild(o);
+          }
+          document.querySelector('head').appendChild(link);
+      }
+      select_css();
+      css.onchange = select_css;
+      </script>
     </form>
     <script src="../../../text-editor.min.js"></script>
     <script src="../../../text-editor/ui/ui.min.js"></script>

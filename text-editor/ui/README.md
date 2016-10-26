@@ -57,8 +57,8 @@ editor.ui({
     },
     languages: { … },
     classes: {
-        editor: 'TE',
-        i: 'fa fa-%1'
+        "": 'text-editor',
+        i: 'icon icon-%1 fa fa-%1'
     }
 });
 ~~~
