@@ -679,7 +679,7 @@ TE.prototype.ui = function(o) {
             for (i in auto_close) {
                 m = auto_close[i];
                 if (m === false) continue;
-                if (after === n && is_set(auto_close[n])) {
+                if (n === m && after === m) {
                     if (before === '\\') {
                         r.insert(n, -1);
                         return event_exit(e);

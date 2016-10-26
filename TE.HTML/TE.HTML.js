@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.1.2
+ *  HTML TEXT EDITOR PLUGIN 1.1.3
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -232,8 +232,12 @@ TE.HTML = function(target, o) {
         return $;
     }
 
-    function attr_value(s) {
-        return force_i(s).replace(/<.*?>/g, "").replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+    function attr_title(s) {
+        return force_i(s).replace(/<.*?>/g, "").replace(/"/g, '&#34;').replace(/'/g, '&#39;').replace(/\(/g, '&#40;').replace(/\)/g, '&#41;');
+    }
+
+    function attr_url(s) {
+        return force_i(s).replace(/<.*?>/g, "").replace(/\s/g, '%20').replace(/"/g, '%22').replace(/\(/g, '%28').replace(/\)/g, '%29');
     }
 
     function force_i(s) {
@@ -285,7 +289,7 @@ TE.HTML = function(target, o) {
                     i18n = languages.modals.a,
                     href, title;
                 return $.record().ui.prompt(['a[href]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
-                    v = force_i(v);
+                    v = attr_url(v);
                     href = v;
                     // automatic `rel="nofollow"` attribute
                     var host = win.location.host,
@@ -294,7 +298,7 @@ TE.HTML = function(target, o) {
                     if (host !== "" && href.indexOf('://' + host) !== -1) x = 0;
                     if (/^([.\/?&#]|javascript:)/.test(href)) x = 0;
                     $.blur().ui.prompt(['a[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
-                        title = attr_value(v);
+                        title = attr_title(v);
                         if (!auto_p_(e, $).$().length) {
                             $.insert(placeholders[""]);
                         }
@@ -316,14 +320,14 @@ TE.HTML = function(target, o) {
                     advance = config.advance_img,
                     src, title;
                 return $.ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
-                    v = force_i(v);
+                    v = attr_url(v);
                     src = v;
                     $.blur().ui.prompt(['img[title]', i18n.title[advance ? 2 : 1]], i18n.placeholder[advance ? 2 : 1], 0, function(e, $, v) {
-                        title = attr_value(v);
+                        title = attr_title(v);
                         if (!alt) {
                             alt = src.split(/[\/\\\\]/).pop();
                         }
-                        alt = attr_value(alt);
+                        alt = attr_title(alt);
                         $[0]();
                         if (advance && title) {
                             $.tidy('\n\n', "").insert('<' + figure + '>\n' + tab + '<' + img + ' alt="' + alt + '" src="' + src + '"' + suffix + '\n' + tab + '<' + figcaption + '>' + title + '</' + get_o(figcaption) + '>\n</' + get_o(figure) + '>\n\n', -1, 1);
@@ -386,11 +390,11 @@ TE.HTML = function(target, o) {
                     return $.i().format(abbr + ' title="' + state[x] + '"'), false;
                 }
                 return $.record().ui.prompt(['abbr[title]', i18n.title], state[abbr_content] || i18n.placeholder, !state[x], function(e, $, v, w) {
-                    v = trim(v || w);
+                    v = attr_title(v || w);
                     $[0]();
                     // find object key by value
                     for (i in state) {
-                        if (state[i] === v) {
+                        if (attr_title(state[i]) === v) {
                             $.insert(i);
                             break;
                         }
