@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.1.3
+ *  HTML TEXT EDITOR PLUGIN 1.1.4
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -169,6 +169,10 @@ TE.HTML = function(target, o) {
         if (a < b) return b;
         if (a > c) return c;
         return a;
+    }
+
+    function num(x) {
+        return parseInt(x, 10);
     }
 
     function get_o(s) {
@@ -392,6 +396,9 @@ TE.HTML = function(target, o) {
                 return $.record().ui.prompt(['abbr[title]', i18n.title], state[abbr_content] || i18n.placeholder, !state[x], function(e, $, v, w) {
                     v = attr_title(v || w);
                     $[0]();
+                    if (!x) {
+                        $.insert(v.replace(/[^a-z\d]/gi, ' ').replace(/([a-z\d])[^ ]* */gi, '$1').toUpperCase()); // automatic abbreviation ...
+                    }
                     // find object key by value
                     for (i in state) {
                         if (attr_title(state[i]) === v) {
@@ -614,9 +621,9 @@ TE.HTML = function(target, o) {
                 o = [], s, c, r, title;
             if ($.$().value === q) return $.select(), false;
             return $[0]().ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
-                c = edge(parseInt(v, 10) || w, std[0], std[1]);
+                c = edge(num(v) || w, std[0], std[1]);
                 $.blur().ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
-                    r = edge(parseInt(v, 10) || w, str[0], str[1]);
+                    r = edge(num(v) || w, str[0], str[1]);
                     $.blur().ui.prompt(['table>caption', i18n.title[2]], i18n.placeholder[2], 0, function(e, $, v) {
                         var tfoot_html = "",
                             i, j, k, l, m, n;

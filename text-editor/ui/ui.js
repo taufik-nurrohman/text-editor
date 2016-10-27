@@ -575,8 +575,8 @@ TE.prototype.ui = function(o) {
         config.tools = tools;
         for (i in tools) {
             v = tools[i];
-            if (!ui.tools[v]) continue;
             tool = ui.tools[v];
+            if (!tool) continue;
             if (is_function(tool)) {
                 tool.click = tool;
             }
@@ -1312,6 +1312,11 @@ TE.prototype.ui = function(o) {
                 i = data;
                 data = {};
             } else {
+                if (is_function(data)) {
+                    data = {
+                        click: data
+                    };
+                }
                 ui.tools[id] = extend((ui.tools[id] || {}), data);
                 if (!is_set(i) && ii !== "") {
                     i = ii;

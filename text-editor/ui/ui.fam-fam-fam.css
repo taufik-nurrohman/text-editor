@@ -117,7 +117,7 @@
   box-shadow:none;
   border-radius:0;
 }
-.text-editor-tool .text-editor-button:active {background:#fff}
+.text-editor-tool .text-editor-button:active {background:#eee}
 .text-editor-button.x,
 .text-editor-button[disabled] { /* disabled */
   cursor:default;
@@ -129,7 +129,7 @@
 .text-editor-tool .text-editor-separator {
   width:0;
   height:1.5em;
-  margin:.25em 0 0;
+  margin:.25em 0;
   padding:0;
   border-left:1px solid;
   border-color:inherit;

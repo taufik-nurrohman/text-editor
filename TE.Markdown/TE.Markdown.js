@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  MARKDOWN TEXT EDITOR PLUGIN 1.1.3
+ *  MARKDOWN TEXT EDITOR PLUGIN 1.1.4
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -68,7 +68,7 @@ TE.Markdown = function(target, o) {
             blockquote: '>',
             code: ['`', '~'], // --ibid
             ul: ['-', '+', '*'], // --ibid
-            ol: '%1.',
+            ol: ['%1.'],
             hr: ['---', '+++', '***'] // --ibid
         }
     }, o), 0);
@@ -116,6 +116,10 @@ TE.Markdown = function(target, o) {
         if (a < b) return b;
         if (a > c) return c;
         return a;
+    }
+
+    function num(x) {
+        return parseInt(x, 10);
     }
 
     function attr_title(s) {
@@ -353,17 +357,21 @@ TE.Markdown = function(target, o) {
                 }
                 return $.record().ui.prompt(['abbr[title]', i18n.title], state[abbr] || i18n.placeholder, !state[x], function(e, $, v, w) {
                     v = attr_title(v);
-                    $.set(trim_right($.get()) + (s.before || x ? n : "") + ' *[' + abbr + ']: ').focus(true).insert(v || w);
+                    $[0]().set(trim_right($.get()) + (s.before || x ? n : "") + ' *[' + abbr + ']: ').focus(true).insert(v || w);
                     if (abbr === placeholders[""]) {
                         var a = $.$().start;
                         $.select(a - 3 - abbr.length, a - 3);
                     }
+                    $[1]();
                 }), false;
             }
         } : 0,
         p: {
             i: 'paragraph',
             click: function(e, $) {
+                if ($.$().length) {
+                    return $.tidy('\n\n').replace(/([\t ]*\n[\t ]*){2,}/g, '\n\n'), false;
+                }
                 return $.tidy('\n\n').insert(placeholders[""]), false;
             }
         },
@@ -458,16 +466,17 @@ TE.Markdown = function(target, o) {
             click: function(e, $) {
                 var s = $.$(),
                     v = s.value,
-                    b = s.before, B,
+                    b = s.before,
                     a = s.after,
                     ul = formats.ul[0],
-                    ol = formats.ol,
+                    ol = formats.ol[0],
                     esc_ul = esc(ul),
                     esc_ol = format(esc(ol), ['\\d+']),
                     bullet = pattern('(^|\\n)([\\t ]*) ' + esc_ul + ' (.*)$'),
                     bullet_s = pattern('^(.*) ' + esc_ul + ' ', 'gm'),
                     list = pattern('(^|\\n)([\\t ]*) ' + esc_ol + ' (.*)$'),
-                    list_s = pattern('^(.*) ' + esc_ol + ' ', 'gm');
+                    list_s = pattern('^(.*) ' + esc_ol + ' ', 'gm'),
+                    placeholder = placeholders[""], B;
                 if (!v) {
                     if (b && a) {
                         // ordered list detected
@@ -482,17 +491,17 @@ TE.Markdown = function(target, o) {
                         }
                         return $.set(B + a).select(B.length), false;
                     }
-                    return $[0]().tidy('\n\n').insert(' ' + ul + ' ', -1).insert(placeholders[""])[1](), false;
+                    return $[0]().tidy('\n\n').insert(' ' + ul + ' ', -1).insert(placeholder)[1](), false;
                 } else {
                     // start ...
-                    if (v === placeholders[""]) {
+                    if (v === placeholder) {
                         $.select();
                     // ordered list detected
                     } else if (list_s.test(v)) {
                         $.replace(list_s, '$1 ' + ul + ' ');
                     // unordered list detected
                     } else if (bullet_s.test(v)) {
-                        $[0]().replace(bullet_s, '$1');
+                        $.replace(bullet_s, '$1');
                     // plain text ...
                     } else {
                         $.replace(/^(\s*)(\S.*)$/gm, '$1 ' + ul + ' $2');
@@ -506,10 +515,10 @@ TE.Markdown = function(target, o) {
             click: function(e, $) {
                 var s = $.$(),
                     v = s.value,
-                    b = s.before, B,
+                    b = s.before,
                     a = s.after,
                     ul = formats.ul[0],
-                    ol = formats.ol,
+                    ol = formats.ol[0],
                     ol_first = format(ol, [1]),
                     esc_ul = esc(ul),
                     esc_ol = format(esc(ol), ['\\d+']),
@@ -517,7 +526,8 @@ TE.Markdown = function(target, o) {
                     bullet_s = pattern('^(.*) ' + esc_ul + ' ', 'gm'),
                     list = pattern('(^|\\n)([\\t ]*) ' + esc_ol + ' (.*)$'),
                     list_s = pattern('^(.*) ' + esc_ol + ' ', 'gm'),
-                    i = 0;
+                    placeholder = placeholders[""],
+                    i = 0, B;
                 if (!v) {
                     if (b && a) {
                         // unordered list detected
@@ -532,10 +542,10 @@ TE.Markdown = function(target, o) {
                         }
                         return $.set(B + a).select(B.length), false;
                     }
-                    return $[0]().tidy('\n\n').insert(' ' + ol_first + ' ', -1).insert(placeholders[""])[1](), false;
+                    return $[0]().tidy('\n\n').insert(' ' + ol_first + ' ', -1).insert(placeholder)[1](), false;
                 } else {
                     // start ...
-                    if (v === placeholders[""]) {
+                    if (v === placeholder) {
                         $.select();
                     // unordered list detected
                     } else if (bullet_s.test(v)) {
@@ -544,7 +554,7 @@ TE.Markdown = function(target, o) {
                         });
                     // ordered list detected
                     } else if (list_s.test(v)) {
-                        $[0]().replace(list_s, '$1');
+                        $.replace(list_s, '$1');
                     // plain text ...
                     } else {
                         $.replace(/^(\s*)(\S.*)$/gm, function(a, b, c) {
@@ -564,9 +574,9 @@ TE.Markdown = function(target, o) {
                 o = [], s, c, r;
             if ($.$().value === q) return $.select(), false;
             return $[0]().ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
-                c = edge(parseInt(v, 10) || w, std[0], std[1]);
+                c = edge(num(v) || w, std[0], std[1]);
                 $.blur().ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
-                    r = edge(parseInt(v, 10) || w, str[0], str[1]);
+                    r = edge(num(v) || w, str[0], str[1]);
                     var i, j, k, l, m, n;
                     for (i = 0; i < r; ++i) {
                         s = '|';
@@ -620,7 +630,7 @@ TE.Markdown = function(target, o) {
             var s = $.$(),
                 blockquote = formats.blockquote,
                 ul = formats.ul[0],
-                ol = formats.ol,
+                ol = formats.ol[0],
                 esc_ol = format(esc(ol), ['\\d+']),
                 regex = '((' + esc(blockquote) + ' )+|' + bullet_any + '| +(' + esc_ol + ') )',
                 match = pattern('^' + regex + '.*$', 'gm').exec(s.before.split('\n').pop());
@@ -628,7 +638,7 @@ TE.Markdown = function(target, o) {
                 if (match[0] === match[1]) {
                     return $.outdent(pattern(regex)), false;
                 } else if (pattern('\\s*' + esc_ol + '\\s*').test(match[1])) {
-                    var i = parseInt(trim(match[1]), 10);
+                    var i = num(trim(match[1]));
                     return $.insert('\n' + match[1].replace(/\d+/, i + 1), -1).scroll('+1'), false;
                 }
                 return $.insert('\n' + match[1], -1).scroll('+1'), false;
@@ -639,7 +649,7 @@ TE.Markdown = function(target, o) {
                 b = s.before,
                 v = s.value,
                 a = s.after,
-                ol = formats.ol,
+                ol = formats.ol[0],
                 esc_ol = esc(ol),
                 esc_ol_any = format(esc_ol, ['\\d+']),
                 esc_blockquote = esc(formats.blockquote),
@@ -667,7 +677,7 @@ TE.Markdown = function(target, o) {
                 b = s.before,
                 v = s.value,
                 a = s.after,
-                ol = formats.ol,
+                ol = formats.ol[0],
                 esc_ol = esc(ol),
                 bullets = pattern(bullet_any + '$'),
                 lists = pattern(' ?' + format(esc_ol, ['\\d+']) + ' $'),

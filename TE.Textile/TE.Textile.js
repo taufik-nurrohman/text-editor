@@ -48,7 +48,8 @@ TE.Textile = function(target, o) {
         formats: {
             b: ['*', '**'], // first array will be used by default
             i: ['_', '__'], // --ibid
-            p: "", // you can also set it as `p`
+            ul: ['*'],
+            ol: ['#'],
             hr: ['---', '***'] // --ibid
         }
     }, o), 0);
@@ -98,6 +99,10 @@ TE.Textile = function(target, o) {
         return a;
     }
 
+    function num(x) {
+        return parseInt(x, 10);
+    }
+
     function attr_title(s) {
         return force_i(s).replace(/<.*?>/g, "").replace(/"/g, '&#34;').replace(/'/g, '&#39;').replace(/\(/g, '&#40;').replace(/\)/g, '&#41;');
     }
@@ -115,8 +120,7 @@ TE.Textile = function(target, o) {
         languages = config.languages,
         formats = config.formats,
         tab = config.tab,
-        placeholders = languages.placeholders,
-        header_step = 0;
+        placeholders = languages.placeholders;
 
     editor.mark = function(str, wrap, gap_1, gap_2) {
         if (!is_object(str)) str = [str];
@@ -154,6 +158,40 @@ TE.Textile = function(target, o) {
             ]
         );
     };
+
+    function toggle_block(L) {
+        var s = editor.$(),
+            v = s.value,
+            b = s.before,
+            a = s.after,
+            esc_L = esc(L),
+            dent = pattern('(^|\\n)' + esc_L + '(.*)$'),
+            dent_s = pattern('^' + esc_L, 'gm'),
+            placeholder = placeholders[""], B;
+        editor[0]();
+        if (!v) {
+            if (b && a) {
+                if (dent.test(b)) {
+                    B = b.replace(dent, '$1$2');
+                } else {
+                    B = b.replace(/(^|\n)([^\n]*)$/, '$1' + L + '$2');
+                }
+                editor.set(B + a).select(B.length);
+            } else {
+                editor.tidy('\n\n').insert(L, -1).insert(placeholder);
+            }
+        } else if (pattern(esc_L + '$').test(b)) {
+            editor.unwrap(L, "");
+        } else {
+            editor.replace(/^[a-z\d]+\.\.?( |$)/gm, "").replace(/[\t ]*\n{2,}[\t ]*/g, '\n\n').tidy('\n\n');
+            if (dent_s.test(v)) {
+                editor.replace(dent_s, "");
+            } else {
+                editor.replace(/(^|\n{2})/g, '$1' + L);
+            }
+        }
+        return editor[1](), false;
+    }
 
     extend(ui.tools, {
         b: {
@@ -288,6 +326,9 @@ TE.Textile = function(target, o) {
                 return $.record().ui.prompt(['abbr[title]', i18n.title], state[abbr] || i18n.placeholder, !state[x], function(e, $, v, w) {
                     v = attr_title(v || w);
                     $[0]();
+                    if (!x) {
+                        $.insert(v.replace(/[^a-z\d]/gi, ' ').replace(/([a-z\d])[^ ]* */gi, '$1').toUpperCase()); // automatic abbreviation ...
+                    }
                     // find object key by value
                     for (i in state) {
                         if (attr_title(state[i]) === v) {
@@ -302,93 +343,42 @@ TE.Textile = function(target, o) {
         p: {
             i: 'paragraph',
             click: function(e, $) {
-                return $.tidy('\n\n').insert(placeholders[""]), false;
+                return toggle_block('p. ');
             }
         },
         'p,h1,h2,h3,h4,h5,h6': {
             i: 'header',
             click: function(e, $) {
-                if (header_step > 5) {
-                    header_step = 0;
-                } else {
-                    header_step++;
-                }
                 var s = $.$(),
-                    setext = config['advance_h1,h2'],
-                    setext_esc = '\\s?[' + esc(formats.h1[0] + formats.h2[0]) + ']+\\s*',
-                    h1 = esc(formats.h1[1]),
-                    clean_B = s.before.replace(pattern('[' + h1 + '\\s]+$'), ""),
-                    clean_V = force_i(s.value).replace(pattern('^[' + h1 + '\\s]+|[' + h1 + '\\s]+$', 'g'), "").replace(pattern(setext_esc + '$'), "") || placeholders[""],
-                    clean_A = s.after.replace(pattern('^[' + h1 + '\\s]+'), "").replace(pattern('^' + setext_esc), ""),
-                    H = [
-                        "",
-                        formats.h1[setext ? 0 : 1],
-                        formats.h2[setext ? 0 : 1],
-                        formats.h3,
-                        formats.h4,
-                        formats.h5,
-                        formats.h6
-                    ];
-                $[0]().set(clean_B + clean_V + clean_A).select(clean_B.length, (clean_B + clean_V).length).tidy('\n\n');
-                if (header_step === 0) {
-                    // do nothing ...
-                } else if (header_step < 3 && setext) {
-                    $.wrap("", '\n' + clean_V.replace(/./g, H[header_step]));
-                } else {
-                    $.wrap(H[header_step] + ' ', config['close_h1,h2,h3,h4,h5,h6'] ? ' ' + H[header_step] : "");
+                    headers = /(?:p|h\d+)\. +/,
+                    match, i;
+                if (!(match = s.before.match(/(?:^|\n)(?:p|h([1-6]))\. $/))) {
+                    match = s.value.match(/^(?:p|h([1-6]))\. /) || [];
                 }
+                i = +(match[1] || 0);
+                $[0]().i();
+                if (!s.value) {
+                    $.insert(placeholders[""]);
+                }
+                $.unwrap(headers, "").unwrap(headers, "", 1).tidy('\n\n').wrap(i < 6 ? 'h' + (i + 1) + '. ' : 'p. ', "", 0, '\n\n');
                 return $[1](), false;
             }
         },
         'blockquote,q': {
             i: 'quote-left',
             click: function(e, $) {
-                var s = $.$(),
-                    v = s.value,
-                    blockquote = formats.blockquote;
-                if (v === placeholders[""]) {
-                    return $.select(), false;
-                }
-                if (!v) {
-                    return $[0]().tidy('\n\n').insert(blockquote + ' ', -1).insert(placeholders[""])[1](), false;
-                }
-                return $.tidy(pattern(blockquote + ' $').test(s.before) ? false : '\n\n')[pattern('^' + blockquote).test(v) ? 'outdent' : 'indent'](blockquote + ' '), false;
+                return toggle_block('bq. ');
             }
         },
         'pre,code': {
             i: 'code',
             click: function(e, $) {
-                var s = $.$(),
-                    b = s.before,
-                    v = s.value,
-                    pre = config['advance_pre,code'],
-                    code = formats.code,
-                    p = code[1] || code[0];
-                p = p + p + p; // repeat three times
-                if (!is_string(pre) && pre) {
-                    pre = p;
-                } else if (is_string(pre) && pre.indexOf('%1') !== -1) {
-                    pre = format(pre, [p]);
-                }
-                var dents = '( {4,}|\\t' + (is_string(pre) ? '|' + esc(pre) : "") + ')';
                 // block
-                if (pattern('(^|\\n)' + dents + '?$').test(b)) {
-                    if (pre) {
-                        return $.mark([pre, pre.split(/\s+/)[0]], 0, '\n\n', '\n'), false;
-                    }
-                    pre = tab === TAB ? TAB : '    ';
-                    if (!v) {
-                        $[0]().tidy('\n\n');
-                        var t = $.$().start,
-                            str = pre + placeholders[""];
-                        return $.insert(str).select(t + pre.length, t + str.length)[1](), false;
-                    } else if(v === placeholders[""] && pattern(dents + '$').test(b)) {
-                        return $.select(s.start - pre.length, s.end), false;
-                    }
-                    return $.tidy('\n\n')[pattern('^' + dents).test(v) ? 'outdent' : 'indent'](pre), false;
+                if (pattern('(^|\\n)$').test($.$().before)) {
+                    return toggle_block('bc..\n');
                 }
                 // span
-                return $.mark(code[0]), false;
+                return $.mark('@'), false;
             }
         },
         ul: {
@@ -396,44 +386,45 @@ TE.Textile = function(target, o) {
             click: function(e, $) {
                 var s = $.$(),
                     v = s.value,
-                    b = s.before, B,
+                    b = s.before,
                     a = s.after,
                     ul = formats.ul[0],
-                    ol = formats.ol,
+                    ol = formats.ol[0],
                     esc_ul = esc(ul),
-                    esc_ol = format(esc(ol), ['\\d+']),
-                    bullet = pattern('(^|\\n)([\\t ]*) ' + esc_ul + ' (.*)$'),
-                    bullet_s = pattern('^(.*) ' + esc_ul + ' ', 'gm'),
-                    list = pattern('(^|\\n)([\\t ]*) ' + esc_ol + ' (.*)$'),
-                    list_s = pattern('^(.*) ' + esc_ol + ' ', 'gm');
+                    esc_ol = esc(ol),
+                    bullet = pattern('(^|\\n)([\\t ]*)' + esc_ul + ' (.*)$'),
+                    bullet_s = pattern('^(.*)' + esc_ul + ' ', 'gm'),
+                    list = pattern('(^|\\n)([\\t ]*)' + esc_ol + ' (.*)$'),
+                    list_s = pattern('^(.*)' + esc_ol + ' ', 'gm'),
+                    placeholder = placeholders[""], B;
                 if (!v) {
                     if (b && a) {
                         // ordered list detected
                         if (list.test(b)) {
-                            B = b.replace(list, '$1$2 ' + ul + ' $3');
+                            B = b.replace(list, '$1$2' + ul + ' $3');
                         // unordered list detected
                         } else if (bullet.test(b)) {
                             B = b.replace(bullet, '$1$2$3');
                         // plain text ...
                         } else {
-                            B = b.replace(/(^|\n)(\s*)([^\n]*)$/, '$1$2 ' + ul + ' $3');
+                            B = b.replace(/(^|\n)(\s*)([^\n]*)$/, '$1$2' + ul + ' $3');
                         }
                         return $.set(B + a).select(B.length), false;
                     }
-                    return $[0]().tidy('\n\n').insert(' ' + ul + ' ', -1).insert(placeholders[""])[1](), false;
+                    return $[0]().tidy('\n\n').insert(ul + ' ', -1).insert(placeholder)[1](), false;
                 } else {
                     // start ...
-                    if (v === placeholders[""]) {
+                    if (v === placeholder) {
                         $.select();
                     // ordered list detected
                     } else if (list_s.test(v)) {
-                        $.replace(list_s, '$1 ' + ul + ' ');
+                        $.replace(list_s, '$1' + ul + ' ');
                     // unordered list detected
                     } else if (bullet_s.test(v)) {
-                        $[0]().replace(bullet_s, '$1');
+                        $.replace(bullet_s, '$1');
                     // plain text ...
                     } else {
-                        $.replace(/^(\s*)(\S.*)$/gm, '$1 ' + ul + ' $2');
+                        $.replace(/^(\s*)(\S.*)$/gm, '$1' + ul + ' $2');
                     }
                     return false;
                 }
@@ -444,49 +435,48 @@ TE.Textile = function(target, o) {
             click: function(e, $) {
                 var s = $.$(),
                     v = s.value,
-                    b = s.before, B,
+                    b = s.before,
                     a = s.after,
                     ul = formats.ul[0],
-                    ol = formats.ol,
-                    ol_first = format(ol, [1]),
+                    ol = formats.ol[0],
                     esc_ul = esc(ul),
-                    esc_ol = format(esc(ol), ['\\d+']),
-                    bullet = pattern('(^|\\n)([\\t ]*) ' + esc_ul + ' (.*)$'),
-                    bullet_s = pattern('^(.*) ' + esc_ul + ' ', 'gm'),
-                    list = pattern('(^|\\n)([\\t ]*) ' + esc_ol + ' (.*)$'),
-                    list_s = pattern('^(.*) ' + esc_ol + ' ', 'gm'),
-                    i = 0;
+                    esc_ol = esc(ol),
+                    bullet = pattern('(^|\\n)([\\t ]*)' + esc_ul + ' (.*)$'),
+                    bullet_s = pattern('^(.*)' + esc_ul + ' ', 'gm'),
+                    list = pattern('(^|\\n)([\\t ]*)' + esc_ol + ' (.*)$'),
+                    list_s = pattern('^(.*)' + esc_ol + ' ', 'gm'),
+                    placeholder = placeholders[""], B;
                 if (!v) {
                     if (b && a) {
                         // unordered list detected
                         if (bullet.test(b)) {
-                            B = b.replace(bullet, '$1$2 ' + ol_first + ' $3');
+                            B = b.replace(bullet, '$1$2' + ol + ' $3');
                         // ordered list detected
                         } else if (list.test(b)) {
                             B = b.replace(list, '$1$2$3');
                         // plain text ...
                         } else {
-                            B = b.replace(/(^|\n)(\s*)([^\n]*)$/, '$1$2 ' + ol_first + ' $3');
+                            B = b.replace(/(^|\n)(\s*)([^\n]*)$/, '$1$2' + ol + ' $3');
                         }
                         return $.set(B + a).select(B.length), false;
                     }
-                    return $[0]().tidy('\n\n').insert(' ' + ol_first + ' ', -1).insert(placeholders[""])[1](), false;
+                    return $[0]().tidy('\n\n').insert(ol + ' ', -1).insert(placeholder)[1](), false;
                 } else {
                     // start ...
-                    if (v === placeholders[""]) {
+                    if (v === placeholder) {
                         $.select();
                     // unordered list detected
                     } else if (bullet_s.test(v)) {
                         $.replace(bullet_s, function(a, b, c) {
-                            return ++i, b + ' ' + format(ol, [i]) + ' ';
+                            return b + ol + ' ';
                         });
                     // ordered list detected
                     } else if (list_s.test(v)) {
-                        $[0]().replace(list_s, '$1');
+                        $.replace(list_s, '$1');
                     // plain text ...
                     } else {
                         $.replace(/^(\s*)(\S.*)$/gm, function(a, b, c) {
-                            return ++i, b + ' ' + format(ol, [i]) + ' ' + c;
+                            return b + ol + ' ' + c;
                         });
                     }
                     return false;
@@ -556,70 +546,59 @@ TE.Textile = function(target, o) {
         },
         'enter': function(e, $) {
             var s = $.$(),
-                blockquote = formats.blockquote,
                 ul = formats.ul[0],
-                ol = formats.ol,
-                esc_ol = format(esc(ol), ['\\d+']),
-                regex = '((' + esc(blockquote) + ' )+|' + bullet_any + '| +(' + esc_ol + ') )',
+                ol = formats.ol[0],
+                esc_ul = esc(ul),
+                esc_ol = esc(ol),
+                regex = '((?:' + esc_ul + '|' + esc_ol + ')+ )',
                 match = pattern('^' + regex + '.*$', 'gm').exec(s.before.split('\n').pop());
             if (match) {
                 if (match[0] === match[1]) {
                     return $.outdent(pattern(regex)), false;
-                } else if (pattern('\\s*' + esc_ol + '\\s*').test(match[1])) {
-                    var i = parseInt(trim(match[1]), 10);
-                    return $.insert('\n' + match[1].replace(/\d+/, i + 1), -1).scroll('+1'), false;
                 }
                 return $.insert('\n' + match[1], -1).scroll('+1'), false;
             }
         },
         'shift+tab': function(e, $) {
             var s = $.$(),
-                b = s.before,
                 v = s.value,
-                a = s.after,
-                ol = formats.ol,
+                b = s.before,
+                ul = formats.ul[0],
+                ol = formats.ol[0],
+                esc_ul = esc(ul),
                 esc_ol = esc(ol),
-                esc_ol_any = format(esc_ol, ['\\d+']),
-                esc_blockquote = esc(formats.blockquote),
-                bullets = pattern('  ' + bullet_any + '$'),
-                lists = pattern('   ( ?' + esc_ol_any + ' )$'),
-                dents = '(' + esc_blockquote + ' |' + bullet_any + '| +' + esc_ol_any + ' )',
-                match;
-            if (!v) {
-                if (match = b.match(pattern(esc_blockquote + ' $'))) {
-                    return $.outdent(match[0]), false;
-                } else if (match = b.match(bullets)) {
-                    b = b.replace(bullets, '$1');
-                    return $.set(b + a).select(b.length), false;
-                } else if (match = b.match(lists)) {
-                    b = b.replace(lists, '$1');
-                    return $.set(b + a).select(b.length), false;
-                }
-            } else if (v && (match = v.match(pattern('(^|\\n)' + dents, 'g')))) {
-                return $.outdent(pattern(dents)), false;
+                bullets = '(^|\\n)(' + esc_ul + ')+',
+                lists = '(^|\\n)(' + esc_ol + ')+';
+            if (v === placeholders[""]) {
+                return $.select(), false;
+            } else if (pattern(bullets + ' $').test(b) || pattern(bullets).test(v)) {
+                $[0]().outdent(pattern(esc_ul + ' *'));
+                if (!v && pattern(bullets + '$').test($.$().before)) $.insert(' ', -1);
+                return $[1](), false;
+            } else if (pattern(lists + ' $').test(b) || pattern(lists).test(v)) {
+                $[0]().outdent(pattern(esc_ol + ' *'));
+                if (!v && pattern(lists + '$').test($.$().before)) $.insert(' ', -1);
+                return $[1](), false;
             }
             return ui.tools.outdent.click(e, $);
         },
         'tab': function(e, $) {
             var s = $.$(),
-                b = s.before,
                 v = s.value,
-                a = s.after,
-                ol = formats.ol,
+                b = s.before,
+                ul = formats.ul[0],
+                ol = formats.ol[0],
+                esc_ul = esc(ul),
                 esc_ol = esc(ol),
-                bullets = pattern(bullet_any + '$'),
-                lists = pattern(' ?' + format(esc_ol, ['\\d+']) + ' $'),
-                match;
-            if (!v) {
-                if (match = b.match(pattern(esc(formats.blockquote) + ' $'))) {
-                    return $.insert(match[0], -1), false;
-                } else if (match = b.match(bullets)) {
-                    b = b.replace(bullets, '  $1');
-                    return $.set(b + a).select(b.length), false;
-                } else if (match = b.match(lists)) {
-                    b = b.replace(lists, '    ' + format(ol, [1]) + ' ');
-                    return $.set(b + a).select(b.length), false;
-                }
+                bullets = '(^|\\n)(' + esc_ul + ')+',
+                lists = '(^|\\n)(' + esc_ol + ')+',
+                space = v ? "" : ' ';
+            if (v === placeholders[""]) {
+                return $.select(), false;
+            } else if (pattern(bullets + ' $').test(b) || pattern(bullets).test(v)) {
+                return $.trim("", false).indent(ul + space), false;
+            } else if (pattern(lists + ' $').test(b) || pattern(lists).test(v)) {
+                return $.trim("", false).indent(ol + space), false;
             }
             return ui.tools.indent.click(e, $);
         }

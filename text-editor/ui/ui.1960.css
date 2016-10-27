@@ -136,7 +136,7 @@
 .text-editor-tool .text-editor-separator {
   width:0;
   height:1.5em;
-  margin:.25em 0 0;
+  margin:.25em 0;
   padding:0;
   border-left:1px solid;
   border-color:inherit;
