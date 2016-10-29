@@ -187,26 +187,22 @@ TE.Markdown = function(target, o) {
 
     extend(ui.tools, {
         b: {
-            i: 'bold',
             click: function(e, $) {
                 return $.i().mark(formats.b[0]), false;
             }
         },
         i: {
-            i: 'italic',
             click: function(e, $) {
                 return $.i().mark(formats.i[0]), false;
             }
         },
         u: 0,
         s: extra ? {
-            i: 'strikethrough',
             click: function(e, $) {
                 return $.i().mark(formats.s), false;
             }
         } : 0,
         a: {
-            i: 'link',
             click: function(e, $) {
                 var s = $.$(),
                     b = s.before,
@@ -258,7 +254,6 @@ TE.Markdown = function(target, o) {
             }
         },
         img: {
-            i: 'image',
             click: function(e, $) {
                 var s = $.$(),
                     alt = s.value,
@@ -336,7 +331,6 @@ TE.Markdown = function(target, o) {
             }
         } : 0,
         abbr: extra ? {
-            i: 'question',
             click: function(e, $) {
                 var s = $.$(),
                     x = trim(s.value),
@@ -367,7 +361,6 @@ TE.Markdown = function(target, o) {
             }
         } : 0,
         p: {
-            i: 'paragraph',
             click: function(e, $) {
                 if ($.$().length) {
                     return $.tidy('\n\n').replace(/([\t ]*\n[\t ]*){2,}/g, '\n\n'), false;
@@ -376,7 +369,6 @@ TE.Markdown = function(target, o) {
             }
         },
         'p,h1,h2,h3,h4,h5,h6': {
-            i: 'header',
             click: function(e, $) {
                 if (header_step > 5) {
                     header_step = 0;
@@ -411,7 +403,6 @@ TE.Markdown = function(target, o) {
             }
         },
         'blockquote,q': {
-            i: 'quote-left',
             click: function(e, $) {
                 var s = $.$(),
                     v = s.value,
@@ -426,7 +417,6 @@ TE.Markdown = function(target, o) {
             }
         },
         'pre,code': {
-            i: 'code',
             click: function(e, $) {
                 var s = $.$(),
                     b = s.before,
@@ -462,7 +452,6 @@ TE.Markdown = function(target, o) {
             }
         },
         ul: {
-            i: 'list-ul',
             click: function(e, $) {
                 var s = $.$(),
                     v = s.value,
@@ -511,7 +500,6 @@ TE.Markdown = function(target, o) {
             }
         },
         ol: {
-            i: 'list-ol',
             click: function(e, $) {
                 var s = $.$(),
                     v = s.value,
@@ -607,7 +595,6 @@ TE.Markdown = function(target, o) {
             }), false;
         } : 0,
         hr: {
-            i: 'ellipsis-h',
             click: function(e, $) {
                 return $.tidy('\n\n', "").insert(formats.hr[0] + '\n\n', -1), false;
             }
@@ -624,7 +611,7 @@ TE.Markdown = function(target, o) {
             if (!is_string(br) && br) {
                 br = '  \n';
             }
-            return $.trim().insert(br || '\n', -1), false;
+            return $.trim().insert(br || '\n', -1).scroll(true), false;
         },
         'enter': function(e, $) {
             var s = $.$(),
@@ -639,9 +626,9 @@ TE.Markdown = function(target, o) {
                     return $.outdent(pattern(regex)), false;
                 } else if (pattern('\\s*' + esc_ol + '\\s*').test(match[1])) {
                     var i = num(trim(match[1]));
-                    return $.insert('\n' + match[1].replace(/\d+/, i + 1), -1).scroll('+1'), false;
+                    return $.insert('\n' + match[1].replace(/\d+/, i + 1), -1).scroll(true), false;
                 }
-                return $.insert('\n' + match[1], -1).scroll('+1'), false;
+                return $.insert('\n' + match[1], -1).scroll(true), false;
             }
         },
         'shift+tab': function(e, $) {

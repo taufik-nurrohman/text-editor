@@ -490,7 +490,7 @@ TE.HTML = function(target, o) {
             }
         },
         'blockquote,q': {
-            i: 'quote-left',
+            i: 'quote-right',
             click: function(e, $) {
                 var s = $.$(),
                     v = s.value,

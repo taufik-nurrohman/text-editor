@@ -470,3 +470,4 @@ Plugins
 
  - [HTML Text Editor](https://rawgit.com/tovic/text-editor/master/TE.HTML/TE.HTML.html)
  - [Markdown Text Editor](https://rawgit.com/tovic/text-editor/master/TE.Markdown/TE.Markdown.html)
+ - [Textile Text Editor](https://rawgit.com/tovic/text-editor/master/TE.Textile/TE.Textile.html)

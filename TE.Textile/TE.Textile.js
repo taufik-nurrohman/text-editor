@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXTILE TEXT EDITOR PLUGIN 0.0.9
+ *  TEXTILE TEXT EDITOR PLUGIN 1.0.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -18,8 +18,7 @@ TE.Textile = function(target, o) {
         format = editor._.format,
         attrs = '(?:\\s[^<>]*?)?',
         attrs_capture = '(|\\s[^<>]*?)',
-        content = '([\\s\\S]*?)',
-        TAB = '\t';
+        content = '([\\s\\S]*?)';
 
     editor.update(extend({
         tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
@@ -36,9 +35,6 @@ TE.Textile = function(target, o) {
             modals: {
                 a: {
                     title: ['Link URL/Reference ID']
-                },
-                img: {
-                    title: ['Image URL/Reference ID']
                 },
                 sup: {
                     title: 'Footnote ID'
@@ -195,26 +191,22 @@ TE.Textile = function(target, o) {
 
     extend(ui.tools, {
         b: {
-            i: 'bold',
             click: function(e, $) {
                 return $.i().mark(formats.b[0]), false;
             }
         },
         i: {
-            i: 'italic',
             click: function(e, $) {
                 return $.i().mark(formats.i[0]), false;
             }
         },
         u: 0,
         s: {
-            i: 'strikethrough',
             click: function(e, $) {
                 return $.i().mark('-'), false;
             }
         },
         a: {
-            i: 'link',
             click: function(e, $) {
                 var s = $.$(),
                     b = s.before,
@@ -253,10 +245,19 @@ TE.Textile = function(target, o) {
                         href = v;
                         $.blur().ui.prompt(['a[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
                             title = attr_title(v);
-                            if (!x) {
-                                $.insert(placeholders[""]);
+                            // image link
+                            if (/^\![^\s]+?\!$/.test(x)) {
+                                if (title) {
+                                    $.replace(/\(.*?\)\!$/, '!').replace(/\!$/, '(' + title + ')!');
+                                }
+                                $.insert(':' + href, 1);
+                            // else ...
+                            } else {
+                                if (!x) {
+                                    $.insert(placeholders[""]);
+                                }
+                                $.i().trim(trim(b) ? ' ' : "", !trim(a) ? "" : (/^\n+(fn\d+\^?\. |\[)/.test(a) ? '\n\n ' : ' ')).wrap('"', (title ? '(' + title + ')' : "") + '":' + href);
                             }
-                            $.i().trim(trim(b) ? ' ' : "", !trim(a) ? "" : (/^\n+(fn\d+\^?\. |\[)/.test(a) ? '\n\n ' : ' ')).wrap('"', (title ? '(' + title + ')' : "") + '":' + href);
                         });
                     }
                     $[1]();
@@ -264,7 +265,6 @@ TE.Textile = function(target, o) {
             }
         },
         img: {
-            i: 'image',
             click: function(e, $) {
                 var s = $.$(),
                     i18n = languages.modals.img,
@@ -304,7 +304,6 @@ TE.Textile = function(target, o) {
             }
         },
         abbr: {
-            i: 'question',
             click: function(e, $) {
                 var s = $.$(),
                     x = trim(s.value),
@@ -341,13 +340,11 @@ TE.Textile = function(target, o) {
             }
         },
         p: {
-            i: 'paragraph',
             click: function(e, $) {
                 return toggle_block('p. ');
             }
         },
         'p,h1,h2,h3,h4,h5,h6': {
-            i: 'header',
             click: function(e, $) {
                 var s = $.$(),
                     headers = /(?:p|h\d+)\. +/,
@@ -365,13 +362,11 @@ TE.Textile = function(target, o) {
             }
         },
         'blockquote,q': {
-            i: 'quote-left',
             click: function(e, $) {
                 return toggle_block('bq. ');
             }
         },
         'pre,code': {
-            i: 'code',
             click: function(e, $) {
                 // block
                 if (pattern('(^|\\n)$').test($.$().before)) {
@@ -382,7 +377,6 @@ TE.Textile = function(target, o) {
             }
         },
         ul: {
-            i: 'list-ul',
             click: function(e, $) {
                 var s = $.$(),
                     v = s.value,
@@ -431,7 +425,6 @@ TE.Textile = function(target, o) {
             }
         },
         ol: {
-            i: 'list-ol',
             click: function(e, $) {
                 var s = $.$(),
                     v = s.value,
@@ -489,33 +482,36 @@ TE.Textile = function(target, o) {
                 i18n = languages.modals.table,
                 p = languages.placeholders.table,
                 q = format(p[0], [1, 1]),
+                advance = config.advance_table,
                 o = [], s, c, r;
             if ($.$().value === q) return $.select(), false;
             return $[0]().ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
-                c = edge(parseInt(v, 10) || w, std[0], std[1]);
+                c = edge(num(v) || w, std[0], std[1]);
                 $.blur().ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
-                    r = edge(parseInt(v, 10) || w, str[0], str[1]);
+                    r = edge(num(v) || w, str[0], str[1]);
                     var i, j, k, l, m, n;
                     for (i = 0; i < r; ++i) {
                         s = '|';
                         for (j = 0; j < c; ++j) {
-                            s += ' ' + format(p[1], [i + 1, j + 1]) + ' |';
+                            s += '   ' + format(p[1], [i + 1, j + 1]) + ' |';
                         }
                         o.push(s);
                     }
                     o = o.join('\n');
                     s = '|';
-                    for (k = 0; k < c; ++k) {
-                        s += ' ' + format(p[0], [k + 1, k + 1]).replace(/./g, '-') + ' |';
-                    }
-                    o = s + '\n' + o;
-                    s = '|';
                     for (l = 0; l < c; ++l) {
-                        s += ' ' + format(p[0], [1, l + 1]) + ' |';
+                        s += '_. ' + format(p[0], [1, l + 1]) + ' |';
+                    }
+                    if (advance) {
+                        s += '\n|~.\n|';
+                        for (l = 0; l < c; ++l) {
+                            s += '   ' + format(p[2], [1, l + 1]) + ' |';
+                        }
+                        s += '\n|-.';
                     }
                     o = s + '\n' + o;
-                    if (!config.close_tr) {
-                        o = o.replace(/^\|\s*|\s*\|$/gm, "");
+                    if (advance) {
+                        o = '|^.\n' + o;
                     }
                     $.tidy('\n\n').insert(o);
                     m = $.$();
@@ -525,7 +521,6 @@ TE.Textile = function(target, o) {
             }), false;
         },
         hr: {
-            i: 'ellipsis-h',
             click: function(e, $) {
                 return $.tidy('\n\n', "").insert(formats.hr[0] + '\n\n', -1), false;
             }
@@ -537,13 +532,7 @@ TE.Textile = function(target, o) {
         'control+arrowup': 'sup',
         'control+arrowdown': 'sup',
         'control+shift+?': 'abbr',
-        'shift+enter': function(e, $) {
-            var br = config.advance_br;
-            if (!is_string(br) && br) {
-                br = '  \n';
-            }
-            return $.trim().insert(br || '\n', -1), false;
-        },
+        'shift+enter': 0,
         'enter': function(e, $) {
             var s = $.$(),
                 ul = formats.ul[0],
@@ -556,7 +545,7 @@ TE.Textile = function(target, o) {
                 if (match[0] === match[1]) {
                     return $.outdent(pattern(regex)), false;
                 }
-                return $.insert('\n' + match[1], -1).scroll('+1'), false;
+                return $.insert('\n' + match[1], -1).scroll(true), false;
             }
         },
         'shift+tab': function(e, $) {
@@ -567,18 +556,18 @@ TE.Textile = function(target, o) {
                 ol = formats.ol[0],
                 esc_ul = esc(ul),
                 esc_ol = esc(ol),
-                bullets = '(^|\\n)(' + esc_ul + ')+',
-                lists = '(^|\\n)(' + esc_ol + ')+';
+                bullets = '(^|\\n)(' + esc_ul + '){2,}',
+                lists = '(^|\\n)(' + esc_ol + '){2,}';
             if (v === placeholders[""]) {
                 return $.select(), false;
-            } else if (pattern(bullets + ' $').test(b) || pattern(bullets).test(v)) {
-                $[0]().outdent(pattern(esc_ul + ' *'));
-                if (!v && pattern(bullets + '$').test($.$().before)) $.insert(' ', -1);
-                return $[1](), false;
-            } else if (pattern(lists + ' $').test(b) || pattern(lists).test(v)) {
-                $[0]().outdent(pattern(esc_ol + ' *'));
-                if (!v && pattern(lists + '$').test($.$().before)) $.insert(' ', -1);
-                return $[1](), false;
+            } else if (pattern(bullets + ' $').test(b)) {
+                return $.replace(pattern(esc_ul + ' $'), ' ', -1), false;
+            } else if (pattern(bullets).test(v)) {
+                return $.replace(pattern('^' + esc_ul + ' *', 'gm'), ""), false;
+            } else if (pattern(lists + ' $').test(b)) {
+                return $.replace(pattern(esc_ol + ' $'), ' ', -1), false;
+            } else if (pattern(lists).test(v)) {
+                return $.replace(pattern('^' + esc_ol + ' *', 'gm'), ""), false;
             }
             return ui.tools.outdent.click(e, $);
         },
@@ -591,14 +580,17 @@ TE.Textile = function(target, o) {
                 esc_ul = esc(ul),
                 esc_ol = esc(ol),
                 bullets = '(^|\\n)(' + esc_ul + ')+',
-                lists = '(^|\\n)(' + esc_ol + ')+',
-                space = v ? "" : ' ';
+                lists = '(^|\\n)(' + esc_ol + ')+';
             if (v === placeholders[""]) {
                 return $.select(), false;
-            } else if (pattern(bullets + ' $').test(b) || pattern(bullets).test(v)) {
-                return $.trim("", false).indent(ul + space), false;
-            } else if (pattern(lists + ' $').test(b) || pattern(lists).test(v)) {
-                return $.trim("", false).indent(ol + space), false;
+            } else if (pattern(bullets + ' $').test(b)) {
+                return $.replace(/ $/, ul + ' ', -1), false;
+            } else if (pattern(bullets).test(v)) {
+                return $.replace(/^(?!$)/gm, ul), false;
+            } else if (pattern(lists + ' $').test(b)) {
+                return $.replace(/ $/, ol + ' ', -1), false;
+            } else if (pattern(lists).test(v)) {
+                return $.replace(/^(?!$)/gm, ol), false;
             }
             return ui.tools.indent.click(e, $);
         }

@@ -43,7 +43,7 @@ var config = {
         '`': '`'
     },
     keys: true, // enable keyboard shortcut feature
-    tools: 'b i | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | hr | undo redo',
+    tools: 'b i | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
     attributes: {
         'spellcheck': 'false'
     },

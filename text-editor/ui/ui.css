@@ -1,4 +1,19 @@
 .text-editor,
+.text-editor:before,
+.text-editor:after,
+.text-editor *,
+.text-editor *:before,
+.text-editor *:after {
+  margin:0;
+  padding:0;
+  line-height:1.5;
+  border-color:inherit;
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  box-sizing:border-box;
+}
+.text-editor *:focus {outline:0}
+.text-editor,
 .text-editor-modal,
 .text-editor-bubble,
 .text-editor-drop,
@@ -12,25 +27,10 @@
   color:#999;
   position:relative;
 }
-.text-editor *:focus {outline:0}
-.text-editor,
-.text-editor:before,
-.text-editor:after,
-.text-editor *,
-.text-editor *:before,
-.text-editor *:after {
-  margin:0;
-  padding:0;
-  line-height:1.5;
-  -webkit-box-sizing:border-box;
-  -moz-box-sizing:border-box;
-  box-sizing:border-box;
-}
 .text-editor a,
 .text-editor a:focus,
 .text-editor a:hover,
 .text-editor a:active {
-  background:0 0;
   color:inherit;
   text-decoration:none;
 }
@@ -48,12 +48,7 @@
 }
 .text-editor-header,
 .text-editor-body,
-.text-editor-footer {
-  background:inherit;
-  border-color:inherit;
-  color:inherit;
-  position:relative;
-}
+.text-editor-footer {position:relative}
 .text-editor-header {min-height:2px}
 .text-editor-button,
 .text-editor-input,
@@ -66,6 +61,8 @@
   font:inherit;
   color:#666;
   padding:.25em .5em;
+  box-shadow:none;
+  border-radius:0;
 }
 .text-editor-select,
 .text-editor-toggle {cursor:pointer}
@@ -86,8 +83,6 @@
   text-shadow:none;
   color:inherit;
   cursor:pointer;
-  box-shadow:none;
-  border-radius:0;
 }
 .text-editor-separator + .text-editor-separator {display:none} /* remove empty separator(s) without content */
 .text-editor-button::-moz-focus-inner {
@@ -105,7 +100,6 @@
 }
 .text-editor-button:focus,
 .text-editor-button:hover {background:#e5e5e5}
-.text-editor-tool {border-color:inherit}
 .text-editor-tool .text-editor-button {
   background:0 0;
   padding:0;
@@ -121,7 +115,7 @@
 }
 .text-editor-button.text {width:auto}
 .text-editor-button.text .text-editor-text {padding:0 .5em}
-.text-editor-button.text .text-editor-text i {display:inline-block}
+.text-editor-button.text .text-editor-text .icon {display:inline-block}
 .text-editor-tool .text-editor-separator {
   width:0;
   height:1.5em;
@@ -140,7 +134,6 @@
 .text-editor-body {
   border-width:1px 0;
   border-style:solid;
-  border-color:inherit;
   border-top-color:#ccc;
   overflow:auto;
 }
@@ -285,6 +278,8 @@
   text-align:left;
   background:0 0;
   color:inherit;
+  box-shadow:none;
+  border-radius:0;
 }
 .text-editor-drop.menu .text-editor-button:active {background:#f5f5f5}
 .text-editor-current.menu:after {

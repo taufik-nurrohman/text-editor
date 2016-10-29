@@ -12,6 +12,7 @@
   -moz-box-sizing:border-box;
   box-sizing:border-box;
 }
+.text-editor *:focus {outline:0}
 .text-editor,
 .text-editor-modal,
 .text-editor-bubble,
@@ -21,25 +22,24 @@
 .text-editor-input,
 .text-editor-select,
 .text-editor-textarea {
-  background:#fff;
-  border:1px solid #000;
-  color:#000;
+  background:#222;
+  border:1px solid #2f2f2f;
+  color:#aaa;
   position:relative;
 }
-.text-editor *:focus {outline:0}
+.text-editor {border-width:0}
 .text-editor .block {
   display:block;
   width:100%;
 }
 .text-editor .left {float:left}
 .text-editor .right {float:right}
-.text-editor a,
-.text-editor a:focus,
-.text-editor a:hover,
-.text-editor a:active {
-  color:inherit;
+.text-editor a {
+  color:#678;
   text-decoration:none;
 }
+.text-editor a:focus,
+.text-editor a:hover {color:#789}
 .text-editor ::-webkit-input-placeholder {
   opacity:.2;
   color:inherit;
@@ -62,27 +62,24 @@
 .text-editor-textarea {
   display:inline-block;
   vertical-align:middle;
+  background:#191919;
+  color:#eee;
   font:inherit;
   padding:.25em .5em;
-  box-shadow:none;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.6);
   border-radius:0;
 }
-.text-editor-input {background:#ffa}
-.text-editor-select {
-  background:#dfa;
-  cursor:pointer;
-}
+.text-editor-select,
+.text-editor-toggle {cursor:pointer}
 .text-editor-textarea {
-  background:#def;
   width:100%;
   resize:vertical;
 }
-.text-editor-toggle {cursor:pointer}
 .text-editor-button,
 .text-editor-separator {
   display:inline-block;
   vertical-align:middle;
-  background:#000;
+  background:#456;
   border:0;
   font:inherit;
   text-align:center;
@@ -90,6 +87,7 @@
   text-shadow:none;
   color:#fff;
   cursor:pointer;
+  box-shadow:0 1px 2px rgba(0,0,0,.6);
 }
 .text-editor-separator + .text-editor-separator {display:none} /* remove empty separator(s) without content */
 .text-editor-button::-moz-focus-inner {
@@ -106,19 +104,17 @@
   text-align:center;
 }
 .text-editor-button:focus,
-.text-editor-button:hover {background:#006}
-.text-editor-button:active {background:#600}
+.text-editor-button:hover {background:#567}
+.text-editor-button:active {background:#345}
 .text-editor-tool .text-editor-button {
   background:0 0;
   padding:0;
   float:left;
   width:2em;
   line-height:2em;
+  box-shadow:none;
 }
-.text-editor-tool .text-editor-button:active {
-  background:#def;
-  box-shadow:inset 0 0 0 2px #fff;
-}
+.text-editor-tool .text-editor-button:active {background:#191919}
 .text-editor-button.x,
 .text-editor-button[disabled] { /* disabled */
   cursor:default;
@@ -134,6 +130,7 @@
   padding:0;
   border-left:1px solid;
   border-color:inherit;
+  box-shadow:none;
   float:left;
 }
 .text-editor-content {
@@ -143,8 +140,8 @@
   font-family:"Courier New",Courier,"Nimbus Mono L",Monospace;
 }
 .text-editor-body {
-  border-width:1px 0;
-  border-style:solid;
+  border:1px solid;
+  border-color:inherit;
   overflow:auto;
 }
 .text-editor-footer {
@@ -201,9 +198,7 @@
   bottom:0;
   left:0;
   z-index:9998;
-  background:rgba(0,0,0,.1);
-  background:repeating-linear-gradient(-45deg,rgba(0,0,0,.1),rgba(0,0,0,.1) 5px,rgba(0,0,0,.2) 5px,rgba(0,0,0,.2) 10px);
-  background-position:50% 50%;
+  background:rgba(0,0,0,.4);
   overflow:auto;
 }
 .text-editor-overlay-content {
@@ -235,7 +230,7 @@
 .text-editor-bubble {
   position:absolute;
   z-index:9999;
-  box-shadow:0 1px 2px rgba(0,0,0,.4);
+  box-shadow:0 2px 4px rgba(0,0,0,.6);
   visibility:hidden;
 }
 .text-editor-modal {
@@ -282,11 +277,12 @@
   display:block;
   text-align:left;
   background:0 0;
-  color:inherit;
+  color:#678;
   box-shadow:none;
   border-radius:0;
 }
-.text-editor-drop.menu .text-editor-button:active {color:#00a}
+.text-editor-drop.menu .text-editor-button:focus,
+.text-editor-drop.menu .text-editor-button:hover {color:#789}
 .text-editor-current.menu:after {
   content:"";
   display:inline-block;

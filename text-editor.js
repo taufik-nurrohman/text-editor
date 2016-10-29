@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.5.2
+ *  TEXT EDITOR PLUGIN 2.5.3
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -197,8 +197,8 @@ var TE = function(target) {
             s = css(target, 'font-size');
         if (!is_set(i)) {
             return Math.floor(current / h);
-        } else if (is_string(i)) {
-            return r.scroll(r.scroll() + (i === '-' ? -1 : 1)), r;
+        } else if (i === true || i === false) {
+            return r.scroll(r.scroll() + (i === false ? -1 : 1)), r;
         }
         return target.scrollTop = (h * i) + (h - s), r;
     };
@@ -543,13 +543,13 @@ var TE = function(target) {
 
 (function(r) {
 
-    // Plugin version
-    r.version = '2.5.2';
+    // plugin version
+    r.version = '2.5.3';
 
-    // Collect all instance(s)
+    // collect all instance(s)
     r.__instance__ = {};
 
-    // Plug to all instance(s)
+    // plug to all instance(s)
     r.each = function(fn, t) {
         return setTimeout(function() {
             var ins = r.__instance__, i;
@@ -559,7 +559,7 @@ var TE = function(target) {
         }, t === 0 ? 0 : (t || 1)), r;
     };
 
-    // Key maps for the deprecated `KeyboardEvent.keyCode`
+    // key maps for the deprecated `KeyboardEvent.keyCode`
     r.keys = {
         // control
         3: 'cancel',
@@ -633,7 +633,7 @@ var TE = function(target) {
         222: ['\'', '"']
     };
 
-    // Key alias(es)
+    // key alias(es)
     r.keys_alias = {
         'alternate': 'alt',
         'option': 'alt',
@@ -669,7 +669,7 @@ var TE = function(target) {
         r.keys[i] = scap(String.fromCharCode(i));
     }
 
-    // Add `KeyboardEvent.TE` property
+    // add `KeyboardEvent.TE` property
     Object.defineProperty(KeyboardEvent.prototype, 'TE', {
         configurable: true,
         get: function() {
