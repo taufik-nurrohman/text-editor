@@ -41,15 +41,15 @@
 .text-editor a:focus,
 .text-editor a:hover {color:#789}
 .text-editor ::-webkit-input-placeholder {
-  opacity:.1;
+  opacity:.2;
   color:inherit;
 }
 .text-editor ::-moz-placeholder {
-  opacity:.1;
+  opacity:.2;
   color:inherit;
 }
 .text-editor ::placeholder {
-  opacity:.1;
+  opacity:.2;
   color:inherit;
 }
 .text-editor-header,
