@@ -108,8 +108,42 @@ editor.destroy();
 
 ### Trigger Editor Tools
 
+This is the same as when you click the bold button:
+
 ~~~ .javascript
 editor.ui.tools.b.click(null, editor);
+~~~
+
+Trigger editor tool with data from a modal prompt:
+
+~~~ .javascript
+function fire_tool_with_prompt(id, data, $) {
+    // [1]. trigger the tool item to show the modal prompt
+    $.ui.tools[id].click(null, $);
+    // [2]. access the visible modal prompt HTML through `$.ui.el.modal`
+    var $modal = $.ui.el.modal, i, j, k;
+    for (i in data) {
+        if (j = $modal.querySelector('input, select, textarea')) {
+            // [3]. set value to the prompt field
+            j.value = data[i];
+            // [4]. trigger click event to the submit button
+            if (k = $modal.querySelector('button')) {
+                $._.event.fire('click', k);
+            }
+        }
+    }
+    return $;
+}
+~~~
+
+Usage:
+
+~~~ .javascript
+// insert table with `4` columns, `6` rows and a `Lorem Ipsum` caption
+fire_tool_with_prompt('table', [4, 6, 'Lorem Ipsum'], editor);
+
+// insert a hyperlink to `http://example.com` with `Lorem Ipsum` title
+fire_tool_with_prompt('a', ['http://example.com', 'Lorem Ipsum'], editor);
 ~~~
 
 Methods
