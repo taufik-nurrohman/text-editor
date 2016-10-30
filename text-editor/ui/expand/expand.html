@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Test Internationalization</title>
+    <title>Maximize and Minimize</title>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
     <link href="../../../text-editor/ui/ui.1960.min.css" rel="stylesheet">
     <style>
@@ -11,30 +11,21 @@
       font-family:Helmet,FreeSans,Sans-Serif;
       font-size:14px;
     }
-    .text-editor + .text-editor {margin-top:.5em}
     .text-editor-content {height:180px}
     </style>
   </head>
   <body>
-    <h1>Language: Indonesian</h1>
     <form action="#">
+      <p>Focus to the editor area then press <kbd>F11</kbd> or click the <a href="javascrpit:;" onclick="return editor.ui.tools.maximize.click(null, editor), false;"><i class="fa fa-expand"></i></a> tool.</p>
       <p><textarea></textarea></p>
-      <p><textarea></textarea></p>
-      <p><textarea></textarea></p>
-      <p>Just a test.</p>
     </form>
     <script src="../../../text-editor.min.js"></script>
     <script src="../../../text-editor/ui/ui.min.js"></script>
-    <script src="../../../text-editor/ui/language/id-id.min.js"></script>
+    <script src="../../../text-editor/ui/expand/expand.min.js"></script>
     <script src="../../../TE.HTML/TE.HTML.min.js"></script>
-    <script src="../../../TE.Markdown/TE.Markdown.min.js"></script>
-    <script src="../../../TE.Textile/TE.Textile.min.js"></script>
     <script>
 
-    var area = document.querySelectorAll('textarea'),
-        editor_1 = new TE.HTML(area[0]),
-        editor_2 = new TE.Markdown(area[1], {extra: true}),
-        editor_3 = new TE.Textile(area[2]);
+    var editor = new TE.HTML(document.querySelector('textarea'));
 
     </script>
   </body>

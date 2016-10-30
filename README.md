@@ -461,7 +461,8 @@ Modules
 
  - [Persistent Storage](https://rawgit.com/tovic/text-editor/master/text-editor/save/save.html)
  - [User Interface](https://rawgit.com/tovic/text-editor/master/text-editor/ui/ui.html)
-   - [Internationalization](https://rawgit.com/tovic/text-editor/master/text-editor/ui/language/language.html)
+ - [Internationalization](https://rawgit.com/tovic/text-editor/master/text-editor/ui/language/language.html)
+ - [Maximize/Minimize the Editor](https://rawgit.com/tovic/text-editor/master/text-editor/ui/expand/expand.html)
 
 Plugins
 -------
