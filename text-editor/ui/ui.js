@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.2.1
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.2.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -82,14 +82,14 @@ TE.prototype.ui = function(o) {
         _COPY = 'copy',
         _CUT = 'cut',
         _PASTE = 'paste',
-        _MOUSEDOWN = 'mousedown touchstart',
-        _MOUSEUP = 'mouseup touchend',
-        _MOUSEMOVE = 'mousemove touchmove',
+        _MOUSEDOWN = 'touchstart mousedown',
+        _MOUSEUP = 'touchend mouseup',
+        _MOUSEMOVE = 'touchmove mousemove',
         _CLICK = 'click',
         _FOCUS = 'focus',
         _BLUR = 'blur',
         _INPUT = 'input',
-        _RESIZE = 'resize orientationchange',
+        _RESIZE = 'orientationchange resize',
         target_events = _BLUR + ' ' + _COPY + ' ' + _CUT + ' ' + _FOCUS + ' ' + _INPUT + ' ' + _KEYDOWN + ' ' + _PASTE,
         i18n = config.languages,
         tab = config.tab,
@@ -97,7 +97,7 @@ TE.prototype.ui = function(o) {
         auto_close = config.auto_close,
         data_tool_id = 'data-tool-id';
 
-    function is_node(x) {
+    function is_dom(x) {
         return x instanceof HTMLElement;
     }
 
@@ -379,7 +379,7 @@ TE.prototype.ui = function(o) {
             var o = _overlay.firstChild;
             if (o) {
                 o = size(o);
-                dom_css({
+                dom_css(frame, {
                     width: o.w + 'px',
                     height: o.h + 'px'
                 });
@@ -427,14 +427,14 @@ TE.prototype.ui = function(o) {
                 }
             }
         }
-        if (is_node(node)) {
+        if (is_dom(node)) {
             em.appendChild(node);
         } else {
             if (is_object(node)) {
                 var v, i;
                 for (i in node) {
                     v = node[i];
-                    if (is_node(v)) {
+                    if (is_dom(v)) {
                         em.appendChild(v);
                     } else {
                         if (v !== false) em.innerHTML = v;
@@ -722,7 +722,7 @@ TE.prototype.ui = function(o) {
         timer_reset(bounce);
         bounce = timer_set(function() {
             do_update_contents(e);
-        }, 1000);
+        }, 250);
     }
 
     function do_click_tool(e) {
@@ -960,7 +960,7 @@ TE.prototype.ui = function(o) {
     ui.overlay = function(s, x, fn) {
         ui.exit(0, 'bubble', 0);
         do_keys_reset(1);
-        dom_set(_body, el(_overlay, s.length || is_node(s) ? el_set(prefix + '-overlay-content', 'div', s) : ""));
+        dom_set(_body, el(_overlay, s.length || is_dom(s) ? el_set(prefix + '-overlay-content', 'div', s) : ""));
         if (x) events_set(_CLICK, _overlay, do_overlay_exit);
         if (is_function(fn)) {
             fn(_overlay);
