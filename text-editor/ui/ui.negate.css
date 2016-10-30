@@ -41,15 +41,15 @@
 .text-editor a:focus,
 .text-editor a:hover {color:#789}
 .text-editor ::-webkit-input-placeholder {
-  opacity:.2;
+  opacity:.1;
   color:inherit;
 }
 .text-editor ::-moz-placeholder {
-  opacity:.2;
+  opacity:.1;
   color:inherit;
 }
 .text-editor ::placeholder {
-  opacity:.2;
+  opacity:.1;
   color:inherit;
 }
 .text-editor-header,
@@ -114,7 +114,7 @@
   line-height:2em;
   box-shadow:none;
 }
-.text-editor-tool .text-editor-button:active {background:#191919}
+.text-editor-tool .text-editor-button:active {color:inherit}
 .text-editor-button.x,
 .text-editor-button[disabled] { /* disabled */
   cursor:default;
