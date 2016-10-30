@@ -16,9 +16,6 @@ TE.Markdown = function(target, o) {
         extend = editor._.extend,
         esc = editor._.x,
         format = editor._.format,
-        attrs = '(?:\\s[^<>]*?)?',
-        attrs_capture = '(|\\s[^<>]*?)',
-        content = '([\\s\\S]*?)',
         TAB = '\t';
 
     editor.update(extend({

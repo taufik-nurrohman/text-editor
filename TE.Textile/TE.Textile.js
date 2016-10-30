@@ -15,17 +15,12 @@ TE.Textile = function(target, o) {
         ui = editor.ui,
         extend = editor._.extend,
         esc = editor._.x,
-        format = editor._.format,
-        attrs = '(?:\\s[^<>]*?)?',
-        attrs_capture = '(|\\s[^<>]*?)',
-        content = '([\\s\\S]*?)';
+        format = editor._.format;
 
     editor.update(extend({
         tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
         states: {
-            a: {
-                "": [""] // implicit link name shortcut (do not remove!)
-            },
+            a: {},
             img: {}
         },
         languages: {
@@ -228,7 +223,7 @@ TE.Textile = function(target, o) {
                     states.a[i] = 1;
                 }
                 state = states.a;
-                return $.record().ui.prompt(['a[href]', i18n.title[0]], http, 0, function(e, $, v) {
+                return $.record().ui.prompt(['a[href]', i18n.title[0]], http, 1, function(e, $, v) {
                     v = attr_url(v);
                     $[0]();
                     if (state[v]) {
