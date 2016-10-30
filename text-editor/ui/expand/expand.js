@@ -30,13 +30,13 @@
             head.appendChild(style);
             once = 0;
         }
-        function do_max(e, $) {
-            html.classList.add(base.slice(1));
+        function do_max() {
+            html.classList.add(s);
             ui.tool('maximize', false).select();
             return do_min_tool(), false;
         }
         function do_min() {
-            html.classList.remove(base.slice(1));
+            html.classList.remove(s);
             ui.tool('minimize', false).select();
             return do_max_tool(), false;
         }
