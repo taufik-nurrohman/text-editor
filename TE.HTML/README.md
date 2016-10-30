@@ -142,17 +142,8 @@ Usage:
 // insert table with `4` columns, `6` rows and a `Lorem Ipsum` caption
 fire_tool_with_prompt('table', [4, 6, 'Lorem Ipsum'], editor);
 
-// insert a hyperlink to `http://example.com` with `Lorem Ipsum` title
+// insert link to `http://example.com` with `Lorem Ipsum` title
 fire_tool_with_prompt('a', ['http://example.com', 'Lorem Ipsum'], editor);
-~~~
-
-Methods
--------
-
-### Force Inline
-
-~~~ .javascript
-editor.i(); // is equal to `editor.trim(false, false).replace(/\s+/g, ' ');`
 ~~~
 
 Hooks

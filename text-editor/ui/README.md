@@ -192,6 +192,14 @@ editor.format('strong', ' ', ""); // span
 editor.format('blockquote', '\n\n', '\n'); // block
 ~~~
 
+#### Force Inline
+
+This is equal to `editor.trim(false, false).replace(/\s+/g, ' ')`:
+
+~~~ .javascript
+editor.i();
+~~~
+
 ### Modal
 
 ~~~ .javascript
