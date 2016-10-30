@@ -31,12 +31,12 @@
             once = 0;
         }
         function do_max() {
-            html.classList.add(s);
+            html.classList.add(base.slice(1));
             ui.tool('maximize', false).select();
             return do_min_tool(), false;
         }
         function do_min() {
-            html.classList.remove(s);
+            html.classList.remove(base.slice(1));
             ui.tool('minimize', false).select();
             return do_max_tool(), false;
         }
