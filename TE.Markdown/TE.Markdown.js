@@ -662,12 +662,14 @@ TE.Markdown = function(target, o) {
                 v = s.value,
                 a = s.after,
                 ol = formats.ol[0],
+                blockquote = formats.blockquote,
                 esc_ol = esc(ol),
+                esc_blockquote = esc(blockquote),
                 bullets = pattern(bullet_any + '$'),
                 lists = pattern(' ?' + format(esc_ol, ['\\d+']) + ' $'),
                 match;
             if (!v) {
-                if (match = b.match(pattern(esc(formats.blockquote) + ' $'))) {
+                if (match = b.match(pattern(esc_blockquote + ' $'))) {
                     return $.insert(match[0], -1), false;
                 } else if (match = b.match(bullets)) {
                     b = b.replace(bullets, '  $1');
@@ -675,6 +677,10 @@ TE.Markdown = function(target, o) {
                 } else if (match = b.match(lists)) {
                     b = b.replace(lists, '    ' + format(ol, [1]) + ' ');
                     return $.set(b + a).select(b.length), false;
+                }
+            } else {
+                if (pattern('^' + esc_blockquote + ' ').test(v)) {
+                    return $.indent(blockquote + ' '), false;
                 }
             }
             return ui.tools.indent.click(e, $);

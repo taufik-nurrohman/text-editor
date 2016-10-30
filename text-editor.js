@@ -570,7 +570,7 @@
         B = is_set(B) ? B : tab;
         B = get_pattern(B);
         if (s.length) {
-            return s.replace(pattern('^' + B, 'gm'), "");
+            return $.replace(pattern('^' + B, 'gm'), "");
         }
         a = s.before.replace(pattern(B + '$'), "");
         return $.set(a + s.value + s.after).select(a.length).record();
