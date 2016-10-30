@@ -561,7 +561,7 @@
         if (s.length) {
             return $.replace(/^(?!$)/gm, B);
         }
-        return $.set(s.before + B + s.value + s.after).select(s.start + s.length).record();
+        return $.set(s.before + B + s.value + s.after).select(s.start + B.length).record();
     };
 
     // outdent
