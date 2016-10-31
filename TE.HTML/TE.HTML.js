@@ -28,7 +28,6 @@ TE.HTML = function(target, o) {
         trim = _.trim,
         edge = _.edge,
         pattern = _.pattern,
-        format = _.format,
         num = _.i,
         ui = $.ui(extend({
             suffix: '>',
@@ -125,6 +124,7 @@ TE.HTML = function(target, o) {
                 hr: 'hr'
             }
         }, o)),
+        format = _.format,
         config = $.config,
         states = config.states,
         languages = config.languages,

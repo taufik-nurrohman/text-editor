@@ -22,7 +22,7 @@
     }
 
     function is_number(x) {
-        return typeof +x === "number";
+        return typeof x === "number";
     }
 
     function is_function(x) {
