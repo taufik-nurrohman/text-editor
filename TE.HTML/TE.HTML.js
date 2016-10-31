@@ -20,11 +20,17 @@ TE.HTML = function(target, o) {
 
         win = window,
         doc = document,
-        editor = new TE(target),
-        extend = editor._.extend,
-        each = editor._.each,
-        esc = editor._.x,
-        ui = editor.ui(extend({
+        $ = new TE(target),
+        _ = $._,
+        extend = _.extend,
+        each = _.each,
+        esc = _.x,
+        trim = _.trim,
+        edge = _.edge,
+        pattern = _.pattern,
+        format = _.format,
+        num = _.i,
+        ui = $.ui(extend({
             suffix: '>',
             auto_encode_html: 1,
             auto_p: 1,
@@ -119,8 +125,7 @@ TE.HTML = function(target, o) {
                 hr: 'hr'
             }
         }, o)),
-        format = editor._.format,
-        config = editor.config,
+        config = $.config,
         states = config.states,
         languages = config.languages,
         formats = config.formats,
@@ -135,45 +140,7 @@ TE.HTML = function(target, o) {
         tree_parent;
 
     // define editor type
-    editor.type = 'HTML';
-
-    function is_set(x) {
-        return typeof x !== "undefined";
-    }
-
-    function is_node(x) {
-        return x instanceof HTMLElement;
-    }
-
-    function is_function(x) {
-        return typeof x === "function";
-    }
-
-    function is_object(x) {
-        return typeof x === "object";
-    }
-
-    function is_number(x) {
-        return typeof x === "number";
-    }
-
-    function pattern(a, b) {
-        return new RegExp(a, b);
-    }
-
-    function trim(s) {
-        return s.replace(/^\s*|\s*$/g, "");
-    }
-
-    function edge(a, b, c) {
-        if (a < b) return b;
-        if (a > c) return c;
-        return a;
-    }
-
-    function num(x) {
-        return parseInt(x, 10);
-    }
+    $.type = 'HTML';
 
     function get_o(s) {
         return s.split(/\s+/)[0];
@@ -185,7 +152,7 @@ TE.HTML = function(target, o) {
     }
 
     function tree(e, parent, child) {
-        var s = editor.$(),
+        var s = $.$(),
             v = s.value,
             before = s.before,
             ul = formats[parent],
@@ -195,37 +162,37 @@ TE.HTML = function(target, o) {
             dent = get_indent(before),
             placeholder = placeholders[""], match;
         tree_parent = ul;
-        editor[0]();
+        $[0]();
         if (!v || v === placeholder) {
             if (match = before.match(pattern('(?:^|\\n)[\\t ]+<(\\/?)(?:' + get_o(formats.ul) + '|' + get_o(formats.ol) + ')' + attrs + '>\\s*$'))) {
-                editor.insert('\n' + dent + (match[1] ? "" : tab), -1);
+                $.insert('\n' + dent + (match[1] ? "" : tab), -1);
             } else if (match = before.match(pattern('<' + li_o + attrs_capture + '>.*?$'))) {
                 if (pattern('<\\/' + li_o + '>\\s*$').test(before)) {
-                    editor.tidy('\n' + dent, false).insert(placeholder).wrap('<' + li_o + match[1] + '>', '</' + li_o + '>');
+                    $.tidy('\n' + dent, false).insert(placeholder).wrap('<' + li_o + match[1] + '>', '</' + li_o + '>');
                 } else {
                     if (!/>\s*$/.test(before)) {
-                        editor.insert('</' + li_o + '>\n' + dent + '<' + li_o + match[1] + '>', -1).insert(placeholder);
+                        $.insert('</' + li_o + '>\n' + dent + '<' + li_o + match[1] + '>', -1).insert(placeholder);
                     } else {
-                        editor.insert(placeholder).wrap('\n' + dent + tab + '<' + ul + '>\n' + dent + tab + tab + '<' + li_o + match[1] + '>', '</' + li_o + '>\n' + dent + tab + '</' + ul_o + '>\n' + dent);
+                        $.insert(placeholder).wrap('\n' + dent + tab + '<' + ul + '>\n' + dent + tab + tab + '<' + li_o + match[1] + '>', '</' + li_o + '>\n' + dent + tab + '</' + ul_o + '>\n' + dent);
                     }
                 }
             } else {
                 if (pattern('<\\/' + li_o + '>\\s*$').test(before)) {
-                    editor.insert(placeholder).wrap('\n' + dent + '<' + li + '>', '</' + li_o + '>');
+                    $.insert(placeholder).wrap('\n' + dent + '<' + li + '>', '</' + li_o + '>');
                 } else {
-                    editor.tidy('\n\n').insert(placeholder).wrap('<' + ul + '>\n' + tab + '<' + li + '>', '</' + li_o + '>\n</' + ul_o + '>');
+                    $.tidy('\n\n').insert(placeholder).wrap('<' + ul + '>\n' + tab + '<' + li + '>', '</' + li_o + '>\n</' + ul_o + '>');
                 }
             }
         } else {
-            editor.tidy('\n\n', "")
+            $.tidy('\n\n', "")
                 .replace(/[\t ]*\n[\t ]*/g, '</' + li_o + '>\n' + tab + '<' + li + '>')
                 .wrap('<' + ul + '>\n' + tab + '<' + li + '>', '</' + li_o + '>\n</' + ul_o + '>\n\n', 1)
                 .replace(pattern('\\n' + tab + '<' + li + '>\\s*<\\/' + li_o + '>\\n', 'g'), '\n</' + ul_o + '>\n\n<' + ul + '>\n')
-                .select(editor.$().end);
+                .select($.$().end);
             if (auto_p) {
-                ui.tools.p.click(e, editor);
+                ui.tools.p.click(e, $);
             }
-            return editor[1](), false;
+            return $[1](), false;
         }
     }
 
@@ -336,7 +303,7 @@ TE.HTML = function(target, o) {
                         if (advance && title) {
                             $.tidy('\n\n', "").insert('<' + figure + '>\n' + tab + '<' + img + ' alt="' + alt + '" src="' + src + '"' + suffix + '\n' + tab + '<' + figcaption + '>' + title + '</' + get_o(figcaption) + '>\n</' + get_o(figure) + '>\n\n', -1, 1);
                             if (auto_p) {
-                                ui.tools.p.click(e, editor);
+                                ui.tools.p.click(e, $);
                             }
                         } else {
                             auto_p_(e, $).tidy(/<[^\/<>]+?>\s*$/.test($.$().before) ? "" : ' ', "").insert('<' + img + ' alt="' + alt + '" src="' + src + '"' + (title ? ' title="' + title + '"' : "") + suffix + ' ', -1, 1);
@@ -749,6 +716,6 @@ TE.HTML = function(target, o) {
         });
     }
 
-    return editor.update({}, 0);
+    return $.update({}, 0);
 
 };

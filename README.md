@@ -421,6 +421,32 @@ Redo from the previous undo:
 editor.redo();
 ~~~
 
+### Scroll
+
+Get the current scroll step and text height (text area scroll height divided by text height):
+
+~~~ .javascript
+console.log(editor.scroll()); // `[4, 16]`
+~~~
+
+Scroll one step down from the current scroll step:
+
+~~~ .javascript
+editor.scroll(true);
+~~~
+
+Scroll one step up from the current scroll step:
+
+~~~ .javascript
+editor.scroll(false);
+~~~
+
+Scroll 3 rows from top:
+
+~~~ .javascript
+editor.scroll(3);
+~~~
+
 Scope
 -----
 

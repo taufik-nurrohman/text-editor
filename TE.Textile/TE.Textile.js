@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXTILE TEXT EDITOR PLUGIN 1.0.0
+ *  TEXTILE TEXT EDITOR PLUGIN 1.0.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -11,13 +11,24 @@ TE.Textile = function(target, o) {
 
     var win = window,
         doc = document,
-        editor = new TE.HTML(target),
-        ui = editor.ui,
-        extend = editor._.extend,
-        esc = editor._.x,
-        format = editor._.format;
+        $ = new TE.HTML(target),
+        ui = $.ui,
+        is = $.is,
+        is_object = is.o,
+        is_set = function(x) {
+            return !is.x(x);
+        },
+        is_string = is.s,
+        _ = $._,
+        extend = _.extend,
+        esc = _.x,
+        trim = _.trim,
+        edge = _.edge,
+        pattern = _.pattern,
+        format = _.format,
+        num = _.i;
 
-    editor.update(extend({
+    $.update(extend({
         tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
         states: {
             a: {},
@@ -25,7 +36,7 @@ TE.Textile = function(target, o) {
         },
         languages: {
             tools: {
-                sup: ['Footnote', editor.config.languages.tools.sub[1]]
+                sup: ['Footnote', $.config.languages.tools.sub[1]]
             },
             modals: {
                 a: {
@@ -46,53 +57,7 @@ TE.Textile = function(target, o) {
     }, o), 0);
 
     // define editor type
-    editor.type = 'Textile';
-
-    function is_set(x) {
-        return typeof x !== "undefined";
-    }
-
-    function is_node(x) {
-        return x instanceof HTMLElement;
-    }
-
-    function is_string(x) {
-        return typeof x === "string";
-    }
-
-    function is_function(x) {
-        return typeof x === "function";
-    }
-
-    function is_object(x) {
-        return typeof x === "object";
-    }
-
-    function is_number(x) {
-        return typeof x === "number";
-    }
-
-    function pattern(a, b) {
-        return new RegExp(a, b);
-    }
-
-    function trim(s) {
-        return s.replace(/^\s*|\s*$/g, "");
-    }
-
-    function trim_right(s) {
-        return s.replace(/\s+$/, "");
-    }
-
-    function edge(a, b, c) {
-        if (a < b) return b;
-        if (a > c) return c;
-        return a;
-    }
-
-    function num(x) {
-        return parseInt(x, 10);
-    }
+    $.type = 'Textile';
 
     function attr_title(s) {
         return force_i(s).replace(/<.*?>/g, "").replace(/"/g, '&#34;').replace(/'/g, '&#39;').replace(/\(/g, '&#40;').replace(/\)/g, '&#41;');
@@ -106,18 +71,18 @@ TE.Textile = function(target, o) {
         return trim(s.replace(/\s+/g, ' '));
     }
 
-    var config = editor.config,
+    var config = $.config,
         states = config.states,
         languages = config.languages,
         formats = config.formats,
         tab = config.tab,
         placeholders = languages.placeholders;
 
-    editor.mark = function(str, wrap, gap_1, gap_2) {
+    $.mark = function(str, wrap, gap_1, gap_2) {
         if (!is_object(str)) str = [str];
         if (!is_set(gap_1)) gap_1 = ' ';
         if (!is_set(gap_2)) gap_2 = "";
-        var s = editor[0]().$(),
+        var s = $[0]().$(),
             a = str[0] + gap_2,
             b = gap_2 + (is_set(str[1]) ? str[1] : str[0]),
             c = s.value,
@@ -129,11 +94,11 @@ TE.Textile = function(target, o) {
             before = s.before,
             after = s.after;
         if (!c) {
-            editor.insert(placeholders[""]);
+            $.insert(placeholders[""]);
         } else {
             gap_1 = false;
         }
-        return editor.toggle(
+        return $.toggle(
             // when ...
             wrap ? !m.test(c) : (!m_A.test(before) && !m_B.test(after)),
             // do ...
@@ -151,7 +116,7 @@ TE.Textile = function(target, o) {
     };
 
     function toggle_block(L) {
-        var s = editor.$(),
+        var s = $.$(),
             v = s.value,
             b = s.before,
             a = s.after,
@@ -159,7 +124,7 @@ TE.Textile = function(target, o) {
             dent = pattern('(^|\\n)' + esc_L + '(.*)$'),
             dent_s = pattern('^' + esc_L, 'gm'),
             placeholder = placeholders[""], B;
-        editor[0]();
+        $[0]();
         if (!v) {
             if (b && a) {
                 if (dent.test(b)) {
@@ -167,21 +132,21 @@ TE.Textile = function(target, o) {
                 } else {
                     B = b.replace(/(^|\n)([^\n]*)$/, '$1' + L + '$2');
                 }
-                editor.set(B + a).select(B.length);
+                $.set(B + a).select(B.length);
             } else {
-                editor.tidy('\n\n').insert(L, -1).insert(placeholder);
+                $.tidy('\n\n').insert(L, -1).insert(placeholder);
             }
         } else if (pattern(esc_L + '$').test(b)) {
-            editor.unwrap(L, "");
+            $.unwrap(L, "");
         } else {
-            editor.replace(/^[a-z\d]+\.\.?( |$)/gm, "").replace(/[\t ]*\n{2,}[\t ]*/g, '\n\n').tidy('\n\n');
+            $.replace(/^[a-z\d]+\.\.?( |$)/gm, "").replace(/[\t ]*\n{2,}[\t ]*/g, '\n\n').tidy('\n\n');
             if (dent_s.test(v)) {
-                editor.replace(dent_s, "");
+                $.replace(dent_s, "");
             } else {
-                editor.replace(/(^|\n{2})/g, '$1' + L);
+                $.replace(/(^|\n{2})/g, '$1' + L);
             }
         }
-        return editor[1](), false;
+        return $[1](), false;
     }
 
     extend(ui.tools, {
@@ -234,7 +199,7 @@ TE.Textile = function(target, o) {
                             b = s.before;
                             start = s.start;
                             end = s.end;
-                            $.set(b + s.value + trim_right(s.after) + n + '[' + (v || trim(x) || placeholders[""]) + ']' + state[v][0]).select(start, end);
+                            $.set(b + s.value + trim(s.after, 1) + n + '[' + (v || trim(x) || placeholders[""]) + ']' + state[v][0]).select(start, end);
                         }
                     } else {
                         href = v;
@@ -293,7 +258,7 @@ TE.Textile = function(target, o) {
                         i = g.indexOf(notes[index]) + 2;
                         $.select(i, i + v.length);
                     } else {
-                        $.trim("", !trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[' + v + ']').set(trim_right($.get()) + n + 'fn' + v + '. ').focus(true).insert(placeholders[""]);
+                        $.trim("", !trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[' + v + ']').set(trim($.get(), 1) + n + 'fn' + v + '. ').focus(true).insert(placeholders[""]);
                     }
                 }), false;
             }
@@ -591,6 +556,6 @@ TE.Textile = function(target, o) {
         }
     });
 
-    return editor.update({}, 0);
+    return $.update({}, 0);
 
 };

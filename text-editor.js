@@ -9,7 +9,7 @@
 
 (function(w, d) {
 
-    function case_lower(x) {
+    function cl(x) {
         return x.toLowerCase();
     }
 
@@ -21,7 +21,11 @@
         return typeof x === "string";
     }
 
-    function is_func(x) {
+    function is_number(x) {
+        return typeof +x === "number";
+    }
+
+    function is_function(x) {
         return typeof x === "function";
     }
 
@@ -29,8 +33,12 @@
         return typeof x === "object";
     }
 
+    function is_boolean(x) {
+        return typeof x === "boolean";
+    }
+
     function is_pattern(x) {
-        return x instanceof RegExp && x.source ? x.source : false;
+        return x instanceof RegExp ? (x.source || true) : false;
     }
 
     function is_dom(x) {
@@ -38,8 +46,8 @@
     }
 
     function edge(a, b, c) {
-        if (a < b) return b;
-        if (a > c) return c;
+        if (is_set(b) && a < b) return b;
+        if (is_set(c) && a > c) return c;
         return a;
     }
 
@@ -47,8 +55,17 @@
         return new RegExp(a, b);
     }
 
-    function num(x) {
-        return parseInt(x, 10);
+    function trim(s, x) {
+        if (x === -1) {
+            return s.replace(/^\s*/, ""); // trim left
+        } else if (x === 1) {
+            return s.replace(/\s*$/, ""); // trim right
+        }
+        return s.replace(/^\s*|\s*$/g, "") // trim left and right
+    }
+
+    function num(x, i) {
+        return parseInt(x, is_set(i) ? i : 10);
     }
 
     function camelize(s) {
@@ -207,7 +224,7 @@
 
         // alphabet
         for (var s = "", i = 65; i < 91; ++i) {
-            $.keys[i] = case_lower(String.fromCharCode(i));
+            $.keys[i] = cl(String.fromCharCode(i));
         }
 
         // add `KeyboardEvent.TE` property
@@ -218,21 +235,21 @@
                     keys_alias = $.keys_alias;
                 // custom `KeyboardEvent.key` for internal use
                 var t = this,
-                    k = t.key ? case_lower(t.key) : keys[t.which || t.keyCode];
+                    k = t.key ? cl(t.key) : keys[t.which || t.keyCode];
                 if (is_object(k)) {
                     k = t.shiftKey ? (k[1] || k[0]) : k[0];
                 }
-                k = case_lower(k);
+                k = cl(k);
                 function ret(x, y) {
                     if (!x || x === true) return y;
                     if (is_pattern(x)) return y && x.test(k);
-                    return x = case_lower(x), y && (keys_alias[x] || x) === k;
+                    return x = cl(x), y && (keys_alias[x] || x) === k;
                 }
                 return {
                     key: function(x) {
                         if (!x || x === true) return k;
                         if (is_pattern(x)) return x.test(k);
-                        return x = case_lower(x), (keys_alias[x] || x) === k;
+                        return x = cl(x), (keys_alias[x] || x) === k;
                     },
                     control: function(x) {
                         return ret(x, t.ctrlKey);
@@ -362,9 +379,9 @@
                 h = css(target, 'line-height'),
                 s = css(target, 'font-size');
             if (!is_set(i)) {
-                return Math.floor(current / h);
-            } else if (i === true || i === false) {
-                return $.scroll($.scroll() + (i === false ? -1 : 1));
+                return [Math.floor(current / h), h];
+            } else if (is_boolean(i)) {
+                return $.scroll($.scroll()[0] + (i === false ? -1 : 1));
             }
             return target.scrollTop = (h * i) + (h - s), $;
         };
@@ -462,7 +479,7 @@
         // match selection
         $.match = function(a, b) {
             var m = $.$().value.match(a);
-            return is_func(b) ? b(m || []) : !!m; // `match` method does not populate history data
+            return is_function(b) ? b(m || []) : !!m; // `match` method does not populate history data
         };
 
         // replace at selection
@@ -553,11 +570,11 @@
         };
 
         // indent
-        $.indent = function(B) {
+        $.indent = function(B, e) {
             var s = $.$();
             B = is_set(B) ? B : tab;
             if (s.length) {
-                return $.replace(/^(?!$)/gm, B);
+                return $.replace(pattern('^' + (e ? "" : '(?!$)'), 'gm'), B);
             }
             return $.insert(B, -1);
         };
@@ -583,9 +600,9 @@
                 a = s.before,
                 b = s.after,
                 c = s.value,
-                aa = O !== false ? a.replace(/\s*$/, O) : a,
-                bb = C !== false ? b.replace(/^\s*/, C) : b,
-                cc = c.replace(/^(\s*)([\s\S]*?)(\s*)$/g, (B !== false ? B : '$1') + '$2' + (E !== false ? E : '$3'));
+                aa = O !== false ? trim(a, 1) + O : a,
+                bb = C !== false ? trim(b, -1) + C : b,
+                cc = (B !== false ? B : "") + trim(c) + (E !== false ? E : "");
             return $.set(aa + cc + bb).select(aa.length, (aa + cc).length); // `trim` method does not populate history data
         };
 
@@ -599,7 +616,7 @@
             } else if (a === false) {
                 a = 1;
             }
-            return is_func(b[a]) ? (b[a]($, a), $) : $.select();
+            return is_function(b[a]) ? (b[a]($, a), $) : $.select();
         };
 
         // save state to history
@@ -668,6 +685,20 @@
             return F = 0, (x === false ? $ : $.record());
         };
 
+        // logic ...
+        $.is = {
+            b: is_boolean,
+            e: is_dom,
+            f: is_function,
+            i: is_number,
+            o: is_object,
+            r: is_pattern,
+            s: is_string,
+            x: function(x) {
+                return !is_set(x);
+            }
+        };
+
         // utility ...
         $._ = {
             // escape regex character(s)
@@ -683,9 +714,9 @@
             // extend object ...
             extend: extend,
             // iterate ...
-            each: function(a, fn, num) {
+            each: function(a, fn, n) {
                 var i, j, k;
-                if (num) {
+                if (n) {
                     for (i = 0, j = a.length; i < j; ++i) {
                         k = fn(a[i], i, a);
                         if (k === true) {
@@ -706,7 +737,12 @@
                 }
                 return a;
             },
-            css: css
+            // other(s) ...
+            trim: trim,
+            css: css,
+            edge: edge,
+            pattern: pattern,
+            i: num
         };
 
         // the target element

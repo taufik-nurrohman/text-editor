@@ -11,14 +11,25 @@ TE.Markdown = function(target, o) {
 
     var win = window,
         doc = document,
-        editor = new TE.HTML(target),
-        ui = editor.ui,
-        extend = editor._.extend,
-        esc = editor._.x,
-        format = editor._.format,
+        $ = new TE.HTML(target),
+        ui = $.ui,
+        is = $.is,
+        is_object = is.o,
+        is_set = function(x) {
+            return !is.x(x);
+        },
+        is_string = is.s,
+        _ = $._,
+        extend = _.extend,
+        esc = _.x,
+        pattern = _.pattern,
+        trim = _.trim,
+        edge = _.edge,
+        format = _.format,
+        num = _.i,
         TAB = '\t';
 
-    editor.update(extend({
+    $.update(extend({
         extra: 0, // enable **Markdown Extra** feature
         auto_p: 0, // disable automatic paragraph feature from `TE.HTML` by default
         auto_close: {
@@ -33,7 +44,7 @@ TE.Markdown = function(target, o) {
         },
         languages: {
             tools: {
-                sup: ['Footnote', editor.config.languages.tools.sub[1]]
+                sup: ['Footnote', $.config.languages.tools.sub[1]]
             },
             modals: {
                 a: {
@@ -71,53 +82,7 @@ TE.Markdown = function(target, o) {
     }, o), 0);
 
     // define editor type
-    editor.type = 'Markdown';
-
-    function is_set(x) {
-        return typeof x !== "undefined";
-    }
-
-    function is_node(x) {
-        return x instanceof HTMLElement;
-    }
-
-    function is_string(x) {
-        return typeof x === "string";
-    }
-
-    function is_function(x) {
-        return typeof x === "function";
-    }
-
-    function is_object(x) {
-        return typeof x === "object";
-    }
-
-    function is_number(x) {
-        return typeof x === "number";
-    }
-
-    function pattern(a, b) {
-        return new RegExp(a, b);
-    }
-
-    function trim(s) {
-        return s.replace(/^\s*|\s*$/g, "");
-    }
-
-    function trim_right(s) {
-        return s.replace(/\s+$/, "");
-    }
-
-    function edge(a, b, c) {
-        if (a < b) return b;
-        if (a > c) return c;
-        return a;
-    }
-
-    function num(x) {
-        return parseInt(x, 10);
-    }
+    $.type = 'Markdown';
 
     function attr_title(s) {
         return force_i(s).replace(/<.*?>/g, "").replace(/"/g, '&#34;').replace(/'/g, '&#39;').replace(/\(/g, '&#40;').replace(/\)/g, '&#41;');
@@ -131,7 +96,7 @@ TE.Markdown = function(target, o) {
         return trim(s.replace(/\s+/g, ' '));
     }
 
-    var config = editor.config,
+    var config = $.config,
         states = config.states,
         languages = config.languages,
         formats = config.formats,
@@ -145,11 +110,11 @@ TE.Markdown = function(target, o) {
         config['advance_pre,code'] = 0;
     }
 
-    editor.mark = function(str, wrap, gap_1, gap_2) {
+    $.mark = function(str, wrap, gap_1, gap_2) {
         if (!is_object(str)) str = [str];
         if (!is_set(gap_1)) gap_1 = ' ';
         if (!is_set(gap_2)) gap_2 = "";
-        var s = editor[0]().$(),
+        var s = $[0]().$(),
             a = str[0] + gap_2,
             b = gap_2 + (is_set(str[1]) ? str[1] : str[0]),
             c = s.value,
@@ -161,11 +126,11 @@ TE.Markdown = function(target, o) {
             before = s.before,
             after = s.after;
         if (!c) {
-            editor.insert(placeholders[""]);
+            $.insert(placeholders[""]);
         } else {
             gap_1 = false;
         }
-        return editor.toggle(
+        return $.toggle(
             // when ...
             wrap ? !m.test(c) : (!m_A.test(before) && !m_B.test(after)),
             // do ...
@@ -233,7 +198,7 @@ TE.Markdown = function(target, o) {
                             b = s.before;
                             start = s.start;
                             end = s.end;
-                            $.set(b + s.value + trim_right(s.after) + n + ' [' + (v || trim(x) || placeholders[""]) + ']: ' + (!implicit ? state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "") : "")).select(start, end);
+                            $.set(b + s.value + trim(s.after, 1) + n + ' [' + (v || trim(x) || placeholders[""]) + ']: ' + (!implicit ? state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "") : "")).select(start, end);
                             if (implicit) $.focus(true).insert(http);
                         }
                     } else {
@@ -262,7 +227,7 @@ TE.Markdown = function(target, o) {
                     i18n = languages.modals.img,
                     keep = /^\n* {0,3}\[.+?\]:/.test(a) ? ' ' : "",
                     A = trim(a),
-                    state, src, title, index, start, end;
+                    state, src, title, index, start, end, i;
                 // collect all embedded reference image(s)
                 for (i in images) {
                     i = ' ' + trim(images[i]).replace(/^\[|\]:$/g, "");
@@ -322,7 +287,7 @@ TE.Markdown = function(target, o) {
                         i = g.indexOf(notes[index]) + 3;
                         $.select(i, i + v.length);
                     } else {
-                        $.trim(trim(b) ? ' ' : "", !trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[^' + v + ']').set(trim_right($.get()) + n + ' [^' + v + ']: ').focus(true).insert(placeholders[""]);
+                        $.trim(trim(b) ? ' ' : "", !trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[^' + v + ']').set(trim($.get(), 1) + n + ' [^' + v + ']: ').focus(true).insert(placeholders[""]);
                     }
                 }), false;
             }
@@ -348,7 +313,7 @@ TE.Markdown = function(target, o) {
                 }
                 return $.record().ui.prompt(['abbr[title]', i18n.title], state[abbr] || i18n.placeholder, !state[x], function(e, $, v, w) {
                     v = attr_title(v);
-                    $[0]().set(trim_right($.get()) + (s.before || x ? n : "") + ' *[' + abbr + ']: ').focus(true).insert(v || w);
+                    $[0]().set(trim($.get(), 1) + (s.before || x ? n : "") + ' *[' + abbr + ']: ').focus(true).insert(v || w);
                     if (abbr === placeholders[""]) {
                         var a = $.$().start;
                         $.select(a - 3 - abbr.length, a - 3);
@@ -687,6 +652,6 @@ TE.Markdown = function(target, o) {
         }
     });
 
-    return editor.update({}, 0);
+    return $.update({}, 0);
 
 };
