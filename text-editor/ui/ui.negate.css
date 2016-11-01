@@ -27,7 +27,6 @@
   color:#aaa;
   position:relative;
 }
-.text-editor {border-width:0}
 .text-editor .block {
   display:block;
   width:100%;
@@ -140,8 +139,8 @@
   font-family:"Courier New",Courier,"Nimbus Mono L",Monospace;
 }
 .text-editor-body {
-  border:1px solid;
-  border-color:inherit;
+  border-width:1px 0;
+  border-style:solid;
   overflow:auto;
 }
 .text-editor-footer {
