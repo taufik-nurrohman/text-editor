@@ -1,6 +1,6 @@
 TE.each(function($) {
 
-    var syntax = !$.is('html'),
+    var syntax = $.is('html') === false,
         _u2026 = '\u2026',
         _u2013 = '\u2013';
 
