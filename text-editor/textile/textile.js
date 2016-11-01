@@ -1,13 +1,13 @@
 /*!
  * ==========================================================
- *  TEXTILE TEXT EDITOR PLUGIN 1.0.1
+ *  TEXTILE TEXT EDITOR PLUGIN 1.2.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
  * ----------------------------------------------------------
  */
 
-TE.Textile = function(target, o) {
+TE.Textile = TE.textile = function(target, o) {
 
     var win = window,
         doc = document,
@@ -57,7 +57,7 @@ TE.Textile = function(target, o) {
     }, o), 0);
 
     // define editor type
-    $.type = 'Textile';
+    $.type = 'textile';
 
     function attr_title(s) {
         return force_i(s).replace(/<.*?>/g, "").replace(/"/g, '&#34;').replace(/'/g, '&#39;').replace(/\(/g, '&#40;').replace(/\)/g, '&#41;');

@@ -495,6 +495,6 @@ Plugins
 
 ![HTML Text Editor](https://cloud.githubusercontent.com/assets/1669261/18806346/373d3bb4-8254-11e6-8634-ef5bdc0d955e.png)
 
- - [HTML Text Editor](https://rawgit.com/tovic/text-editor/master/TE.HTML/TE.HTML.html)
- - [Markdown Text Editor](https://rawgit.com/tovic/text-editor/master/TE.Markdown/TE.Markdown.html)
- - [Textile Text Editor](https://rawgit.com/tovic/text-editor/master/TE.Textile/TE.Textile.html)
+ - [HTML Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor/html/html.html)
+ - [Markdown Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor/markdown/markdown.html)
+ - [Textile Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor/textile/textile.html)

@@ -3,7 +3,7 @@ Markdown › Text Editor
 
 > Markdown text editor plugin.
 
-[View Demo](https://rawgit.com/tovic/text-editor/master/TE.Markdown/TE.Markdown.html)
+[View Demo](https://rawgit.com/tovic/text-editor/master/text-editor/markdown/markdown.html)
 
 ### CSS
 
@@ -20,8 +20,8 @@ Markdown › Text Editor
 ~~~ .html
 <script src="../text-editor.min.js"></script>
 <script src="../text-editor/ui/ui.min.js"></script>
-<script src="../TE.HTML/TE.HTML.min.js"></script>
-<script src="../TE.Markdown/TE.Markdown.min.js"></script>
+<script src="../text-editor/html/html.min.js"></script>
+<script src="../text-editor/markdown/markdown.min.js"></script>
 ~~~
 
 Instance

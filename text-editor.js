@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.5.4
+ *  TEXT EDITOR PLUGIN 2.5.5
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -107,7 +107,7 @@
     (function($) {
 
         // plugin version
-        $.version = '2.5.4';
+        $.version = '2.5.5';
 
         // collect all instance(s)
         $.__instance__ = {};
@@ -686,7 +686,11 @@
         };
 
         // logic ...
-        $.is = {
+        $.is = function(s, x) {
+            return cl($.type) === cl(s) ? $.type : (is_set(x) ? x : false);
+        };
+
+        var check = {
             b: is_boolean,
             e: is_dom,
             f: is_function,
@@ -697,7 +701,9 @@
             x: function(x) {
                 return !is_set(x);
             }
-        };
+        }, i;
+
+        for (i in check) $.is[i] = check[i];
 
         // utility ...
         $._ = {

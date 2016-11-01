@@ -3,7 +3,7 @@ HTML › Text Editor
 
 > HTML text editor plugin.
 
-[View Demo](https://rawgit.com/tovic/text-editor/master/TE.HTML/TE.HTML.html)
+[View Demo](https://rawgit.com/tovic/text-editor/master/text-editor/html/html.html)
 
 ### CSS
 
@@ -20,7 +20,7 @@ HTML › Text Editor
 ~~~ .html
 <script src="../text-editor.min.js"></script>
 <script src="../text-editor/ui/ui.min.js"></script>
-<script src="../TE.HTML/TE.HTML.min.js"></script>
+<script src="../text-editor/html/html.min.js"></script>
 ~~~
 
 Instance
