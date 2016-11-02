@@ -241,13 +241,13 @@
                 }
                 k = cl(k);
                 function ret(x, y) {
-                    if (!x || x === true) return y || k;
+                    if (!x || x === true) return k;
                     if (is_pattern(x)) return y && x.test(k);
                     return x = cl(x), y && (keys_alias[x] || x) === k;
                 }
                 return {
                     key: function(x) {
-                        return ret(x);
+                        return ret(x, 1);
                     },
                     control: function(x) {
                         return ret(x, t.ctrlKey);
@@ -604,7 +604,7 @@
                 b = s.after,
                 c = s.value,
                 aa = O !== false ? trim(a, 1) + O : a,
-                bb = C !== false ? trim(b, -1) + C : b,
+                bb = C !== false ? C + trim(b, -1) : b,
                 cc = (B !== false ? B : "") + trim(c) + (E !== false ? E : "");
             return $.set(aa + cc + bb).select(aa.length, (aa + cc).length); // `trim` method does not populate history data
         };

@@ -48,6 +48,16 @@ TE.prototype.ui = function(o) {
                 'spellcheck': 'false'
             },
             css: 'html,body{background:#fff;color:#000}',
+            union: {
+                unit: ['<', '>', '/'],
+                data: ['=', '"', '"', ' '],
+                __: ['<!--', '-->']
+            },
+            union_x: {
+                unit: ['\\<', '\\>', '\\/'],
+                data: ['\\=', '"', '"', '\\s'],
+                __: ['\\<\\!\\-\\-', '\\-\\-\\>']
+            },
             auto_tab: 1,
             auto_close: {
                 '"': '"',
@@ -276,8 +286,10 @@ TE.prototype.ui = function(o) {
         if (!is_set(gap_1)) gap_1 = ' ';
         if (!is_set(gap_2)) gap_2 = "";
         var s = $[0]().$(),
-            a = '<' + node + '>' + gap_2,
-            b = gap_2 + '</' + node.split(/\s+/)[0] + '>',
+            unit = config.union.unit,
+            esc_unit = config.union_x.unit,
+            a = (node ? unit[0] + node + unit[1] : "") + gap_2,
+            b = gap_2 + (node ? unit[0] + unit[2] + node.split(/\s+/)[0] + unit[1] : ""),
             A = esc(a),
             B = esc(b),
             m = pattern('^' + A + '([\\s\\S]*?)' + B + '$'),
@@ -297,7 +309,7 @@ TE.prototype.ui = function(o) {
             [
                 // first toggle
                 function($) {
-                    $.unwrap(a, b, 1).tidy(/<[^\/<>]+?>$/.test(before) ? "" : gap_1, /^<\/[^<>]+?>/.test(after) ? "" : gap_1).wrap(a, b, wrap)[1]();
+                    $.unwrap(a, b, 1).tidy(pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + esc_unit[2] + ']+?' + esc_unit[1] + '$').test(before) ? "" : gap_1, pattern('^' + esc_unit[0] + esc_unit[2] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1]).test(after) ? "" : gap_1).wrap(a, b, wrap)[1]();
                 },
                 // second toggle (the reset state)
                 function($) {
@@ -528,7 +540,8 @@ TE.prototype.ui = function(o) {
 
     function do_word_count() {
         if (!i18n_others._word || !i18n_others._words) return;
-        var v = (_content.value || "").replace(/<[^<>]+?>/g, ""),
+        var esc_unit = esc(config.union.unit),
+            v = (_content.value || "").replace(pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1], 'g'), ""),
             i = (v.match(/(\w+)/g) || []).length;
         content_set(_description_right, format(i18n_others['_word' + (i === 1 ? "" : 's')], [i]));
     }
