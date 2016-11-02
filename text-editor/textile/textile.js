@@ -1,13 +1,13 @@
 /*!
  * ==========================================================
- *  TEXTILE TEXT EDITOR PLUGIN 1.2.0
+ *  TEXTILE TEXT EDITOR PLUGIN 1.2.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
  * ----------------------------------------------------------
  */
 
-TE.Textile = TE.textile = function(target, o) {
+TE.Textile = function(target, o) {
 
     var win = window,
         doc = document,
@@ -26,7 +26,11 @@ TE.Textile = TE.textile = function(target, o) {
         edge = _.edge,
         pattern = _.pattern,
         format = _.format,
-        num = _.i;
+        num = _.i,
+        ul = '*',
+        ol = '#',
+        esc_ul = esc(ul),
+        esc_ol = esc(ol);
 
     $.update(extend({
         tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
@@ -50,14 +54,12 @@ TE.Textile = TE.textile = function(target, o) {
         formats: {
             b: ['*', '**'], // first array will be used by default
             i: ['_', '__'], // --ibid
-            ul: ['*'],
-            ol: ['#'],
             hr: ['---', '***'] // --ibid
         }
     }, o), 0);
 
     // define editor type
-    $.type = 'textile';
+    $.type = 'Textile';
 
     function attr_title(s) {
         return force_i(s).replace(/<.*?>/g, "").replace(/"/g, '&#34;').replace(/'/g, '&#39;').replace(/\(/g, '&#40;').replace(/\)/g, '&#41;');
@@ -342,10 +344,6 @@ TE.Textile = TE.textile = function(target, o) {
                     v = s.value,
                     b = s.before,
                     a = s.after,
-                    ul = formats.ul[0],
-                    ol = formats.ol[0],
-                    esc_ul = esc(ul),
-                    esc_ol = esc(ol),
                     bullet = pattern('(^|\\n)([\\t ]*)' + esc_ul + ' (.*)$'),
                     bullet_s = pattern('^(.*)' + esc_ul + ' ', 'gm'),
                     list = pattern('(^|\\n)([\\t ]*)' + esc_ol + ' (.*)$'),
@@ -390,10 +388,6 @@ TE.Textile = TE.textile = function(target, o) {
                     v = s.value,
                     b = s.before,
                     a = s.after,
-                    ul = formats.ul[0],
-                    ol = formats.ol[0],
-                    esc_ul = esc(ul),
-                    esc_ol = esc(ol),
                     bullet = pattern('(^|\\n)([\\t ]*)' + esc_ul + ' (.*)$'),
                     bullet_s = pattern('^(.*)' + esc_ul + ' ', 'gm'),
                     list = pattern('(^|\\n)([\\t ]*)' + esc_ol + ' (.*)$'),
@@ -495,10 +489,6 @@ TE.Textile = TE.textile = function(target, o) {
         'shift+enter': 0,
         'enter': function(e, $) {
             var s = $.$(),
-                ul = formats.ul[0],
-                ol = formats.ol[0],
-                esc_ul = esc(ul),
-                esc_ol = esc(ol),
                 regex = '((?:' + esc_ul + '|' + esc_ol + ')+ )',
                 match = pattern('^' + regex + '.*$', 'gm').exec(s.before.split('\n').pop());
             if (match) {
@@ -512,10 +502,6 @@ TE.Textile = TE.textile = function(target, o) {
             var s = $.$(),
                 v = s.value,
                 b = s.before,
-                ul = formats.ul[0],
-                ol = formats.ol[0],
-                esc_ul = esc(ul),
-                esc_ol = esc(ol),
                 bullets = '(^|\\n)(' + esc_ul + '){2,}',
                 lists = '(^|\\n)(' + esc_ol + '){2,}';
             if (v === placeholders[""]) {
@@ -535,10 +521,6 @@ TE.Textile = TE.textile = function(target, o) {
             var s = $.$(),
                 v = s.value,
                 b = s.before,
-                ul = formats.ul[0],
-                ol = formats.ol[0],
-                esc_ul = esc(ul),
-                esc_ol = esc(ol),
                 bullets = '(^|\\n)(' + esc_ul + ')+',
                 lists = '(^|\\n)(' + esc_ol + ')+';
             if (v === placeholders[""]) {

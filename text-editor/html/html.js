@@ -1,13 +1,13 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.2.0
+ *  HTML TEXT EDITOR PLUGIN 1.2.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
  * ----------------------------------------------------------
  */
 
-TE.HTML = TE.html = function(target, o) {
+TE.HTML = function(target, o) {
 
     var _u2013 = '\u2013', // N-dash
         _u2026 = '\u2026', // horizontal ellipsis
@@ -140,7 +140,7 @@ TE.HTML = TE.html = function(target, o) {
         tree_parent;
 
     // define editor type
-    $.type = 'html';
+    $.type = 'HTML';
 
     function get_o(s) {
         return s.split(/\s+/)[0];

@@ -241,15 +241,13 @@
                 }
                 k = cl(k);
                 function ret(x, y) {
-                    if (!x || x === true) return y;
+                    if (!x || x === true) return y || k;
                     if (is_pattern(x)) return y && x.test(k);
                     return x = cl(x), y && (keys_alias[x] || x) === k;
                 }
                 return {
                     key: function(x) {
-                        if (!x || x === true) return k;
-                        if (is_pattern(x)) return x.test(k);
-                        return x = cl(x), (keys_alias[x] || x) === k;
+                        return ret(x);
                     },
                     control: function(x) {
                         return ret(x, t.ctrlKey);
@@ -277,21 +275,26 @@
             S = {}, // storage
             div = d.createElement('div'),
             span = d.createElement('span'),
-            tab = '\t',
-            scroll_width = (function() {
-                var x = d.createElement('div'),
-                    y = d.body,
-                    z = x.style, w;
-                y.appendChild(x);
-                z.position = 'absolute';
-                z.top = z.left = '-9999px';
-                z.width = z.height = '100px';
-                z.overflow = 'scroll';
-                z.visibility = 'hidden';
-                w = x.offsetWidth - x.clientWidth;
-                y.removeChild(x);
-                return w;
-            })();
+            tab = '\t';
+    
+        // return a new instance if `TE` was called without the `new` operator
+        if (!($ instanceof TE)) {
+            return new TE(target);
+        }
+    
+        var scroll_width = (function() {
+            var x = d.createElement('div'),
+                y = d.body,
+                z = x.style, w;
+            y.appendChild(x);
+            z.position = 'absolute';
+            z.top = z.left = '-9999px';
+            z.width = z.height = '100px';
+            z.overflow = 'scroll';
+            z.visibility = 'hidden';
+            w = x.offsetWidth - x.clientWidth;
+            return y.removeChild(x), w;
+        })();
 
         $.type = ""; // default editor type
         $.x = '!$^*()-=+[]{}\\|:<>,./?'; // character(s) to escape
@@ -687,7 +690,11 @@
 
         // logic ...
         $.is = function(s, x) {
-            return cl($.type) === cl(s) ? $.type : (is_set(x) ? x : false);
+            x = is_set(x) ? x : false;
+            if (is_pattern(s)) {
+                return s.test($.type) ? $.type : x;
+            }
+            return $.type === s ? $.type : x;
         };
 
         var check = {

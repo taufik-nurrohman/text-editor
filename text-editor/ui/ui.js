@@ -255,7 +255,7 @@ TE.prototype.ui = function(o) {
         return a;
     }
 
-    // add `ui` method(s) to `TE`
+    // add `ui` method to `TE`
     var ui = $.ui = {};
 
     // add `tidy` method to `TE`

@@ -1,13 +1,13 @@
 /*!
  * ==========================================================
- *  MARKDOWN TEXT EDITOR PLUGIN 1.2.0
+ *  MARKDOWN TEXT EDITOR PLUGIN 1.2.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
  * ----------------------------------------------------------
  */
 
-TE.Markdown = TE.markdown = function(target, o) {
+TE.Markdown = function(target, o) {
 
     var win = window,
         doc = document,
@@ -82,7 +82,7 @@ TE.Markdown = TE.markdown = function(target, o) {
     }, o), 0);
 
     // define editor type
-    $.type = 'markdown';
+    $.type = 'Markdown';
 
     function attr_title(s) {
         return force_i(s).replace(/<.*?>/g, "").replace(/"/g, '&#34;').replace(/'/g, '&#39;').replace(/\(/g, '&#40;').replace(/\)/g, '&#41;');
