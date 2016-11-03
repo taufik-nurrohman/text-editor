@@ -11,7 +11,54 @@ TE.Markdown = function(target, o) {
 
     var win = window,
         doc = document,
-        $ = new TE.HTML(target),
+        $ = new TE.HTML(target, {
+            extra: 0, // enable **Markdown Extra** feature
+            auto_p: 0, // disable automatic paragraph feature from `TE.HTML` by default
+            auto_close: {
+                '`': '`'
+            },
+            tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
+            states: {
+                a: {
+                    "": [""] // implicit link name shortcut (do not remove!)
+                },
+                img: {}
+            },
+            languages: {
+                modals: {
+                    a: {
+                        title: ['Link URL/Reference ID']
+                    },
+                    img: {
+                        title: ['Image URL/Reference ID']
+                    },
+                    sup: {
+                        title: 'Footnote ID'
+                    }
+                }
+            },
+            advance_br: 1, // press `⇧+↵` to do a hard break
+            'advance_h1,h2': 1, // enable **SEText** header style
+            'advance_pre,code': 1, // replace with `true` or `%1 .foo` to enable fenced code block syntax in **Markdown Extra**
+            'close_h1,h2,h3,h4,h5,h6': 0, // replace with `true` for `### heading 3 ###`
+            close_tr: 0, // enable closed table pipe
+            formats: {
+                b: ['**', '__'], // first array will be used by default
+                i: ['_', '*'], // --ibid
+                s: '~~',
+                h1: ['=', '#'], // --ibid
+                h2: ['-', '##'], // --ibid
+                h3: '###',
+                h4: '####',
+                h5: '#####',
+                h6: '######',
+                blockquote: '>',
+                code: ['`', '~'], // --ibid
+                ul: ['-', '+', '*'], // --ibid
+                ol: ['%1.'],
+                hr: ['---', '+++', '***'] // --ibid
+            }
+        }),
         ui = $.ui,
         is = $.is,
         is_object = is.o,
@@ -30,70 +77,40 @@ TE.Markdown = function(target, o) {
         TAB = '\t';
 
     $.update(extend({
-        extra: 0, // enable **Markdown Extra** feature
-        auto_p: 0, // disable automatic paragraph feature from `TE.HTML` by default
-        auto_close: {
-            '`': '`'
-        },
-        tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
-        states: {
-            a: {
-                "": [""] // implicit link name shortcut (do not remove!)
-            },
-            img: {}
-        },
         languages: {
             tools: {
                 sup: ['Footnote', $.config.languages.tools.sub[1]]
-            },
-            modals: {
-                a: {
-                    title: ['Link URL/Reference ID']
-                },
-                img: {
-                    title: ['Image URL/Reference ID']
-                },
-                sup: {
-                    title: 'Footnote ID'
-                }
             }
-        },
-        advance_br: 1, // press `⇧+↵` to do a hard break
-        'advance_h1,h2': 1, // enable **SEText** header style
-        'advance_pre,code': 1, // replace with `true` or `%1 .foo` to enable fenced code block syntax in **Markdown Extra**
-        'close_h1,h2,h3,h4,h5,h6': 0, // replace with `true` for `### heading 3 ###`
-        close_tr: 0, // enable closed table pipe
-        formats: {
-            b: ['**', '__'], // first array will be used by default
-            i: ['_', '*'], // --ibid
-            s: '~~',
-            h1: ['=', '#'], // --ibid
-            h2: ['-', '##'], // --ibid
-            h3: '###',
-            h4: '####',
-            h5: '#####',
-            h6: '######',
-            blockquote: '>',
-            code: ['`', '~'], // --ibid
-            ul: ['-', '+', '*'], // --ibid
-            ol: ['%1.'],
-            hr: ['---', '+++', '***'] // --ibid
         }
     }, o), 0);
 
     // define editor type
     $.type = 'Markdown';
 
+    function force_i(s) {
+        return trim(s.replace(/\s+/g, ' '));
+    }
+
     function attr_title(s) {
-        return force_i(s).replace(/<.*?>/g, "").replace(/"/g, '&#34;').replace(/'/g, '&#39;').replace(/\(/g, '&#40;').replace(/\)/g, '&#41;');
+        return force_i(s)
+            .replace(/<.*?>/g, "")
+            .replace(/"/g, '&#34;')
+            .replace(/'/g, '&#39;')
+            .replace(/\(/g, '&#40;')
+            .replace(/\)/g, '&#41;')
+            .replace(/\[/g, '&#91;')
+            .replace(/\]/g, '&#93;');
     }
 
     function attr_url(s) {
-        return force_i(s).replace(/<.*?>/g, "").replace(/\s/g, '%20').replace(/"/g, '%22').replace(/\(/g, '%28').replace(/\)/g, '%29');
-    }
-
-    function force_i(s) {
-        return trim(s.replace(/\s+/g, ' '));
+        return force_i(s)
+            .replace(/<.*?>/g, "")
+            .replace(/\s/g, '%20')
+            .replace(/"/g, '%22')
+            .replace(/\(/g, '%28')
+            .replace(/\)/g, '%29')
+            .replace(/\[/g, '%5B')
+            .replace(/\]/g, '%5D');
     }
 
     var config = $.config,
@@ -198,7 +215,7 @@ TE.Markdown = function(target, o) {
                             b = s.before;
                             start = s.start;
                             end = s.end;
-                            $.set(b + s.value + trim(s.after, 1) + n + ' [' + (v || trim(x) || placeholders[""]) + ']: ' + (!implicit ? state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "") : "")).select(start, end);
+                            $.set(b + x + trim(s.after, 1) + n + ' [' + (v || trim(x) || placeholders[""]) + ']: ' + (!implicit ? state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "") : "")).select(start, end);
                             if (implicit) $.focus(true).insert(http);
                         }
                     } else {
@@ -218,7 +235,8 @@ TE.Markdown = function(target, o) {
         img: {
             click: function(e, $) {
                 var s = $.$(),
-                    alt = s.value,
+                    x = s.value,
+                    alt = x,
                     b = s.before,
                     a = s.after,
                     g = $.get(),
@@ -251,7 +269,7 @@ TE.Markdown = function(target, o) {
                             b = s.before;
                             start = s.start;
                             end = s.end;
-                            $.set(b + s.value + s.after + (A ? n : "") + ' [' + v + ']: ' + state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "")).select(start, end);
+                            $.set(b + x + s.after + (A ? n : "") + ' [' + v + ']: ' + state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "")).select(start, end);
                         }
                     } else {
                         $.blur().ui.prompt(['img[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {

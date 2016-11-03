@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BBCODE TEXT EDITOR PLUGIN 0.0.1
+ *  BBCODE TEXT EDITOR PLUGIN 0.0.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -11,49 +11,36 @@ TE.BBCode = function(target, o) {
 
     var win = window,
         doc = document,
-        $ = new TE.HTML(target),
+        $ = new TE.HTML(target, {
+            auto_p: 0, // disable automatic paragraph feature from `TE.HTML` by default
+            advance_table: 0, // disable advance table feature from `TE.HTML` by default
+            tools: 'b i s | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | undo redo',
+            union: {
+                unit: ['\u005B', '\u005D']
+            },
+            union_x: {
+                unit: ['\\u005B', '\\u005D']
+            },
+            formats: {
+                b: 'b',
+                i: 'i',
+                u: 'u',
+                s: 's',
+                a: 'url',
+                p: "",
+                blockquote: 'quote',
+                q: 'quote',
+                pre: 'code',
+                code: 'code',
+                caption: ""
+            }
+        }),
         ui = $.ui,
         _ = $._,
         extend = _.extend,
-        each = _.each,
-        esc = _.x,
-        trim = _.trim,
-        edge = _.edge,
-        pattern = _.pattern,
-        is = $.is,
-        is_set = function(x) {
-            return !is.x(x);
-        };
+        trim = _.trim;
 
-    $.update(extend({
-        auto_p: 0, // disable automatic paragraph feature from `TE.HTML` by default
-        advance_table: 0, // disable advance table feature from `TE.HTML` by default
-        tools: 'b i s | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | undo redo',
-        union: {
-            unit: ['[', ']']
-        },
-        union_x: {
-            unit: ['\\\\\\[', '\\\\\\]']
-        },
-        formats: {
-            b: 'b',
-            i: 'i',
-            u: 'u',
-            s: 's',
-            a: 'url',
-            h1: 'h1',
-            h2: 'h2',
-            h3: 'h3',
-            h4: 'h4',
-            h5: 'h5',
-            h6: 'h6',
-            blockquote: 'quote',
-            q: 'quote',
-            pre: 'code',
-            code: 'code',
-            caption: ""
-        }
-    }, o), 0);
+    $.update(o, 0);
 
     // define editor type
     $.type = 'BBCode';
@@ -62,16 +49,30 @@ TE.BBCode = function(target, o) {
         return s.split(/\s+|=/)[0];
     }
 
+    function force_i(s) {
+        return trim(s.replace(/\s+/g, ' '));
+    }
+
     function attr_title(s) {
-        return force_i(s).replace(/\[.*?\]/g, "").replace(/"/g, '&#34;').replace(/'/g, '&#39;').replace(/\(/g, '&#40;').replace(/\)/g, '&#41;');
+        return force_i(s)
+            .replace(/(<.*?>)|(\[.*?\])/g, "")
+            .replace(/"/g, '&#34;')
+            .replace(/'/g, '&#39;')
+            .replace(/\(/g, '&#40;')
+            .replace(/\)/g, '&#41;')
+            .replace(/\[/g, '&#91;')
+            .replace(/\]/g, '&#93;');
     }
 
     function attr_url(s) {
-        return force_i(s).replace(/\[.*?\]/g, "").replace(/\s/g, '%20').replace(/"/g, '%22').replace(/\(/g, '%28').replace(/\)/g, '%29');
-    }
-
-    function force_i(s) {
-        return trim(s.replace(/\s+/g, ' '));
+        return force_i(s)
+            .replace(/(<.*?>)|(\[.*?\])/g, "")
+            .replace(/\s/g, '%20')
+            .replace(/"/g, '%22')
+            .replace(/\(/g, '%28')
+            .replace(/\)/g, '%29')
+            .replace(/\[/g, '%5B')
+            .replace(/\]/g, '%5D');
     }
 
     var config = $.config,

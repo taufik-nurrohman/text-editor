@@ -11,7 +11,24 @@ TE.Textile = function(target, o) {
 
     var win = window,
         doc = document,
-        $ = new TE.HTML(target),
+        $ = new TE.HTML(target, {
+            tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
+            languages: {
+                modals: {
+                    a: {
+                        title: ['Link URL/Reference ID']
+                    },
+                    sup: {
+                        title: 'Footnote ID'
+                    }
+                }
+            },
+            formats: {
+                b: ['*', '**'], // first array will be used by default
+                i: ['_', '__'], // --ibid
+                hr: ['---', '***'] // --ibid
+            }
+        }),
         ui = $.ui,
         is = $.is,
         is_object = is.o,
@@ -33,44 +50,36 @@ TE.Textile = function(target, o) {
         esc_ol = esc(ol);
 
     $.update(extend({
-        tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
-        states: {
-            a: {},
-            img: {}
-        },
         languages: {
             tools: {
                 sup: ['Footnote', $.config.languages.tools.sub[1]]
-            },
-            modals: {
-                a: {
-                    title: ['Link URL/Reference ID']
-                },
-                sup: {
-                    title: 'Footnote ID'
-                }
             }
-        },
-        formats: {
-            b: ['*', '**'], // first array will be used by default
-            i: ['_', '__'], // --ibid
-            hr: ['---', '***'] // --ibid
         }
     }, o), 0);
 
     // define editor type
     $.type = 'Textile';
 
+    function force_i(s) {
+        return trim(s.replace(/\s+/g, ' '));
+    }
+
     function attr_title(s) {
-        return force_i(s).replace(/<.*?>/g, "").replace(/"/g, '&#34;').replace(/'/g, '&#39;').replace(/\(/g, '&#40;').replace(/\)/g, '&#41;');
+        return force_i(s)
+            .replace(/<.*?>/g, "")
+            .replace(/"/g, '&#34;')
+            .replace(/'/g, '&#39;')
+            .replace(/\(/g, '&#40;')
+            .replace(/\)/g, '&#41;');
     }
 
     function attr_url(s) {
-        return force_i(s).replace(/<.*?>/g, "").replace(/\s/g, '%20').replace(/"/g, '%22').replace(/\(/g, '%28').replace(/\)/g, '%29');
-    }
-
-    function force_i(s) {
-        return trim(s.replace(/\s+/g, ' '));
+        return force_i(s)
+            .replace(/<.*?>/g, "")
+            .replace(/\s/g, '%20')
+            .replace(/"/g, '%22')
+            .replace(/\(/g, '%28')
+            .replace(/\)/g, '%29');
     }
 
     var config = $.config,

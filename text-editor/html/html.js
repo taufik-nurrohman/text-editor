@@ -30,7 +30,6 @@ TE.HTML = function(target, o) {
         pattern = _.pattern,
         num = _.i,
         ui = $.ui(extend({
-            suffix: '%2',
             auto_encode_html: 1,
             auto_p: 1,
             tools: 'clear | b i u s | sub sup | abbr | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
@@ -135,7 +134,7 @@ TE.HTML = function(target, o) {
         data = config.union.data,
         esc_unit = config.union_x.unit,
         esc_data = config.union_x.data,
-        suffix = format(config.suffix, unit),
+        suffix = config.suffix,
         attrs = '(?:' + esc_data[3] + '[^' + esc_unit[0] + esc_unit[1] + ']*?)?',
         attrs_capture = '(|' + esc_data[3] + '[^' + esc_unit[0] + esc_unit[1] + ']*?)',
         content = '([\\s\\S]*?)',
@@ -207,16 +206,26 @@ TE.HTML = function(target, o) {
         return $;
     }
 
+    function force_i(s) {
+        return trim(s.replace(/\s+/g, ' '));
+    }
+
     function attr_title(s) {
-        return force_i(s).replace(pattern(esc_unit[0] + '.*?' + esc_unit[1], 'g'), "").replace(/"/g, '&#34;').replace(/'/g, '&#39;').replace(/\(/g, '&#40;').replace(/\)/g, '&#41;');
+        return force_i(s)
+            .replace(pattern(esc_unit[0] + '.*?' + esc_unit[1], 'g'), "")
+            .replace(/"/g, '&#34;')
+            .replace(/'/g, '&#39;')
+            .replace(/\(/g, '&#40;')
+            .replace(/\)/g, '&#41;');
     }
 
     function attr_url(s) {
-        return force_i(s).replace(pattern(esc_unit[0] + '.*?' + esc_unit[1], 'g'), "").replace(/\s/g, '%20').replace(/"/g, '%22').replace(/\(/g, '%28').replace(/\)/g, '%29');
-    }
-
-    function force_i(s) {
-        return trim(s.replace(/\s+/g, ' '));
+        return force_i(s)
+            .replace(pattern(esc_unit[0] + '.*?' + esc_unit[1], 'g'), "")
+            .replace(/\s/g, '%20')
+            .replace(/"/g, '%22')
+            .replace(/\(/g, '%28')
+            .replace(/\)/g, '%29');
     }
 
     extend(ui.tools, {

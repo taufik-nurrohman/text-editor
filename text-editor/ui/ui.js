@@ -49,15 +49,14 @@ TE.prototype.ui = function(o) {
             },
             css: 'html,body{background:#fff;color:#000}',
             union: {
-                unit: ['<', '>', '/'],
-                data: ['=', '"', '"', ' '],
-                __: ['<!--', '-->']
+                unit: ['\u003C', '\u003E', '\u002F'],
+                data: ['\u003D', '\u0022', '\u0022', '\u0020']
             },
             union_x: {
-                unit: ['\\<', '\\>', '\\/'],
-                data: ['\\=', '"', '"', '\\s'],
-                __: ['\\<\\!\\-\\-', '\\-\\-\\>']
+                unit: ['\\u003C', '\\u003E', '\\u002F'],
+                data: ['\\u003D', '\\u0022', '\\u0022', '\\u0020']
             },
+            suffix: 0,
             auto_tab: 1,
             auto_close: {
                 '"': '"',
@@ -118,6 +117,8 @@ TE.prototype.ui = function(o) {
         tab = config.tab,
         auto_tab = config.auto_tab,
         auto_close = config.auto_close,
+        unit = config.union.unit,
+        esc_unit = config.union_x.unit,
         data_tool_id = 'data-tool-id';
 
     function hook_set(ev, fn, id) {
@@ -286,8 +287,6 @@ TE.prototype.ui = function(o) {
         if (!is_set(gap_1)) gap_1 = ' ';
         if (!is_set(gap_2)) gap_2 = "";
         var s = $[0]().$(),
-            unit = config.union.unit,
-            esc_unit = config.union_x.unit,
             a = (node ? unit[0] + node + unit[1] : "") + gap_2,
             b = gap_2 + (node ? unit[0] + unit[2] + node.split(/\s+/)[0] + unit[1] : ""),
             A = esc(a),
@@ -343,6 +342,10 @@ TE.prototype.ui = function(o) {
         _p = 0,
         _drop_target = 0,
         _button, _icon;
+
+    if (!config.suffix) {
+        config.suffix = unit[1];
+    }
 
     function do_click_preview(e) {
         var v = $.get(),
