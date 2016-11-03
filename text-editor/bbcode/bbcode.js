@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BBCODE TEXT EDITOR PLUGIN 0.0.2
+ *  BBCODE TEXT EDITOR PLUGIN 0.0.3
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -15,12 +15,14 @@ TE.BBCode = function(target, o) {
             auto_p: 0, // disable automatic paragraph feature from `TE.HTML` by default
             advance_table: 0, // disable advance table feature from `TE.HTML` by default
             tools: 'b i s | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | undo redo',
-            union: {
-                unit: ['\u005B', '\u005D']
-            },
-            union_x: {
-                unit: ['\\u005B', '\\u005D']
-            },
+            unit: [
+                [
+                    ['\u005B', '\u005D']
+                ],
+                [
+                    ['\\u005B', '\\u005D']
+                ]
+            ],
             formats: {
                 b: 'b',
                 i: 'i',
@@ -38,41 +40,24 @@ TE.BBCode = function(target, o) {
         ui = $.ui,
         _ = $._,
         extend = _.extend,
-        trim = _.trim;
+        trim = _.trim,
+        replace = _.replace;
 
     $.update(o, 0);
 
     // define editor type
     $.type = 'BBCode';
 
-    function get_o(s) {
-        return s.split(/\s+|=/)[0];
-    }
-
     function force_i(s) {
         return trim(s.replace(/\s+/g, ' '));
     }
 
     function attr_title(s) {
-        return force_i(s)
-            .replace(/(<.*?>)|(\[.*?\])/g, "")
-            .replace(/"/g, '&#34;')
-            .replace(/'/g, '&#39;')
-            .replace(/\(/g, '&#40;')
-            .replace(/\)/g, '&#41;')
-            .replace(/\[/g, '&#91;')
-            .replace(/\]/g, '&#93;');
+        return replace(force_i(s), [/(<.*?>)|(\[.*?\])/g, '"', "'", '(', ')', '[', ']'], ["", '&#34;', '&#39;', '&#40;', '&#41;', '&#91;', '&#93;']);
     }
 
     function attr_url(s) {
-        return force_i(s)
-            .replace(/(<.*?>)|(\[.*?\])/g, "")
-            .replace(/\s/g, '%20')
-            .replace(/"/g, '%22')
-            .replace(/\(/g, '%28')
-            .replace(/\)/g, '%29')
-            .replace(/\[/g, '%5B')
-            .replace(/\]/g, '%5D');
+        return replace(force_i(s), [/(<.*?>)|(\[.*?\])/g, /\s/g, '"', '(', ')', '[', ']'], ["", '%20', '%22', '%28', '%29', '%5B', '%5D']);
     }
 
     var config = $.config,
@@ -92,7 +77,7 @@ TE.BBCode = function(target, o) {
                     return $.format(a), false;
                 }
                 return $.record().ui.prompt(['a[href]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
-                    $.format(a + '=' + attr_url(v));
+                    $.format([a + '=' + attr_url(v), a]);
                 }), false;
             }
         },
@@ -102,7 +87,7 @@ TE.BBCode = function(target, o) {
                     i18n = languages.modals.img;
                 if (!$.$().length) {
                     return $.record().ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
-                        $[0]().insert(attr_url(v)).format(img)[1]();
+                        $[0]().format(img).insert(attr_url(v))[1]();
                     }), false;
                 }
                 return $.format(img), false;

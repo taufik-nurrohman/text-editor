@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  MARKDOWN TEXT EDITOR PLUGIN 1.2.1
+ *  MARKDOWN TEXT EDITOR PLUGIN 1.2.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -70,6 +70,7 @@ TE.Markdown = function(target, o) {
         extend = _.extend,
         esc = _.x,
         pattern = _.pattern,
+        replace = _.replace,
         trim = _.trim,
         edge = _.edge,
         format = _.format,
@@ -92,25 +93,11 @@ TE.Markdown = function(target, o) {
     }
 
     function attr_title(s) {
-        return force_i(s)
-            .replace(/<.*?>/g, "")
-            .replace(/"/g, '&#34;')
-            .replace(/'/g, '&#39;')
-            .replace(/\(/g, '&#40;')
-            .replace(/\)/g, '&#41;')
-            .replace(/\[/g, '&#91;')
-            .replace(/\]/g, '&#93;');
+        return replace(force_i(s), [/<.*?>/g, '"', "'", '(', ')', '[', ']'], ["", '&#34;', '&#39;', '&#40;', '&#41;', '&#91;', '&#93;']);
     }
 
     function attr_url(s) {
-        return force_i(s)
-            .replace(/<.*?>/g, "")
-            .replace(/\s/g, '%20')
-            .replace(/"/g, '%22')
-            .replace(/\(/g, '%28')
-            .replace(/\)/g, '%29')
-            .replace(/\[/g, '%5B')
-            .replace(/\]/g, '%5D');
+        return replace(force_i(s), [/<.*?>/g, /\s/g, '"', '(', ')', '[', ']'], ["", '%20', '%22', '%28', '%29', '%5B', '%5D']);
     }
 
     var config = $.config,

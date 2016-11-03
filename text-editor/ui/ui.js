@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.2.3
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.2.4
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -30,6 +30,7 @@ TE.prototype.ui = function(o) {
         is_function = is.f,
         is_number = is.i,
         is_object = is.o,
+        is_pattern = is.r,
         is_string = is.s,
         is_set = function(x) {
             return !is.x(x);
@@ -48,14 +49,16 @@ TE.prototype.ui = function(o) {
                 'spellcheck': 'false'
             },
             css: 'html,body{background:#fff;color:#000}',
-            union: {
-                unit: ['\u003C', '\u003E', '\u002F'],
-                data: ['\u003D', '\u0022', '\u0022', '\u0020']
-            },
-            union_x: {
-                unit: ['\\u003C', '\\u003E', '\\u002F'],
-                data: ['\\u003D', '\\u0022', '\\u0022', '\\u0020']
-            },
+            unit: [
+                [
+                    ['\u003C', '\u003E', '\u002F'],
+                    ['\u003D', '\u0022', '\u0022', '\u0020']
+                ],
+                [
+                    ['\\u003C', '\\u003E', '\\u002F'],
+                    ['\\u003D', '\\u0022', '\\u0022', '\\u0020']
+                ]
+            ],
             suffix: 0,
             auto_tab: 1,
             auto_close: {
@@ -117,8 +120,8 @@ TE.prototype.ui = function(o) {
         tab = config.tab,
         auto_tab = config.auto_tab,
         auto_close = config.auto_close,
-        unit = config.union.unit,
-        esc_unit = config.union_x.unit,
+        unit = config.unit[0][0],
+        esc_unit = config.unit[1][0],
         data_tool_id = 'data-tool-id';
 
     function hook_set(ev, fn, id) {
@@ -214,6 +217,14 @@ TE.prototype.ui = function(o) {
         return clearTimeout(timer_set_fn);
     }
 
+    function sanitize(s, from, to) {
+        for (var i = 0, j = from.length, k; i < j; ++i) {
+            k = from[i];
+            s = s.replace(is_pattern(k) ? k : pattern(esc(k), 'g'), (to && to[i]) || "");
+        }
+        return s;
+    }
+
     function format(s, data) {
         return s.replace(/%(\d+)/g, function(a, b) {
             --b;
@@ -223,12 +234,7 @@ TE.prototype.ui = function(o) {
 
     function slug(s) {
         // exclude ` ` and `/`
-        return trim(s
-            .toLowerCase()
-            .replace(/[^ \/a-z\d-]/g, '-')
-            .replace(/([ -])+/g, '$1')
-            .replace(/^-|-$/g, "")
-        );
+        return trim(sanitize(s, [/[^ \/a-z\d-]/g, /([ -])+/g, /^-|-$/g], ['-', '$1', ""]));
     }
 
     function point(node, e) {
@@ -284,11 +290,12 @@ TE.prototype.ui = function(o) {
 
     // add `format` method to `TE`
     $.format = function(node, wrap, gap_1, gap_2) {
+        if (!is_object(node)) node = [node];
         if (!is_set(gap_1)) gap_1 = ' ';
         if (!is_set(gap_2)) gap_2 = "";
         var s = $[0]().$(),
-            a = (node ? unit[0] + node + unit[1] : "") + gap_2,
-            b = gap_2 + (node ? unit[0] + unit[2] + node.split(/\s+/)[0] + unit[1] : ""),
+            a = (node[0] ? unit[0] + node[0] + unit[1] : "") + gap_2,
+            b = gap_2 + (node[0] ? unit[0] + unit[2] + (node[1] || node[0].split(config.unit[0][1][3])[0]) + unit[1] : ""),
             A = esc(a),
             B = esc(b),
             m = pattern('^' + A + '([\\s\\S]*?)' + B + '$'),
@@ -346,41 +353,6 @@ TE.prototype.ui = function(o) {
     if (!config.suffix) {
         config.suffix = unit[1];
     }
-
-    function do_click_preview(e) {
-        var v = $.get(),
-            w = "", frame;
-        if (v.indexOf('</html>') === -1) {
-            w = '<!DOCTYPE html><html dir="' + config.dir + '"><head><meta charset="utf-8"><style>' + config.css + '</style></head><body>' + v + '</body></html>';
-        }
-        frame = el('iframe', false, {
-            'class': prefix + '-portal',
-            src: 'data:text/html,' + encodeURIComponent(w)
-        });
-        function frame_resize() {
-            var o = _overlay.firstChild;
-            if (o) {
-                o = size(o);
-                dom_css(frame, {
-                    width: o.w + 'px',
-                    height: o.h + 'px'
-                });
-            }
-        }
-        if (!dom_exist(_overlay) && v) {
-            ui.overlay(frame, 1, function() {
-                frame_resize();
-                events_set(_RESIZE, win, frame_resize);
-                hook_fire('enter.overlay.preview', [e, $, [v, w], _overlay.firstChild]);
-            });
-        } else {
-            events_reset(_RESIZE, win, frame_resize);
-            do_overlay_exit();
-        }
-        return event_exit(e);
-    }
-
-    events_set(_CLICK, _preview, do_click_preview);
 
     function el(em, node, attr) {
         em = is_string(em) ? doc.createElement(em) : em;
@@ -543,8 +515,7 @@ TE.prototype.ui = function(o) {
 
     function do_word_count() {
         if (!i18n_others._word || !i18n_others._words) return;
-        var esc_unit = esc(config.union.unit),
-            v = (_content.value || "").replace(pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1], 'g'), ""),
+        var v = (_content.value || "").replace(pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1], 'g'), ""),
             i = (v.match(/(\w+)/g) || []).length;
         content_set(_description_right, format(i18n_others['_word' + (i === 1 ? "" : 's')], [i]));
     }
@@ -1347,6 +1318,41 @@ TE.prototype.ui = function(o) {
         }
     };
 
+    function do_click_preview(e) {
+        var v = $.get(),
+            w = "", frame;
+        if (v.indexOf('</html>') === -1) {
+            w = '<!DOCTYPE html><html dir="' + config.dir + '"><head><meta charset="utf-8"><style>' + config.css + '</style></head><body>' + v + '</body></html>';
+        }
+        frame = el('iframe', false, {
+            'class': prefix + '-portal',
+            src: 'data:text/html,' + encodeURIComponent(w)
+        });
+        function frame_resize() {
+            var o = _overlay.firstChild;
+            if (o) {
+                o = size(o);
+                dom_css(frame, {
+                    width: o.w + 'px',
+                    height: o.h + 'px'
+                });
+            }
+        }
+        if (!dom_exist(_overlay) && v) {
+            ui.overlay(frame, 1, function() {
+                frame_resize();
+                events_set(_RESIZE, win, frame_resize);
+                hook_fire('enter.overlay.preview', [e, $, [v, w], _overlay.firstChild]);
+            });
+        } else {
+            events_reset(_RESIZE, win, frame_resize);
+            do_overlay_exit();
+        }
+        return event_exit(e);
+    }
+
+    events_set(_CLICK, _preview, do_click_preview);
+
     // default hotkey(s)
     ui.keys = {
         'control+y': 'redo',
@@ -1401,6 +1407,7 @@ TE.prototype.ui = function(o) {
                 "" + millisecond
             ];
         },
+        replace: sanitize,
         format: format,
         el: el,
         event: {

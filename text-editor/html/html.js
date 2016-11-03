@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.2.1
+ *  HTML TEXT EDITOR PLUGIN 1.2.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -124,16 +124,17 @@ TE.HTML = function(target, o) {
             }
         }, o)),
         format = _.format,
+        replace = _.replace,
         config = $.config,
         states = config.states,
         languages = config.languages,
         formats = config.formats,
         classes = config.classes,
         tab = config.tab,
-        unit = config.union.unit,
-        data = config.union.data,
-        esc_unit = config.union_x.unit,
-        esc_data = config.union_x.data,
+        unit = config.unit[0][0],
+        data = config.unit[0][1],
+        esc_unit = config.unit[1][0],
+        esc_data = config.unit[1][1],
         suffix = config.suffix,
         attrs = '(?:' + esc_data[3] + '[^' + esc_unit[0] + esc_unit[1] + ']*?)?',
         attrs_capture = '(|' + esc_data[3] + '[^' + esc_unit[0] + esc_unit[1] + ']*?)',
@@ -167,10 +168,10 @@ TE.HTML = function(target, o) {
         tree_parent = ul;
         $[0]();
         if (!v || v === placeholder) {
-            if (match = before.match(pattern('(?:^|\\n)[\\t ]+' + esc_unit[0] + '(' + esc_unit[2] + '?)(?:' + get_o(formats.ul) + '|' + get_o(formats.ol) + ')' + attrs + esc_unit[1] + '\\s*$'))) {
+            if (match = before.match(pattern('(?:^|\\n)[\\t ]+' + esc_unit[0] + '(' + esc_unit[2] + '?)(?:' + esc(get_o(formats.ul)) + '|' + esc(get_o(formats.ol)) + ')' + attrs + esc_unit[1] + '\\s*$'))) {
                 $.insert('\n' + dent + (match[1] ? "" : tab), -1);
-            } else if (match = before.match(pattern(esc_unit[0] + li_o + attrs_capture + esc_unit[1] + '.*?$'))) {
-                if (pattern(esc_unit[0] + esc_unit[2] + li_o + esc_unit[1] + '\\s*$').test(before)) {
+            } else if (match = before.match(pattern(esc_unit[0] + esc(li_o) + attrs_capture + esc_unit[1] + '.*?$'))) {
+                if (pattern(esc_unit[0] + esc_unit[2] + esc(li_o) + esc_unit[1] + '\\s*$').test(before)) {
                     $.tidy('\n' + dent, false).insert(placeholder).wrap(unit[0] + li_o + match[1] + unit[1], unit[0] + unit[2] + li_o + unit[1]);
                 } else {
                     if (!pattern(esc_unit[1] + '\\s*$').test(before)) {
@@ -180,17 +181,17 @@ TE.HTML = function(target, o) {
                     }
                 }
             } else {
-                if (pattern(esc_unit[0] + esc_unit[2] + li_o + esc_unit[1] + '\\s*$').test(before)) {
+                if (pattern(esc_unit[0] + esc_unit[2] + esc(li_o) + esc_unit[1] + '\\s*$').test(before)) {
                     $.insert(placeholder).wrap('\n' + dent + unit[0] + li + unit[1], unit[0] + unit[2] + li_o + unit[1]);
                 } else {
                     $.tidy('\n\n').insert(placeholder).wrap(unit[0] + ul + unit[1] + '\n' + tab + unit[0] + li + unit[1], unit[0] + unit[2] + li_o + unit[1] + '\n' + unit[0] + unit[2] + ul_o + unit[1]);
                 }
             }
-        } else {console.log('\\n' + tab + esc_unit[0] + li + esc_unit[1] + '\\s*' + esc_unit[0] + esc_unit[2] + li_o + esc_unit[1] + '\\n')
+        } else {
             $.tidy('\n\n', "")
                 .replace(/[\t ]*\n[\t ]*/g, unit[0] + unit[2] + li_o + unit[1] + '\n' + tab + unit[0] + li + unit[1])
                 .wrap(unit[0] + ul + unit[1] + '\n' + tab + unit[0] + li + unit[1], unit[0] + unit[2] + li_o + unit[1] + '\n' + unit[0] + unit[2] + ul_o + unit[1] + '\n\n', 1)
-                .replace(pattern('\\n' + tab + esc_unit[0] + li + esc_unit[1] + '\\s*' + esc_unit[0] + esc_unit[2] + li_o + esc_unit[1] + '\\n', 'g'), '\n' + unit[0] + unit[2] + ul_o + unit[1] + '\n\n' + unit[0] + ul + unit[1] + '\n')
+                .replace(pattern('\\n' + esc(tab) + esc_unit[0] + esc(li) + esc_unit[1] + '\\s*' + esc_unit[0] + esc_unit[2] + esc(li_o) + esc_unit[1] + '\\n', 'g'), '\n' + unit[0] + unit[2] + ul_o + unit[1] + '\n\n' + unit[0] + ul + unit[1] + '\n')
                 .select($.$().end);
             if (auto_p) {
                 ui.tools.p.click(e, $);
@@ -211,21 +212,11 @@ TE.HTML = function(target, o) {
     }
 
     function attr_title(s) {
-        return force_i(s)
-            .replace(pattern(esc_unit[0] + '.*?' + esc_unit[1], 'g'), "")
-            .replace(/"/g, '&#34;')
-            .replace(/'/g, '&#39;')
-            .replace(/\(/g, '&#40;')
-            .replace(/\)/g, '&#41;');
+        return replace(force_i(s), [pattern(esc_unit[0] + '.*?' + esc_unit[1], 'g'), '"', "'"], ["", '&#34;', '&#39;']);
     }
 
     function attr_url(s) {
-        return force_i(s)
-            .replace(pattern(esc_unit[0] + '.*?' + esc_unit[1], 'g'), "")
-            .replace(/\s/g, '%20')
-            .replace(/"/g, '%22')
-            .replace(/\(/g, '%28')
-            .replace(/\)/g, '%29');
+        return replace(force_i(s), [pattern(esc_unit[0] + '.*?' + esc_unit[1], 'g'), /\s/g, '"'], ["", '%20', '%22']);
     }
 
     extend(ui.tools, {
@@ -333,7 +324,7 @@ TE.HTML = function(target, o) {
                     sup = formats.sup,
                     sup_o = get_o(sup);
                 return auto_p_(e, $)[0]()
-                    .unwrap(pattern(esc_unit[0] + sup_o + attrs + esc_unit[1]), unit[0] + unit[2] + sup_o + unit[1])
+                    .unwrap(pattern(esc_unit[0] + esc(sup_o) + attrs + esc_unit[1]), unit[0] + unit[2] + sup_o + unit[1])
                     .i()
                     .format(sub)
                 [1](), false;
@@ -346,7 +337,7 @@ TE.HTML = function(target, o) {
                     sup = formats.sup,
                     sub_o = get_o(sub);
                 return auto_p_(e, $)[0]()
-                    .unwrap(pattern(esc_unit[0] + sub_o + attrs + esc_unit[1]), unit[0] + unit[2] + sub_o + unit[1])
+                    .unwrap(pattern(esc_unit[0] + esc(sub_o) + attrs + esc_unit[1]), unit[0] + unit[2] + sub_o + unit[1])
                     .i()
                     .format(sup)
                 [1](), false;
@@ -364,7 +355,7 @@ TE.HTML = function(target, o) {
                     abbr_o = get_o(abbr),
                     abbr_begin = esc_unit[0] + esc(abbr) + attrs_capture + esc_unit[1],
                     abbr_begin_alt = esc_unit[0] + esc(abbr) + attrs + esc_unit[1],
-                    abbr_end = esc_unit[0] + esc_unit[2] + abbr_o + esc_unit[1],
+                    abbr_end = esc_unit[0] + esc_unit[2] + esc(abbr_o) + esc_unit[1],
                     abbr_html = pattern(abbr_begin + content + abbr_end), state, i;
                 g.replace(abbr_html, function(a, b, c) {
                     if (c = trim(c)) states.abbr[c] = (b.match(pattern(format('%4+title%1%2\\s*(.*?)\\s*%3', esc_data))) || ["", ""])[1];
@@ -405,27 +396,27 @@ TE.HTML = function(target, o) {
                     placeholder = placeholders[""], match;
                 $[0]();
                 if (!v || v.indexOf('\n') === -1) {
-                    if (pattern('^\\s*' + esc_unit[0] + esc_unit[2] + p_o + esc_unit[1]).test(after)) {
-                        if (pattern(esc_unit[0] + p_o + attrs + esc_unit[1] + '\\s*$').test(before)) {
-                            $.unwrap(pattern('\\s*' + esc_unit[0] + p_o + attrs + esc_unit[1] + '\\s*'), pattern('\\s*' + esc_unit[0] + esc_unit[2] + p_o + esc_unit[1])).replace(placeholder, "").tidy('\n', '\n' + dent);
-                        } else if (match = before.match(pattern(esc_unit[0] + p_o + attrs_capture + esc_unit[1] + '.*?$'))) {
+                    if (pattern('^\\s*' + esc_unit[0] + esc_unit[2] + esc(p_o) + esc_unit[1]).test(after)) {
+                        if (pattern(esc_unit[0] + esc(p_o) + attrs + esc_unit[1] + '\\s*$').test(before)) {
+                            $.unwrap(pattern('\\s*' + esc_unit[0] + esc(p_o) + attrs + esc_unit[1] + '\\s*'), pattern('\\s*' + esc_unit[0] + esc_unit[2] + esc(p_o) + esc_unit[1])).replace(placeholder, "").tidy('\n', '\n' + dent);
+                        } else if (match = before.match(pattern(esc_unit[0] + esc(p_o) + attrs_capture + esc_unit[1] + '.*?$'))) {
                             $.wrap(unit[0] + unit[2] + p_o + unit[1] + '\n' + dent + unit[0] + p_o + match[1] + unit[1], "").insert(placeholder);
                         }
                     } else {
                         $.format(p, 0, '\n\n');
                     }
                 } else {
-                    var par = pattern('^(?:\\s*' + esc_unit[0] + p_o + attrs + esc_unit[1] + '\\s*)+' + content + '(?:\\s*' + esc_unit[0] + esc_unit[2] + p_o + esc_unit[1] + '\\s*)+$');
+                    var par = pattern('^(?:\\s*' + esc_unit[0] + esc(p_o) + attrs + esc_unit[1] + '\\s*)+' + content + '(?:\\s*' + esc_unit[0] + esc_unit[2] + esc(p_o) + esc_unit[1] + '\\s*)+$');
                     if (par.test(v)) {
                         $.replace(par, '$1')
-                            .replace(pattern('\\s*' + esc_unit[0] + esc_unit[2] + p_o + esc_unit[1] + '\\s*' + esc_unit[0] + p_o + attrs + esc_unit[1] + '\\s*', 'g'), '\n\n')
-                            .replace(pattern('\\s*' + esc_unit[0] + br_o + attrs + esc_unit[1] + '\\s*', 'g'), '\n');
+                            .replace(pattern('\\s*' + esc_unit[0] + esc_unit[2] + esc(p_o) + esc_unit[1] + '\\s*' + esc_unit[0] + esc(p_o) + attrs + esc_unit[1] + '\\s*', 'g'), '\n\n')
+                            .replace(pattern('\\s*' + esc_unit[0] + esc(br_o) + attrs + esc_unit[1] + '\\s*', 'g'), '\n');
                     } else {
                         $.replace(/\n/g, '\n' + unit[0] + br + suffix + '\n')
-                            .replace(pattern('(\\s*' + esc_unit[0] + br_o + attrs + suffix + '\\s*){2,}', 'g'), unit[0] + unit[2] + p_o + unit[1] + '\n' + unit[0] + p + unit[1])
+                            .replace(pattern('(\\s*' + esc_unit[0] + esc(br_o) + attrs + suffix + '\\s*){2,}', 'g'), unit[0] + unit[2] + p_o + unit[1] + '\n' + unit[0] + p + unit[1])
                             .wrap(unit[0] + p + unit[1], unit[0] + unit[2] + p_o + unit[1], 1)
-                            .replace(pattern('(' + esc_unit[0] + p_o + attrs + esc_unit[1] + ')+', 'g'), '$1')
-                            .replace(pattern('(' + esc_unit[0] + esc_unit[2] + p_o + esc_unit[1] + ')+', 'g'), '$1')
+                            .replace(pattern('(' + esc_unit[0] + esc(p_o) + attrs + esc_unit[1] + ')+', 'g'), '$1')
+                            .replace(pattern('(' + esc_unit[0] + esc_unit[2] + esc(p_o) + esc_unit[1] + ')+', 'g'), '$1')
                             .tidy('\n');
                     }
                 }
@@ -478,7 +469,7 @@ TE.HTML = function(target, o) {
                     q = formats.q,
                     p = formats.p,
                     p_o = get_o(p),
-                    para = esc_unit[0] + p_o + attrs + esc_unit[1];
+                    para = esc_unit[0] + esc(p_o) + attrs + esc_unit[1];
                 // block
                 if (pattern('(^|\\n|' + para + ')$').test(s.before)) {
                     if (auto_p && (v === placeholders[""] || pattern('(' + para + ')$').test(s.before))) {
@@ -489,7 +480,7 @@ TE.HTML = function(target, o) {
                         if (!v || $.match(pattern('^[^' + esc_unit[0] + '\\n]*?[^' + esc_unit[1] + ']$'))) {
                             $.wrap(tab + unit[0] + p + unit[1], unit[0] + unit[2] + p_o + unit[1]);
                         } else {
-                            $[pattern('((^|\\n)' + tab + ')+').test(v) ? 'outdent' : 'indent'](tab);
+                            $[pattern('((^|\\n)' + esc(tab) + ')+').test(v) ? 'outdent' : 'indent'](tab);
                         }
                     }
                     $[1]();
@@ -510,8 +501,8 @@ TE.HTML = function(target, o) {
                     code = formats.code,
                     pre_o = get_o(pre),
                     code_o = get_o(code),
-                    B = esc_unit[0] + pre_o + attrs + esc_unit[1] + '\\s*' + esc_unit[0] + code_o + attrs + esc_unit[1] + '\\s*',
-                    A = '\\s*' + esc_unit[0] + esc_unit[2] + code_o + esc_unit[1] + '\\s*' + esc_unit[0] + esc_unit[2] + pre_o + esc_unit[1],
+                    B = esc_unit[0] + esc(pre_o) + attrs + esc_unit[1] + '\\s*' + esc_unit[0] + esc(code_o) + attrs + esc_unit[1] + '\\s*',
+                    A = '\\s*' + esc_unit[0] + esc_unit[2] + esc(code_o) + esc_unit[1] + '\\s*' + esc_unit[0] + esc_unit[2] + esc(pre_o) + esc_unit[1],
                     before = pattern(B + '\\s*$'),
                     after = pattern('^\\s*' + A),
                     any = pattern('^' + content + '$');
@@ -531,7 +522,7 @@ TE.HTML = function(target, o) {
                 // span
                 } else {
                     $[0]().format(code).loss().replace(any, function(a) {
-                        return force_i(pattern('^' + esc_unit[0] + esc_unit[2] + code_o + esc_unit[1]).test($.$().after) ? encode(a) : decode(a));
+                        return force_i(pattern('^' + esc_unit[0] + esc_unit[2] + esc(code_o) + esc_unit[1]).test($.$().after) ? encode(a) : decode(a));
                     })[1]();
                 }
                 return false;
@@ -547,8 +538,8 @@ TE.HTML = function(target, o) {
                     s = '(' + esc(ul_o) + '|' + esc(ol_o) + ')';
                 if ($.match(pattern(esc_unit[0] + s + attrs + esc_unit[1] + content + esc_unit[0] + esc_unit[2] + s + esc_unit[1]))) {
                     $[0]()
-                        .replace(pattern(esc_unit[0] + ol_o + attrs_capture + esc_unit[1], 'g'), unit[0] + ul_o + '$1' + unit[1])
-                        .replace(pattern(esc_unit[0] + esc_unit[2] + ol_o + esc_unit[1], 'g'), unit[0] + unit[2] + ul_o + unit[1])
+                        .replace(pattern(esc_unit[0] + esc(ol_o) + attrs_capture + esc_unit[1], 'g'), unit[0] + ul_o + '$1' + unit[1])
+                        .replace(pattern(esc_unit[0] + esc_unit[2] + esc(ol_o) + esc_unit[1], 'g'), unit[0] + unit[2] + ul_o + unit[1])
                     [1]();
                 } else {
                     tree(e, ul, formats.li);
@@ -566,8 +557,8 @@ TE.HTML = function(target, o) {
                     s = '(' + esc(ul_o) + '|' + esc(ol_o) + ')';
                 if ($.match(pattern(esc_unit[0] + s + attrs + esc_unit[1] + content + esc_unit[0] + esc_unit[2] + s + esc_unit[1]))) {
                     $[0]()
-                        .replace(pattern(esc_unit[0] + ul_o + attrs_capture + esc_unit[1], 'g'), unit[0] + ol_o + '$1' + unit[1])
-                        .replace(pattern(esc_unit[0] + esc_unit[2] + ul_o + esc_unit[1], 'g'), unit[0] + unit[2] + ol_o + unit[1])
+                        .replace(pattern(esc_unit[0] + esc(ul_o) + attrs_capture + esc_unit[1], 'g'), unit[0] + ol_o + '$1' + unit[1])
+                        .replace(pattern(esc_unit[0] + esc_unit[2] + esc(ul_o) + esc_unit[1], 'g'), unit[0] + unit[2] + ol_o + unit[1])
                     [1]();
                 } else {
                     tree(e, ol, formats.li);
@@ -677,9 +668,9 @@ TE.HTML = function(target, o) {
                     dent = get_indent(s.before),
                     placeholder = placeholders[""], match, m, n;
                 if (!v || v === placeholder) {
-                    if (match = s.after.match(pattern('^\\s*' + esc_unit[0] + esc_unit[2] + '(' + p_o + '|' + li_o + ')' + esc_unit[1]))) {
+                    if (match = s.after.match(pattern('^\\s*' + esc_unit[0] + esc_unit[2] + '(' + esc(p_o) + '|' + esc(li_o) + ')' + esc_unit[1]))) {
                         m = match[1];
-                        ui.tools[m === 'li' ? tree_parent : m].click(e, $);
+                        ui.tools[m === li_o ? tree_parent : m].click(e, $);
                     } else if (auto_p && p && trim(w) && s.end === w.length && pattern('^\\s*[^' + esc_unit[0] + '\\n]*?[^' + esc_unit[1] + ']\\s*$').test(w)) {
                         w = unit[0] + p + unit[1] + w + unit[0] + unit[2] + p_o + unit[1] + '\n' + unit[0] + p + unit[1];
                         n = placeholder + unit[0] + unit[2] + p_o + unit[1];
@@ -695,7 +686,7 @@ TE.HTML = function(target, o) {
                     li = formats.li,
                     li_o = get_o(li),
                     dent = get_indent(s.before);
-                if (pattern(esc_unit[0] + esc_unit[2] + li + esc_unit[1]).test(s.after)) {
+                if (pattern(esc_unit[0] + esc_unit[2] + esc(li_o) + esc_unit[1]).test(s.after)) {
                     return $[0]().wrap('\n' + dent + tab + unit[0] + (formats[tree_parent] || tree_parent) + unit[1] + '\n' + dent + tab + tab + unit[0] + li + unit[1], unit[0] + unit[2] + li_o + unit[1] + '\n' + dent + tab + unit[0] + unit[2] + tree_parent + unit[1] + '\n' + dent).insert(placeholders[""])[1](), false;
                 }
                 return $.ui.tools.indent.click(e, $);
@@ -709,8 +700,8 @@ TE.HTML = function(target, o) {
                 if (!v && pattern(end + '$').test(before)) {
                     tag = before.split(unit[0]).pop().match(pattern('^([^' + esc_unit[2] + '\\s]+).*?' + esc_unit[1] + '$'));
                     tag = (tag && tag[1]) || 0;
-                    if (tag && pattern('^\\s*' + esc_unit[0] + esc_unit[2] + tag + esc_unit[1]).test(after)) {
-                        $.unwrap(pattern(esc_unit[0] + tag + attrs + esc_unit[1]), pattern('\\s*' + esc_unit[0] + esc_unit[2] + tag + esc_unit[1]));
+                    if (tag && pattern('^\\s*' + esc_unit[0] + esc_unit[2] + esc(tag) + esc_unit[1]).test(after)) {
+                        $.unwrap(pattern(esc_unit[0] + esc(tag) + attrs + esc_unit[1]), pattern('\\s*' + esc_unit[0] + esc_unit[2] + esc(tag) + esc_unit[1]));
                     } else {
                         $.outdent(pattern(end));
                     }

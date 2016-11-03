@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXTILE TEXT EDITOR PLUGIN 1.2.1
+ *  TEXTILE TEXT EDITOR PLUGIN 1.2.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -43,6 +43,7 @@ TE.Textile = function(target, o) {
         edge = _.edge,
         pattern = _.pattern,
         format = _.format,
+        replace = _.replace,
         num = _.i,
         ul = '*',
         ol = '#',
@@ -65,21 +66,11 @@ TE.Textile = function(target, o) {
     }
 
     function attr_title(s) {
-        return force_i(s)
-            .replace(/<.*?>/g, "")
-            .replace(/"/g, '&#34;')
-            .replace(/'/g, '&#39;')
-            .replace(/\(/g, '&#40;')
-            .replace(/\)/g, '&#41;');
+        return replace(force_i(s), [/<.*?>/g, '"', "'", '(', ')', '[', ']'], ["", '&#34;', '&#39;', '&#40;', '&#41;', '&#91;', '&#93;']);
     }
 
     function attr_url(s) {
-        return force_i(s)
-            .replace(/<.*?>/g, "")
-            .replace(/\s/g, '%20')
-            .replace(/"/g, '%22')
-            .replace(/\(/g, '%28')
-            .replace(/\)/g, '%29');
+        return replace(force_i(s), [/<.*?>/g, /\s/g, '"', '(', ')', '[', ']'], ["", '%20', '%22', '%28', '%29', '%5B', '%5D']);
     }
 
     var config = $.config,
