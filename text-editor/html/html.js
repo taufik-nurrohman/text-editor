@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.2.2
+ *  HTML TEXT EDITOR PLUGIN 1.2.3
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -147,7 +147,7 @@ TE.HTML = function(target, o) {
     $.type = 'HTML';
 
     function get_o(s) {
-        return s.split(/\s+/)[0];
+        return s.split(pattern('(' + esc_data[3] + ')+'))[0];
     }
 
     function get_indent(s) {
@@ -159,7 +159,7 @@ TE.HTML = function(target, o) {
         var s = $.$(),
             v = s.value,
             before = s.before,
-            ul = formats[parent],
+            ul = formats[parent] || parent,
             li = formats[child] || child,
             ul_o = get_o(ul),
             li_o = get_o(li),
@@ -169,13 +169,13 @@ TE.HTML = function(target, o) {
         $[0]();
         if (!v || v === placeholder) {
             if (match = before.match(pattern('(?:^|\\n)[\\t ]+' + esc_unit[0] + '(' + esc_unit[2] + '?)(?:' + esc(get_o(formats.ul)) + '|' + esc(get_o(formats.ol)) + ')' + attrs + esc_unit[1] + '\\s*$'))) {
-                $.insert('\n' + dent + (match[1] ? "" : tab), -1);
+                $.insert('\n' + dent + (match[1] ? "" : tab), 0);
             } else if (match = before.match(pattern(esc_unit[0] + esc(li_o) + attrs_capture + esc_unit[1] + '.*?$'))) {
                 if (pattern(esc_unit[0] + esc_unit[2] + esc(li_o) + esc_unit[1] + '\\s*$').test(before)) {
                     $.tidy('\n' + dent, false).insert(placeholder).wrap(unit[0] + li_o + match[1] + unit[1], unit[0] + unit[2] + li_o + unit[1]);
                 } else {
                     if (!pattern(esc_unit[1] + '\\s*$').test(before)) {
-                        $.insert(unit[0] + unit[2] + li_o + unit[1] + '\n' + dent + unit[0] + li_o + match[1] + unit[1], -1).insert(placeholder);
+                        $.insert(unit[0] + unit[2] + li_o + unit[1] + '\n' + dent + unit[0] + li_o + match[1] + unit[1], 0).insert(placeholder);
                     } else {
                         $.insert(placeholder).wrap('\n' + dent + tab + unit[0] + ul + unit[1] + '\n' + dent + tab + tab + unit[0] + li_o + match[1] + unit[1], unit[0] + unit[2] + li_o + unit[1] + '\n' + dent + tab + unit[0] + unit[2] + ul_o + unit[1] + '\n' + dent);
                     }
@@ -294,7 +294,7 @@ TE.HTML = function(target, o) {
                     i18n = languages.modals.img,
                     advance = config.advance_img,
                     src, title;
-                return $.ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
+                return ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
                     v = attr_url(v);
                     src = v;
                     $.blur().ui.prompt(['img[title]', i18n.title[advance ? 2 : 1]], i18n.placeholder[advance ? 2 : 1], 0, function(e, $, v) {
@@ -305,12 +305,12 @@ TE.HTML = function(target, o) {
                         alt = attr_title(alt);
                         $[0]();
                         if (advance && title) {
-                            $.tidy('\n\n', "").insert(unit[0] + figure + unit[1] + '\n' + tab + unit[0] + img + format('%4alt%1%2' + alt + '%3%4src%1%2' + src + '%3', data) + suffix + '\n' + tab + unit[0] + figcaption + unit[1] + title + unit[0] + unit[2] + get_o(figcaption) + unit[1] + '\n' + unit[0] + unit[2] + get_o(figure) + unit[1] + '\n\n', -1, 1);
+                            $.tidy('\n\n', "").insert(unit[0] + figure + unit[1] + '\n' + tab + unit[0] + img + format('%4alt%1%2' + alt + '%3%4src%1%2' + src + '%3', data) + suffix + '\n' + tab + unit[0] + figcaption + unit[1] + title + unit[0] + unit[2] + get_o(figcaption) + unit[1] + '\n' + unit[0] + unit[2] + get_o(figure) + unit[1] + '\n\n', 0, 1);
                             if (auto_p) {
                                 ui.tools.p.click(e, $);
                             }
                         } else {
-                            auto_p_(e, $).tidy(pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + esc_unit[2] + ']+?' + esc_unit[1] + '\\s*$').test($.$().before) ? "" : ' ', "").insert(unit[0] + img + format('%4alt%1%2' + alt + '%3%4src%1%2' + src + '%3', data) + (title ? format('%4title%1%2' + title + '%3', data) : "") + suffix + ' ', -1, 1);
+                            auto_p_(e, $).tidy(pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + esc_unit[2] + ']+?' + esc_unit[1] + '\\s*$').test($.$().before) ? "" : ' ', "").insert(unit[0] + img + format('%4alt%1%2' + alt + '%3%4src%1%2' + src + '%3', data) + (title ? format('%4title%1%2' + title + '%3', data) : "") + suffix + ' ', 0, 1);
                         }
                         $[1]();
                     });
@@ -623,7 +623,7 @@ TE.HTML = function(target, o) {
                         }
                         s += advance + tab + unit[0] + unit[2] + tr_o + unit[1] + (advance ? '\n' + tab + unit[0] + unit[2] + thead_o + unit[1] + '\n' + tfoot_html + tab + unit[0] + tbody + unit[1] : "") + '\n';
                         o = s + o + (advance ? '\n' + tab + unit[0] + unit[2] + tbody_o + unit[1] : "") + '\n';
-                        $.tidy('\n\n').insert(unit[0] + table + unit[1] + '\n' + (title && caption ? tab + unit[0] + caption + unit[1] + title + unit[0] + unit[2] + caption_o + unit[1] + '\n' : "") + o + unit[0] + unit[2] + table_o + unit[1], 0);
+                        $.tidy('\n\n').insert(unit[0] + table + unit[1] + '\n' + (title && caption ? tab + unit[0] + caption + unit[1] + title + unit[0] + unit[2] + caption_o + unit[1] + '\n' : "") + o + unit[0] + unit[2] + table_o + unit[1]);
                         m = $.$();
                         n = m.start + m.value.indexOf(q);
                         $.select(n, n + q.length)[1]();
@@ -635,7 +635,7 @@ TE.HTML = function(target, o) {
             i: 'ellipsis-h',
             click: function(e, $) {
                 var dent = get_indent($.$().before);
-                return $.tidy('\n\n', "").insert(dent + unit[0] + formats.hr + suffix + '\n\n', -1), false;
+                return $.tidy('\n\n', "").insert(dent + unit[0] + formats.hr + suffix + '\n\n', 0), false;
             }
         }
     });
@@ -655,7 +655,7 @@ TE.HTML = function(target, o) {
             'control+enter': 'p',
             'shift+enter': function(e, $) {
                 var dent = get_indent($.$().before);
-                return $.tidy('\n', "").insert(dent + unit[0] + formats.br + suffix + '\n', -1), false;
+                return $.tidy('\n', "").insert(dent + unit[0] + formats.br + suffix + '\n', 0), false;
             },
             'enter': function(e, $) {
                 var s = $.$(),
@@ -666,11 +666,13 @@ TE.HTML = function(target, o) {
                     p_o = get_o(p),
                     li_o = get_o(li),
                     dent = get_indent(s.before),
-                    placeholder = placeholders[""], match, m, n;
+                    placeholder = placeholders[""],
+                    tools = ui.tools,
+                    match, m, n;
                 if (!v || v === placeholder) {
                     if (match = s.after.match(pattern('^\\s*' + esc_unit[0] + esc_unit[2] + '(' + esc(p_o) + '|' + esc(li_o) + ')' + esc_unit[1]))) {
                         m = match[1];
-                        ui.tools[m === li_o ? tree_parent : m].click(e, $);
+                        (tools[m === li_o ? tree_parent : m] || tools.ul).click(e, $);
                     } else if (auto_p && p && trim(w) && s.end === w.length && pattern('^\\s*[^' + esc_unit[0] + '\\n]*?[^' + esc_unit[1] + ']\\s*$').test(w)) {
                         w = unit[0] + p + unit[1] + w + unit[0] + unit[2] + p_o + unit[1] + '\n' + unit[0] + p + unit[1];
                         n = placeholder + unit[0] + unit[2] + p_o + unit[1];
@@ -689,7 +691,7 @@ TE.HTML = function(target, o) {
                 if (pattern(esc_unit[0] + esc_unit[2] + esc(li_o) + esc_unit[1]).test(s.after)) {
                     return $[0]().wrap('\n' + dent + tab + unit[0] + (formats[tree_parent] || tree_parent) + unit[1] + '\n' + dent + tab + tab + unit[0] + li + unit[1], unit[0] + unit[2] + li_o + unit[1] + '\n' + dent + tab + unit[0] + unit[2] + tree_parent + unit[1] + '\n' + dent).insert(placeholders[""])[1](), false;
                 }
-                return $.ui.tools.indent.click(e, $);
+                return ui.tools.indent.click(e, $);
             },
             'backspace': function(e, $) {
                 var s = $.$(),

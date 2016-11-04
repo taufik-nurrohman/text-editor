@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXTILE TEXT EDITOR PLUGIN 1.2.2
+ *  TEXTILE TEXT EDITOR PLUGIN 1.2.3
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -136,7 +136,7 @@ TE.Textile = function(target, o) {
                 }
                 $.set(B + a).select(B.length);
             } else {
-                $.tidy('\n\n').insert(L, -1).insert(placeholder);
+                $.tidy('\n\n').insert(L, 0).insert(placeholder);
             }
         } else if (pattern(esc_L + '$').test(b)) {
             $.unwrap(L, "");
@@ -231,11 +231,11 @@ TE.Textile = function(target, o) {
                 var s = $.$(),
                     i18n = languages.modals.img,
                     src, title;
-                return $.ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
+                return ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
                     src = attr_url(v);
                     $.blur().ui.prompt(['img[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
                         title = attr_title(v);
-                        $.tidy('\n\n', "").insert('!' + src + (title ? '(' + title + ')' : "") + '!\n\n', -1);
+                        $.tidy('\n\n', "").insert('!' + src + (title ? '(' + title + ')' : "") + '!\n\n', 0);
                     });
                 }), false;
             }
@@ -253,7 +253,7 @@ TE.Textile = function(target, o) {
                     notes = g.match(/^fn\d+\^?\. /gm) || [],
                     i = 0, index;
                 i = notes.length + 1;
-                return $.ui.prompt(['sup[id]', i18n.title], s.value || i18n.placeholder || i, 0, function(e, $, v) {
+                return ui.prompt(['sup[id]', i18n.title], s.value || i18n.placeholder || i, 0, function(e, $, v) {
                     v = trim(v) || i;
                     index = notes.indexOf('fn' + v + '. ');
                     if (index !== -1) {
@@ -363,7 +363,7 @@ TE.Textile = function(target, o) {
                         }
                         return $.set(B + a).select(B.length), false;
                     }
-                    return $[0]().tidy('\n\n').insert(ul + ' ', -1).insert(placeholder)[1](), false;
+                    return $[0]().tidy('\n\n').insert(ul + ' ', 0).insert(placeholder)[1](), false;
                 } else {
                     // start ...
                     if (v === placeholder) {
@@ -407,7 +407,7 @@ TE.Textile = function(target, o) {
                         }
                         return $.set(B + a).select(B.length), false;
                     }
-                    return $[0]().tidy('\n\n').insert(ol + ' ', -1).insert(placeholder)[1](), false;
+                    return $[0]().tidy('\n\n').insert(ol + ' ', 0).insert(placeholder)[1](), false;
                 } else {
                     // start ...
                     if (v === placeholder) {
@@ -476,7 +476,7 @@ TE.Textile = function(target, o) {
         },
         hr: {
             click: function(e, $) {
-                return $.tidy('\n\n', "").insert(formats.hr[0] + '\n\n', -1), false;
+                return $.tidy('\n\n', "").insert(formats.hr[0] + '\n\n', 0), false;
             }
         }
     });
@@ -495,7 +495,7 @@ TE.Textile = function(target, o) {
                 if (match[0] === match[1]) {
                     return $.outdent(pattern(regex)), false;
                 }
-                return $.insert('\n' + match[1], -1).scroll(true), false;
+                return $.insert('\n' + match[1], 0).scroll(true), false;
             }
         },
         'shift+tab': function(e, $) {
@@ -507,11 +507,11 @@ TE.Textile = function(target, o) {
             if (v === placeholders[""]) {
                 return $.select(), false;
             } else if (pattern(bullets + ' $').test(b)) {
-                return $.replace(pattern(esc_ul + ' $'), ' ', -1), false;
+                return $.replace(pattern(esc_ul + ' $'), ' ', 0), false;
             } else if (pattern(bullets).test(v)) {
                 return $.replace(pattern('^' + esc_ul + ' *', 'gm'), ""), false;
             } else if (pattern(lists + ' $').test(b)) {
-                return $.replace(pattern(esc_ol + ' $'), ' ', -1), false;
+                return $.replace(pattern(esc_ol + ' $'), ' ', 0), false;
             } else if (pattern(lists).test(v)) {
                 return $.replace(pattern('^' + esc_ol + ' *', 'gm'), ""), false;
             }
@@ -526,11 +526,11 @@ TE.Textile = function(target, o) {
             if (v === placeholders[""]) {
                 return $.select(), false;
             } else if (pattern(bullets + ' $').test(b)) {
-                return $.replace(/ $/, ul + ' ', -1), false;
+                return $.replace(/ $/, ul + ' ', 0), false;
             } else if (pattern(bullets).test(v)) {
                 return $.replace(/^(?!$)/gm, ul), false;
             } else if (pattern(lists + ' $').test(b)) {
-                return $.replace(/ $/, ol + ' ', -1), false;
+                return $.replace(/ $/, ol + ' ', 0), false;
             } else if (pattern(lists).test(v)) {
                 return $.replace(/^(?!$)/gm, ol), false;
             }

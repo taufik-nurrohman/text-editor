@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.5.5
+ *  TEXT EDITOR PLUGIN 2.6.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -56,7 +56,7 @@
     }
 
     function trim(s, x) {
-        if (x === -1) {
+        if (x === 0) {
             return s.replace(/^\s*/, ""); // trim left
         } else if (x === 1) {
             return s.replace(/\s*$/, ""); // trim right
@@ -107,7 +107,7 @@
     (function($) {
 
         // plugin version
-        $.version = '2.5.5';
+        $.version = '2.6.0';
 
         // collect all instance(s)
         $.__instance__ = {};
@@ -491,7 +491,7 @@
                 a = s.before,
                 b = s.after,
                 c = s.value, d, e;
-            if (x === -1) { // replace before
+            if (x === 0) { // replace before
                 a = a.replace(f, t);
             } else if (x === 1) { // replace after
                 b = b.replace(f, t);
@@ -505,7 +505,7 @@
 
         // replace before selection
         $.replaceBefore = function(f, t) {
-            return $.replace(f, t, -1);
+            return $.replace(f, t, 0);
         };
 
         // replace after selection
@@ -520,7 +520,7 @@
             if (clear) {
                 $.replace(f, ""); // force to delete selection on insert before/after?
             }
-            if (x === -1) { // insert before
+            if (x === 0) { // insert before
                 f = /$/;
             } else if (x === 1) { // insert after
                 f = /^/;
@@ -530,7 +530,7 @@
 
         // insert before selection
         $.insertBefore = function(s, clear) {
-            return $.insert(s, -1, clear);
+            return $.insert(s, 0, clear);
         };
 
         // insert after selection
@@ -579,7 +579,7 @@
             if (s.length) {
                 return $.replace(pattern('^' + (e ? "" : '(?!$)'), 'gm'), B);
             }
-            return $.insert(B, -1);
+            return $.insert(B, 0);
         };
 
         // outdent
@@ -590,7 +590,7 @@
             if (s.length) {
                 return $.replace(pattern('^' + B, 'gm'), "");
             }
-            return $.replace(pattern(B + '$'), "", -1);
+            return $.replace(pattern(B + '$'), "", 0);
         };
 
         // trim white-space before and after selection range
@@ -604,7 +604,7 @@
                 b = s.after,
                 c = s.value,
                 aa = O !== false ? trim(a, 1) + O : a,
-                bb = C !== false ? C + trim(b, -1) : b,
+                bb = C !== false ? C + trim(b, 0) : b,
                 cc = (B !== false ? B : "") + trim(c) + (E !== false ? E : "");
             return $.set(aa + cc + bb).select(aa.length, (aa + cc).length); // `trim` method does not populate history data
         };

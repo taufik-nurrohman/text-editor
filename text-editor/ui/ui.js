@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.2.4
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.2.5
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -121,7 +121,9 @@ TE.prototype.ui = function(o) {
         auto_tab = config.auto_tab,
         auto_close = config.auto_close,
         unit = config.unit[0][0],
+        data = config.unit[0][1],
         esc_unit = config.unit[1][0],
+        esc_data = config.unit[1][1],
         data_tool_id = 'data-tool-id';
 
     function hook_set(ev, fn, id) {
@@ -295,7 +297,7 @@ TE.prototype.ui = function(o) {
         if (!is_set(gap_2)) gap_2 = "";
         var s = $[0]().$(),
             a = (node[0] ? unit[0] + node[0] + unit[1] : "") + gap_2,
-            b = gap_2 + (node[0] ? unit[0] + unit[2] + (node[1] || node[0].split(config.unit[0][1][3])[0]) + unit[1] : ""),
+            b = gap_2 + (node[0] ? unit[0] + unit[2] + (node[1] || node[0].split(pattern('(' + esc_data[3] + ')+'))[0]) + unit[1] : ""),
             A = esc(a),
             B = esc(b),
             m = pattern('^' + A + '([\\s\\S]*?)' + B + '$'),
@@ -635,7 +637,7 @@ TE.prototype.ui = function(o) {
                 if (m === false) continue;
                 if (n === m && after === m) {
                     if (before === '\\') {
-                        $.insert(n, -1);
+                        $.insert(n, 0);
                         return event_exit(e);
                     }
                     return $.select(s.end + 1), event_exit(e);
@@ -656,7 +658,7 @@ TE.prototype.ui = function(o) {
             if (n === 'backspace' && pattern(esc(tab) + '$').test(s_before)) {
                 return $.outdent(tab).scroll(true), event_exit(e);
             } else if (n === 'enter' && pattern('(^|\\n)(' + esc(tab) + ')+.*$').test(s_before)) {
-                return $.insert('\n' + dent, -1, 1).scroll(true), event_exit(e);
+                return $.insert('\n' + dent, 0, 1).scroll(true), event_exit(e);
             }
         }
     }

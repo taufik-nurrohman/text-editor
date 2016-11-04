@@ -76,9 +76,7 @@
         <li><kbd>&#8984;+&darr;</kbd> &rarr; Subscript</li>
         <li><kbd>&#8984;+&uarr;</kbd> &rarr; Superscript</li>
         <li><kbd>&#8984;+&#8629;</kbd> &rarr; Paragraph</li>
-        <li><kbd>&#8984;+&#8679;+?</kbd> &rarr; Abbreviation</li>
         <li><kbd>&#8679;+&#8629;</kbd> &rarr; Line Break</li>
-        <li><kbd>&#10008;</kbd> &rarr; Clear Format &rarr; Delete</li>
         <li><kbd>F5</kbd> &rarr; Preview</li>
         <li><kbd>&#8677;</kbd> &rarr; Indent &amp; <em>Depends</em></li>
         <li><kbd>&#8679;+&#8677;</kbd> &rarr; Outdent</li>
@@ -87,26 +85,12 @@
       </ul>
       <h3>Depends &rarr; Special Cases</h3>
       <p>Try pressing the <kbd>&#8629;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
-      <pre><code>lorem ipsum dolor sit amet<mark>|</mark></code></pre>
-      <pre><code>&lt;p&gt;<mark>|</mark>&lt;/p&gt;</code></pre>
-      <pre><code>&lt;p class="foo"&gt;<mark>|</mark>&lt;/p&gt;</code></pre>
-      <pre><code>&lt;p&gt;foo<mark>|</mark>&lt;/p&gt;</code></pre>
-      <pre><code>&lt;p class="foo"&gt;foo<mark>|</mark>&lt;/p&gt;</code></pre>
-      <pre><code>&lt;ul&gt;
-  &lt;li&gt;<mark>|</mark>&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-      <pre><code>&lt;ul&gt;
-  &lt;li class="foo"&gt;<mark>|</mark>&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-      <pre><code>&lt;ul&gt;
-  &lt;li&gt;foo<mark>|</mark>&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-      <pre><code>&lt;ul&gt;
-  &lt;li&gt;&lt;a href="#"&gt;foo&lt;/a&gt;<mark>|</mark>&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-      <pre><code>&lt;ul&gt;
-  &lt;li class="foo"&gt;&lt;a href="#"&gt;foo&lt;/a&gt;<mark>|</mark>&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+      <pre><code>[list]
+  [*]<mark>|</mark>[/*]
+[/list]</code></pre>
+      <pre><code>[list]
+  [*]foo<mark>|</mark>[/*]
+[/list]</code></pre>
       <pre><code>    <mark>|</mark></code></pre>
       <pre><code>"<mark>|</mark>"</code></pre>
       <pre><code>'<mark>|</mark>'</code></pre>
@@ -115,10 +99,10 @@
       <pre><code>[<mark>|</mark>]</code></pre>
       <pre><code>&lt;<mark>|</mark>&gt;</code></pre>
       <p>Try pressing the <kbd>&#8677;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
-      <pre><code>&lt;li&gt;abc<mark>|</mark>&lt;/li&gt;</code></pre>
+      <pre><code>[*]abc<mark>|</mark>[/*]</code></pre>
       <p>Try pressing the <kbd>&#9003;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
-      <pre><code>&lt;p class="foo"&gt;&lt;/p&gt;<mark>|</mark></code></pre>
-      <pre><code>&lt;p class="foo"&gt;<mark>|</mark>&lt;/p&gt;</code></pre>
+      <pre><code>[b][/b]<mark>|</mark></code></pre>
+      <pre><code>[b]<mark>|</mark>[/b]</code></pre>
       <pre><code>    <mark>|</mark></code></pre>
     </div>
     <script src="../../text-editor.min.js"></script>

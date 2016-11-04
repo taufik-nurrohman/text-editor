@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BBCODE TEXT EDITOR PLUGIN 0.0.3
+ *  BBCODE TEXT EDITOR PLUGIN 1.0.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -14,13 +14,14 @@ TE.BBCode = function(target, o) {
         $ = new TE.HTML(target, {
             auto_p: 0, // disable automatic paragraph feature from `TE.HTML` by default
             advance_table: 0, // disable advance table feature from `TE.HTML` by default
-            tools: 'b i s | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | undo redo',
+            tools: 'clear | b i s | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
             unit: [
                 [
                     ['\u005B', '\u005D']
                 ],
                 [
-                    ['\\u005B', '\\u005D']
+                    ['\\u005B', '\\u005D'],
+                    ['\\u003D', '\\u0022', '\\u0022', '\\u0020|\\u003D']
                 ]
             ],
             formats: {
@@ -29,11 +30,15 @@ TE.BBCode = function(target, o) {
                 u: 'u',
                 s: 's',
                 a: 'url',
+                email: 'email',
                 p: "",
                 blockquote: 'quote',
                 q: 'quote',
                 pre: 'code',
                 code: 'code',
+                ol: 'list=1',
+                ul: 'list',
+                li: '*',
                 caption: ""
             }
         }),
@@ -71,13 +76,17 @@ TE.BBCode = function(target, o) {
         a: {
             click: function(e, $) {
                 var a = formats.a,
-                    i18n = languages.modals.a;
+                    i18n = languages.modals.a,
+                    v = $.$().value;
                 // link text
-                if (/^[a-z]+:\/\/\S+$/.test($.$().value)) {
+                if (/^[a-z]+:\/\/\S+$/i.test(v)) {
                     return $.format(a), false;
+                // email text
+                } else if (/^[\w.-]+@[\w.-]+(?:\.[\w.-]+)?$/i.test(v)) {
+                    return $.format(formats.email), false;
                 }
                 return $.record().ui.prompt(['a[href]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
-                    $.format([a + '=' + attr_url(v), a]);
+                    $.format(a + '=' + attr_url(v));
                 }), false;
             }
         },
@@ -93,8 +102,6 @@ TE.BBCode = function(target, o) {
                 return $.format(img), false;
             }
         },
-        sub: 0,
-        sup: 0,
         abbr: 0,
         p: {
             click: function(e, $) {
@@ -113,15 +120,11 @@ TE.BBCode = function(target, o) {
             click: function(e, $) {
                 return $.format(formats.pre, 0, '\n\n', '\n'), false;
             }
-        },
-        hr: 0
+        }
     });
 
     extend(ui.keys, {
-        'control+arrowup': 0,
-        'control+arrowdown': 0,
-        'control+shift+?': 0,
-        'control+r': 0
+        'control+shift+?': 0
     });
 
     return $.update({}, 0);
