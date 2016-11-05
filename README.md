@@ -423,7 +423,7 @@ editor.redo();
 
 ### Scroll
 
-Get the current scroll step and text height (text area scroll height divided by text height):
+Get the current scroll step (text area scroll height divided by text height) and text height:
 
 ~~~ .javascript
 console.log(editor.scroll()); // `[4, 16]`
