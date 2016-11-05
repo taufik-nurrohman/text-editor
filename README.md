@@ -496,6 +496,6 @@ Plugins
 ![HTML Text Editor](https://cloud.githubusercontent.com/assets/1669261/18806346/373d3bb4-8254-11e6-8634-ef5bdc0d955e.png)
 
  - [HTML Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor/html/html.html)
- - [BBCode Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor/bbcode/bbcode.html)
  - [Markdown Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor/markdown/markdown.html)
  - [Textile Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor/textile/textile.html)
+ - [BBCode Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor/bbcode/bbcode.html)
