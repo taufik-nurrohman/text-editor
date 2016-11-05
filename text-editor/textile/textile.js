@@ -9,9 +9,7 @@
 
 TE.Textile = function(target, o) {
 
-    var win = window,
-        doc = document,
-        $ = new TE.HTML(target, {
+    var $ = new TE.HTML(target, {
             tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
             languages: {
                 modals: {
@@ -205,7 +203,7 @@ TE.Textile = function(target, o) {
                         }
                     } else {
                         href = v;
-                        $.blur().ui.prompt(['a[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
+                        ui.prompt(['a[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
                             title = attr_title(v);
                             // image link
                             if (/^\![^\s]+?\!$/.test(x)) {
@@ -233,7 +231,7 @@ TE.Textile = function(target, o) {
                     src, title;
                 return ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
                     src = attr_url(v);
-                    $.blur().ui.prompt(['img[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
+                    ui.prompt(['img[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
                         title = attr_title(v);
                         $.tidy('\n\n', "").insert('!' + src + (title ? '(' + title + ')' : "") + '!\n\n', 0);
                     });
@@ -441,7 +439,7 @@ TE.Textile = function(target, o) {
             if ($.$().value === q) return $.select(), false;
             return $[0]().ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
                 c = edge(num(v) || w, std[0], std[1]);
-                $.blur().ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
+                ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
                     r = edge(num(v) || w, str[0], str[1]);
                     var i, j, k, l, m, n;
                     for (i = 0; i < r; ++i) {

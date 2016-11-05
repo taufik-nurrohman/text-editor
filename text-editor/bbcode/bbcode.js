@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BBCODE TEXT EDITOR PLUGIN 1.0.0
+ *  BBCODE TEXT EDITOR PLUGIN 1.0.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -9,9 +9,7 @@
 
 TE.BBCode = function(target, o) {
 
-    var win = window,
-        doc = document,
-        $ = new TE.HTML(target, {
+    var $ = new TE.HTML(target, {
             auto_p: 0, // disable automatic paragraph feature from `TE.HTML` by default
             advance_table: 0, // disable advance table feature from `TE.HTML` by default
             tools: 'clear | b i s | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
@@ -33,25 +31,32 @@ TE.BBCode = function(target, o) {
                 email: 'email',
                 p: "",
                 blockquote: 'quote',
-                q: 'quote',
-                pre: 'code',
                 code: 'code',
                 ol: 'list=1',
                 ul: 'list',
                 li: '*',
+                table: 'table=1',
                 caption: ""
             }
         }),
         ui = $.ui,
         _ = $._,
+        esc = _.x,
         extend = _.extend,
         trim = _.trim,
-        replace = _.replace;
+        replace = _.replace,
+        pattern = _.pattern,
+        esc_unit = $.config.unit[1][0],
+        esc_data = $.config.unit[1][1];
 
     $.update(o, 0);
 
     // define editor type
     $.type = 'BBCode';
+
+    function get_o(s) {
+        return s.split(pattern('(' + esc_data[3] + ')+'))[0];
+    }
 
     function force_i(s) {
         return trim(s.replace(/\s+/g, ' '));
@@ -118,7 +123,18 @@ TE.BBCode = function(target, o) {
         },
         'pre,code': {
             click: function(e, $) {
-                return $.format(formats.pre, 0, '\n\n', '\n'), false;
+                var x = config.auto_encode_html,
+                    code = formats.code,
+                    code_o = get_o(code);
+                function encode(a) {
+                    return x ? a.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : a;
+                }
+                function decode(a) {
+                    return x ? a.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&') : a;
+                }
+                return $[0]().format(pre, 0, '\n\n', '\n').replace(/^[\s\S]*?$/, function(a) {
+                    return pattern('^\\s*' + esc_unit[0] + esc_unit[2] + esc(code_o) + esc_unit[1]).test($.$().after) ? encode(a) : decode(a);
+                })[1](), false;
             }
         }
     });

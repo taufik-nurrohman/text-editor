@@ -9,9 +9,7 @@
 
 TE.Markdown = function(target, o) {
 
-    var win = window,
-        doc = document,
-        $ = new TE.HTML(target, {
+    var $ = new TE.HTML(target, {
             extra: 0, // enable **Markdown Extra** feature
             auto_p: 0, // disable automatic paragraph feature from `TE.HTML` by default
             auto_close: {
@@ -207,7 +205,7 @@ TE.Markdown = function(target, o) {
                         }
                     } else {
                         href = v;
-                        $.blur().ui.prompt(['a[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
+                        ui.prompt(['a[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
                             title = attr_title(v);
                             if (!x) {
                                 $.insert(placeholders[""]);
@@ -259,7 +257,7 @@ TE.Markdown = function(target, o) {
                             $.set(b + x + s.after + (A ? n : "") + ' [' + v + ']: ' + state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "")).select(start, end);
                         }
                     } else {
-                        $.blur().ui.prompt(['img[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
+                        ui.prompt(['img[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
                             title = attr_title(v);
                             $.insert('![' + alt + '](' + src + (title ? ' "' + title + '"' : "") + ')\n\n', 0, 1);
                             if (keep) $.select($.$().start);
@@ -530,7 +528,7 @@ TE.Markdown = function(target, o) {
             if ($.$().value === q) return $.select(), false;
             return $[0]().ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
                 c = edge(num(v) || w, std[0], std[1]);
-                $.blur().ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
+                ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
                     r = edge(num(v) || w, str[0], str[1]);
                     var i, j, k, l, m, n;
                     for (i = 0; i < r; ++i) {

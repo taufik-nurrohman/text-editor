@@ -18,8 +18,6 @@ TE.HTML = function(target, o) {
         _u2718 = '\u2718', // delete sign
         _u21E7 = '\u21E7', // shift sign
 
-        win = window,
-        doc = document,
         $ = new TE(target),
         _ = $._,
         extend = _.extend,
@@ -267,12 +265,12 @@ TE.HTML = function(target, o) {
                     v = attr_url(v);
                     href = v;
                     // automatic `rel="nofollow"` attribute
-                    var host = win.location.host,
+                    var host = location.host,
                         x, extra;
                     if (href.indexOf('://') !== -1) x = 1;
                     if (host !== "" && href.indexOf('://' + host) !== -1) x = 0;
                     if (/^([.\/?&#]|javascript:)/.test(href)) x = 0;
-                    $.blur().ui.prompt(['a[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
+                    ui.prompt(['a[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
                         title = attr_title(v);
                         if (!auto_p_(e, $).$().length) {
                             $.insert(placeholders[""]);
@@ -297,7 +295,7 @@ TE.HTML = function(target, o) {
                 return ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
                     v = attr_url(v);
                     src = v;
-                    $.blur().ui.prompt(['img[title]', i18n.title[advance ? 2 : 1]], i18n.placeholder[advance ? 2 : 1], 0, function(e, $, v) {
+                    ui.prompt(['img[title]', i18n.title[advance ? 2 : 1]], i18n.placeholder[advance ? 2 : 1], 0, function(e, $, v) {
                         title = attr_title(v);
                         if (!alt) {
                             alt = src.split(/[\/\\\\]/).pop();
@@ -522,7 +520,7 @@ TE.HTML = function(target, o) {
                 // span
                 } else {
                     $[0]().format(code).loss().replace(any, function(a) {
-                        return force_i(pattern('^' + esc_unit[0] + esc_unit[2] + esc(code_o) + esc_unit[1]).test($.$().after) ? encode(a) : decode(a));
+                        return force_i(pattern('^\\s*' + esc_unit[0] + esc_unit[2] + esc(code_o) + esc_unit[1]).test($.$().after) ? encode(a) : decode(a));
                     })[1]();
                 }
                 return false;
@@ -593,9 +591,9 @@ TE.HTML = function(target, o) {
             if ($.$().value === q) return $.select(), false;
             return $[0]().ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
                 c = edge(num(v) || w, std[0], std[1]);
-                $.blur().ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
+                ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
                     r = edge(num(v) || w, str[0], str[1]);
-                    $.blur().ui.prompt(['table>caption', i18n.title[2]], i18n.placeholder[2], 0, function(e, $, v) {
+                    ui.prompt(['table>caption', i18n.title[2]], i18n.placeholder[2], 0, function(e, $, v) {
                         var tfoot_html = "",
                             i, j, k, l, m, n;
                         title = force_i(v);
