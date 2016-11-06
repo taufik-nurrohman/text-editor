@@ -489,11 +489,12 @@ Modules
  - [User Interface](https://rawgit.com/tovic/text-editor/master/text-editor/ui/ui.html)
    - [Internationalization](https://rawgit.com/tovic/text-editor/master/text-editor/ui/language/language.html)
    - [Maximize/Minimize the Editor](https://rawgit.com/tovic/text-editor/master/text-editor/ui/expand/expand.html)
+   - [Table Grid Selector](https://rawgit.com/tovic/text-editor/master/text-editor/ui/table-grid/table-grid.html)
 
 Plugins
 -------
 
-![HTML Text Editor](https://cloud.githubusercontent.com/assets/1669261/18806346/373d3bb4-8254-11e6-8634-ef5bdc0d955e.png)
+![HTML Text Editor](https://cloud.githubusercontent.com/assets/1669261/20038219/63a3820a-a462-11e6-8101-1bd02585754a.png)
 
  - [HTML Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor/html/html.html)
  - [Markdown Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor/markdown/markdown.html)
