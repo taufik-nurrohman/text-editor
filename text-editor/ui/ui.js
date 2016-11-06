@@ -1361,7 +1361,7 @@ TE.prototype.ui = function(o) {
 
     function do_click_preview(e) {
         var v = $.get(),
-            w = "", frame;
+            w = "", frame, o, p;
         if (v.indexOf('</html>') === -1) {
             w = '<!DOCTYPE html><html dir="' + config.dir + '"><head><meta charset="utf-8"><style>' + config.css + '</style></head><body>' + v + '</body></html>';
         }
@@ -1370,7 +1370,6 @@ TE.prototype.ui = function(o) {
             src: 'data:text/html,' + encodeURIComponent(w)
         });
         function frame_resize() {
-            var o = dom_children(_overlay)[0], p;
             if (o) {
                 p = size(o);
                 dom_css(frame, {
@@ -1381,6 +1380,7 @@ TE.prototype.ui = function(o) {
         }
         if (!dom_exist(_overlay) && v) {
             ui.overlay(frame, 1, function() {
+                o = dom_children(_overlay)[0];
                 frame_resize();
                 events_set(_RESIZE, win, frame_resize);
                 hook_fire('enter.overlay.preview', [e, $, [v, w], o]);
@@ -1399,7 +1399,7 @@ TE.prototype.ui = function(o) {
         'control+y': 'redo',
         'control+z': 'undo',
         'f5': function(e, $) {
-            return do_click_preview(e), false;
+            return do_click_preview(e);
         },
         'shift+tab': auto_tab ? 'outdent' : 0,
         'tab': auto_tab ? 'indent' : 0,

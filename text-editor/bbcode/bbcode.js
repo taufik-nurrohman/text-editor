@@ -12,7 +12,7 @@ TE.BBCode = function(target, o) {
     var $ = new TE.HTML(target, {
             auto_p: 0, // disable automatic paragraph feature from `TE.HTML` by default
             advance_table: 0, // disable advance table feature from `TE.HTML` by default
-            tools: 'clear | b i s | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
+            tools: 'clear | b i s | sub sup | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
             unit: [
                 [
                     ['\u005B', '\u005D']
@@ -34,7 +34,7 @@ TE.BBCode = function(target, o) {
                 code: 'code',
                 ol: 'list=1',
                 ul: 'list',
-                li: '*',
+                li: '*', // TODO: remove the closing star tag
                 table: 'table=1',
                 caption: ""
             }
