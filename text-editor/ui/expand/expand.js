@@ -23,7 +23,7 @@ TE.each(function($) {
         $$ = $.target.style, is_max;
     prefix = prefix_base + ' ' + prefix + '--' + uniq + ' ' + prefix;
     ui.el.container.classList.add(s + '--' + uniq);
-    $.config.css += '</style><style>body{padding-top:2.5em}';
+    $.config.css += 'body{padding-top:2em}';
     _.extend(i18n, {
         maximize: ['Maximize', 'F11'],
         minimize: ['Minimize', 'F11']
