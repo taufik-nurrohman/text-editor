@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.0.0
+ *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.0.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -66,7 +66,7 @@ TE.each(function($) {
             if (color === border) {
                 color = '#39f'; // ... force hover color to `#39f`
             }
-            el(style, prefix + ' div{background:' + border + ';border:1px solid ' + background + ';overflow:hidden}' + prefix + ' div>div{border-width:0}' + prefix + '>div>div+div{border-top-width:1px}' + prefix + '>div>div>div{width:1em;height:1em;float:left;border-width:0;cursor:pointer}' + prefix + '>div>div>div+div{border-left-width:1px}' + prefix + '>div>div>.active{background:' + color + '}');
+            el(style, prefix + ' div{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;background:' + border + ';border:1px solid ' + background + ';overflow:hidden}' + prefix + ' div>div{border-width:0}' + prefix + '>div>div+div{border-top-width:1px}' + prefix + '>div>div>div{width:1em;height:1em;float:left;border-width:0;cursor:pointer}' + prefix + '>div>div>div+div{border-left-width:1px}' + prefix + '>div>div>.active{background:' + color + '}');
             function do_over() {
                 data = this.title.split(x);
                 results = [+data[0], +data[1]];
