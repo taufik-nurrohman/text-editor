@@ -53,8 +53,8 @@ TE.each(function($) {
         if (busy) return;
         ui.drop(prefix.slice(1), function(drop) {
             var container = el('div'),
-                rows = states.tr[1], // number of rows
-                columns = states.td[1], // number of columns
+                rows = states.tr,
+                columns = states.td,
                 c = 'children',
                 x = ' \u00D7 ',
                 ui_container = ui.el.container,
@@ -82,10 +82,10 @@ TE.each(function($) {
             function do_click() {
                 fire_tool_with_prompt('table', $.restore('grid'), $);
             }
-            i = rows;
+            i = rows[1]; // number of rows
             while (i--) {
                 tr = el('div');
-                j = columns;
+                j = columns[1]; // number of columns
                 while (j--) {
                     td = el('div');
                     event.set("mouseover touchstart", td, do_over);
@@ -98,4 +98,4 @@ TE.each(function($) {
             prepend(drop, container);
         });
     }, 'table-grid');
-}, 1000);
+}, 250);
