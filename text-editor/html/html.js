@@ -32,8 +32,8 @@ TE.HTML = function(target, o) {
             auto_p: 1,
             tools: 'clear | b i u s | sub sup | abbr | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
             states: {
-                tr: [1, 20], // minimum and maximum table row(s)
-                td: [1, 20], // minimum and maximum table column(s)
+                tr: [1, 10], // minimum and maximum table row(s)
+                td: [1, 10], // minimum and maximum table column(s)
                 abbr: {}
             },
             languages: {
