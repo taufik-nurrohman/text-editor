@@ -286,6 +286,7 @@
   box-shadow:none;
   border-radius:0;
 }
+.text-editor-drop.menu .text-editor-button:focus,
 .text-editor-drop.menu .text-editor-button:active {color:#00a}
 .text-editor-current.menu:after {
   content:"";

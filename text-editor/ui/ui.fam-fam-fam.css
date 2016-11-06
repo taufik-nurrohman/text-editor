@@ -297,6 +297,7 @@
   box-shadow:none;
   border-radius:0;
 }
+.text-editor-drop.menu .text-editor-button:focus,
 .text-editor-drop.menu .text-editor-button:active {background:#eee}
 .text-editor-current.menu:after {
   content:"";

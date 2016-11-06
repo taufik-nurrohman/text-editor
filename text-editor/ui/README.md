@@ -444,7 +444,14 @@ editor.ui.menu('my-menu', 'Arial', {
         return $.wrap('<span style="font-family: Arial;">', '</span>'), false;
     },
     'Times New Roman': function(e, $) { … },
-    'Test': 'italic'
+    'Test': 'italic',
+    'foo': {
+        text: 'This text will overrides the `foo`,
+        active: false, // disabled menu
+        click: function(e, $) {
+            return $.insert('[foo]'), false;
+        }
+    }
 });
 ~~~
 

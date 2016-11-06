@@ -531,6 +531,16 @@ TE.prototype.ui = function(o) {
         content_set(_description_right, format(i18n_others['_word' + (i === 1 ? "" : 's')], [i]));
     }
 
+    function do_attributes(tool, k) {
+        if (is_function(tool)) {
+            tool.click = tool;
+        }
+        if (!is_set(tool.active)) {
+            tool.active = 1;
+        }
+        tool.title = i18n_tools[k] || "";
+    }
+
     function do_update_tools() {
         content_reset(_tool, false);
         var tools = is_string(config.tools) ? trim(config.tools).split(/\s+/) : config.tools,
@@ -542,10 +552,7 @@ TE.prototype.ui = function(o) {
             v = tools[i];
             tool = ui.tools[v];
             if (!tool) continue;
-            if (is_function(tool)) {
-                tool.click = tool;
-            }
-            tool.title = i18n_tools[v] || "";
+            do_attributes(tool, v);
             if ((icon = tool.i || v) !== '|') {
                 icon = slug(icon);
             }
@@ -558,9 +565,7 @@ TE.prototype.ui = function(o) {
                 _button.tabIndex = -1;
                 _button.setAttribute(data_tool_id, v);
                 icon = '<i class="' + format(c.i, [icon]) + ' ' + _button_id + '"></i>';
-                if (!is_set(tool.active)) {
-                    tool.active = 1;
-                } else if (!tool.active) {
+                if (!tool.active) {
                     class_set(_button, 'x');
                 }
                 if (tool.text) {
@@ -693,15 +698,15 @@ TE.prototype.ui = function(o) {
     function do_click_tool(e) {
         ui.exit(0, 0, 0);
         var id = this.getAttribute(data_tool_id),
-            tools = ui.tools;
+            tools = ui.tools,
+            tool = tools[id], j;
         _drop_target = e.currentTarget || e.target;
-        if (tools[id] && tools[id].click && tools[id].active) {
-            tools[id].click(e, $, id);
+        if (tool && tool.active && tool.click) {
+            j = tools[id].click(e, $, id);
             hook_fire('on:change', [e, $, id]);
-        } else {
-            $.select();
+            if (j === false) return event_exit(e);
         }
-        return event_exit(e);
+        return $.select(), event_exit(e);
     }
 
     $.create = function(o, hook) {
@@ -1188,36 +1193,57 @@ TE.prototype.ui = function(o) {
         }
         return ui.tool(id, {
             i: icon,
-            text: format(current, [str, icon]),
+            text: format(current, [(data[str] && data[str].text) || str, icon]),
             click: function(e) {
                 var attr = {
+                    href: "",
                     'class': prefix + '-button'
-                }, h, i, j, k;
-                ui.drop('menu', function(drop) {
+                }, h, i, j, k, l;
+                return ui.drop('menu', function(drop) {
                     content_reset(drop);
-                    for (i in data) {
-                        attr[data_tool_id] = i;
-                        h = el('span', i, attr);
-                        if (data[i]) {
-                            events_set(_CLICK, h, function(e) {
-                                k = data[this.getAttribute(data_tool_id)];
-                                if (is_string(k)) {
-                                    k = ui.tools[k].click;
-                                }
-                                j = k && k(e, $);
-                                if (_drop_target) {
-                                    content_set(dom_children(_drop_target)[0] || _drop_target, format(current, [content_set(this), icon]));
-                                }
-                                if (j === false) return event_exit(e);
-                            });
-                            events_set(_KEYDOWN, h, function(e) {
-                                
-                            });
+                    function _do_click(e) {
+                        j = this;
+                        k = data[j.getAttribute(data_tool_id)];
+                        l = (is_string(k) ? (ui.tools[k] || {}) : k).click;
+                        if (k && k.active && is_function(l)) {
+                            l = l(e, $);
+                            if (_drop_target) {
+                                content_set(dom_children(_drop_target)[0] || _drop_target, format(current, [content_set(j), icon]));
+                            }
+                            if (l === false) return event_exit(e);
                         }
-                        dom_set(drop, h);
-                        
+                        return $.select(), event_exit(e);
                     }
-                });
+                    function _do_key(e) {
+                        j = this;
+                        k = e.TE.key;
+                        if (k('enter')) return _do_click(e);
+                        if (k('escape')) {
+                            ui.exit(1);
+                        } else if (k('arrowdown') && (l = dom_next(j)) || k('arrowup') && (l = dom_previous(j))) {
+                            l.focus();
+                        }
+                        return event_exit(e);
+                    }
+                    for (i in data) {
+                        k = data[i];
+                        k = is_string(k) ? ui.tools[k].click : k;
+                        if (!k) continue;
+                        do_attributes(k, i);
+                        attr[data_tool_id] = i;
+                        h = el('a', k.text || i, attr);
+                        if (!k.active) {
+                            class_set(h, 'x');
+                        }
+                        data[i] = k;
+                        events_set(_CLICK, h, _do_click);
+                        events_set(_KEYDOWN, h, _do_key);
+                        dom_set(drop, h);
+                    }
+                    timer_set(function() {
+                        drop.children[0].focus();
+                    }, 250);
+                }), false;
             }
         }, i), hook_fire('update.menus', [$]), $;
     };

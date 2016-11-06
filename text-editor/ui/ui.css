@@ -282,6 +282,7 @@
   box-shadow:none;
   border-radius:0;
 }
+.text-editor-drop.menu .text-editor-button:focus,
 .text-editor-drop.menu .text-editor-button:active {background:#f5f5f5}
 .text-editor-current.menu:after {
   content:"";

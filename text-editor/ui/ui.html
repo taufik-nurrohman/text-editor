@@ -16,6 +16,7 @@
     .text-h1 {font-size:175%}
     .text-h2 {font-size:150%}
     .text-h3 {font-size:115%}
+    .text-strong {font-weight:bold}
     .text-em {font-style:italic}
     .text-editor-current.menu * {font-size:100%}
     input,
@@ -99,16 +100,16 @@ SOFTWARE.</textarea></p>
     // add custom tool(s)
     editor._.extend(ui.tools, {
         bold: function(e, $) {
-            $.format('strong');
+            return $.format('strong'), false;
         },
         italic: function(e, $) {
-            $.format('em');
+            return $.format('em'), false;
         },
         alert_button: {
             i: 'exclamation-triangle',
             title: 'Show Alert Modal',
             click: function(e, $) {
-                $.ui.alert('Alert', 'Lorem ipsum dolor sit amet.');
+                return $.ui.alert('Alert', 'Lorem ipsum dolor sit amet.'), false;
             }
         },
         confirm_button: {
@@ -119,10 +120,10 @@ SOFTWARE.</textarea></p>
                     'Confirm', // title
                     'Are you sure?', // description
                     function(e, $) { // if yes ...
-                        $.insert('[yes]');
+                        return $.insert('[yes]'), false;
                     },
                     function(e, $) { // if no ...
-                        $.insert('[no]');
+                        return $.insert('[no]'), false;
                     }
                 );
             }
@@ -131,21 +132,21 @@ SOFTWARE.</textarea></p>
             i: 'pencil',
             title: 'Show Prompt Modal',
             click: function(e, $) {
-                $.ui.prompt(
+                return $.ui.prompt(
                     'Name', // title
                     'Anonymous', // placeholder
                     true, // is required?
                     function(e, $, value) { // if yes ...
                         $.insert('Your name is: ' + value);
                     }
-                );
+                ), false;
             }
         },
         drop_button: {
             i: 'paint-brush',
             title: 'Test Drop',
             click: function(e, $) {
-                $.ui.drop('my-drop', function(body) {
+                return $.ui.drop('my-drop', function(body) {
                     body.innerHTML = "";
                     var colors = ['red', 'orange', 'yellow', 'lime', 'green'],
                         i, j, k;
@@ -170,7 +171,7 @@ SOFTWARE.</textarea></p>
                         });
                         body.appendChild(k);
                     }
-                });
+                }), false;
             }
         }
     });
@@ -181,18 +182,26 @@ SOFTWARE.</textarea></p>
     });
 
     // test menu button(s)
-    editor.ui.menu('styles', '<span class="text-p">Paragraph</span>', {
+    editor.ui.menu('styles', 'foo', {
         '<span class="text-h1">Heading 1</span>': function(e, $) {
-            $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('h1');
+            return $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('h1'), false;
         },
         '<span class="text-h2">Heading 2</span>': function(e, $) {
-            $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('h2');
+            return $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('h2'), false;
         },
         '<span class="text-h3">Heading 3</span>': function(e, $) {
-            $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('h3');
+            return $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('h3'), false;
         },
-        '<span class="text-p">Paragraph</span>': function(e, $) {
-            $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('p');
+        'foo': {
+            text: '<span class="text-p">Paragraph</span>',
+            click: function(e, $) {
+                return $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('p'), false;
+            }
+        },
+        'foo': {
+            text: '<span class="text-strong">Test Bold (Disabled)</span>',
+            active: false, // disable
+            click: 'bold'
         },
         '<span class="text-em">Test Italic</span>': 'italic'
     });
