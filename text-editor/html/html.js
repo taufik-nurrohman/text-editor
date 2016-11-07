@@ -222,13 +222,20 @@ TE.HTML = function(target, o) {
             i: 'eraser',
             click: function(e, $) {
                 var s = $[0]().$(),
-                    v = s.value;
-                if (!pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1]).test(v) && (s.before.slice(-1) !== unit[1] && s.after[0] !== unit[0])) {
+                    b = s.before,
+                    a = s.after,
+                    v = s.value, w,
+                    tag_any = esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1],
+                    tag_open = esc_unit[0] + '[^' + esc_unit[2] + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1],
+                    tag_close = esc_unit[0] + esc_unit[2] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1];
+                if (!v && a && (w = pattern('^' + tag_any)).test(a)) {
+                    return $.replace(w, "", 1), false;
+                } else if (!pattern(tag_any).test(v) && (b.slice(-1) !== unit[1] && a[0] !== unit[0])) {
                     $.insert("");
                 } else {
-                    $.replace(pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1], 'g'), "").unwrap(pattern(esc_unit[0] + '[^' + esc_unit[2] + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1]), pattern(esc_unit[0] + esc_unit[2] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1]));
+                    $.replace(pattern(tag_any, 'g'), "").unwrap(pattern(tag_open), pattern(tag_close));
                 }
-                return $[1](), !!s.after;
+                return $[1](), !!a;
             }
         },
         b: {

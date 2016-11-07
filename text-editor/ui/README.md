@@ -46,7 +46,7 @@ editor.ui({
         'spellcheck': 'false'
     },
     css: 'body{background:#fff;color:#000}', // CSS for iframe content
-    auto_tab: 1,
+    auto_tab: true,
     auto_close: {
         '"': '"',
         "'": "'",
@@ -59,7 +59,8 @@ editor.ui({
     classes: {
         "": 'text-editor',
         i: 'icon icon-%1 fa fa-%1'
-    }
+    },
+    debounce: 250
 });
 ~~~
 
@@ -202,6 +203,8 @@ editor.i();
 
 ### Modal
 
+![Modal](https://cloud.githubusercontent.com/assets/1669261/20048290/0bfb8fc0-a4ee-11e6-81ee-79827bc30ac3.png)
+
 ~~~ .javascript
 // create a modal button
 var button = editor._.el('button', 'OK');
@@ -221,13 +224,24 @@ editor.ui.modal('my-modal', {
 });
 ~~~
 
+Custom modal position:
+
+~~~ .javascript
+editor.ui.modal.fit(); // refresh modal position after modal content update (center)
+editor.ui.modal.fit([10, 40]); // set modal position 10 pixels from left and 40 pixels from top
+~~~
+
 ### Alert › Modal
+
+![Alert › Modal](https://cloud.githubusercontent.com/assets/1669261/20048093/8967edfc-a4ec-11e6-9fd2-69cbf8c0665f.png)
 
 ~~~ .javascript
 editor.ui.alert('Alert Title', 'Alert content.');
 ~~~
 
 ### Confirm › Modal
+
+![Confirm › Modal](https://cloud.githubusercontent.com/assets/1669261/20048096/89deba04-a4ec-11e6-9806-c491a625192d.png)
 
 ~~~ .javascript
 editor.ui.confirm(
@@ -247,6 +261,8 @@ editor.ui.confirm(
 ~~~
 
 ### Prompt › Modal
+
+![Prompt › Modal](https://cloud.githubusercontent.com/assets/1669261/20048097/89eecac0-a4ec-11e6-9eb9-54f548df5ec6.png)
 
 ~~~ .javascript
 editor.ui.prompt(
@@ -284,6 +300,8 @@ editor.ui.prompt(
 
 ### Overlay
 
+![Overlay](https://cloud.githubusercontent.com/assets/1669261/20048089/895e0940-a4ec-11e6-9b7b-0cbd584d3d1a.png)
+
 A single method to show only the overlay:
 
 ~~~ .javascript
@@ -291,6 +309,8 @@ editor.ui.overlay('Overlay content.', true); // click to exit
 ~~~
 
 ### Drop
+
+![Drop](https://cloud.githubusercontent.com/assets/1669261/20048091/8960746e-a4ec-11e6-8127-3b4f7349bf5c.png)
 
 ~~~ .javascript
 editor.ui.drop('my-drop', function(drop) {
@@ -303,7 +323,17 @@ editor.ui.drop('my-drop', function(drop) {
 editor.ui.drop('my-drop', '<div class="test-class-add">Test content.</div>');
 ~~~
 
+Custom drop position:
+
+~~~ .javascript
+editor.ui.drop.fit(); // refresh drop position after drop content update
+editor.ui.drop.fit(true); // force drop position to be centered vertically and horizontally from the page
+editor.ui.drop.fit([10, 40]); // set drop position 10 pixels from left and 40 pixels from top
+~~~
+
 ### Bubble
+
+![Bubble](https://cloud.githubusercontent.com/assets/1669261/20048090/896047fa-a4ec-11e6-8871-203b2dc664cf.png)
 
 ~~~ .javascript
 editor.ui.bubble('my-bubble', function(bubble) {
@@ -314,6 +344,13 @@ editor.ui.bubble('my-bubble', function(bubble) {
 
 ~~~ .javascript
 editor.ui.bubble('my-bubble', '<div class="test-class-add">Test content.</div>');
+~~~
+
+Custom bubble position:
+
+~~~ .javascript
+editor.ui.bubble.fit(); // refresh bubble position after bubble content update
+editor.ui.bubble.fit([10, 40]); // set bubble position 10 pixels from left and 40 pixels from top
 ~~~
 
 ### Exit
@@ -334,6 +371,8 @@ editor.ui.exit(true, 'drop'); // restore selection, exit drop only
 
 Tools
 -----
+
+![Tools](https://cloud.githubusercontent.com/assets/1669261/20048094/896c5e82-a4ec-11e6-8a8d-ac6ab5ae9b28.png)
 
 ### Add
 
@@ -422,7 +461,7 @@ A key with string value will be used to take a tool item from the `editor.ui.too
 ~~~ .javascript
 // this…
 editor.ui.key('control+b', 'bold');
->
+
 // is equal to this…
 editor.ui.key('control+b', editor.ui.tools.bold);
 ~~~
@@ -433,8 +472,10 @@ editor.ui.key('control+b', editor.ui.tools.bold);
 editor.ui.key('control+b', false);
 ~~~
 
-Menus
------
+Drop › Menus
+------------
+
+![Drop › Menus](https://cloud.githubusercontent.com/assets/1669261/20048092/896350c6-a4ec-11e6-9d6b-38f8767322c5.png)
 
 ### Add
 
@@ -511,6 +552,10 @@ Hooks
  - `exit.modal`
  - `exit.drop`
  - `exit.bubble`
+ - `fit`
+ - `fit.modal`
+ - `fit.drop`
+ - `fit.bubble`
  - `on:change`
  - `on:click`
  - `on:focus`

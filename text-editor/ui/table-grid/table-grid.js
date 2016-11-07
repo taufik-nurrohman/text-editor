@@ -20,7 +20,7 @@ TE.each(function($) {
         el = _.el,
         css = _.css,
         modal = $.ui.el.modal,
-        c = 'children',
+        q = 'querySelector',
         prefix = '.' + classes[""] + '-grid',
         style = el('style'),
         css, i, j, k;
@@ -37,12 +37,12 @@ TE.each(function($) {
         ui.tools[id].click(null, $);
         // [2]. access the visible modal prompt HTML through `$.ui.el.modal`
         for (i in data) {
-            if (j = modal[c][1][c][0][c][0]) {
+            if (j = modal[q]('[name=data]')) {
                 // [3]. set value to the prompt field
                 j.value = data[i];
                 // [4]. trigger click event to the submit button
-                if (k = modal[c][2][c][0]) {
-                    event.fire('click', k);
+                if (k = modal[q]('[name=y]')) {
+                    event.fire("click", k);
                 }
             }
         }

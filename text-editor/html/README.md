@@ -123,11 +123,11 @@ function fire_tool_with_prompt(id, data, $) {
     // [2]. access the visible modal prompt HTML through `$.ui.el.modal`
     var $modal = $.ui.el.modal, i, j, k;
     for (i in data) {
-        if (j = $modal.querySelector('input, select, textarea')) {
+        if (j = $modal.querySelector('[name=data]')) {
             // [3]. set value to the prompt field
             j.value = data[i];
             // [4]. trigger click event to the submit button
-            if (k = $modal.querySelector('button')) {
+            if (k = $modal.querySelector('[name=y]')) {
                 $._.event.fire('click', k);
             }
         }

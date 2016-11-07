@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BBCODE TEXT EDITOR PLUGIN 1.0.2
+ *  BBCODE TEXT EDITOR PLUGIN 1.0.3
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -46,6 +46,8 @@ TE.BBCode = function(target, o) {
         trim = _.trim,
         replace = _.replace,
         pattern = _.pattern,
+        hook = _.hook,
+        event = _.event,
         esc_unit = $.config.unit[1][0],
         esc_data = $.config.unit[1][1];
 
@@ -141,6 +143,14 @@ TE.BBCode = function(target, o) {
 
     extend(ui.keys, {
         'control+shift+?': 0
+    });
+
+    // table caption is not supported in **BBCode** so we have to remove the modal prompt here
+    hook.set('enter.modal.prompt:table>caption', function($) {
+        var k;
+        if (!formats.caption && (k = ui.el.modal.querySelector('[name=y]'))) {
+            event.fire("click", k); // force to click the submit button
+        }
     });
 
     return $.update({}, 0);

@@ -105,6 +105,17 @@ SOFTWARE.</textarea></p>
         italic: function(e, $) {
             return $.format('em'), false;
         },
+        modal_button: {
+            i: 'info',
+            title: 'Raw Modal Example',
+            click: function(e, $) {
+                return $.ui.modal('foo', {
+                    header: 'Modal Title',
+                    body: 'Raw modal example.',
+                    footer: '<button class="' + editor.config.classes[""] + '-button">Test Button</button>'
+                }), false;
+            }
+        },
         alert_button: {
             i: 'exclamation-triangle',
             title: 'Show Alert Modal',
@@ -116,7 +127,7 @@ SOFTWARE.</textarea></p>
             i: 'question-circle',
             title: 'Show Confirm Modal',
             click: function(e, $) {
-                $.ui.confirm(
+                return $.ui.confirm(
                     'Confirm', // title
                     'Are you sure?', // description
                     function(e, $) { // if yes ...
@@ -125,7 +136,7 @@ SOFTWARE.</textarea></p>
                     function(e, $) { // if no ...
                         return $.insert('[no]'), false;
                     }
-                );
+                ), false;
             }
         },
         prompt_button: {
@@ -178,7 +189,7 @@ SOFTWARE.</textarea></p>
 
     // put the custom tool(s) to the editor toolbar
     editor.update({
-        tools: 'bold italic | indent outdent | undo redo | alert_button confirm_button prompt_button | drop_button'
+        tools: 'bold italic | indent outdent | undo redo | modal_button alert_button confirm_button prompt_button | drop_button'
     });
 
     // test menu button(s)
@@ -199,11 +210,11 @@ SOFTWARE.</textarea></p>
             }
         },
         'bar': {
-            text: '<span class="text-strong">Test Bold (Disabled)</span>',
-            active: false, // disable
+            title: 'Test Title',
+            text: '<span class="text-strong">Bold</span>',
             click: 'bold'
         },
-        '<span class="text-em">Test Italic</span>': 'italic'
+        '<span class="text-em">Italic</span>': 'italic'
     });
 
     // custom hook(s)
