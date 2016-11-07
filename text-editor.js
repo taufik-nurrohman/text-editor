@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.6.1
+ *  TEXT EDITOR PLUGIN 2.6.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -107,7 +107,7 @@
     (function($) {
 
         // plugin version
-        $.version = '2.6.1';
+        $.version = '2.6.2';
 
         // collect all instance(s)
         $.__instance__ = {};
@@ -386,7 +386,7 @@
             } else if (is_boolean(i)) {
                 return $.scroll($.scroll()[0] + (i === false ? -1 : 1));
             }
-            return target.scrollTop = (h * i) + (h - s), $;
+            return target.scrollTop = (h * i) + s + (h - s), $;
         };
 
         // set value
