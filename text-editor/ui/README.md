@@ -472,10 +472,10 @@ editor.ui.key('control+b', editor.ui.tools.bold);
 editor.ui.key('control+b', false);
 ~~~
 
-Drop › Menus
+Menus › Drop
 ------------
 
-![Drop › Menus](https://cloud.githubusercontent.com/assets/1669261/20048092/896350c6-a4ec-11e6-9d6b-38f8767322c5.png)
+![Menus › Drop](https://cloud.githubusercontent.com/assets/1669261/20048092/896350c6-a4ec-11e6-9d6b-38f8767322c5.png)
 
 ### Add
 
@@ -487,7 +487,7 @@ editor.ui.menu('my-menu', 'Arial', {
     'Times New Roman': function(e, $) { … },
     'Test': 'italic',
     'foo': {
-        text: 'This text will overrides the `foo`,
+        text: 'This text will overrides the `foo`',
         active: false, // disabled menu
         click: function(e, $) {
             return $.insert('[foo]'), false;
