@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  MARKDOWN TEXT EDITOR PLUGIN 1.2.3
+ *  MARKDOWN TEXT EDITOR PLUGIN 1.2.4
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -289,6 +289,7 @@ TE.Markdown = function(target, o) {
                     if (index !== -1) {
                         i = g.indexOf(notes[index]) + 3;
                         $.select(i, i + v.length);
+                        target.scrollTop = $.$(1).caret[0].y;
                     } else {
                         $.trim(trim(b) ? ' ' : "", !trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[^' + v + ']').set(trim($.get(), 1) + n + ' [^' + v + ']: ').focus(true).insert(placeholders[""]);
                     }
@@ -312,7 +313,8 @@ TE.Markdown = function(target, o) {
                 i = abbrs.indexOf(' *[' + abbr + ']:');
                 if (x && i !== -1) {
                     i = g.indexOf(abbrs[i]) + 3;
-                    return $.select(i, i + abbr.length), false;
+                    $.select(i, i + abbr.length);
+                    return target.scrollTop = $.$(1).caret[0].y, false;
                 }
                 return $.record().ui.prompt(['abbr[title]', i18n.title], state[abbr] || i18n.placeholder, !state[x], function(e, $, v, w) {
                     v = attr_title(v);

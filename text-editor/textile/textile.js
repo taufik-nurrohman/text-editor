@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXTILE TEXT EDITOR PLUGIN 1.2.3
+ *  TEXTILE TEXT EDITOR PLUGIN 1.2.4
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -251,12 +251,13 @@ TE.Textile = function(target, o) {
                     notes = g.match(/^fn\d+\^?\. /gm) || [],
                     i = 0, index;
                 i = notes.length + 1;
-                return ui.prompt(['sup[id]', i18n.title], s.value || i18n.placeholder || i, 0, function(e, $, v) {
-                    v = trim(v) || i;
-                    index = notes.indexOf('fn' + v + '. ');
+                return ui.prompt(['sup[id]', i18n.title], s.value || i18n.placeholder || i, 0, function(e, $, v, w) {
+                    v = trim(v) || trim(w) || i;
+                    index = notes.indexOf('fn' + num(v) + '. ');
                     if (index !== -1) {
                         i = g.indexOf(notes[index]) + 2;
                         $.select(i, i + v.length);
+                        target.scrollTop = $.$(1).caret[0].y;
                     } else {
                         $.trim("", !trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[' + v + ']').set(trim($.get(), 1) + n + 'fn' + v + '. ').focus(true).insert(placeholders[""]);
                     }
