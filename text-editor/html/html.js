@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.2.3
+ *  HTML TEXT EDITOR PLUGIN 1.2.4
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -79,7 +79,6 @@ TE.HTML = function(target, o) {
                     table: ['Table Head %1.%2', 'Table Data %1.%2', 'Table Foot %1.%2']
                 }
             },
-            classes: {},
             advance_a: 1, // detect external URL and automatically adds `rel="nofollow" target="_blank"` attribute to the link markup
             advance_img: 1, // insert image with a `<figure>` element if title field is defined
             advance_table: 1, // include `<thead>`, `<tbody>` and `<tfoot>` markup
@@ -595,8 +594,8 @@ TE.HTML = function(target, o) {
                 th_o = get_o(th),
                 td_o = get_o(td),
                 o = [], s, c, r, title;
-            if ($.$().value === q) return $.select(), false;
-            return $[0]().ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
+            if ($[0]().$().value === q) return $.select(), false;
+            return ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
                 c = edge(num(v) || w, std[0], std[1]);
                 ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
                     r = edge(num(v) || w, str[0], str[1]);

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.3.1
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.3.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -369,7 +369,7 @@ TE.prototype.ui = function(o) {
                     } else if (v === null) {
                         em.removeAttribute(i);
                     } else {
-                        em = dom_css(em, v);
+                        em = css(em, v);
                     }
                 } else {
                     if (is_function(v)) {
@@ -411,16 +411,6 @@ TE.prototype.ui = function(o) {
             node.id = id;
         }
         return id;
-    }
-
-    function dom_css(em, prop) {
-        em = el(em);
-        for (var i in prop) {
-            em.style[i.replace(/\-([a-z])/g, function(a, b) {
-                return b.toUpperCase();
-            })] = prop[i];
-        }
-        return em;
     }
 
     function class_exist(node, s) {
@@ -805,8 +795,8 @@ TE.prototype.ui = function(o) {
 
     function do_resize_move(e) {
         if (drag === _resize) {
-            dom_css(_content, {
-                height: (point(_body, e).y - s.h) + 'px'
+            css(_content, {
+                'height': (point(_body, e).y - s.h) + 'px'
             });
         }
     }
@@ -851,16 +841,16 @@ TE.prototype.ui = function(o) {
             o = point(_body, e);
             left = o.x - x;
             top = o.y - y;
-            dom_css(_modal, {
-                left: (w > W ? left : edge(left, 0, W - w)) + 'px',
-                top: (h > H ? top : edge(top, 0, H - h)) + 'px'
+            css(_modal, {
+                'left': (w > W ? left : edge(left, 0, W - w)) + 'px',
+                'top': (h > H ? top : edge(top, 0, H - h)) + 'px'
             });
         } else if (drag === resize) {
             o = point(_modal, e);
             s = size(resize);
-            dom_css(_modal, {
-                width: (o.x + (s.w / 4)) + 'px',
-                height: (o.y + (s.h / 4)) + 'px'
+            css(_modal, {
+                'width': (o.x + (s.w / 4)) + 'px',
+                'height': (o.y + (s.h / 4)) + 'px'
             });
         }
     }
@@ -1010,12 +1000,12 @@ TE.prototype.ui = function(o) {
             left = edge(left, 0);
             top = edge(top, 0);
         }
-        dom_css(_modal, {
-            left: left + 'px',
-            top: top + 'px',
+        css(_modal, {
+            'left': left + 'px',
+            'top': top + 'px',
             'min-width': w + 'px',
             'min-height': h + 'px',
-            visibility: 'visible'
+            'visibility': 'visible'
         });
         hook_fire('fit.modal', [$]);
         hook_fire('fit', [$]);
@@ -1211,10 +1201,10 @@ TE.prototype.ui = function(o) {
             left = edge(left, 0, a.w - b.w);
             top = edge(top, 0, a.h - b.h);
         }
-        dom_css(_drop, {
-            left: left + 'px',
-            top: top + 'px',
-            visibility: 'visible'
+        css(_drop, {
+            'left': left + 'px',
+            'top': top + 'px',
+            'visibility': 'visible'
         });
         hook_fire('fit.drop', [$]);
         hook_fire('fit', [$]);
@@ -1312,10 +1302,16 @@ TE.prototype.ui = function(o) {
             width = '-width',
             left = s.caret[0].x + o.l - _content.scrollLeft,
             top = s.caret[1].y + o.t + h - _content.scrollTop,
+            b = css(_body, [
+                border + 'top' + width,
+                border + 'bottom' + width,
+                border + 'left' + width,
+                border + 'right' + width
+            ]),
             ts = size(_body),
             bs = size(_bubble),
-            tb_v = css(_body, border + 'top' + width) + css(_body, border + 'bottom' + width),
-            tb_h = css(_body, border + 'left' + width) + css(_body, border + 'right' + width);
+            tb_v = b[0] + b[1],
+            tb_h = b[2] + b[3];
         if (is_object(center)) {
             left = center[0];
             top = center[1];
@@ -1323,10 +1319,10 @@ TE.prototype.ui = function(o) {
             left = edge(left, o.l, o.l + ts.w - bs.w - tb_h);
             top = edge(top, o.t, o.t + ts.h - bs.h - tb_v);
         }
-        dom_css(_bubble, {
-            left: left + 'px',
-            top: top + 'px',
-            visibility: 'visible'
+        css(_bubble, {
+            'left': left + 'px',
+            'top': top + 'px',
+            'visibility': 'visible'
         });
         hook_fire('fit.bubble', [$]);
         hook_fire('fit', [$]);
@@ -1418,9 +1414,9 @@ TE.prototype.ui = function(o) {
         function frame_resize() {
             if (o) {
                 p = size(o);
-                dom_css(frame, {
-                    width: p.w + 'px',
-                    height: p.h + 'px'
+                css(frame, {
+                    'width': p.w + 'px',
+                    'height': p.h + 'px'
                 });
             }
         }

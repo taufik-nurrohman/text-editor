@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.6.2
+ *  TEXT EDITOR PLUGIN 2.6.3
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -9,8 +9,12 @@
 
 (function(w, d) {
 
-    function cl(x) {
-        return x.toLowerCase();
+    function cl(s) {
+        return s.toLowerCase();
+    }
+
+    function cu(s) {
+        return s.toUpperCase();
     }
 
     function is_set(x) {
@@ -31,6 +35,10 @@
 
     function is_object(x) {
         return typeof x === "object";
+    }
+
+    function is_array(x) {
+        return Array.isArray(x);
     }
 
     function is_boolean(x) {
@@ -70,19 +78,33 @@
 
     function camelize(s) {
         return s.replace(/\-([a-z])/g, function(a, b) {
-            return b.toUpperCase();
+            return cu(b);
         });
     }
 
     function dasherize(s) {
         return s.replace(/([A-Z])/g, function(a, b) {
-            return '-' + b.toLowerCase();
+            return '-' + cl(b);
         });
     }
 
     function css(a, b, c) {
         var o = w.getComputedStyle(a, c),
             h = {}, i, j;
+        if (is_object(b)) {
+            if (is_array(b)) {
+                o = [];
+                for (i in b) {
+                    i = b[i];
+                    o[i] = css(a, i, c);
+                }
+                return o;
+            }
+            for (i in b) {
+                a.style[camelize(i)] = b[i];
+            }
+            return a;
+        }
         return b ? (i = o[camelize(b)], j = num(i), j === 0 ? 0 : (j || i)) : (function() {
             for (i in o) {
                 j = num(o[i]);
@@ -104,10 +126,34 @@
         return a;
     }
 
+    function each(a, fn) {
+        var i, j, k;
+        if (is_array(a)) {
+            for (i = 0, j = a.length; i < j; ++i) {
+                k = fn(a[i], i, a);
+                if (k === true) {
+                    continue;
+                } else if (k === false) {
+                    break;
+                }
+            }
+        } else {
+            for (i in a) {
+                k = fn(a[i], i, a);
+                if (k === true) {
+                    continue;
+                } else if (k === false) {
+                    break;
+                }
+            }
+        }
+        return a;
+    }
+
     (function($) {
 
         // plugin version
-        $.version = '2.6.2';
+        $.version = '2.6.3';
 
         // collect all instance(s)
         $.__instance__ = {};
@@ -270,9 +316,11 @@
         var $ = this,
             _ = 1, // cache of history length
             F = 0, // history feature is active
-            H = [[val(), 0, 0, 0]], // load the first history data
+            H = [[val(), 0, 0, [0, 0]]], // load the first history data
             I = 0, // current state of history
             S = {}, // storage
+            html = d.documentElement,
+            body = d.body,
             div = d.createElement('div'),
             span = d.createElement('span'),
             tab = '\t';
@@ -283,17 +331,22 @@
         }
     
         var scroll_width = (function() {
-            var x = d.createElement('div'),
-                y = d.body,
-                z = x.style, w;
-            y.appendChild(x);
-            z.position = 'absolute';
-            z.top = z.left = '-9999px';
-            z.width = z.height = '100px';
-            z.overflow = 'scroll';
-            z.visibility = 'hidden';
-            w = x.offsetWidth - x.clientWidth;
-            return y.removeChild(x), w;
+            var v = '-9999px',
+                w = '200px',
+                x = d.createElement('div'),
+                y = x.style, z;
+            body.appendChild(x);
+            css(x, {
+                'position': 'absolute',
+                'top': v,
+                'left': v,
+                'width': w,
+                'height': w,
+                'overflow': 'scroll',
+                'visibility': 'hidden'
+            });
+            z = x.offsetWidth - x.clientWidth;
+            return body.removeChild(x), z;
         })();
 
         $.type = ""; // default editor type
@@ -303,8 +356,19 @@
             return target.value.replace(/\r/g, "");
         }
 
+        function esc(x) {
+            if (is_array(x)) {
+                var i, o = [];
+                for (i in x) {
+                    o[i] = esc(x[i]);
+                }
+                return o;
+            }
+            return x.replace(pattern('[' + $.x.replace(/./g, '\\$&') + ']', 'g'), '\\$&');
+        }
+
         function get_pattern(x) {
-            return is_pattern(x) || $._.x(x);
+            return is_pattern(x) || esc(x);
         }
 
         // <https://github.com/component/textarea-caret-position>
@@ -336,19 +400,21 @@
                     text + 'decoration',
                     text + 'indent',
                     text + 'transform',
+                    'width',
                     'word-spacing'
                 ];
-            var b = d.body,
-                i = prop.length,
+            var i = prop.length,
                 s, t, o, v, width;
-            b.appendChild(div);
+            body.appendChild(div);
             s = div.style;
-            t = css(target);
+            t = css(target, prop);
             width = t.width;
-            s.whiteSpace = 'pre-wrap';
-            s.wordWrap = 'break-word';
-            s.position = 'absolute';
-            s.visibility = 'hidden';
+            css(div, {
+                'white-space': 'pre-wrap',
+                'word-wrap': 'break-word',
+                'posittion': 'absolute',
+                'visibility': 'hidden'
+            });
             while (--i) {
                 v = t[prop[i]];
                 s[camelize(prop[i])] = is_string(v) ? v : v + 'px';
@@ -367,7 +433,7 @@
                 x: span.offsetLeft + t[border + 'left-width'],
                 y: span.offsetTop + t[border + 'top-width']
             };
-            return b.removeChild(div), o;
+            return body.removeChild(div), o;
         }
 
         // access editor instance from `this` scope with `this.TE`
@@ -379,14 +445,13 @@
         // scroll the editor
         $.scroll = function(i) {
             var current = target.scrollTop,
-                h = css(target, 'line-height'),
-                s = css(target, 'font-size');
+                h = css(target, ['line-height', 'font-size']);
             if (!is_set(i)) {
-                return [Math.floor(current / h), h];
+                return [Math.floor(current / h[0]), h[0]];
             } else if (is_boolean(i)) {
                 return $.scroll($.scroll()[0] + (i === false ? -1 : 1));
             }
-            return target.scrollTop = (h * i) + s + (h - s), $;
+            return target.scrollTop = (h[0] * i) + h[1] + (h[0] - h[1]), $;
         };
 
         // set value
@@ -455,27 +520,24 @@
         $.select = function() {
             var arg = arguments,
                 count = arg.length,
-                a = d.documentElement,
-                b = d.body,
-                c = target,
                 D = 'scrollTop',
                 s = $.$(),
                 id = 'TE.scroll', z;
-            $.save(id, [a[D], b[D], c[D]]).focus();
+            $.save(id, [html[D], body[D], target[D]]).focus();
             if (count === 0) { // restore selection with `$.select()`
                 arg[0] = s.start;
                 arg[1] = s.end;
             } else if (count === 1) { // move caret position with `$.select(7)`
                 if (arg[0] === true) { // select all with `$.select(true)`
-                    return c.select(), $;
+                    return target.select(), $;
                 }
                 arg[1] = arg[0];
             }
-            c.setSelectionRange(arg[0], arg[1]); // default `$.select(7, 100)`
-            z = $.restore(id, [0, 0, 0]);
-            a[D] = z[0];
-            b[D] = z[1];
-            c[D] = z[2];
+            target.setSelectionRange(arg[0], arg[1]); // default `$.select(7, 100)`
+            z = $.restore(id, [0, 0, [0, 0]]);
+            html[D] = z[0];
+            body[D] = z[1];
+            target[D] = z[2];
             return $; // `select` method does not populate history data
         };
 
@@ -516,16 +578,15 @@
         // insert/replace at caret
         $.insert = function(s, x, clear) {
             var f = /^[\s\S]*?$/;
-            $[0]();
             if (clear) {
-                $.replace(f, ""); // force to delete selection on insert before/after?
+                $.replace(f, "").loss(); // force to delete selection on insert before/after?
             }
             if (x === 0) { // insert before
                 f = /$/;
             } else if (x === 1) { // insert after
                 f = /^/;
             }
-            return $.replace(f, s, x)[1]();
+            return $.replace(f, s, x);
         };
 
         // insert before selection
@@ -667,7 +728,7 @@
             I--;
             I = edge(I, 0, _ - 1);
             var a = H[I];
-            return $.set(a[0]).select(a[1], a[2]).scroll(a[3]);
+            return $.set(a[0]).select(a[1], a[2]).scroll(a[3][0]);
         };
 
         // redo
@@ -675,7 +736,7 @@
             I++;
             I = edge(I, 0, _ - 1);
             var a = H[I];
-            return $.set(a[0]).select(a[1], a[2]).scroll(a[3]);
+            return $.set(a[0]).select(a[1], a[2]).scroll(a[3][0]);
         };
 
         // disable the history feature
@@ -698,6 +759,7 @@
         };
 
         var check = {
+            a: is_array,
             b: is_boolean,
             e: is_dom,
             f: is_function,
@@ -715,41 +777,11 @@
         // utility ...
         $._ = {
             // escape regex character(s)
-            x: function(x) {
-                if (is_object(x)) {
-                    var o = [],
-                        i = x.length;
-                    while (i--) o.unshift($._.x(x[i]));
-                    return o;
-                }
-                return x.replace(pattern('[' + $.x.replace(/./g, '\\$&') + ']', 'g'), '\\$&');
-            },
+            x: esc,
             // extend object ...
             extend: extend,
             // iterate ...
-            each: function(a, fn, n) {
-                var i, j, k;
-                if (n) {
-                    for (i = 0, j = a.length; i < j; ++i) {
-                        k = fn(a[i], i, a);
-                        if (k === true) {
-                            continue;
-                        } else if (k === false) {
-                            break;
-                        }
-                    }
-                } else {
-                    for (i in a) {
-                        k = fn(a[i], i, a);
-                        if (k === true) {
-                            continue;
-                        } else if (k === false) {
-                            break;
-                        }
-                    }
-                }
-                return a;
-            },
+            each: each,
             // other(s) ...
             trim: trim,
             css: css,

@@ -437,8 +437,8 @@ TE.Textile = function(target, o) {
                 q = format(p[0], [1, 1]),
                 advance = config.advance_table,
                 o = [], s, c, r;
-            if ($.$().value === q) return $.select(), false;
-            return $[0]().ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
+            if ($[0]().$().value === q) return $.select(), false;
+            return ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
                 c = edge(num(v) || w, std[0], std[1]);
                 ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
                     r = edge(num(v) || w, str[0], str[1]);
