@@ -103,6 +103,7 @@ TE.prototype.ui = function(o) {
             },
             debounce: 250
         }, o),
+
         _KEYDOWN = 'keydown',
         _KEYUP = 'keyup',
         _COPY = 'copy',
@@ -116,7 +117,8 @@ TE.prototype.ui = function(o) {
         _BLUR = 'blur',
         _INPUT = 'input',
         _RESIZE = 'orientationchange resize',
-        target_events = _BLUR + ' ' + _COPY + ' ' + _CUT + ' ' + _FOCUS + ' ' + _INPUT + ' ' + _KEYDOWN + ' ' + _PASTE,
+        _KEYS = _BLUR + ' ' + _COPY + ' ' + _CUT + ' ' + _FOCUS + ' ' + _INPUT + ' ' + _KEYDOWN + ' ' + _PASTE,
+
         i18n = config.languages,
         tab = config.tab,
         auto_tab = config.auto_tab,
@@ -125,7 +127,8 @@ TE.prototype.ui = function(o) {
         data = config.unit[0][1],
         esc_unit = config.unit[1][0],
         esc_data = config.unit[1][1],
-        data_tool_id = 'data-tool-id';
+        data_tool_id = 'data-tool-id',
+        px = 'px';
 
     function hook_set(ev, fn, id) {
         if (!is_set(ev)) return hooks;
@@ -157,6 +160,20 @@ TE.prototype.ui = function(o) {
         return $;
     }
 
+    function attr_set(node, a, b) {
+        if (is_object(a)) {
+            for (var i in a) {
+                attr_set(node, i, a[i]);
+            }
+        } else {
+            node.setAttribute(a, b);
+        }
+    }
+
+    function attr_reset(node, s) {
+        node.removeAttribute(s);
+    }
+
     function event_exit(e) {
         if (e) e.preventDefault();
         return false;
@@ -173,6 +190,9 @@ TE.prototype.ui = function(o) {
         if (!node) return;
         node.removeEventListener(id, fn, false);
         hook_reset('on:' + id, dom_id(node));
+        if (node.id.split(':')[0] === prefix + '-dom') {
+            attr_reset(node, 'id');
+        }
         return $;
     }
 
@@ -365,9 +385,9 @@ TE.prototype.ui = function(o) {
                 v = attr[i];
                 if (i === 'style') {
                     if (is_string(v)) {
-                        em.setAttribute(i, v);
+                        attr_set(em, i, v);
                     } else if (v === null) {
-                        em.removeAttribute(i);
+                        attr_reset(em, i);
                     } else {
                         em = css(em, v);
                     }
@@ -376,9 +396,9 @@ TE.prototype.ui = function(o) {
                         em[i] = v;
                     } else {
                         if (v === null) {
-                            em.removeAttribute(i);
+                            attr_reset(em, i);
                         } else {
-                            em.setAttribute(i, is_object(v) ? v.join(' ') : "" + v);
+                            attr_set(em, i, is_object(v) ? v.join(' ') : "" + v);
                         }
                     }
                 }
@@ -504,7 +524,7 @@ TE.prototype.ui = function(o) {
 
     function dom_content_reset(node) {
         content_reset(el(node, false, {
-            style: ""
+            'style': ""
         }));
         dom_reset(node);
     }
@@ -556,10 +576,12 @@ TE.prototype.ui = function(o) {
             _button = el_set(is_button ? c_button : c_separator, is_button ? 'a' : 'span');
             if (is_button) {
                 _button_id = c_button + ':' + slug(v).replace(/\s/g, "");
-                _button.href = "";
-                _button.id = _button_id;
-                _button.tabIndex = -1;
-                _button.setAttribute(data_tool_id, v);
+                attr_set(_button, {
+                    'href': "",
+                    'id': _button_id,
+                    'tab-index': -1
+                });
+                attr_set(_button, data_tool_id, v);
                 icon = '<i class="' + format(c.i, [icon]) + ' ' + _button_id + '"></i>';
                 if (!tool.active) {
                     class_set(_button, 'x');
@@ -729,14 +751,16 @@ TE.prototype.ui = function(o) {
         }
         events_set(_KEYDOWN, _content, do_keys);
         events_set(_KEYUP, _content, do_keys_reset);
-        events_set(target_events, _content, do_update_contents_debounce);
+        events_set(_KEYS, _content, do_update_contents_debounce);
         events_set(_MOUSEDOWN, _resize, do_resize_down);
         events_set(_MOUSEMOVE, body, do_resize_move);
         events_set(_MOUSEUP, body, do_resize_up);
         if (i18n_others.preview) {
             var t = i18n_tools.preview;
-            _preview.href = "";
-            _preview.title = is_object(t) ? t[0] + (t[1] ? ' (' + t[1] + ')' : "") : t;
+            attr_set(_preview, {
+                'href': "",
+                'title': is_object(t) ? t[0] + (t[1] ? ' (' + t[1] + ')' : "") : t
+            });
             dom_set(_description_left, _preview);
             content_set(_preview, i18n_others.preview);
         }
@@ -765,7 +789,7 @@ TE.prototype.ui = function(o) {
         events_reset(_MOUSEDOWN, _resize, do_resize_down);
         events_reset(_MOUSEMOVE, body, do_resize_move);
         events_reset(_MOUSEUP, body, do_resize_up);
-        events_reset(target_events, _content, do_update_contents_debounce);
+        events_reset(_KEYS, _content, do_update_contents_debounce);
         if (_p) {
             dom_before(_container, _p);
             dom_set(_p, _content);
@@ -796,7 +820,7 @@ TE.prototype.ui = function(o) {
     function do_resize_move(e) {
         if (drag === _resize) {
             css(_content, {
-                'height': (point(_body, e).y - s.h) + 'px'
+                'height': point(_body, e).y - s.h + px
             });
         }
     }
@@ -842,15 +866,15 @@ TE.prototype.ui = function(o) {
             left = o.x - x;
             top = o.y - y;
             css(_modal, {
-                'left': (w > W ? left : edge(left, 0, W - w)) + 'px',
-                'top': (h > H ? top : edge(top, 0, H - h)) + 'px'
+                'left': (w > W ? left : edge(left, 0, W - w)) + px,
+                'top': (h > H ? top : edge(top, 0, H - h)) + px
             });
         } else if (drag === resize) {
             o = point(_modal, e);
             s = size(resize);
             css(_modal, {
-                'width': (o.x + (s.w / 4)) + 'px',
-                'height': (o.y + (s.h / 4)) + 'px'
+                'width': (o.x + (s.w / 4)) + px,
+                'height': (o.y + (s.h / 4)) + px
             });
         }
     }
@@ -965,7 +989,7 @@ TE.prototype.ui = function(o) {
         O.resize = el_set(prefix + '-resize se ' + l); // add `resize` button
         content_reset(_modal);
         dom_set(_body, el(_modal, O, {
-            style: ""
+            'style': ""
         }));
         ui.modal.fit();
         // put overlay next to the modal so that we can use `+` CSS selector
@@ -1001,10 +1025,10 @@ TE.prototype.ui = function(o) {
             top = edge(top, 0);
         }
         css(_modal, {
-            'left': left + 'px',
-            'top': top + 'px',
-            'min-width': w + 'px',
-            'min-height': h + 'px',
+            'left': left + px,
+            'top': top + px,
+            'min-width': w + px,
+            'min-height': h + px,
             'visibility': 'visible'
         });
         hook_fire('fit.modal', [$]);
@@ -1079,13 +1103,14 @@ TE.prototype.ui = function(o) {
         var okay = el('button', i18n_buttons.okay, button_attrs),
             cancel = el('button', i18n_buttons.cancel, button_attrs),
             input = el('input', false, {
-                type: 'text',
-                value: value,
-                placeholder: value,
-                spellcheck: 'false',
+                'type': 'text',
+                'value': value,
+                'placeholder': value,
+                'spellcheck': 'false',
                 'class': prefix + '-input block'
             }),
-            id = 'prompt', key, options = [], i, j;
+            id = 'prompt',
+            options = [], key, i, j;
         if (is_object(title)) {
             id += ':' + title[0];
             title = title[1] || title[0];
@@ -1096,14 +1121,14 @@ TE.prototype.ui = function(o) {
         }
         if (type === 1) {
             input = el('textarea', value, {
-                placeholder: value.split('\n')[0],
+                'placeholder': value.split('\n')[0],
                 'class': prefix + '-textarea block'
             });
         } else if (type === 2) {
             for (i in value) {
                 options.push(el('option', value[i], {
-                    value: i,
-                    selected: i === required || null
+                    'value': i,
+                    'selected': i === required || null
                 }));
             }
             input = el('select', options, {
@@ -1202,8 +1227,8 @@ TE.prototype.ui = function(o) {
             top = edge(top, 0, a.h - b.h);
         }
         css(_drop, {
-            'left': left + 'px',
-            'top': top + 'px',
+            'left': left + px,
+            'top': top + px,
             'visibility': 'visible'
         });
         hook_fire('fit.drop', [$]);
@@ -1226,7 +1251,7 @@ TE.prototype.ui = function(o) {
             text: format(current, [(data[str] && data[str].text) || str, icon]),
             click: function(e) {
                 var attr = {
-                    href: "",
+                    'href': "",
                     'class': prefix + '-button'
                 }, html, h, i, j, k, l, m;
                 return ui.drop('menu menu-' + slug(id), function(drop) {
@@ -1320,8 +1345,8 @@ TE.prototype.ui = function(o) {
             top = edge(top, o.t, o.t + ts.h - bs.h - tb_v);
         }
         css(_bubble, {
-            'left': left + 'px',
-            'top': top + 'px',
+            'left': left + px,
+            'top': top + px,
             'visibility': 'visible'
         });
         hook_fire('fit.bubble', [$]);
@@ -1409,14 +1434,14 @@ TE.prototype.ui = function(o) {
         }
         frame = el('iframe', false, {
             'class': prefix + '-portal',
-            src: 'data:text/html,' + encodeURIComponent(w)
+            'src': 'data:text/html,' + encodeURIComponent(w)
         });
         function frame_resize() {
             if (o) {
                 p = size(o);
                 css(frame, {
-                    'width': p.w + 'px',
-                    'height': p.h + 'px'
+                    'width': p.w + px,
+                    'height': p.h + px
                 });
             }
         }

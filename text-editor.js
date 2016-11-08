@@ -38,7 +38,7 @@
     }
 
     function is_array(x) {
-        return Array.isArray(x);
+        return x instanceof Array;
     }
 
     function is_boolean(x) {
@@ -90,22 +90,23 @@
 
     function css(a, b, c) {
         var o = w.getComputedStyle(a, c),
-            h = {}, i, j;
+            h = {}, i, j, k;
         if (is_object(b)) {
             if (is_array(b)) {
-                o = [];
+                o = {};
                 for (i in b) {
                     i = b[i];
-                    o[i] = css(a, i, c);
+                    o[i.replace(/^\!/, "")] = css(a, i, c);
                 }
                 return o;
             }
             for (i in b) {
-                a.style[camelize(i)] = b[i];
+                j = b[i];
+                a.style[camelize(i)] = j ? (is_string(j) ? j : j + 'px') : "";
             }
             return a;
         }
-        return b ? (i = o[camelize(b)], j = num(i), j === 0 ? 0 : (j || i)) : (function() {
+        return b ? (b[0] === '!' && (b = b.slice(1), k = 1), i = o[camelize(b)], j = k ? i : num(i), j === 0 ? 0 : (j || i)) : (function() {
             for (i in o) {
                 j = num(o[i]);
                 h[dasherize(i)] = j === 0 ? 0 : (j || o[i]);
@@ -259,6 +260,7 @@
             'right': 'arrowright',
             'up': 'arrowup',
             'down': 'arrowdown',
+            'back': 'backspace',
             'space': ' ',
             'plus': '+'
         };
@@ -316,7 +318,7 @@
         var $ = this,
             _ = 1, // cache of history length
             F = 0, // history feature is active
-            H = [[val(), 0, 0, [0, 0]]], // load the first history data
+            H = [[val(), 0, 0, 0]], // load the first history data
             I = 0, // current state of history
             S = {}, // storage
             html = d.documentElement,
@@ -331,10 +333,9 @@
         }
     
         var scroll_width = (function() {
-            var v = '-9999px',
+            var v = '-200px',
                 w = '200px',
-                x = d.createElement('div'),
-                y = x.style, z;
+                x = d.createElement('div'), y;
             body.appendChild(x);
             css(x, {
                 'position': 'absolute',
@@ -345,8 +346,8 @@
                 'overflow': 'scroll',
                 'visibility': 'hidden'
             });
-            z = x.offsetWidth - x.clientWidth;
-            return body.removeChild(x), z;
+            y = x.offsetWidth - x.clientWidth;
+            return body.removeChild(x), y;
         })();
 
         $.type = ""; // default editor type
@@ -377,16 +378,22 @@
                 text = 'text-',
                 padding = 'padding-',
                 border = 'border-',
+                width = '-width',
+                i = '!',
                 prop = [
+                    border + 'bottom' + width,
+                    border + 'left' + width,
+                    border + 'right' + width,
+                    border + 'top' + width,
                     'box-sizing',
                     'direction',
-                    font + 'family',
+                    i + font + 'family',
                     font + 'size',
-                    font + 'size-adjust',
-                    font + 'stretch',
-                    font + 'style',
-                    font + 'variant',
-                    font + 'weight',
+                    i + font + 'size-adjust',
+                    i + font + 'stretch',
+                    i + font + 'style',
+                    i + font + 'variant',
+                    i + font + 'weight',
                     'height',
                     'letter-spacing',
                     'line-height',
@@ -402,36 +409,28 @@
                     text + 'transform',
                     'width',
                     'word-spacing'
-                ];
-            var i = prop.length,
-                s, t, o, v, width;
+                ],
+                i = prop.length,
+                s, t, o, v, w;
             body.appendChild(div);
             s = div.style;
             t = css(target, prop);
-            width = t.width;
-            css(div, {
+            w = t.width;
+            css(div, extend(t, {
+                'width': is_set(w.mozInnerScreenX) ? w : w + scroll_width, // Firefox :(
+                'overflow-y': target.scrollHeight > t.height ? 'scroll' : 'auto',
                 'white-space': 'pre-wrap',
                 'word-wrap': 'break-word',
-                'posittion': 'absolute',
+                'position': 'absolute',
                 'visibility': 'hidden'
-            });
-            while (--i) {
-                v = t[prop[i]];
-                s[camelize(prop[i])] = is_string(v) ? v : v + 'px';
-            }
-            s.overflowY = target.scrollHeight > t.height ? 'scroll' : 'auto';
-            if (is_set(w.mozInnerScreenX)) { // Firefox :(
-                s.width = width + 'px';
-            } else {
-                s.width = width + scroll_width + 'px';
-            }
+            }));
             span.textContent = val().substring(x) || '.';
             v = val().substring(0, x);
             div.textContent = v;
             div.appendChild(span);
             o = {
-                x: span.offsetLeft + t[border + 'left-width'],
-                y: span.offsetTop + t[border + 'top-width']
+                x: span.offsetLeft + t[border + 'left' + width],
+                y: span.offsetTop + t[border + 'top' + width]
             };
             return body.removeChild(div), o;
         }
@@ -534,7 +533,7 @@
                 arg[1] = arg[0];
             }
             target.setSelectionRange(arg[0], arg[1]); // default `$.select(7, 100)`
-            z = $.restore(id, [0, 0, [0, 0]]);
+            z = $.restore(id, [0, 0, 0]);
             html[D] = z[0];
             body[D] = z[1];
             target[D] = z[2];
@@ -691,7 +690,7 @@
                 v = val(),
                 w = s.start,
                 x = s.end,
-                a = is_set(a) ? a : [v, w, x, $.scroll()];
+                a = is_set(a) ? a : [v, w, x, $.scroll()[0]];
             if (o && is_object(o) && (
                 o[0] === v &&
                 o[1] === w &&
@@ -728,7 +727,7 @@
             I--;
             I = edge(I, 0, _ - 1);
             var a = H[I];
-            return $.set(a[0]).select(a[1], a[2]).scroll(a[3][0]);
+            return $.set(a[0]).select(a[1], a[2]).scroll(a[3]);
         };
 
         // redo
@@ -736,7 +735,7 @@
             I++;
             I = edge(I, 0, _ - 1);
             var a = H[I];
-            return $.set(a[0]).select(a[1], a[2]).scroll(a[3][0]);
+            return $.set(a[0]).select(a[1], a[2]).scroll(a[3]);
         };
 
         // disable the history feature
