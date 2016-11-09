@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  EXPAND PLUGIN FOR USER INTERFACE MODULE 1.0.5
+ *  EXPAND PLUGIN FOR USER INTERFACE MODULE 1.0.6
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -8,7 +8,7 @@
  */
 
 TE.each(function($) {
-    var uniq = '-' + (new Date()).getTime(),
+    var uniq = '-' + Date().now(),
         doc = document,
         html = doc.documentElement,
         head = doc.head,

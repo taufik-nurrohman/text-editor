@@ -411,7 +411,7 @@
                     'word-spacing'
                 ],
                 i = prop.length,
-                s, t, o, v, w;
+                s, t, o, w;
             body.appendChild(div);
             s = div.style;
             t = css(target, prop);
@@ -425,8 +425,7 @@
                 'visibility': 'hidden'
             }));
             span.textContent = val().substring(x) || '.';
-            v = val().substring(0, x);
-            div.textContent = v;
+            div.textContent = val().substring(0, x);
             div.appendChild(span);
             o = {
                 x: span.offsetLeft + t[border + 'left' + width],
@@ -763,6 +762,9 @@
             e: is_dom,
             f: is_function,
             i: is_number,
+            n: function(x) {
+                return x === null;
+            },
             o: is_object,
             r: is_pattern,
             s: is_string,

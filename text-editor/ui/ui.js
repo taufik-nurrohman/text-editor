@@ -427,7 +427,7 @@ TE.prototype.ui = function(o) {
     function dom_id(node) {
         var id = node.id;
         if (!id) {
-            id = prefix + '-dom:' + (new Date()).getTime();
+            id = prefix + '-dom:' + Date.now();
             node.id = id;
         }
         return id;
