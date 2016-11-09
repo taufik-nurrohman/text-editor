@@ -8,7 +8,7 @@
  */
 
 TE.each(function($) {
-    var uniq = '-' + Date().now(),
+    var uniq = '-' + Date.now(),
         doc = document,
         html = doc.documentElement,
         head = doc.head,
