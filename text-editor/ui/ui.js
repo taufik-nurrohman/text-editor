@@ -128,6 +128,7 @@ TE.prototype.ui = function(o) {
         esc_unit = config.unit[1][0],
         esc_data = config.unit[1][1],
         data_tool_id = 'data-tool-id',
+        js = 'javascript:;',
         px = 'px';
 
     function hook_set(ev, fn, id) {
@@ -190,7 +191,7 @@ TE.prototype.ui = function(o) {
         if (!node) return;
         node.removeEventListener(id, fn, false);
         hook_reset('on:' + id, dom_id(node));
-        if (node.id.split(':')[0] === prefix + '-dom') {
+        if (is_dom(node) && node.id.split(':')[0] === prefix + '-dom') {
             attr_reset(node, 'id');
         }
         return $;
@@ -577,7 +578,7 @@ TE.prototype.ui = function(o) {
             if (is_button) {
                 _button_id = c_button + ':' + slug(v).replace(/\s/g, "");
                 attr_set(_button, {
-                    'href': "",
+                    'href': js,
                     'id': _button_id,
                     'tab-index': -1
                 });
@@ -758,7 +759,7 @@ TE.prototype.ui = function(o) {
         if (i18n_others.preview) {
             var t = i18n_tools.preview;
             attr_set(_preview, {
-                'href': "",
+                'href': js,
                 'title': is_object(t) ? t[0] + (t[1] ? ' (' + t[1] + ')' : "") : t
             });
             dom_set(_description_left, _preview);
@@ -1251,7 +1252,7 @@ TE.prototype.ui = function(o) {
             text: format(current, [(data[str] && data[str].text) || str, icon]),
             click: function(e) {
                 var attr = {
-                    'href': "",
+                    'href': js,
                     'class': prefix + '-button'
                 }, html, h, i, j, k, l, m;
                 return ui.drop('menu menu-' + slug(id), function(drop) {

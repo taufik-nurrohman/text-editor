@@ -333,21 +333,20 @@
         }
     
         var scroll_width = (function() {
-            var v = '-200px',
-                w = '200px',
-                x = d.createElement('div'), y;
-            body.appendChild(x);
-            css(x, {
+            var a = '-200px',
+                b = '200px', c;
+            body.appendChild(div);
+            css(div, {
                 'position': 'absolute',
-                'top': v,
-                'left': v,
-                'width': w,
-                'height': w,
+                'top': a,
+                'left': a,
+                'width': b,
+                'height': b,
                 'overflow': 'scroll',
                 'visibility': 'hidden'
             });
-            y = x.offsetWidth - x.clientWidth;
-            return body.removeChild(x), y;
+            c = div.offsetWidth - div.clientWidth;
+            return body.removeChild(div), c;
         })();
 
         $.type = ""; // default editor type
