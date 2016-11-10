@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BBCODE TEXT EDITOR PLUGIN 1.0.3
+ *  BBCODE TEXT EDITOR PLUGIN 1.0.4
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -32,9 +32,16 @@ TE.BBCode = function(target, o) {
                 p: "",
                 blockquote: 'quote',
                 code: 'code',
+
+                // by default, **BBCode** parser should accept `[ol]`, `[ul]` and `[li]` markup
+                // <https://www.bbcode.org/reference.php>
+
+                /*
                 ol: 'list=1',
                 ul: 'list',
                 li: '*', // TODO: remove the closing star tag
+                */
+
                 table: 'table=1',
                 caption: ""
             }
@@ -145,7 +152,7 @@ TE.BBCode = function(target, o) {
         'control+shift+?': 0
     });
 
-    // table caption is not supported in **BBCode** so we have to remove the modal prompt here
+    // table caption is not supported in **BBCode** so we have to remove that "add caption" modal prompt here
     hook.set('enter.modal.prompt:table>caption', function($) {
         var k;
         if (!formats.caption && (k = ui.el.modal.querySelector('[name=y]'))) {
