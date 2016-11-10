@@ -468,14 +468,15 @@ TE.prototype.ui = function(o) {
         return id;
     }
 
-    function class_exist(node, s) {
-        return pattern('(^|\\s)' + s + '(\\s|$)').test(node.className);
-    }
-
     function class_set(node, s) {
-        if (!class_exist(node, s)) {
+        if (!class_get(node, s)) {
             node.className = trim(node.className + ' ' + s);
         }
+    }
+
+    function class_get(node, s, b) {
+        var n = node.className;
+        return pattern('(^|\\s)' + s + '(\\s|$)').test(n) ? n : (is_set(b) ? b : false);
     }
 
     function class_reset(node, s) {
@@ -483,8 +484,11 @@ TE.prototype.ui = function(o) {
     }
 
     function content_set(node, s) {
-        if (!is_set(s)) return node.innerHTML;
         node.innerHTML = s;
+    }
+
+    function content_get(node, s) {
+        return node.innerHTML || (is_set(s) ? s : "");
     }
 
     function content_reset(node, deep) {
@@ -511,6 +515,10 @@ TE.prototype.ui = function(o) {
 
     function dom_previous(node) {
         return node.previousElementSibling || node.previousSibling;
+    }
+
+    function dom_get(s, context) {
+        return (context || doc).querySelectorAll(s) || [];
     }
 
     function dom_exist(node, dom) {
@@ -806,14 +814,14 @@ TE.prototype.ui = function(o) {
     };
 
     $.update = function(o, hook) {
-        if (class_exist(_content, C)) {
+        if (class_get(_content, C)) {
             $.destroy(0); // destroy if already created
         }
         return (hook !== 0 ? hook_fire('update', [$]) : $).create(o, 0);
     };
 
     $.destroy = function(hook) {
-        if (!class_exist(_content, C)) return $;
+        if (!class_get(_content, C)) return $;
         ui.exit(0, 0, 0);
         class_reset(_content, C);
         if (is_object(config.tools)) config.tools = config.tools.join(' ');
@@ -1295,7 +1303,7 @@ TE.prototype.ui = function(o) {
                     function _do_click(e) {
                         j = this;
                         m = data[data_get(j, data_tool_id)];
-                        html = content_set(j);
+                        html = content_get(j);
                         if (m && m.active && is_function(l = m.click)) {
                             l = l(e, $);
                             if (_drop_target) {
@@ -1569,12 +1577,12 @@ TE.prototype.ui = function(o) {
         dom: {
             set: dom_set,
             reset: dom_reset,
-            exist: dom_exist,
+            get: dom_get,
             id: dom_id,
             classes: {
                 set: class_set,
                 reset: class_reset,
-                exist: class_exist
+                get: class_get
             },
             attr: {
                 set: attr_set,
@@ -1591,7 +1599,8 @@ TE.prototype.ui = function(o) {
             size: size,
             content: {
                 set: content_set,
-                reset: content_reset
+                reset: content_reset,
+                get: content_get
             },
             closest: closest,
             parent: dom_parent,

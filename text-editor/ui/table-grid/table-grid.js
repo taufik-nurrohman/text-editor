@@ -24,12 +24,12 @@ TE.each(function($) {
         _prepend = _dom.prepend,
         _class = _dom.classes,
         _data = _dom.data,
+        _get = _dom.get,
         $el = $.ui.el,
         $container = $el.container,
         $modal = $el.modal,
         save_id = 'TE.grid',
         grid_id = 'grid-id',
-        q = 'querySelector',
         s = classes[""],
         prefix = '.' + s + '-grid',
         style = _el('style'),
@@ -41,11 +41,11 @@ TE.each(function($) {
         ui.tools[id].click(null, $);
         // [2]. access the visible modal prompt HTML through `$.ui.el.modal`
         for (i in data) {
-            if (j = $modal[q]('[name=data]')) {
+            if (j = _get('[name=data]', $modal)[0]) {
                 // [3]. set value to the prompt field
                 j.value = data[i];
                 // [4]. trigger click event to the submit button
-                if (k = $modal[q]('[name=y]')) {
+                if (k = _get('[name=y]', $modal)[0]) {
                     _event.fire("click", k);
                 }
             }
@@ -66,7 +66,7 @@ TE.each(function($) {
                 columns = states.td,
                 c = 'children',
                 x = ' \u00D7 ',
-                color = _css($container[q]('a'), 'color'),
+                color = _css(_get('a', $container)[0], 'color'),
                 border = _css($container, 'border-top-color') || _css($container, 'border-bottom-color'),
                 background = _css($container, 'background-color'),
                 data, results, tr, td, tr_index, td_index, i, j;
