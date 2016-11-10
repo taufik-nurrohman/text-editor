@@ -989,7 +989,7 @@ TE.prototype.ui = function(o) {
     };
 
     ui.overlay = function(s, x, fn) {
-        ui.exit(0, 0, 0).blur();
+        ui.exit(0, 0, 0);
         do_keys_reset(1);
         dom_set(_body, el(_overlay, s.length || is_dom(s) ? el_set(prefix + '-overlay-content', 'div', s) : ""));
         if (x) events_set(_CLICK, _overlay, do_overlay_exit);
@@ -1006,7 +1006,7 @@ TE.prototype.ui = function(o) {
     ui.overlay.fit = function() {}; // TODO
 
     ui.modal = function() {
-        ui.overlay("", 1);
+        ui.overlay("", 1).blur();
         var arg = arguments,
             k = arg[0],
             o = arg[1],
