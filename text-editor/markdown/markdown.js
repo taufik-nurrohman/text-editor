@@ -434,7 +434,7 @@ TE.Markdown = function(target, o) {
                     list_s = pattern('^(.*) ' + esc_ol + ' ', 'gm'),
                     placeholder = placeholders[""], B;
                 if (!v) {
-                    if (b && a) {
+                    if (a && b && (a[0] !== '\n' || b.slice(-1) !== '\n')) {
                         // ordered list detected
                         if (list.test(b)) {
                             B = b.replace(list, '$1$2 ' + ul + ' $3');
@@ -484,7 +484,7 @@ TE.Markdown = function(target, o) {
                     placeholder = placeholders[""],
                     i = 0, B;
                 if (!v) {
-                    if (b && a) {
+                    if (a && b && (a[0] !== '\n' || b.slice(-1) !== '\n')) {
                         // unordered list detected
                         if (bullet.test(b)) {
                             B = b.replace(bullet, '$1$2 ' + ol_first + ' $3');
