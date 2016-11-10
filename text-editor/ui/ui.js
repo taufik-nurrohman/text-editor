@@ -38,6 +38,7 @@ TE.prototype.ui = function(o) {
         html = doc.documentElement,
         head = doc.head,
         body = doc.body,
+        target = $.target,
         hooks = {},
         noop = function() {},
         config = extend({
@@ -330,88 +331,6 @@ TE.prototype.ui = function(o) {
         return a;
     }
 
-    // add `ui` method to `TE`
-    var ui = $.ui = {};
-
-    // add `tidy` method to `TE`
-    $.tidy = function(a, b) {
-        var s = $.$(),
-            B = trim(s.before) ? a : "",
-            A = trim(s.after) ? (is_set(b) ? b : a) : "";
-        return $.trim(B, A);
-    };
-
-    // helper: force inline
-    $.i = function() {
-        return trim($.replace(/\s+/g, ' '));
-    };
-
-    // add `format` method to `TE`
-    $.format = function(node, wrap, gap_1, gap_2) {
-        if (!is_object(node)) node = [node];
-        if (!is_set(gap_1)) gap_1 = ' ';
-        if (!is_set(gap_2)) gap_2 = "";
-        var s = $[0]().$(),
-            a = (node[0] ? unit[0] + node[0] + unit[1] : "") + gap_2,
-            b = gap_2 + (node[0] ? unit[0] + unit[2] + (node[1] || node[0].split(pattern('(' + esc_data[3] + ')+'))[0]) + unit[1] : ""),
-            A = esc(a),
-            B = esc(b),
-            m = pattern('^' + A + '([\\s\\S]*?)' + B + '$'),
-            m_A = pattern(A + '$'),
-            m_B = pattern('^' + B),
-            before = s.before,
-            after = s.after;
-        if (!s.length) {
-            $.insert(i18n.placeholders[""]);
-        } else {
-            gap_1 = false;
-        }
-        return $.toggle(
-            // when ...
-            wrap ? !m.test(s.value) : (!m_A.test(before) && !m_B.test(after)),
-            // do ...
-            [
-                // first toggle
-                function($) {
-                    $.unwrap(a, b, 1).tidy(pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + esc_unit[2] + ']+?' + esc_unit[1] + '$').test(before) ? "" : gap_1, pattern('^' + esc_unit[0] + esc_unit[2] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1]).test(after) ? "" : gap_1).wrap(a, b, wrap)[1]();
-                },
-                // second toggle (the reset state)
-                function($) {
-                    $.unwrap(a, b, wrap)[1]();
-                }
-            ]
-        );
-    };
-
-    var c = config.classes,
-        prefix = c[""],
-        i18n_tools = i18n.tools,
-        i18n_buttons = i18n.buttons,
-        i18n_others = i18n.others,
-        C = prefix + '-textarea ' + prefix + '-content block',
-        _container = el_set(prefix),
-        _header = el_set(prefix + '-header'),
-        _body = el_set(prefix + '-body'),
-        _footer = el_set(prefix + '-footer'),
-        _tool = el_set(prefix + '-tool'),
-        _content = el($.target, false, config.attributes),
-        _resize = el_set(prefix + '-resize s'),
-        _description = el_set(prefix + '-description'),
-        _overlay = el_set(prefix + '-overlay'),
-        _modal = el('div'),
-        _drop = el('div'),
-        _bubble = el('div'),
-        _description_left = el_set('left', 'span'),
-        _description_right = el_set('right', 'span'),
-        _preview = el_set(prefix + '-preview', 'a'),
-        _p = 0,
-        _drop_target = 0,
-        _button, _icon;
-
-    if (!config.suffix) {
-        config.suffix = unit[1];
-    }
-
     function el(em, node, attr) {
         em = is_string(em) ? doc.createElement(em) : em;
         if (is_object(attr)) {
@@ -576,6 +495,88 @@ TE.prototype.ui = function(o) {
         return el(b || 'div', c, {
             'class': a
         });
+    }
+
+    // add `ui` method to `TE`
+    var ui = $.ui = {};
+
+    // add `tidy` method to `TE`
+    $.tidy = function(a, b) {
+        var s = $.$(),
+            B = trim(s.before) ? a : "",
+            A = trim(s.after) ? (is_set(b) ? b : a) : "";
+        return $.trim(B, A);
+    };
+
+    // helper: force inline
+    $.i = function() {
+        return trim($.replace(/\s+/g, ' '));
+    };
+
+    // add `format` method to `TE`
+    $.format = function(node, wrap, gap_1, gap_2) {
+        if (!is_object(node)) node = [node];
+        if (!is_set(gap_1)) gap_1 = ' ';
+        if (!is_set(gap_2)) gap_2 = "";
+        var s = $[0]().$(),
+            a = (node[0] ? unit[0] + node[0] + unit[1] : "") + gap_2,
+            b = gap_2 + (node[0] ? unit[0] + unit[2] + (node[1] || node[0].split(pattern('(' + esc_data[3] + ')+'))[0]) + unit[1] : ""),
+            A = esc(a),
+            B = esc(b),
+            m = pattern('^' + A + '([\\s\\S]*?)' + B + '$'),
+            m_A = pattern(A + '$'),
+            m_B = pattern('^' + B),
+            before = s.before,
+            after = s.after;
+        if (!s.length) {
+            $.insert(i18n.placeholders[""]);
+        } else {
+            gap_1 = false;
+        }
+        return $.toggle(
+            // when ...
+            wrap ? !m.test(s.value) : (!m_A.test(before) && !m_B.test(after)),
+            // do ...
+            [
+                // first toggle
+                function($) {
+                    $.unwrap(a, b, 1).tidy(pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + esc_unit[2] + ']+?' + esc_unit[1] + '$').test(before) ? "" : gap_1, pattern('^' + esc_unit[0] + esc_unit[2] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1]).test(after) ? "" : gap_1).wrap(a, b, wrap)[1]();
+                },
+                // second toggle (the reset state)
+                function($) {
+                    $.unwrap(a, b, wrap)[1]();
+                }
+            ]
+        );
+    };
+
+    var c = config.classes,
+        prefix = c[""],
+        i18n_tools = i18n.tools,
+        i18n_buttons = i18n.buttons,
+        i18n_others = i18n.others,
+        C = prefix + '-textarea ' + prefix + '-content block',
+        _container = el_set(prefix),
+        _header = el_set(prefix + '-header'),
+        _body = el_set(prefix + '-body'),
+        _footer = el_set(prefix + '-footer'),
+        _tool = el_set(prefix + '-tool'),
+        _content = el(target, false, config.attributes),
+        _resize = el_set(prefix + '-resize s'),
+        _description = el_set(prefix + '-description'),
+        _overlay = el_set(prefix + '-overlay'),
+        _modal = el('div'),
+        _drop = el('div'),
+        _bubble = el('div'),
+        _description_left = el_set('left', 'span'),
+        _description_right = el_set('right', 'span'),
+        _preview = el_set(prefix + '-preview', 'a'),
+        _p = 0,
+        _drop_target = 0,
+        _button, _icon;
+
+    if (!config.suffix) {
+        config.suffix = unit[1];
     }
 
     function do_word_count() {
@@ -942,7 +943,7 @@ TE.prototype.ui = function(o) {
             _drop_target = 0;
             dom_content_reset(_drop);
             events_reset(_CLICK, body, do_drop_exit);
-            ui.exit(1);
+            ui.exit(e.target === target);
         }
     }
 
