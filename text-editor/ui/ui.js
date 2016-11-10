@@ -469,14 +469,14 @@ TE.prototype.ui = function(o) {
     }
 
     function class_set(node, s) {
-        if (!class_get(node, s)) {
-            node.className = trim(node.className + ' ' + s);
+        if (!class_get(node, s, 0)) {
+            node.className = trim(node.className + ' ' + (is_object(s) ? s.join(' ') : s));
         }
     }
 
     function class_get(node, s, b) {
         var n = node.className;
-        return pattern('(^|\\s)' + s + '(\\s|$)').test(n) ? n : (is_set(b) ? b : false);
+        return pattern('(^|\\s)' + s + '(\\s|$)').test(n) ? n.split(/\s+/) : (is_set(b) ? b : []);
     }
 
     function class_reset(node, s) {
@@ -814,14 +814,14 @@ TE.prototype.ui = function(o) {
     };
 
     $.update = function(o, hook) {
-        if (class_get(_content, C)) {
+        if (class_get(_content, C, 0)) {
             $.destroy(0); // destroy if already created
         }
         return (hook !== 0 ? hook_fire('update', [$]) : $).create(o, 0);
     };
 
     $.destroy = function(hook) {
-        if (!class_get(_content, C)) return $;
+        if (!class_get(_content, C, 0)) return $;
         ui.exit(0, 0, 0);
         class_reset(_content, C);
         if (is_object(config.tools)) config.tools = config.tools.join(' ');
