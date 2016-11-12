@@ -511,10 +511,10 @@ TE.HTML = function(target, o) {
                     after = pattern('^\\s*' + A),
                     any = pattern('^' + content + '$');
                 function encode(a) {
-                    return x ? a.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : a;
+                    return x ? replace(a, ['&', '<', '>'], ['&amp;', '&lt;', '&gt;']) : a;
                 }
                 function decode(a) {
-                    return x ? a.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&') : a;
+                    return x ? replace(a, ['&lt;', '&gt;', '&amp;'], ['<', '>', '&']) : a;
                 }
                 // block
                 if (pattern('(^|\\n|' + B + ')$').test(s.before)) {

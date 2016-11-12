@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BBCODE TEXT EDITOR PLUGIN 1.0.4
+ *  BBCODE TEXT EDITOR PLUGIN 1.0.5
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -136,10 +136,10 @@ TE.BBCode = function(target, o) {
                     code = formats.code,
                     code_o = get_o(code);
                 function encode(a) {
-                    return x ? a.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : a;
+                    return x ? replace(a, ['&', '<', '>'], ['&amp;', '&lt;', '&gt;']) : a;
                 }
                 function decode(a) {
-                    return x ? a.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&') : a;
+                    return x ? replace(a, ['&lt;', '&gt;', '&amp;'], ['<', '>', '&']) : a;
                 }
                 return $[0]().format(code, 0, '\n\n', '\n').replace(/^[\s\S]*?$/, function(a) {
                     return pattern('^\\s*' + esc_unit[0] + esc_unit[2] + esc(code_o) + esc_unit[1]).test($.$().after) ? encode(a) : decode(a);
