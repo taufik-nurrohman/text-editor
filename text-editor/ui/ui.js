@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.1
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -202,7 +202,14 @@ TE.prototype.ui = function(o) {
                 attr_reset(node, a[i]);
             }
         } else {
-            node.removeAttribute(a);
+            if (!is_set(a)) {
+                attr_reset(node, 'class'); // :(
+                for (i = 0, j = node.attributes, k = j.length; i < k; ++i) {
+                    if (j[i]) attr_reset(node, j[i].name);
+                }
+            } else {
+                node.removeAttribute(a);
+            }
         }
     }
 
@@ -236,7 +243,15 @@ TE.prototype.ui = function(o) {
                 attr_reset(node, 'data-' + a[i]);
             }
         } else {
-            attr_reset(node, 'data-' + a);
+            if (!is_set(a)) {
+                for (i = 0, j = node.attributes, k = j.length; i < k; ++i) {
+                    if (j[i] && j[i].name.slice(0, 5) === 'data-') {
+                        attr_reset(node, j[i].name);
+                    }
+                }
+            } else {
+                attr_reset(node, 'data-' + a);
+            }
         }
     }
 
@@ -369,9 +384,13 @@ TE.prototype.ui = function(o) {
     }
 
     function class_reset(node, s) {
-        s = str_split(s);
-        for (i in s) {
-            node.classList.remove(s[i]);
+        if (!is_set(s)) {
+            attr_reset(node, 'class');
+        } else {
+            s = str_split(s);
+            for (i in s) {
+                node.classList.remove(s[i]);
+            }
         }
     }
 
@@ -380,7 +399,7 @@ TE.prototype.ui = function(o) {
         if (is_object(attr)) {
             for (i in attr) {
                 v = attr[i];
-                if (i === 'class') {
+                if (i === 'classes') {
                     class_set(em, v);
                 } else if (i === 'data') {
                     for (j in v) {
@@ -391,11 +410,11 @@ TE.prototype.ui = function(o) {
                             data_set(em, j, v);
                         }
                     }
-                } else if (i === 'style') {
+                } else if (i === 'css') {
                     if (is_string(v)) {
-                        attr_set(em, i, v);
+                        attr_set(em, 'style', v);
                     } else if (v === null) {
-                        attr_reset(em, i);
+                        attr_reset(em, 'style');
                     } else {
                         css(em, v);
                     }
@@ -607,6 +626,7 @@ TE.prototype.ui = function(o) {
     };
 
     var _c = config.classes,
+        _i = _c.i,
         _prefix = _c[""],
         _i18n_tools = i18n.tools,
         _i18n_buttons = i18n.buttons,
@@ -669,7 +689,8 @@ TE.prototype.ui = function(o) {
             tool = ui.tools[v];
             if (!tool) continue;
             do_attributes(tool, v);
-            if ((icon = tool.i || v) !== '|') {
+            icon = tool.i || v;
+            if (icon !== '|' && icon[0] !== '<') {
                 icon = slug(icon);
             }
             is_button = icon !== '|';
@@ -682,7 +703,7 @@ TE.prototype.ui = function(o) {
                     'tab-index': -1
                 });
                 data_set(_button, data_tool_id, v);
-                icon = '<i class="' + format(_c.i, [icon]) + ' ' + id + '"></i>';
+                icon = icon[0] === '<' ? icon : '<i class="' + format(_i, [icon]) + ' ' + id + '"></i>';
                 if (!tool.active) {
                     class_set(_button, 'x');
                 }
@@ -1155,7 +1176,7 @@ TE.prototype.ui = function(o) {
         event_set(_KEYDOWN, okay, function(e) {
             var key = e.TE.key;
             if (key(/^escape|enter$/)) {
-                return event_fire(_CLICK, okay, [e, $]);
+                return event_fire(_CLICK, okay, [e]);
             }
         });
         ui.modal(id, do_modal_dom_set(title, content, okay), fn);
@@ -1337,23 +1358,27 @@ TE.prototype.ui = function(o) {
     };
 
     ui.menu = function(id, str, data, i) {
+        str = (!is_object(str) && data[str] && data[str].text) || str;
         var current = '<span class="' + _prefix + '-current menu">%1</span>',
-            icon = "";
+            icon = "",
+            attributes = {
+                'href': js,
+                'class': _prefix + '-button',
+                'data': {}
+            }, v;
         if (str === false) {
             return ui.tool(id, str);
         } else if (is_object(str)) {
             icon = str[0];
-            str = str[1];
-            current = '<i class="' + format(_c.i, [icon]) + '"></i> ' + current;
+            icon = icon[0] === '<' ? icon : '<i class="' + format(_i, [icon]) + '"></i>';
+            str = is_set(str[1]) ? str[1] : false;
+            str = (str && data[str] && data[str].text) || str;
+            current = icon + (str !== false ? ' ' + current : "");
         }
         return ui.tool(id, {
             i: icon,
-            text: format(current, [(data[str] && data[str].text) || str, icon]),
+            text: format(current, [str, icon]),
             click: function(e) {
-                var attributes = {
-                    'href': js,
-                    'class': _prefix + '-button'
-                }, v;
                 return ui.drop('menu menu-' + slug(id), function(drop) {
                     function _do_click(e) {
                         v = this;
@@ -1361,8 +1386,15 @@ TE.prototype.ui = function(o) {
                         h = content_get(v);
                         if (m && m.active && is_function(i = m.click)) {
                             i = i(e, $);
-                            if (_drop_target) {
-                                content_set(dom_children(_drop_target)[0] || _drop_target, format(current, [h, icon]));
+                            if (str !== false && _drop_target) {
+                                s = dom_children(_drop_target)[0] || _drop_target;
+                                content_set(s, format(current, [h, icon]));
+                                if(is_object(m.text) && (t = dom_children(s)[0])) {
+                                    if (t.nodeName === 'I') {
+                                        class_reset(t);
+                                        class_set(t, format(_i, [m.text[0]]));
+                                    }
+                                }
                             }
                             if (i === false) return event_exit(e);
                         }
@@ -1373,10 +1405,12 @@ TE.prototype.ui = function(o) {
                         v = is_string(v) ? ui.tools[v] : v;
                         if (!v) continue;
                         do_attributes(v, i);
-                        attributes['data-' + data_tool_id] = i;
+                        attributes['data'][data_tool_id] = i;
+                        r = v.text;
+                        r = is_object(r) ? (r[1] || "") : r;
                         s = el('a', v.text || i, extend(attributes, v.attributes || {}));
                         if (!s.title && (t = v.title)) {
-                            t.title = is_object(t) ? t[0] + (t[1] ? ' (' + t[1] + ')' : "") : t;
+                            s.title = is_object(t) ? t[0] + (t[1] ? ' (' + t[1] + ')' : "") : t;
                         }
                         if (!v.active) {
                             class_set(s, 'x');
@@ -1639,7 +1673,7 @@ TE.prototype.ui = function(o) {
                 reset: class_reset,
                 get: class_get
             },
-            attr: {
+            attributes: {
                 set: attr_set,
                 reset: attr_reset,
                 get: attr_get

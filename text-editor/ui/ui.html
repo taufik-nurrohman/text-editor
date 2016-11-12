@@ -158,14 +158,13 @@ SOFTWARE.</textarea></p>
             title: 'Test Drop',
             click: function(e, $) {
                 return $.ui.drop('my-drop', function(body) {
-                    body.innerHTML = "";
                     var colors = ['red', 'orange', 'yellow', 'lime', 'green'],
                         i, j, k;
                     for (i in colors) {
                         j = colors[i];
                         k = $._.el('span', "", {
                             title: j,
-                            style: {
+                            css: {
                                 width: '2em',
                                 height: '2em',
                                 display: 'block',
@@ -211,7 +210,7 @@ SOFTWARE.</textarea></p>
         },
         'bar': {
             title: 'Test Title',
-            text: '<span class="text-strong">Bold</span>',
+            text: ['bold', '<span class="text-strong">Bold</span>'],
             click: 'bold'
         },
         '<span class="text-em">Italic</span>': 'italic'
