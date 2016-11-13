@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.0.2
+ *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.0.3
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -66,9 +66,14 @@ TE.each(function($) {
                 columns = states.td,
                 c = 'children',
                 x = ' \u00D7 ',
+                container_css = _css($container, [
+                    'border-top-color',
+                    'border-bottom-color',
+                    'background-color'
+                ]),
                 color = _css(_get('a', $container)[0], 'color'),
-                border = _css($container, 'border-top-color') || _css($container, 'border-bottom-color'),
-                background = _css($container, 'background-color'),
+                border = container_css[0] || container_css[1],
+                background = container_css[2],
                 data, results, tr, td, tr_index, td_index, i, j;
             // if normal state color is the same as the hover state ...
             if (color === border) {

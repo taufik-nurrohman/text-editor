@@ -196,7 +196,6 @@
 }
 .text-editor-resize:before {
   content:"";
-  display:block;
   position:absolute;
   right:2px;
   bottom:2px;
@@ -225,19 +224,17 @@
   border-width:0;
 }
 .text-editor-portal {
-  display:block;
-  float:left;
+  position:absolute;
+  top:0;
+  right:0;
+  bottom:0;
+  left:0;
   margin:0;
   padding:0;
   border:0;
   outline:0;
   width:100%;
   height:100%;
-  position:absolute;
-  top:0;
-  right:0;
-  bottom:0;
-  left:0;
 }
 .text-editor-modal,
 .text-editor-drop,
@@ -253,12 +250,12 @@
 }
 .text-editor-modal-header,
 .text-editor-modal-footer {
-  height:2.5em;
-  line-height:2.5em;
-  padding:0 1em;
   position:absolute;
   right:0;
   left:0;
+  height:2.5em;
+  line-height:2.5em;
+  padding:0 1em;
 }
 .text-editor-modal-header {
   top:0;
@@ -304,6 +301,37 @@
 }
 .text-editor-drop.menu .text-editor-button:focus,
 .text-editor-drop.menu .text-editor-button:active {background:#eee}
+.text-editor-drop.menu .text-editor-label {
+  display:block;
+  height:1em;
+  margin:.25em .5em;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  background:inherit;
+  border-color:inherit;
+  position:relative;
+  pointer-events:none;
+}
+.text-editor-drop.menu .text-editor-label:before {
+  content:"";
+  position:absolute;
+  top:.5em;
+  right:0;
+  left:0;
+  border-top:1px solid;
+  border-color:inherit;
+}
+.text-editor-drop.menu .text-editor-label[title]:after {
+  content:attr(title);
+  position:absolute;
+  top:0;
+  font-weight:bold;
+  font-size:65%;
+  line-height:1.5em;
+  text-transform:uppercase;
+  padding:0 .5em 0 0;
+  background:inherit;
+}
 .text-editor-current.menu:after {
   content:"";
   display:inline-block;

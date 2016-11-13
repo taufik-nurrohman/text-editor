@@ -90,13 +90,17 @@
 
     function css(a, b, c) {
         var o = w.getComputedStyle(a, c),
-            h = {}, i, j, k;
+            g = 0,
+            h = {}, i, j, k, l;
         if (is_object(b)) {
             if (is_array(b)) {
                 o = {};
                 for (i in b) {
                     i = b[i];
-                    o[i.replace(/^\!/, "")] = css(a, i, c);
+                    l = css(a, i, c);
+                    o[g] = l;
+                    o[i.replace(/^\!/, "")] = l;
+                    ++g;
                 }
                 return o;
             }
@@ -170,7 +174,7 @@
         };
 
         // key maps for the deprecated `KeyboardEvent.keyCode`
-        $.keys = {
+        var keys = {
             // control
             3: 'cancel',
             6: 'help',
@@ -241,10 +245,10 @@
             220: ['\\', '|'],
             221: [']', '}'],
             222: ['\'', '"']
-        };
+        },
 
         // key alias(es)
-        $.keys_alias = {
+        keys_alias = {
             'alternate': 'alt',
             'option': 'alt',
             'ctrl': 'control',
@@ -267,20 +271,18 @@
 
         // function
         for (var i = 1; i < 25; ++i) {
-            $.keys[111 + i] = 'f' + i;
+            keys[111 + i] = 'f' + i;
         }
 
         // alphabet
         for (var s = "", i = 65; i < 91; ++i) {
-            $.keys[i] = cl(String.fromCharCode(i));
+            keys[i] = cl(String.fromCharCode(i));
         }
 
         // add `KeyboardEvent.TE` property
         Object.defineProperty(KeyboardEvent.prototype, 'TE', {
             configurable: true,
             get: function() {
-                var keys = $.keys,
-                    keys_alias = $.keys_alias;
                 // custom `KeyboardEvent.key` for internal use
                 var t = this,
                     k = t.key ? cl(t.key) : keys[t.which || t.keyCode];
@@ -312,6 +314,9 @@
                 };
             }
         });
+
+        $.keys = keys;
+        $.keys_alias = keys_alias;
 
     })(w.TE = function(target) {
 

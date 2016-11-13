@@ -438,6 +438,7 @@ Here are all of the available properties for `editor.ui.tool`:
  - `text` → use text instead of icon?
  - `active` → `true` by default, it means that the tool is active and can be operated
  - `attributes` → extra HTML attributes for the tool markup
+ - `target` → HTML element used to trigger the tool item
 
 Separator › Tools
 -----------------
