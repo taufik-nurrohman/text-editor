@@ -174,7 +174,7 @@ Replace something before caret/selection with something:
 editor.replaceBefore(/foo/g, 'bar');
 ~~~
 
-### Replace Before Caret/Selection
+### Replace After Caret/Selection
 
 Replace something after caret/selection with something:
 
@@ -465,7 +465,7 @@ editor.target.onkeydown = function(e) {
 
     console.log(this.TE); // is equal to the current `editor`
 
-    // check for current key character (try pressing the “control” key)
+    // check for current key character (try pressing the control key)
     if (e.TE.key('ctrl')) { … } // `ctrl` is an alias for `control`, this will return `true`
     if (e.TE.key() === 'ctrl') { … } // comparing `ctrl` outside the function, this will return `false`
     if (e.TE.key() === 'control') { … } // is equal to the original key value, this will return `true`
@@ -488,8 +488,10 @@ Modules
  - [Persistent Storage](https://rawgit.com/tovic/text-editor/master/text-editor/save/save.html)
  - [User Interface](https://rawgit.com/tovic/text-editor/master/text-editor/ui/ui.html)
    - [Internationalization](https://rawgit.com/tovic/text-editor/master/text-editor/ui/language/language.html)
-   - [Maximize/Minimize the Editor](https://rawgit.com/tovic/text-editor/master/text-editor/ui/expand/expand.html)
+   - [Maximize/Minimize](https://rawgit.com/tovic/text-editor/master/text-editor/ui/expand/expand.html)
    - [Table Grid Selector](https://rawgit.com/tovic/text-editor/master/text-editor/ui/table-grid/table-grid.html)
+   - [Common String Converter](https://rawgit.com/tovic/text-editor/master/text-editor/ui/converter/converter.html)
+   - [Native Emoji](https://rawgit.com/tovic/text-editor/master/text-editor/ui/emoji/emoji.html)
 
 Plugins
 -------
