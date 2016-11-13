@@ -64,7 +64,7 @@ TE.each(function($) {
     });
 
     menus = {
-        'label:0': 1, // label
+        '%1': 1, // label
         html_encode: function(e, $) {
             return $.replace(/[&<>]/g, function(a) {
                 return _replace(a, ['&', '<', '>'], ['&amp;', '&lt;', '&gt;']);
@@ -117,7 +117,7 @@ TE.each(function($) {
                 return btoa(a);
             }), check(), false;
         } : 0,
-        'label:1': 1, // label
+        '%2': 1, // label
         html_decode: function(e, $) {
             return $.replace(any, function(a) {
                 return _replace(_el('div', a).innerHTML, ['&lt;', '&gt;', '&amp;'], ['<', '>', '&']);
@@ -145,7 +145,7 @@ TE.each(function($) {
     };
 
     if (a = config[converter + 's']) {
-        menus['label:2'] = 1;
+        menus['%3'] = 1;
         _extend(menus, a);
     }
 

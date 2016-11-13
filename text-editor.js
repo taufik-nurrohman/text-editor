@@ -7,7 +7,10 @@
  * ----------------------------------------------------------
  */
 
-(function(w, d) {
+(function(win, doc) {
+
+    var ins = '__instance__',
+        re = 'replace';
 
     function cl(s) {
         return s.toLowerCase();
@@ -65,11 +68,11 @@
 
     function trim(s, x) {
         if (x === 0) {
-            return s.replace(/^\s*/, ""); // trim left
+            return s[re](/^\s*/, ""); // trim left
         } else if (x === 1) {
-            return s.replace(/\s*$/, ""); // trim right
+            return s[re](/\s*$/, ""); // trim right
         }
-        return s.replace(/^\s*|\s*$/g, "") // trim left and right
+        return s[re](/^\s*|\s*$/g, "") // trim left and right
     }
 
     function num(x, i) {
@@ -77,19 +80,19 @@
     }
 
     function camelize(s) {
-        return s.replace(/\-([a-z])/g, function(a, b) {
+        return s[re](/\-([a-z])/g, function(a, b) {
             return cu(b);
         });
     }
 
     function dasherize(s) {
-        return s.replace(/([A-Z])/g, function(a, b) {
+        return s[re](/([A-Z])/g, function(a, b) {
             return '-' + cl(b);
         });
     }
 
     function css(a, b, c) {
-        var o = w.getComputedStyle(a, c),
+        var o = win.getComputedStyle(a, c),
             g = 0,
             h = {}, i, j, k, l;
         if (is_object(b)) {
@@ -99,7 +102,7 @@
                     i = b[i];
                     l = css(a, i, c);
                     o[g] = l;
-                    o[i.replace(/^\!/, "")] = l;
+                    o[i[re](/^\!/, "")] = l;
                     ++g;
                 }
                 return o;
@@ -156,22 +159,6 @@
     }
 
     (function($) {
-
-        // plugin version
-        $.version = '2.6.3';
-
-        // collect all instance(s)
-        $.__instance__ = {};
-
-        // plug to all instance(s)
-        $.each = function(fn, t) {
-            return setTimeout(function() {
-                var ins = $.__instance__, i;
-                for (i in ins) {
-                    fn(ins[i], i, ins);
-                }
-            }, t === 0 ? 0 : (t || 1)), $;
-        };
 
         // key maps for the deprecated `KeyboardEvent.keyCode`
         var keys = {
@@ -267,17 +254,21 @@
             'back': 'backspace',
             'space': ' ',
             'plus': '+'
-        };
+        }, i, j;
 
         // function
-        for (var i = 1; i < 25; ++i) {
+        for (i = 1; i < 25; ++i) {
             keys[111 + i] = 'f' + i;
         }
 
         // alphabet
-        for (var s = "", i = 65; i < 91; ++i) {
+        for (i = 65; i < 91; ++i) {
             keys[i] = cl(String.fromCharCode(i));
         }
+
+        // register key(s)
+        $.keys = keys;
+        $.keys_alias = keys_alias;
 
         // add `KeyboardEvent.TE` property
         Object.defineProperty(KeyboardEvent.prototype, 'TE', {
@@ -285,6 +276,8 @@
             get: function() {
                 // custom `KeyboardEvent.key` for internal use
                 var t = this,
+                    keys = $.keys, // refresh ...
+                    keys_alias = $.keys_alias, // refresh ...
                     k = t.key ? cl(t.key) : keys[t.which || t.keyCode];
                 if (is_object(k)) {
                     k = t.shiftKey ? (k[1] || k[0]) : k[0];
@@ -292,6 +285,9 @@
                 k = cl(k);
                 function ret(x, y) {
                     if (!x || x === true) return k;
+                    if (is_string(y)) {
+                        y = t[y + 'Key'];
+                    }
                     if (is_pattern(x)) return y && x.test(k);
                     return x = cl(x), y && (keys_alias[x] || x) === k;
                 }
@@ -300,37 +296,68 @@
                         return ret(x, 1);
                     },
                     control: function(x) {
-                        return ret(x, t.ctrlKey);
+                        return ret(x, 'ctrl');
                     },
                     shift: function(x) {
-                        return ret(x, t.shiftKey);
+                        return ret(x, 'shift');
                     },
                     option: function(x) {
-                        return ret(x, t.altKey);
+                        return ret(x, 'alt');
                     },
                     meta: function(x) {
-                        return ret(x, t.metaKey);
+                        return ret(x, 'meta');
                     }
                 };
             }
         });
 
-        $.keys = keys;
-        $.keys_alias = keys_alias;
+        // plugin version
+        $.version = '2.6.3';
 
-    })(w.TE = function(target) {
+        // collect all instance(s)
+        $[ins] = {};
+
+        // plug to all instance(s)
+        $.each = function(fn, t) {
+            return setTimeout(function() {
+                j = $[ins];
+                for (i in j) {
+                    fn(j[i], i, j);
+                }
+            }, t === 0 ? 0 : (t || 1)), $;
+        };
+
+    })(win.TE = function(target) {
 
         var $ = this,
             _ = 1, // cache of history length
             F = 0, // history feature is active
-            H = [[val(), 0, 0, 0]], // load the first history data
+            G = 'createElement', H,
             I = 0, // current state of history
+            J = 'appendChild',
+            K = 'removeChild',
+            L = 'replace',
+            M = 'textContent',
+            N = 'substring',
+            O = 'selectionStart',
+            P = 'selectionEnd',
+            Q = 'scrollTop',
+            R = 'insert',
             S = {}, // storage
-            html = d.documentElement,
-            body = d.body,
-            div = d.createElement('div'),
-            span = d.createElement('span'),
-            tab = '\t';
+            html = doc.documentElement,
+            body = doc.body,
+            div = doc[G]('div'),
+            span = doc[G]('span'),
+            tab = '\t',
+
+            a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z;
+
+        if (!is_set(target)) {
+            target = doc[G]('textarea');
+        }
+
+        // load the first history data
+        H = [[val(), 0, 0, 0]];
     
         // return a new instance if `TE` was called without the `new` operator
         if (!($ instanceof TE)) {
@@ -338,9 +365,9 @@
         }
     
         var scroll_width = (function() {
-            var a = '-200px',
-                b = '200px', c;
-            body.appendChild(div);
+            a = '-200px';
+            b = '200px';
+            body[J](div);
             css(div, {
                 'position': 'absolute',
                 'top': a,
@@ -351,25 +378,25 @@
                 'visibility': 'hidden'
             });
             c = div.offsetWidth - div.clientWidth;
-            return body.removeChild(div), c;
+            return body[K](div), c;
         })();
 
         $.type = ""; // default editor type
         $.x = '!$^*()-=+[]{}\\|:<>,./?'; // character(s) to escape
 
         function val() {
-            return target.value.replace(/\r/g, "");
+            return target.value[L](/\r/g, "");
         }
 
         function esc(x) {
             if (is_array(x)) {
-                var i, o = [];
+                o = [];
                 for (i in x) {
                     o[i] = esc(x[i]);
                 }
                 return o;
             }
-            return x.replace(pattern('[' + $.x.replace(/./g, '\\$&') + ']', 'g'), '\\$&');
+            return x[L](pattern('[' + $.x[L](/./g, '\\$&') + ']', 'g'), '\\$&');
         }
 
         function get_pattern(x) {
@@ -413,47 +440,45 @@
                     text + 'transform',
                     'width',
                     'word-spacing'
-                ],
-                i = prop.length,
-                s, t, o, w;
-            body.appendChild(div);
+                ], i = prop.length, o;
+            body[J](div);
             s = div.style;
             t = css(target, prop);
-            w = t.width;
+            w = t[26];
+            span[M] = val()[N](x) || '.';
             css(div, extend(t, {
-                'width': is_set(w.mozInnerScreenX) ? w : w + scroll_width, // Firefox :(
-                'overflow-y': target.scrollHeight > t.height ? 'scroll' : 'auto',
+                'width': is_set(win.mozInnerScreenX) ? w : w + scroll_width, // Firefox :(
+                'overflow-y': target.scrollHeight > t[13] ? 'scroll' : 'auto',
                 'white-space': 'pre-wrap',
                 'word-wrap': 'break-word',
                 'position': 'absolute',
                 'visibility': 'hidden'
             }));
-            span.textContent = val().substring(x) || '.';
-            div.textContent = val().substring(0, x);
-            div.appendChild(span);
+            div[M] = val()[N](0, x);
+            div[J](span);
             o = {
-                x: span.offsetLeft + t[border + 'left' + width],
-                y: span.offsetTop + t[border + 'top' + width]
+                x: span.offsetLeft + t[1],
+                y: span.offsetTop + t[3]
             };
-            return body.removeChild(div), o;
+            return body[K](div), o;
         }
 
         // access editor instance from `this` scope with `this.TE`
         target.TE = $;
 
         // store editor instance to `TE.__instance__`
-        TE.__instance__[target.id || target.name || Object.keys(TE.__instance__).length] = $;
+        TE[ins][target.id || target.name || Object.keys(TE[ins]).length] = $;
 
         // scroll the editor
         $.scroll = function(i) {
-            var current = target.scrollTop,
-                h = css(target, ['line-height', 'font-size']);
+            c = target[Q];
+            h = css(target, ['line-height', 'font-size']);
             if (!is_set(i)) {
-                return [Math.floor(current / h[0]), h[0]];
+                return [Math.floor(c / h[0]), h[0]];
             } else if (is_boolean(i)) {
                 return $.scroll($.scroll()[0] + (i === false ? -1 : 1));
             }
-            return target.scrollTop = (h[0] * i) + h[1] + (h[0] - h[1]), $;
+            return target[Q] = (h[0] * i) + h[1] + (h[0] - h[1]), $;
         };
 
         // set value
@@ -489,8 +514,8 @@
                 x = y = 0; // put caret at the start of the editor, scroll to the start of the editor
             }
             if (is_set(x)) {
-                target.selectionStart = target.selectionEnd = x;
-                target.scrollTop = y;
+                target[O] = target[P] = x;
+                target[Q] = y;
             }
             return target.focus(), $;
         };
@@ -501,19 +526,18 @@
         };
 
         // get selection
-        $.$ = function(O) {
-            var v = val(),
-                a = target.selectionStart,
-                b = target.selectionEnd,
-                c = v.substring(a, b),
-                o = O ? [offset(a), offset(b)] : [];
+        $.$ = function(C) {
+            v = val();
+            a = target[O];
+            b = target[P];
+            c = v[N](a, b);
             return {
                 start: a,
                 end: b,
                 value: c,
-                before: v.substring(0, a),
-                after: v.substring(b),
-                caret: o,
+                before: v[N](0, a),
+                after: v[N](b),
+                caret: C ? [offset(a), offset(b)] : [],
                 length: c.length
             };
         };
@@ -522,10 +546,9 @@
         $.select = function() {
             var arg = arguments,
                 count = arg.length,
-                D = 'scrollTop',
                 s = $.$(),
-                id = 'TE.scroll', z;
-            $.save(id, [html[D], body[D], target[D]]).focus();
+                id = 'TE.scroll';
+            $.save(id, [html[Q], body[Q], target[Q]]).focus();
             if (count === 0) { // restore selection with `$.select()`
                 arg[0] = s.start;
                 arg[1] = s.end;
@@ -536,31 +559,31 @@
                 arg[1] = arg[0];
             }
             target.setSelectionRange(arg[0], arg[1]); // default `$.select(7, 100)`
-            z = $.restore(id, [0, 0, 0]);
-            html[D] = z[0];
-            body[D] = z[1];
-            target[D] = z[2];
+            o = $.restore(id, [0, 0, 0]);
+            html[Q] = o[0];
+            body[Q] = o[1];
+            target[Q] = o[2];
             return $; // `select` method does not populate history data
         };
 
         // match selection
         $.match = function(a, b) {
-            var m = $.$().value.match(a);
+            m = $.$().value.match(a);
             return is_function(b) ? b(m || []) : !!m; // `match` method does not populate history data
         };
 
         // replace at selection
-        $.replace = function(f, t, x) {
-            var s = $.$(),
-                a = s.before,
-                b = s.after,
-                c = s.value, d, e;
+        $[L] = function(f, t, x) {
+            s = $.$();
+            a = s.before;
+            b = s.after;
+            c = s.value;
             if (x === 0) { // replace before
-                a = a.replace(f, t);
+                a = a[L](f, t);
             } else if (x === 1) { // replace after
-                b = b.replace(f, t);
+                b = b[L](f, t);
             } else {
-                c = c.replace(f, t);
+                c = c[L](f, t);
             }
             d = a.length;
             e = d + c.length;
@@ -568,92 +591,91 @@
         };
 
         // replace before selection
-        $.replaceBefore = function(f, t) {
-            return $.replace(f, t, 0);
+        $[L + 'Before'] = function(f, t) {
+            return $[L](f, t, 0);
         };
 
         // replace after selection
-        $.replaceAfter = function(f, t) {
-            return $.replace(f, t, 1);
+        $[L + 'After'] = function(f, t) {
+            return $[L](f, t, 1);
         };
 
         // insert/replace at caret
-        $.insert = function(s, x, clear) {
-            var f = /^[\s\S]*?$/;
+        $[R] = function(s, x, clear) {
+            f = /^[\s\S]*?$/;
             if (clear) {
-                $.replace(f, "").loss(); // force to delete selection on insert before/after?
+                $[L](f, "").loss(); // force to delete selection on insert before/after?
             }
             if (x === 0) { // insert before
                 f = /$/;
             } else if (x === 1) { // insert after
                 f = /^/;
             }
-            return $.replace(f, s, x);
+            return $[L](f, s, x);
         };
 
         // insert before selection
-        $.insertBefore = function(s, clear) {
-            return $.insert(s, 0, clear);
+        $[R + 'Before'] = function(s, clear) {
+            return $[R](s, 0, clear);
         };
 
         // insert after selection
-        $.insertAfter = function(s, clear) {
-            return $.insert(s, 1, clear);
+        $[R + 'After'] = function(s, clear) {
+            return $[R](s, 1, clear);
         };
 
         // wrap selection
         $.wrap = function(O, C, wrap) {
-            var s = $.$(),
-                a = s.before,
-                b = s.after,
-                c = s.value;
+            s = $.$();
+            a = s.before;
+            b = s.after;
+            c = s.value;
             if (wrap) {
-                return $.replace(/^([\s\S]*?)$/, O + '$1' + C);
+                return $[L](/^([\s\S]*?)$/, O + '$1' + C);
             }
             return $.set(a + O + c + C + b).select((a + O).length, (a + O + c).length).record();
         };
 
         // unwrap selection
         $.unwrap = function(O, C, wrap) {
-            var s = $.$(),
-                a = s.before,
-                b = s.after,
-                c = s.value,
-                A, B, before, after;
+            s = $.$();
+            a = s.before;
+            b = s.after;
+            c = s.value;
             O = get_pattern(O);
             C = get_pattern(C);
-            before = pattern(O + '$');
-            after = pattern('^' + C);
+            f = pattern(O + '$');
+            g = pattern('^' + C);
             if (wrap) {
-                return $.replace(pattern('^' + O + '([\\s\\S]*?)' + C + '$'), '$1');
+                return $[L](pattern('^' + O + '([\\s\\S]*?)' + C + '$'), '$1');
             }
-            if (before.test(a) && after.test(b)) {
-                A = a.replace(before, "");
-                B = b.replace(after, "");
-                return $.set(A + c + B).select(A.length, (A + c).length).record();
+            if (f.test(a) && g.test(b)) {
+                d = a[L](f, "");
+                e = b[L](g, "");
+                return $.set(d + c + e).select(d.length, (d + c).length).record();
             }
             return $.select();
         };
 
         // indent
         $.indent = function(B, e) {
-            var s = $.$();
+            s = $.$();
             B = is_set(B) ? B : tab;
             if (s.length) {
-                return $.replace(pattern('^' + (e ? "" : '(?!$)'), 'gm'), B);
+                return $[L](pattern('^' + (e ? "" : '(?!$)'), 'gm'), B);
             }
-            return $.insert(B, 0);
+            return $[R](B, 0);
         };
 
         // outdent
         $.outdent = function(B) {
-            var s = $.$(), a;
+            s = $.$();
             B = is_set(B) ? B : tab;
             B = get_pattern(B);
             if (s.length) {
-                return $.replace(pattern('^' + B, 'gm'), "");
+                return $[L](pattern('^' + B, 'gm'), "");
             }
-            return $.replace(pattern(B + '$'), "", 0);
+            return $[L](pattern(B + '$'), "", 0);
         };
 
         // trim white-space before and after selection range
@@ -662,14 +684,14 @@
             if (C !== false) C = C || "";
             if (B !== false) B = B || "";
             if (E !== false) E = E || "";
-            var s = $.$(),
-                a = s.before,
-                b = s.after,
-                c = s.value,
-                aa = O !== false ? trim(a, 1) + O : a,
-                bb = C !== false ? C + trim(b, 0) : b,
-                cc = (B !== false ? B : "") + trim(c) + (E !== false ? E : "");
-            return $.set(aa + cc + bb).select(aa.length, (aa + cc).length); // `trim` method does not populate history data
+            s = $.$();
+            a = s.before;
+            b = s.after;
+            c = s.value;
+            d = O !== false ? trim(a, 1) + O : a,
+            e = C !== false ? C + trim(b, 0) : b,
+            f = (B !== false ? B : "") + trim(c) + (E !== false ? E : "");
+            return $.set(d + f + e).select(d.length, (d + f).length); // `trim` method does not populate history data
         };
 
         // toggle state
@@ -688,12 +710,12 @@
         // save state to history
         $.record = function(a, i) {
             if (F) return $;
-            var o = H[I],
-                s = $.$(),
-                v = val(),
-                w = s.start,
-                x = s.end,
-                a = is_set(a) ? a : [v, w, x, $.scroll()[0]];
+            o = H[I];
+            s = $.$();
+            v = val();
+            w = s.start;
+            x = s.end;
+            a = is_set(a) ? a : [v, w, x, $.scroll()[0]];
             if (o && is_object(o) && (
                 o[0] === v &&
                 o[1] === w &&
@@ -729,7 +751,7 @@
         $.undo = function() {
             I--;
             I = edge(I, 0, _ - 1);
-            var a = H[I];
+            a = H[I];
             return $.set(a[0]).select(a[1], a[2]).scroll(a[3]);
         };
 
@@ -737,7 +759,7 @@
         $.redo = function() {
             I++;
             I = edge(I, 0, _ - 1);
-            var a = H[I];
+            a = H[I];
             return $.set(a[0]).select(a[1], a[2]).scroll(a[3]);
         };
 
@@ -775,7 +797,7 @@
             x: function(x) {
                 return !is_set(x);
             }
-        }, i;
+        };
 
         for (i in check) $.is[i] = check[i];
 

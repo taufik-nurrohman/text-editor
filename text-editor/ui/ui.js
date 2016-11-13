@@ -1423,17 +1423,16 @@ TE.prototype.ui = function(o) {
                     }
                     for (i in data) {
                         v = data[i];
-                        w = i.split(':');
-                        x = w[0] === 'label';
-                        v = is_string(v) && !x ? ui.tools[v] : v;
+                        w = i[0] === '%';
+                        v = is_string(v) && !w ? ui.tools[v] : v;
                         if (!v) continue;
                         v = do_attributes(v, i, ui.tools);
                         var attributes = {
-                            'href': x ? null : js,
-                            'class': _prefix + '-' + (x ? 'label' : 'button')
+                            'href': w ? null : js,
+                            'class': _prefix + '-' + (w ? 'label' : 'button')
                         };
-                        if (x) {
-                            j = _i18n_labels[id] && _i18n_labels[id][+w[1]] || i;
+                        if (w) {
+                            j = _i18n_labels[id] && _i18n_labels[id][+i.slice(1) - 1] || i;
                         } else {
                             attributes['data'] = {};
                             attributes['data'][data_tool_id] = i;
@@ -1442,11 +1441,11 @@ TE.prototype.ui = function(o) {
                         r = v.text;
                         r = is_object(r) ? (r[1] || "") : r;
                         j = is_object(j) ? j[0] : j;
-                        s = el(x ? 'span' : 'a', x ? false : (v.text || j), extend(attributes, v.attributes || {}));
+                        s = el(w ? 'span' : 'a', w ? false : (v.text || j), extend(attributes, v.attributes || {}));
                         if (!s.title && (t = v.title)) {
                             s.title = is_object(t) ? t[0] + (t[1] ? ' (' + t[1] + ')' : "") : t;
                         }
-                        if (x) {
+                        if (w) {
                             attr_set(s, {
                                 'id': _prefix + '-label:' + index,
                                 'title': j || null
