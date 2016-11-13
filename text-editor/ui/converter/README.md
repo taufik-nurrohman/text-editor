@@ -22,7 +22,7 @@ var editor = new TE(document.querySelector('textarea')),
 Options
 -------
 
-## Custom Converter
+### Custom Converter
 
 ~~~ .javascript
 editor.update({
@@ -41,7 +41,7 @@ editor.update({
 });
 ~~~
 
-## Disable Converter
+### Disable Converter
 
 Disable _Base64_ converters:
 
@@ -54,10 +54,23 @@ editor.update({
 });
 ~~~
 
-## Trigger Single Converter
+Methods
+-------
+
+### Trigger Single Converter
 
 This is the same as clicking the _URL Encode_ menu item:
 
 ~~~ .javascript
 editor.ui.tools.converter.data.url_encode.click(null, editor);
+~~~
+
+### Check for Empty Selection
+
+~~~ .javascript
+editor.ui.tools.converter.check();
+~~~
+
+~~~ .javascript
+editor.ui.tools.converter.check('Custom Title', 'Custom message.');
 ~~~
