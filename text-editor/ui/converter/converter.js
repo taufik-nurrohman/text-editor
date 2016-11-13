@@ -66,7 +66,7 @@ TE.each(function($) {
     menus = {
         '%1': 1, // label
         html_encode: function(e, $) {
-            return $.replace(/[&<>]/g, function(a) {
+            return $.record().replace(/[&<>]/g, function(a) {
                 return _replace(a, ['&', '<', '>'], ['&amp;', '&lt;', '&gt;']);
             }), check(), false;
         },
@@ -83,7 +83,7 @@ TE.each(function($) {
             }), check(), false;
         },
         html_encode_dec: function(e, $) {
-            return $.replace(any, function(a) {
+            return $.record().replace(any, function(a) {
                 var o = "",
                     i, j, k;
                 for (i = 0, j = a.length; i < j; ++i) {
@@ -95,7 +95,7 @@ TE.each(function($) {
             }), check(), false;
         },
         js_encode_hex: function(e, $) {
-            return $.replace(any, function(a) {
+            return $.record().replace(any, function(a) {
                 var o = "",
                     i, j, k;
                 for (i = 0, j = a.length; i < j; ++i) {
@@ -108,33 +108,33 @@ TE.each(function($) {
             }), check(), false;
         },
         url_encode: function(e, $) {
-            return $.replace(any, function(a) {
+            return $.record().replace(any, function(a) {
                 return encodeURIComponent(a);
             }), check(), false;
         },
         base64_encode: w.btoa ? function(e, $) {
-            return $.replace(any, function(a) {
+            return $.record().replace(any, function(a) {
                 return btoa(a);
             }), check(), false;
         } : 0,
         '%2': 1, // label
         html_decode: function(e, $) {
-            return $.replace(any, function(a) {
+            return $.record().replace(any, function(a) {
                 return _replace(_el('div', a).innerHTML, ['&lt;', '&gt;', '&amp;'], ['<', '>', '&']);
             }), check(), false;
         },
         js_decode: function(e, $) {
-            return $.replace(any, function(a) {
+            return $.record().replace(any, function(a) {
                 return _el('div', _replace(a, ['\\u', /^;/], [';&#x', ""])).innerHTML;
             }), check(), false;
         },
         url_decode: function(e, $) {
-            return $.replace(any, function(a) {
+            return $.record().replace(any, function(a) {
                 return decodeURIComponent(a);
             }), check(), false;
         },
         base64_decode: w.atob ? function(e, $) {
-            return $.replace(any, function(a) {
+            return $.record().replace(any, function(a) {
                 try {
                     return atob(a);
                 } catch(e) {

@@ -81,7 +81,7 @@ TE.each(function($) {
             }
             m = prefix + uniq;
             _el(style, m + ' div{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;background:' + border + ';border:1px solid ' + background + ';overflow:hidden}' + m + ' div>div{border-width:0}' + m + '>div>div+div{border-top-width:1px}' + m + '>div>div>div{width:1em;height:1em;float:left;border-width:0;cursor:pointer}' + m + '>div>div>div+div{border-left-width:1px}' + m + '>div>div>.active{background:' + color + '}', {
-                'id': s + ':style-grid' + uniq
+                'id': s + '-style:grid' + uniq
             });
             function do_over() {
                 data = this.title.split(x);
