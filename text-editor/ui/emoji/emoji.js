@@ -47,7 +47,8 @@
             n = 0;
             q = o.before;
             r = o.after;
-            p = !r || r[0] === '\n';
+            o = !_trim(q) || q.slice(-1) === '\n';
+            p = !_trim(r) || r[0] === '\n';
             for (m in l[1]) {
                 if (l[1][m][0] === j) {
                     n = 1; // check for duplicate recent item ...
@@ -58,7 +59,7 @@
                 l[1].unshift([j, i.title, k]);
                 l[1] = l[1].slice(0, 20); // maximum of recent emoji are 20
             }
-            return $.trim(_trim(q) ? ' ' : "", p ? false : "").insert((k || j) + (p ? "" : ' '), 0, 1), _event.x(e);
+            return $.trim(o ? false : ' ', p ? false : "").insert((k || j) + (p ? "" : ' '), 0, 1), _event.x(e);
         }
 
         function do_key(e) {
