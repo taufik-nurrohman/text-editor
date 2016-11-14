@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.3
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.4
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -719,7 +719,7 @@ TE.prototype.ui = function(o) {
                 attr_set(_button, {
                     'href': js,
                     'id': id,
-                    'tab-index': -1
+                    'tabindex': -1
                 });
                 data_set(_button, data_tool_id, v);
                 icon = icon[0] === '<' ? icon : '<i class="' + format(_i, [icon]) + ' ' + id + '"></i>';
@@ -1041,6 +1041,7 @@ TE.prototype.ui = function(o) {
             _drop_target = 0;
             dom_content_reset(_drop);
             event_reset(_CLICK, doc, do_drop_exit);
+            event_reset(_RESIZE, win, do_drop_exit);
             ui.exit(e.target === target);
         }
     }
@@ -1347,6 +1348,7 @@ TE.prototype.ui = function(o) {
         }
         ui.drop.fit();
         event_set(_CLICK, doc, do_drop_exit);
+        event_set(_RESIZE, win, do_drop_exit);
         hook_fire('enter.drop.' + k, [$]);
         hook_fire('enter.drop', [$]);
         return $;
@@ -1421,6 +1423,19 @@ TE.prototype.ui = function(o) {
                         }
                         return $.select(), event_exit(e);
                     }
+                    function _do_key(e) {
+                        v = this;
+                        k = e.TE.key;
+                        if (k('escape')) return ui.exit(1), event_exit(e);
+                        if (k('arrowdown') && (l = dom_next(v))) {
+                            while (!dom_is(l, 'a')) l = dom_next(l);
+                            return l && l.focus(), event_exit(e);
+                        }
+                        if (k('arrowup') && (l = dom_previous(v))) {
+                            while (!dom_is(l, 'a')) l = dom_previous(l);
+                            return l && l.focus(), event_exit(e);
+                        }
+                    }
                     for (i in data) {
                         v = data[i];
                         w = i[0] === '%';
@@ -1455,11 +1470,15 @@ TE.prototype.ui = function(o) {
                                 class_set(s, 'x');
                             }
                             event_set(_CLICK, s, _do_click);
+                            event_set(_KEYDOWN, s, _do_key);
                         }
                         data[i] = v;
                         dom_set(drop, s);
                         ++index;
                     }
+                    timer_set(function() {
+                        dom_get('a', drop)[0].focus();
+                    }, 1);
                 }), false;
             }
         }, i), (ui.tools[id].data = data), $;

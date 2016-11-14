@@ -514,7 +514,7 @@ TE.HTML = function(target, o) {
                     return x ? replace(a, ['&', '<', '>'], ['&amp;', '&lt;', '&gt;']) : a;
                 }
                 function decode(a) {
-                    return x ? replace(a, ['&lt;', '&gt;', '&amp;'], ['<', '>', '&']) : a;
+                    return x ? replace(a, ['&amp;', '&lt;', '&gt;'], ['&', '<', '>']) : a;
                 }
                 // block
                 if (pattern('(^|\\n|' + B + ')$').test(s.before)) {

@@ -28,10 +28,12 @@ Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming 
     var editor = new TE.HTML(document.querySelector('textarea'), {
         converters: {
             'Remove White-Spaces': function(e, $) {
-                $.ui.tools.converter.check();
-                return $.replace(/^[\s\S]*?$/, function(a) {
-                    return a.replace(/\s+/g, "");
-                }), false;
+                if ($.ui.tools.converter.check()) {
+                    $.replace(/^[\s\S]*?$/, function(a) {
+                        return a.replace(/\s+/g, "");
+                    });
+                }
+                return false;
             }
         }
     });

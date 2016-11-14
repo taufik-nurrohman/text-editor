@@ -68,7 +68,9 @@ editor.ui.tools.converter.data.url_encode.click(null, editor);
 ### Check for Empty Selection
 
 ~~~ .javascript
-editor.ui.tools.converter.check();
+if (editor.ui.tools.converter.check()) {
+    // is not empty
+}
 ~~~
 
 ~~~ .javascript

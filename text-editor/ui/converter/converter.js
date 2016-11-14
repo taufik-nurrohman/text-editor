@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  STRING CONVERTER PLUGIN FOR USER INTERFACE MODULE 1.0.0
+ *  STRING CONVERTER PLUGIN FOR USER INTERFACE MODULE 1.0.3
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -25,20 +25,22 @@ TE.each(function($) {
         _event = _.event,
         _replace = _.replace,
         _extend = _.extend,
-        _append = _dom.append;
+        _append = _dom.append,
+        _content = _dom.content.get;
 
     function check(a, b) {
-        modals = config.languages.modals[converter];
-        setTimeout(function() {
-            if (!$.$().length) {
+        if (!$.$().length) {
+            return setTimeout(function() {
+                modals = config.languages.modals[converter];
                 ui.alert(a || modals.title, b || modals.description);
-            }
-        }, 1);
+            }, 1), false;
+        }
+        return true;
     }
 
     _extend(config.languages, {
         tools: {
-            converter: ['Converter'],
+            converter: ['Converter', '\u2318+\u21e7+C'],
             html_encode: ['HTML Encode', '&' + to + '&amp;'],
             html_encode_hex: ['HTML Encode: HEX', '&' + to + '&#x26;'],
             html_encode_dec: ['HTML Encode: DEC', '&' + to + '&#38;'],
@@ -66,12 +68,12 @@ TE.each(function($) {
     menus = {
         '%1': 1, // label
         html_encode: function(e, $) {
-            return $.record().replace(/[&<>]/g, function(a) {
+            return check() && $.record().replace(/[&<>]/g, function(a) {
                 return _replace(a, ['&', '<', '>'], ['&amp;', '&lt;', '&gt;']);
-            }), check(), false;
+            }), false;
         },
         html_encode_hex: function(e, $) {
-            return $.replace(any, function(a) {
+            return check() && $.record().replace(any, function(a) {
                 var o = "",
                     i, j, k;
                 for (i = 0, j = a.length; i < j; ++i) {
@@ -80,10 +82,10 @@ TE.each(function($) {
                     o += '\u0026\u0023\u0078' + k + '\u003b';
                 }
                 return o;
-            }), check(), false;
+            }), false;
         },
         html_encode_dec: function(e, $) {
-            return $.record().replace(any, function(a) {
+            return check() && $.record().replace(any, function(a) {
                 var o = "",
                     i, j, k;
                 for (i = 0, j = a.length; i < j; ++i) {
@@ -92,10 +94,10 @@ TE.each(function($) {
                     o += '\u0026\u0023' + k + '\u003b';
                 }
                 return o;
-            }), check(), false;
+            }), false;
         },
         js_encode_hex: function(e, $) {
-            return $.record().replace(any, function(a) {
+            return check() && $.record().replace(any, function(a) {
                 var o = "",
                     i, j, k;
                 for (i = 0, j = a.length; i < j; ++i) {
@@ -105,42 +107,42 @@ TE.each(function($) {
                     o += '\u005c\u0075' + k;
                 }
                 return o;
-            }), check(), false;
+            }), false;
         },
         url_encode: function(e, $) {
-            return $.record().replace(any, function(a) {
+            return check() && $.record().replace(any, function(a) {
                 return encodeURIComponent(a);
-            }), check(), false;
+            }), false;
         },
         base64_encode: w.btoa ? function(e, $) {
-            return $.record().replace(any, function(a) {
+            return check() && $.record().replace(any, function(a) {
                 return btoa(a);
-            }), check(), false;
+            }), false;
         } : 0,
         '%2': 1, // label
         html_decode: function(e, $) {
-            return $.record().replace(any, function(a) {
-                return _replace(_el('div', a).innerHTML, ['&lt;', '&gt;', '&amp;'], ['<', '>', '&']);
-            }), check(), false;
+            return check() && $.record().replace(any, function(a) {
+                return _replace(_content(_el('div', a)), ['&amp;', '&lt;', '&gt;'], ['&', '<', '>']);
+            }), false;
         },
         js_decode: function(e, $) {
-            return $.record().replace(any, function(a) {
-                return _el('div', _replace(a, ['\\u', /^;/], [';&#x', ""])).innerHTML;
-            }), check(), false;
+            return check() && $.record().replace(any, function(a) {
+                return _replace(_content(_el('div', a.replace(/\\u([a-f\d]{4})/gi, '&#x$1;'))), ['&amp;', '&lt;', '&gt;'], ['&', '<', '>']);
+            }), false;
         },
         url_decode: function(e, $) {
-            return $.record().replace(any, function(a) {
+            return check() && $.record().replace(any, function(a) {
                 return decodeURIComponent(a);
-            }), check(), false;
+            }), false;
         },
         base64_decode: w.atob ? function(e, $) {
-            return $.record().replace(any, function(a) {
+            return check() && $.record().replace(any, function(a) {
                 try {
                     return atob(a);
                 } catch(e) {
                     return a;
                 }
-            }), check(), false;
+            }), false;
         } : 0
     };
 
@@ -153,5 +155,8 @@ TE.each(function($) {
 
     // add `$.ui.tools.converter.check()` method
     ui.tools[converter].check = check;
+
+    // press `control+shift+c` for "converter"
+    ui.key('control+shift+c', converter);
 
 });

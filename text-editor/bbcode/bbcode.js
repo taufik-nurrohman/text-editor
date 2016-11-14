@@ -139,7 +139,7 @@ TE.BBCode = function(target, o) {
                     return x ? replace(a, ['&', '<', '>'], ['&amp;', '&lt;', '&gt;']) : a;
                 }
                 function decode(a) {
-                    return x ? replace(a, ['&lt;', '&gt;', '&amp;'], ['<', '>', '&']) : a;
+                    return x ? replace(a, ['&amp;', '&lt;', '&gt;'], ['&', '<', '>']) : a;
                 }
                 return $[0]().format(code, 0, '\n\n', '\n').replace(/^[\s\S]*?$/, function(a) {
                     return pattern('^\\s*' + esc_unit[0] + esc_unit[2] + esc(code_o) + esc_unit[1]).test($.$().after) ? encode(a) : decode(a);

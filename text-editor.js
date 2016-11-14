@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.6.3
+ *  TEXT EDITOR PLUGIN 2.6.4
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -312,7 +312,7 @@
         });
 
         // plugin version
-        $.version = '2.6.3';
+        $.version = '2.6.4';
 
         // collect all instance(s)
         $[ins] = {};
@@ -603,7 +603,7 @@
         // insert/replace at caret
         $[R] = function(s, x, clear) {
             f = /^[\s\S]*?$/;
-            if (clear) {
+            if (clear && $.$().length) {
                 $[L](f, "").loss(); // force to delete selection on insert before/after?
             }
             if (x === 0) { // insert before
