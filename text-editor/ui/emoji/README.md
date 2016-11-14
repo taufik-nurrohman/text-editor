@@ -19,7 +19,7 @@ var editor = new TE(document.querySelector('textarea')),
 <script src="../text-editor/ui/emoji/emoji.min.js"></script>
 ~~~
 
-An emoji aliases based on <http://emoji-cheat-sheet.com> is available in `emoji.alias.min.js`. Just include the script right after the `emoji.min.js` script. This way, you can insert `:grinning:` instead of 😀:
+_Emoji_ aliases based on <http://emoji-cheat-sheet.com> is available in `emoji.alias.min.js`. Just include the script right after the `emoji.min.js` script. This way, you can insert `:grinning:` instead of 😀:
 
 ~~~ .html
 <script src="../text-editor/ui/emoji/emoji.min.js"></script>
@@ -135,7 +135,7 @@ editor.config.emoji[1][1] = [
 
 ### Replace
 
-Replace the first emoji data (`GRINNING FACE`) with a custom one:
+Replace the first _emoji_ data (`GRINNING FACE`) with a custom one:
 
 ~~~.javascript
 // this will inserts `©`
