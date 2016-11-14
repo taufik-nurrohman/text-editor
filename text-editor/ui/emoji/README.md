@@ -175,9 +175,9 @@ Remove 😀 icon from “Smileys & People” set:
 editor.config.emoji[1][1][0] = false;
 ~~~
 
-### Custom Set
+### Custom Category Set
 
-Add your own custom set:
+Add your own custom category set:
 
 ~~~.javascript
 editor.config.emoji.push([
