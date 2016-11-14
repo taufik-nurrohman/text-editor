@@ -138,24 +138,24 @@ editor.config.emoji[1][1] = [
 Replace the first _emoji_ data (`GRINNING FACE`) with a custom one:
 
 ~~~.javascript
-// this will inserts `©`
+// this will insert `©`
 editor.config.emoji[1][1][0] = ['©', 'COPYRIGHT SIGN'];
 ~~~
 
 ~~~.javascript
-// this will inserts `(c)`
+// this will insert `(c)`
 editor.config.emoji[1][1][0] = ['©', 'COPYRIGHT SIGN', '(c)'];
 ~~~
 
 Example with image icon:
 
 ~~~.javascript
-// this will inserts `<img src="../img/smile.png">`
+// this will insert `<img src="../img/smile.png">`
 editor.config.emoji[1][1][0] = ['<img src="../img/smile.png">', 'SMILING FACE'];
 ~~~
 
 ~~~.javascript
-// this will inserts `:)`
+// this will insert `:)`
 editor.config.emoji[1][1][0] = ['<img src="../img/smile.png">', 'SMILING FACE', ':)'];
 ~~~
 
