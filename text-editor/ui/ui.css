@@ -112,6 +112,7 @@
   width:2em;
   line-height:2em;
 }
+.text-editor-tool .text-editor-button:focus,
 .text-editor-tool .text-editor-button:active {background:#f5f5f5}
 .text-editor-button.x,
 .text-editor-button[disabled] { /* disabled */

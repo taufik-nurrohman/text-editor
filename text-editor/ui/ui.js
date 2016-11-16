@@ -1253,7 +1253,7 @@ TE.prototype.ui = function(o) {
                 'class': _prefix + '-input block'
             }),
             id = 'prompt',
-            options = [], key;
+            options = [], s, key;
         if (is_object(title)) {
             id += ':' + title[0];
             title = title[1] || title[0];
@@ -1749,6 +1749,7 @@ TE.prototype.ui = function(o) {
                 reset: data_reset,
                 get: data_get
             },
+            is: dom_is,
             offset: offset,
             point: point,
             size: size,

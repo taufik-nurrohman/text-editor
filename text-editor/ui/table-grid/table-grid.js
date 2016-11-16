@@ -35,7 +35,7 @@ TE.each(function($) {
         style = _el('style'),
         css, i, j, k, l, m;
 
-    function fire_tool_with_prompt(id, data, $) {
+    function do_modals(id, data, $) {
         busy = 1;
         // [1]. trigger the tool item to show the modal prompt
         ui.tools[id].click(null, $);
@@ -96,7 +96,7 @@ TE.each(function($) {
                 }
             }
             function do_click() {
-                fire_tool_with_prompt('table', $.restore(save_id), $);
+                do_modals('table', $.restore(save_id), $);
             }
             i = rows[1]; // number of rows
             while (i--) {

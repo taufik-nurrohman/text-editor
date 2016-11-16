@@ -118,6 +118,7 @@
   box-shadow:none;
   border-radius:0;
 }
+.text-editor-tool .text-editor-button:focus,
 .text-editor-tool .text-editor-button:active {background:#eee}
 .text-editor-button.x,
 .text-editor-button[disabled] { /* disabled */

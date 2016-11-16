@@ -64,7 +64,7 @@ TE.each(function($) {
         return false;
     }
     do_min();
-    // Press `F11` to maximize/minimize
+    // press `f11` to maximize/minimize
     ui.key('f11', function(e, $) {
         return is_max ? do_min(e, $) : do_max(e, $), false;
     });

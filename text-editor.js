@@ -126,7 +126,7 @@
             }
             for (i in b) {
                 j = b[i];
-                a.style[camelize(i.replace(/^\!/, ""))] = j === 0 ? 0 : (j ? (is_string(j) ? j : j + 'px') : "");
+                a.style[camelize(i[replace](/^\!/, ""))] = j === 0 ? 0 : (j ? (is_string(j) ? j : j + 'px') : "");
             }
             return a;
         } else if (b) {

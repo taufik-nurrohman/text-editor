@@ -485,20 +485,21 @@ Examples
 Modules
 -------
 
- - [Persistent Storage](https://rawgit.com/tovic/text-editor/master/text-editor/save/save.html)
- - [User Interface](https://rawgit.com/tovic/text-editor/master/text-editor/ui/ui.html)
-   - [Internationalization](https://rawgit.com/tovic/text-editor/master/text-editor/ui/language/language.html)
-   - [Maximize/Minimize](https://rawgit.com/tovic/text-editor/master/text-editor/ui/expand/expand.html)
-   - [Table Grid Selector](https://rawgit.com/tovic/text-editor/master/text-editor/ui/table-grid/table-grid.html)
-   - [Common String Converter](https://rawgit.com/tovic/text-editor/master/text-editor/ui/converter/converter.html)
-   - [Native Emoji](https://rawgit.com/tovic/text-editor/master/text-editor/ui/emoji/emoji.html)
+ - [Persistent Storage](https://github.com/tovic/text-editor/tree/master/text-editor/save)
+ - [User Interface](https://github.com/tovic/text-editor/tree/master/text-editor/ui)
+   - [Internationalization](https://github.com/tovic/text-editor/tree/master/text-editor/ui/language)
+   - [Maximize/Minimize](https://github.com/tovic/text-editor/tree/master/text-editor/ui/expand)
+   - [Table Grid Selector](https://github.com/tovic/text-editor/tree/master/text-editor/ui/table-grid)
+   - [Common String Converter](https://github.com/tovic/text-editor/tree/master/text-editor/ui/converter)
+   - [Native Emoji](https://github.com/tovic/text-editor/tree/master/text-editor/ui/emoji)
+   - [Bubble Tools](https://github.com/tovic/text-editor/tree/master/text-editor/ui/bubble-tools)
 
 Plugins
 -------
 
 ![HTML Text Editor](https://cloud.githubusercontent.com/assets/1669261/20038219/63a3820a-a462-11e6-8101-1bd02585754a.png)
 
- - [HTML Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor/html/html.html)
- - [Markdown Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor/markdown/markdown.html)
- - [Textile Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor/textile/textile.html)
- - [BBCode Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor/bbcode/bbcode.html)
+ - [HTML Text Editor](https://github.com/tovic/text-editor/tree/master/text-editor/html)
+ - [Markdown Text Editor](https://github.com/tovic/text-editor/tree/master/text-editor/markdown)
+ - [Textile Text Editor](https://github.com/tovic/text-editor/tree/master/text-editor/textile)
+ - [BBCode Text Editor](https://github.com/tovic/text-editor/tree/master/text-editor/bbcode)

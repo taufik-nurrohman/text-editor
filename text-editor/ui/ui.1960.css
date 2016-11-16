@@ -120,6 +120,7 @@
   width:2em;
   line-height:2em;
 }
+.text-editor-tool .text-editor-button:focus,
 .text-editor-tool .text-editor-button:active {
   background:#def;
   box-shadow:inset 0 0 0 2px #fff;
