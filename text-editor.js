@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.6.4
+ *  TEXT EDITOR PLUGIN 2.6.5
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -9,8 +9,23 @@
 
 (function(win, doc) {
 
-    var ins = '__instance__',
-        re = 'replace';
+    var a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z,
+
+        insert = 'insert',
+        replace = 'replace',
+        set = 'appendChild',
+        reset = 'removeChild',
+        content = 'textContent',
+        cut = 'substring',
+        start = 'selectionStart',
+        end = 'selectionEnd',
+        top = 'scrollTop',
+        scroll = 'scroll',
+        rec = 'record',
+        rec_x = 'loss',
+        select = 'select',
+        create = 'createElement',
+        instance = '__instance__';
 
     function cl(s) {
         return s.toLowerCase();
@@ -18,6 +33,10 @@
 
     function cu(s) {
         return s.toUpperCase();
+    }
+
+    function count(x) {
+        return x.length;
     }
 
     function is_set(x) {
@@ -68,11 +87,11 @@
 
     function trim(s, x) {
         if (x === 0) {
-            return s[re](/^\s*/, ""); // trim left
+            return s[replace](/^\s*/, ""); // trim left
         } else if (x === 1) {
-            return s[re](/\s*$/, ""); // trim right
+            return s[replace](/\s*$/, ""); // trim right
         }
-        return s[re](/^\s*|\s*$/g, "") // trim left and right
+        return s[replace](/^\s*|\s*$/g, "") // trim left and right
     }
 
     function num(x, i) {
@@ -80,43 +99,49 @@
     }
 
     function camelize(s) {
-        return s[re](/\-([a-z])/g, function(a, b) {
+        return s[replace](/\-([a-z])/g, function(a, b) {
             return cu(b);
         });
     }
 
     function dasherize(s) {
-        return s[re](/([A-Z])/g, function(a, b) {
+        return s[replace](/([A-Z])/g, function(a, b) {
             return '-' + cl(b);
         });
     }
 
     function css(a, b, c) {
-        var o = win.getComputedStyle(a, c),
-            g = 0,
+        var o = win.getComputedStyle(a, (c = c || null)),
             h = {}, i, j, k, l;
         if (is_object(b)) {
             if (is_array(b)) {
-                o = {};
+                o = [];
                 for (i in b) {
-                    i = b[i];
-                    l = css(a, i, c);
-                    o[g] = l;
-                    o[i[re](/^\!/, "")] = l;
-                    ++g;
+                    if (j = b[i]) {
+                        l = css(a, j, c);
+                        o[i] = l;
+                    }
                 }
                 return o;
             }
             for (i in b) {
                 j = b[i];
-                a.style[camelize(i)] = j ? (is_string(j) ? j : j + 'px') : "";
+                a.style[camelize(i.replace(/^\!/, ""))] = j === 0 ? 0 : (j ? (is_string(j) ? j : j + 'px') : "");
             }
             return a;
+        } else if (b) {
+            if (b[0] === '!') {
+                b = b.slice(1);
+                k = 1;
+            }
+            i = o[camelize(b)];
+            j = k ? i : num(i);
+            return j === 0 ? 0 : (j || i);
         }
-        return b ? (b[0] === '!' && (b = b.slice(1), k = 1), i = o[camelize(b)], j = k ? i : num(i), j === 0 ? 0 : (j || i)) : (function() {
+        return (function() {
             for (i in o) {
                 j = num(o[i]);
-                h[dasherize(i)] = j === 0 ? 0 : (j || o[i]);
+                h[dasherize(i)] = j === 0 ? 0 : (j || o[i] || "");
             }
             return h;
         })();
@@ -124,7 +149,7 @@
 
     function extend(a, b) {
         b = b || {};
-        for (var i in b) {
+        for (i in b) {
             if (is_object(a[i]) && is_object(b[i]) && !is_dom(a[i]) && !is_dom(b[i])) {
                 a[i] = extend(a[i], b[i]);
             } else {
@@ -137,7 +162,7 @@
     function each(a, fn) {
         var i, j, k;
         if (is_array(a)) {
-            for (i = 0, j = a.length; i < j; ++i) {
+            for (i = 0, j = count(a); i < j; ++i) {
                 k = fn(a[i], i, a);
                 if (k === true) {
                     continue;
@@ -253,7 +278,8 @@
             'down': 'arrowdown',
             'back': 'backspace',
             'space': ' ',
-            'plus': '+'
+            'plus': '+',
+            'minus': '-'
         }, i, j;
 
         // function
@@ -312,15 +338,15 @@
         });
 
         // plugin version
-        $.version = '2.6.4';
+        $.version = '2.6.5';
 
         // collect all instance(s)
-        $[ins] = {};
+        $[instance] = {};
 
         // plug to all instance(s)
         $.each = function(fn, t) {
             return setTimeout(function() {
-                j = $[ins];
+                j = $[instance];
                 for (i in j) {
                     fn(j[i], i, j);
                 }
@@ -330,63 +356,51 @@
     })(win.TE = function(target) {
 
         var $ = this,
-            _ = 1, // cache of history length
-            F = 0, // history feature is active
-            G = 'createElement', H,
-            I = 0, // current state of history
-            J = 'appendChild',
-            K = 'removeChild',
-            L = 'replace',
-            M = 'textContent',
-            N = 'substring',
-            O = 'selectionStart',
-            P = 'selectionEnd',
-            Q = 'scrollTop',
-            R = 'insert',
-            S = {}, // storage
+            any = /^([\s\S]*?)$/,
+            history = 0, // current state of history
+            history_x = 0, // history feature is active
+            history_count = 1, // cache of history length
+            bin = {}, // storage
+            indent = '\t',
             html = doc.documentElement,
             body = doc.body,
-            div = doc[G]('div'),
-            span = doc[G]('span'),
-            tab = '\t',
-
-            a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z;
+            div = doc[create]('div'),
+            span = doc[create]('span'),
+            scroll_width = (function() {
+                a = '-200px';
+                b = '200px';
+                body[set](div);
+                css(div, {
+                    'position': 'absolute',
+                    'top': a,
+                    'left': a,
+                    'width': b,
+                    'height': b,
+                    'overflow': 'scroll',
+                    'visibility': 'hidden'
+                });
+                c = div.offsetWidth - div.clientWidth;
+                return body[reset](div), c;
+            })(), H;
 
         if (!is_set(target)) {
-            target = doc[G]('textarea');
+            target = doc[create]('textarea');
+        }
+
+        function val() {
+            return target.value[replace](/\r/g, "");
         }
 
         // load the first history data
         H = [[val(), 0, 0, 0]];
-    
+
         // return a new instance if `TE` was called without the `new` operator
         if (!($ instanceof TE)) {
             return new TE(target);
         }
-    
-        var scroll_width = (function() {
-            a = '-200px';
-            b = '200px';
-            body[J](div);
-            css(div, {
-                'position': 'absolute',
-                'top': a,
-                'left': a,
-                'width': b,
-                'height': b,
-                'overflow': 'scroll',
-                'visibility': 'hidden'
-            });
-            c = div.offsetWidth - div.clientWidth;
-            return body[K](div), c;
-        })();
 
         $.type = ""; // default editor type
         $.x = '!$^*()-=+[]{}\\|:<>,./?'; // character(s) to escape
-
-        function val() {
-            return target.value[L](/\r/g, "");
-        }
 
         function esc(x) {
             if (is_array(x)) {
@@ -396,7 +410,7 @@
                 }
                 return o;
             }
-            return x[L](pattern('[' + $.x[L](/./g, '\\$&') + ']', 'g'), '\\$&');
+            return x[replace](pattern('[' + $.x[replace](/./g, '\\$&') + ']', 'g'), '\\$&');
         }
 
         function get_pattern(x) {
@@ -410,21 +424,21 @@
                 padding = 'padding-',
                 border = 'border-',
                 width = '-width',
-                i = '!',
-                prop = [
+                keep = '!',
+                properties = [
                     border + 'bottom' + width,
                     border + 'left' + width,
                     border + 'right' + width,
                     border + 'top' + width,
                     'box-sizing',
                     'direction',
-                    i + font + 'family',
+                    keep + font + 'family',
                     font + 'size',
-                    i + font + 'size-adjust',
-                    i + font + 'stretch',
-                    i + font + 'style',
-                    i + font + 'variant',
-                    i + font + 'weight',
+                    keep + font + 'size-adjust',
+                    keep + font + 'stretch',
+                    keep + font + 'style',
+                    keep + font + 'variant',
+                    keep + font + 'weight',
                     'height',
                     'letter-spacing',
                     'line-height',
@@ -440,13 +454,17 @@
                     text + 'transform',
                     'width',
                     'word-spacing'
-                ], i = prop.length, o;
-            body[J](div);
-            s = div.style;
-            t = css(target, prop);
+                ];
+            i = count(properties);
+            body[set](div);
+            t = css(target, properties);
+            u = {};
+            for (i in properties) {
+                u[properties[i]] = t[i];
+            }
             w = t[26];
-            span[M] = val()[N](x) || '.';
-            css(div, extend(t, {
+            span[content] = val()[cut](x) || '.';
+            css(div, extend(u, {
                 'width': is_set(win.mozInnerScreenX) ? w : w + scroll_width, // Firefox :(
                 'overflow-y': target.scrollHeight > t[13] ? 'scroll' : 'auto',
                 'white-space': 'pre-wrap',
@@ -454,31 +472,31 @@
                 'position': 'absolute',
                 'visibility': 'hidden'
             }));
-            div[M] = val()[N](0, x);
-            div[J](span);
+            div[content] = val()[cut](0, x);
+            div[set](span);
             o = {
                 x: span.offsetLeft + t[1],
                 y: span.offsetTop + t[3]
             };
-            return body[K](div), o;
+            return body[reset](div), o;
         }
 
         // access editor instance from `this` scope with `this.TE`
         target.TE = $;
 
         // store editor instance to `TE.__instance__`
-        TE[ins][target.id || target.name || Object.keys(TE[ins]).length] = $;
+        TE[instance][target.id || target.name || count(Object.keys(TE[instance]))] = $;
 
         // scroll the editor
-        $.scroll = function(i) {
-            c = target[Q];
+        $[scroll] = function(i) {
+            c = target[top];
             h = css(target, ['line-height', 'font-size']);
             if (!is_set(i)) {
                 return [Math.floor(c / h[0]), h[0]];
             } else if (is_boolean(i)) {
-                return $.scroll($.scroll()[0] + (i === false ? -1 : 1));
+                return $[scroll]($[scroll]()[0] + (i === false ? -1 : 1));
             }
-            return target[Q] = (h[0] * i) + h[1] + (h[0] - h[1]), $;
+            return target[top] = (h[0] * i) + h[1] + (h[0] - h[1]), $;
         };
 
         // set value
@@ -489,33 +507,33 @@
         // get value
         $.get = function(f) {
             if (is_set(f)) {
-                return val().length ? val() : f;
+                return count(val()) ? val() : f;
             }
             return val();
         };
 
         // save state
         $.save = function(k, v) {
-            return S[k] = v, $;
+            return bin[k] = v, $;
         };
 
         // restore state
         $.restore = function(k, f) {
-            if (!is_set(k)) return S; // read all storage with `$.restore()`
-            return is_set(S[k]) ? S[k] : (is_set(f) ? f : "");
+            if (!is_set(k)) return bin; // read all storage with `$.restore()`
+            return is_set(bin[k]) ? bin[k] : (is_set(f) ? f : "");
         };
 
         // focus the editor
         $.focus = function(x, y) {
             if (x === true) {
-                x = val().length; // put caret at the end of the editor
+                x = count(val()); // put caret at the end of the editor
                 y = target.scrollHeight; // scroll to the end of the editor
             } else if (x === false) {
                 x = y = 0; // put caret at the start of the editor, scroll to the start of the editor
             }
             if (is_set(x)) {
-                target[O] = target[P] = x;
-                target[Q] = y;
+                target[start] = target[end] = x;
+                target[top] = y;
             }
             return target.focus(), $;
         };
@@ -526,43 +544,44 @@
         };
 
         // get selection
-        $.$ = function(C) {
-            v = val();
-            a = target[O];
-            b = target[P];
-            c = v[N](a, b);
-            return {
-                start: a,
-                end: b,
-                value: c,
-                before: v[N](0, a),
-                after: v[N](b),
-                caret: C ? [offset(a), offset(b)] : [],
-                length: c.length
-            };
+        $.$ = function(caret) {
+            function $$(a, b, c, d) {
+                t = this;
+                t.start = a;
+                t.end = b;
+                t.value = (e = c[cut](a, b));
+                t.before = c[cut](0, a);
+                t.after = c[cut](b);
+                t.caret = d ? [offset(a), offset(b)] : [];
+                t.length = count(e);
+                t.toString = function() {
+                    return e;
+                };
+            }
+            return new $$(target[start], target[end], val(), caret);
         };
 
         // select value
-        $.select = function() {
+        $[select] = function() {
             var arg = arguments,
-                count = arg.length,
+                counts = count(arg),
                 s = $.$(),
                 id = 'TE.scroll';
-            $.save(id, [html[Q], body[Q], target[Q]]).focus();
-            if (count === 0) { // restore selection with `$.select()`
+            $.save(id, [html[top], body[top], target[top]]).focus();
+            if (counts === 0) { // restore selection with `$.select()`
                 arg[0] = s.start;
                 arg[1] = s.end;
-            } else if (count === 1) { // move caret position with `$.select(7)`
+            } else if (counts === 1) { // move caret position with `$.select(7)`
                 if (arg[0] === true) { // select all with `$.select(true)`
-                    return target.select(), $;
+                    return target[select](), $;
                 }
                 arg[1] = arg[0];
             }
             target.setSelectionRange(arg[0], arg[1]); // default `$.select(7, 100)`
             o = $.restore(id, [0, 0, 0]);
-            html[Q] = o[0];
-            body[Q] = o[1];
-            target[Q] = o[2];
+            html[top] = o[0];
+            body[top] = o[1];
+            target[top] = o[2];
             return $; // `select` method does not populate history data
         };
 
@@ -573,55 +592,55 @@
         };
 
         // replace at selection
-        $[L] = function(f, t, x) {
+        $[replace] = function(f, t, x) {
             s = $.$();
             a = s.before;
             b = s.after;
             c = s.value;
             if (x === 0) { // replace before
-                a = a[L](f, t);
+                a = a[replace](f, t);
             } else if (x === 1) { // replace after
-                b = b[L](f, t);
+                b = b[replace](f, t);
             } else {
-                c = c[L](f, t);
+                c = c[replace](f, t);
             }
-            d = a.length;
-            e = d + c.length;
-            return $.set(a + c + b).select(d, e).record();
+            d = count(a);
+            e = d + count(c);
+            return $.set(a + c + b)[select](d, e)[rec]();
         };
 
         // replace before selection
-        $[L + 'Before'] = function(f, t) {
-            return $[L](f, t, 0);
+        $[replace + 'Before'] = function(f, t) {
+            return $[replace](f, t, 0);
         };
 
         // replace after selection
-        $[L + 'After'] = function(f, t) {
-            return $[L](f, t, 1);
+        $[replace + 'After'] = function(f, t) {
+            return $[replace](f, t, 1);
         };
 
         // insert/replace at caret
-        $[R] = function(s, x, clear) {
-            f = /^[\s\S]*?$/;
-            if (clear && $.$().length) {
-                $[L](f, "").loss(); // force to delete selection on insert before/after?
+        $[insert] = function(s, x, clear) {
+            f = any;
+            if (clear && count($.$())) {
+                $[replace](f, "")[rec_x](); // force to delete selection on insert before/after?
             }
             if (x === 0) { // insert before
                 f = /$/;
             } else if (x === 1) { // insert after
                 f = /^/;
             }
-            return $[L](f, s, x);
+            return $[replace](f, s, x);
         };
 
         // insert before selection
-        $[R + 'Before'] = function(s, clear) {
-            return $[R](s, 0, clear);
+        $[insert + 'Before'] = function(s, clear) {
+            return $[insert](s, 0, clear);
         };
 
         // insert after selection
-        $[R + 'After'] = function(s, clear) {
-            return $[R](s, 1, clear);
+        $[insert + 'After'] = function(s, clear) {
+            return $[insert](s, 1, clear);
         };
 
         // wrap selection
@@ -631,9 +650,9 @@
             b = s.after;
             c = s.value;
             if (wrap) {
-                return $[L](/^([\s\S]*?)$/, O + '$1' + C);
+                return $[replace](any, O + '$1' + C);
             }
-            return $.set(a + O + c + C + b).select((a + O).length, (a + O + c).length).record();
+            return $.set(a + O + c + C + b)[select](count(a + O), count(a + O + c))[rec]();
         };
 
         // unwrap selection
@@ -647,35 +666,35 @@
             f = pattern(O + '$');
             g = pattern('^' + C);
             if (wrap) {
-                return $[L](pattern('^' + O + '([\\s\\S]*?)' + C + '$'), '$1');
+                return $[replace](pattern('^' + O + '([\\s\\S]*?)' + C + '$'), '$1');
             }
             if (f.test(a) && g.test(b)) {
-                d = a[L](f, "");
-                e = b[L](g, "");
-                return $.set(d + c + e).select(d.length, (d + c).length).record();
+                d = a[replace](f, "");
+                e = b[replace](g, "");
+                return $.set(d + c + e)[select](count(d), count(d + c))[rec]();
             }
-            return $.select();
+            return $[select]();
         };
 
         // indent
         $.indent = function(B, e) {
             s = $.$();
-            B = is_set(B) ? B : tab;
-            if (s.length) {
-                return $[L](pattern('^' + (e ? "" : '(?!$)'), 'gm'), B);
+            B = is_set(B) ? B : indent;
+            if (count(s)) {
+                return $[replace](pattern('^' + (e ? "" : '(?!$)'), 'gm'), B);
             }
-            return $[R](B, 0);
+            return $[insert](B, 0);
         };
 
         // outdent
         $.outdent = function(B) {
             s = $.$();
-            B = is_set(B) ? B : tab;
+            B = is_set(B) ? B : indent;
             B = get_pattern(B);
-            if (s.length) {
-                return $[L](pattern('^' + B, 'gm'), "");
+            if (count(s)) {
+                return $[replace](pattern('^' + B, 'gm'), "");
             }
-            return $[L](pattern(B + '$'), "", 0);
+            return $[replace](pattern(B + '$'), "", 0);
         };
 
         // trim white-space before and after selection range
@@ -691,86 +710,84 @@
             d = O !== false ? trim(a, 1) + O : a,
             e = C !== false ? C + trim(b, 0) : b,
             f = (B !== false ? B : "") + trim(c) + (E !== false ? E : "");
-            return $.set(d + f + e).select(d.length, (d + f).length); // `trim` method does not populate history data
+            return $.set(d + f + e)[select](count(d), count(d + f)); // `trim` method does not populate history data
         };
 
         // toggle state
         $.toggle = function(a, b) {
             if (!is_set(b)) {
-                return $.select();
+                return $[select]();
             }
             if (a === true) {
                 a = 0;
             } else if (a === false) {
                 a = 1;
             }
-            return is_function(b[a]) ? (b[a]($, a), $) : $.select();
+            return is_function(b[a]) ? (b[a]($, a), $) : $[select]();
         };
 
         // save state to history
-        $.record = function(a, i) {
-            if (F) return $;
-            o = H[I];
+        $[rec] = function(a, i) {
+            if (history_x) return $;
+            o = H[history];
             s = $.$();
             v = val();
             w = s.start;
             x = s.end;
-            a = is_set(a) ? a : [v, w, x, $.scroll()[0]];
+            a = is_set(a) ? a : [v, w, x, $[scroll]()[0]];
             if (o && is_object(o) && (
                 o[0] === v &&
                 o[1] === w &&
                 o[2] === x
             )) return $; // prevent duplicate history data
-            I++;
-            H[is_set(i) ? i : I] = a;
-            return _ = H.length, $;
+            history++;
+            H[is_set(i) ? i : history] = a;
+            return history_count = count(H), $;
         };
 
         // remove state from history
-        $.loss = function(i) {
+        $[rec_x] = function(i) {
             if (i === true) { // clear all history with `$.loss(true)`
                 H = [H[0]];
-                I = 0;
+                history = 0;
                 return $;
             }
-            i = is_set(i) ? i : I;
-            if (i <= I) {
-                I--;
+            i = is_set(i) ? i : history;
+            if (i <= history) {
+                history--;
             }
             H.splice(i, 1);
-            return _ = H.length, $;
+            return history_count = count(H), $;
         };
 
         // read history
-        $.records = function(i, f) {
+        $[rec + 's'] = function(i, f) {
             if (!is_set(i)) return H; // read all history with `$.records()`
             return is_set(H[i]) ? H[i] : (is_set(f) ? f : false);
         };
 
         // undo
         $.undo = function() {
-            I--;
-            I = edge(I, 0, _ - 1);
-            a = H[I];
-            return $.set(a[0]).select(a[1], a[2]).scroll(a[3]);
+            history--;
+            a = H[history = edge(history, 0, history_count - 1)];
+            return $.set(a[0])[select](a[1], a[2])[scroll](a[3]);
         };
 
         // redo
         $.redo = function() {
-            I++;
-            I = edge(I, 0, _ - 1);
-            a = H[I];
-            return $.set(a[0]).select(a[1], a[2]).scroll(a[3]);
+            history++;
+            a = H[history = edge(history, 0, history_count - 1)];
+            return $.set(a[0])[select](a[1], a[2])[scroll](a[3]);
         };
 
         // disable the history feature
         $[0] = function() {
-            return F = 1, $;
+            return history_x = 1, $;
         };
 
         // enable the history feature
         $[1] = function(x) {
-            return F = 0, (x === false ? $ : $.record());
+            return history_x = 0, (x === false ? $ : $[rec]());
         };
 
         // logic ...
@@ -803,13 +820,9 @@
 
         // utility ...
         $._ = {
-            // escape regex character(s)
             x: esc,
-            // extend object ...
             extend: extend,
-            // iterate ...
             each: each,
-            // other(s) ...
             trim: trim,
             css: css,
             edge: edge,

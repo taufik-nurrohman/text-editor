@@ -114,6 +114,7 @@
 .text-editor-button:active {background:#600}
 .text-editor-tool .text-editor-button {
   background:0 0;
+  color:inherit;
   padding:0;
   float:left;
   width:2em;
@@ -288,8 +289,10 @@
   box-shadow:none;
   border-radius:0;
 }
+.text-editor-drop.menu:hover .text-editor-button:focus {color:inherit}
 .text-editor-drop.menu .text-editor-button:focus,
-.text-editor-drop.menu .text-editor-button:active {color:#00a}
+.text-editor-drop.menu .text-editor-button:active,
+.text-editor-drop.menu:hover .text-editor-button:hover {color:#00a}
 .text-editor-drop.menu .text-editor-label {
   display:block;
   height:1em;
@@ -310,8 +313,7 @@
   border-top:1px solid;
   border-color:inherit;
 }
-.text-editor-drop.menu .text-editor-label[title]:after {
-  content:attr(title);
+.text-editor-drop.menu .text-editor-label span {
   position:absolute;
   top:0;
   font-weight:bold;

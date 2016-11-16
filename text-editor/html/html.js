@@ -525,7 +525,7 @@ TE.HTML = function(target, o) {
                     }
                 // span
                 } else {
-                    $[0]().format(code).loss().replace(any, function(a) {
+                    $[0]().format(code).replace(any, function(a) {
                         return force_i(pattern('^\\s*' + esc_unit[0] + esc_unit[2] + esc(code_o) + esc_unit[1]).test($.$().after) ? encode(a) : decode(a));
                     })[1]();
                 }

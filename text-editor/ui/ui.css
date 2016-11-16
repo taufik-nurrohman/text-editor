@@ -284,8 +284,10 @@
   box-shadow:none;
   border-radius:0;
 }
+.text-editor-drop.menu:hover .text-editor-button:focus {background:0 0}
 .text-editor-drop.menu .text-editor-button:focus,
-.text-editor-drop.menu .text-editor-button:active {background:#f5f5f5}
+.text-editor-drop.menu .text-editor-button:active,
+.text-editor-drop.menu:hover .text-editor-button:hover {background:#f5f5f5}
 .text-editor-drop.menu .text-editor-label {
   display:block;
   height:1em;
@@ -306,8 +308,7 @@
   border-top:1px solid;
   border-color:inherit;
 }
-.text-editor-drop.menu .text-editor-label[title]:after {
-  content:attr(title);
+.text-editor-drop.menu .text-editor-label span {
   position:absolute;
   top:0;
   font-weight:bold;

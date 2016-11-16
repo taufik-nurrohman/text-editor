@@ -6,7 +6,7 @@
  * License: MIT
  * ----------------------------------------------------------
  */
- 
+
 // emoji aliases based on <http://www.emoji-cheat-sheet.com>
 
 (function() {

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.4
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.5
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -103,7 +103,7 @@ TE.prototype.ui = function(o) {
                 "": 'text-editor',
                 i: 'icon icon-%1 fa fa-%1'
             },
-            debounce: 250
+            debounce: 500
         }, o),
 
         a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z,
@@ -119,9 +119,8 @@ TE.prototype.ui = function(o) {
         _CLICK = 'click',
         _FOCUS = 'focus',
         _BLUR = 'blur',
-        _INPUT = 'input',
         _RESIZE = 'orientationchange resize',
-        _KEYS = _BLUR + ' ' + _COPY + ' ' + _CUT + ' ' + _FOCUS + ' ' + _INPUT + ' ' + _KEYDOWN + ' ' + _PASTE,
+        _INPUT = _BLUR + ' ' + _COPY + ' ' + _CUT + ' ' + _FOCUS + ' input ' + _KEYDOWN + ' ' + _PASTE,
 
         i18n = config.languages,
         tab = config.tab,
@@ -476,25 +475,25 @@ TE.prototype.ui = function(o) {
     }
 
     function dom_parent(node) {
-        return node.parentNode;
+        return node && node.parentNode;
     }
 
     function dom_children(node) {
-        return node.children || [];
+        return node && node.children || [];
     }
 
     function dom_next(node) {
-        return node.nextSibling;
+        return node && node.nextSibling;
     }
 
     function dom_previous(node) {
-        return node.previousSibling;
+        return node && node.previousSibling;
     }
 
     function dom_is(node, s) {
-        if (is_string(s)) {
+        if (node && is_string(s)) {
             return node.nodeName.toLowerCase() === s.toLowerCase();
-        } else if (is_function(s)) {
+        } else if (node && is_function(s)) {
             return node === s(node);
         }
         return node === s;
@@ -594,7 +593,7 @@ TE.prototype.ui = function(o) {
         var s = $.$(),
             B = trim(s.before) ? a : "",
             A = trim(s.after) ? (is_set(b) ? b : a) : "";
-        return $.trim(B, A);
+        return $.trim(B, A); // `tidy` method does not populate history data
     };
 
     // helper: force inline
@@ -607,7 +606,7 @@ TE.prototype.ui = function(o) {
         if (!is_object(node)) node = [node];
         if (!is_set(gap_1)) gap_1 = ' ';
         if (!is_set(gap_2)) gap_2 = "";
-        var s = $[0]().$(),
+        var s = $.$(),
             a = (node[0] ? unit[0] + node[0] + unit[1] : "") + gap_2,
             b = gap_2 + (node[0] ? unit[0] + unit[2] + (node[1] || node[0].split(pattern('(' + esc_data[3] + ')+'))[0]) + unit[1] : ""),
             A = esc(a),
@@ -618,7 +617,7 @@ TE.prototype.ui = function(o) {
             before = s.before,
             after = s.after;
         if (!s.length) {
-            $.insert(i18n.placeholders[""]);
+            $.insert(i18n.placeholders[""]).loss();
         } else {
             gap_1 = false;
         }
@@ -629,11 +628,11 @@ TE.prototype.ui = function(o) {
             [
                 // first toggle
                 function($) {
-                    $.unwrap(a, b, 1).tidy(pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + esc_unit[2] + ']+?' + esc_unit[1] + '$').test(before) ? "" : gap_1, pattern('^' + esc_unit[0] + esc_unit[2] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1]).test(after) ? "" : gap_1).wrap(a, b, wrap)[1]();
+                    $.unwrap(a, b, 1).tidy(pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + esc_unit[2] + ']+?' + esc_unit[1] + '$').test(before) ? "" : gap_1, pattern('^' + esc_unit[0] + esc_unit[2] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1]).test(after) ? "" : gap_1).loss().wrap(a, b, wrap);
                 },
                 // second toggle (the reset state)
                 function($) {
-                    $.unwrap(a, b, wrap)[1]();
+                    $.unwrap(a, b, wrap);
                 }
             ]
         );
@@ -706,7 +705,7 @@ TE.prototype.ui = function(o) {
         for (i in tools) {
             v = tools[i];
             tool = ui.tools[v];
-            if (!tool) continue;
+            if (!(tool || tool === {})) continue;
             tool = do_attributes(tool, v, ui.tools);
             icon = tool.i || v;
             if (icon !== '|' && icon[0] !== '<') {
@@ -735,11 +734,11 @@ TE.prototype.ui = function(o) {
                 if (!_button.title && (j = tool.title)) {
                     _button.title = is_object(j) ? j[0] + (j[1] ? ' (' + j[1] + ')' : "") : j;
                 }
-                ui.tools[v].target = _button;
                 event_set(_CLICK, _button, do_click_tool);
             } else {
                 _button.id = _prefix + '-separator:' + i;
             }
+            ui.tools[v].target = _button;
             dom_set(_tool, _button);
         }
         hook_fire('update.tools', [$]);
@@ -895,7 +894,7 @@ TE.prototype.ui = function(o) {
         }
         event_set(_KEYDOWN, _content, do_keys);
         event_set(_KEYUP, _content, do_keys_reset);
-        event_set(_KEYS, _content, do_update_contents_debounce);
+        event_set(_INPUT, _content, do_update_contents_debounce);
         event_set(_MOUSEDOWN, _resize, do_resize_down);
         event_set(_MOUSEMOVE, doc, do_resize_move);
         event_set(_MOUSEUP, body, do_resize_up);
@@ -933,7 +932,7 @@ TE.prototype.ui = function(o) {
         event_reset(_MOUSEDOWN, _resize, do_resize_down);
         event_reset(_MOUSEMOVE, doc, do_resize_move);
         event_reset(_MOUSEUP, doc, do_resize_up);
-        event_reset(_KEYS, _content, do_update_contents_debounce);
+        event_reset(_INPUT, _content, do_update_contents_debounce);
         if (_p) {
             dom_before(_container, _p);
             dom_set(_p, _content);
@@ -1404,13 +1403,13 @@ TE.prototype.ui = function(o) {
                         v = this;
                         m = data[data_get(v, data_tool_id)];
                         m = is_string(m) ? ui.tools[m] : (m || {});
-                        h = content_get(v);
+                        n = content_get(v);
                         if (!is_disabled_tool(m) && is_function(i = m.click)) {
                             i = i(e, $);
                             if (str !== false && _drop_target) {
                                 s = dom_children(_drop_target)[0] || _drop_target;
                                 if (!dom_is(s, 'i')) {
-                                    content_set(s, format(current, [h, icon]));
+                                    content_set(s, format(current, [n, icon]));
                                 }
                                 if(is_object(m.text) && (t = dom_children(s)[0])) {
                                     if (dom_is(t, 'i')) {
@@ -1428,11 +1427,16 @@ TE.prototype.ui = function(o) {
                         k = e.TE.key;
                         if (k('escape')) return ui.exit(1), event_exit(e);
                         if (k('arrowdown') && (l = dom_next(v))) {
-                            while (!dom_is(l, 'a')) l = dom_next(l);
+                            while (!dom_is(l, 'a')) {
+                                if (!l) break;
+                                l = dom_next(l);
+                            }
                             return l && l.focus(), event_exit(e);
-                        }
-                        if (k('arrowup') && (l = dom_previous(v))) {
-                            while (!dom_is(l, 'a')) l = dom_previous(l);
+                        } else if (k('arrowup') && (l = dom_previous(v))) {
+                            while (!dom_is(l, 'a')) {
+                                if (!l) break;
+                                l = dom_previous(l);
+                            }
                             return l && l.focus(), event_exit(e);
                         }
                     }
@@ -1456,14 +1460,13 @@ TE.prototype.ui = function(o) {
                         r = v.text;
                         r = is_object(r) ? (r[1] || "") : r;
                         j = is_object(j) ? j[0] : j;
-                        s = el(w ? 'span' : 'a', w ? false : (v.text || j), extend(attributes, v.attributes || {}));
+                        s = el(w ? 'span' : 'a', w ? '<span>' + (j || '%' + index) + '</span>' : (v.text || j), extend(attributes, v.attributes || {}));
                         if (!s.title && (t = v.title)) {
                             s.title = is_object(t) ? t[0] + (t[1] ? ' (' + t[1] + ')' : "") : t;
                         }
                         if (w) {
                             attr_set(s, {
-                                'id': _prefix + '-label:' + index,
-                                'title': j || null
+                                'id': _prefix + '-label:' + index
                             });
                         } else {
                             if (is_disabled_tool(v)) {
@@ -1611,7 +1614,7 @@ TE.prototype.ui = function(o) {
 
     // default tool(s)
     ui.tools = {
-        '|': 1, // separator
+        '|': {}, // separator
         undo: {
             i: 'undo',
             click: function(e, $) {
@@ -1728,6 +1731,9 @@ TE.prototype.ui = function(o) {
             reset: dom_reset,
             get: dom_get,
             id: dom_id,
+            copy: function(a, b) {
+                return a.cloneNode(is_set(b) ? b : true);
+            },
             classes: {
                 set: class_set,
                 reset: class_reset,

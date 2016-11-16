@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.0.1
+ *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.0.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -80,7 +80,7 @@
                     p = config.emoji;
                     q = _css(drop, ['background-color', 'color', 'padding-top']);
                     r = _dom.children;
-                    _el(style, h + '{max-height:20em;overflow:auto}' + h + ' div{max-width:20em;margin:0 0 ' + q[2] + 'px;background:rgba(0,0,0,.025);border-color:inherit;font-size:100%;overflow:hidden}' + h + ' div[title]:before{content:attr(title);display:block;padding:.5em;background:' + q[0] + ';border-bottom:1px solid;border-color:inherit}' + h + ' a{float:left;width:10%;height:2em;line-height:2em;text-align:center;color:inherit;text-decoration:none;overflow:hidden;white-space:nowrap;transition:transform .05s ease-out}' + h + ' a img{display:block;width:60%;height:60%;max-width:none;max-height:none;min-width:0;min-height:0;margin:20%;background:0 0;border:0;outline:0;box-shadow:none;border-radius:0}' + h + ' a:focus,' + h + ' a:hover,' + h + ':hover a:focus:hover{outline:0;transform:scale(1.5)}' + h + ':hover a:focus{transform:scale(1)}');
+                    _el(style, h + '{max-height:20em;overflow:auto}' + h + ' div{max-width:20em;margin:0 0 ' + q[2] + 'px;background:rgba(0,0,0,.025);border-color:inherit;font-size:100%;overflow:hidden}' + h + ' div[title]:before{content:attr(title);display:block;padding:.5em;background:' + q[0] + ';border-bottom:1px solid;border-color:inherit}' + h + ' a{float:left;width:10%;height:2em;line-height:2em;text-align:center;color:inherit;text-decoration:none;overflow:hidden;white-space:nowrap;transition:transform .05s ease-out}' + h + ' a img{display:block;width:60%;height:60%;max-width:none;max-height:none;min-width:0;min-height:0;margin:20%;background:0 0;border:0;outline:0;box-shadow:none;border-radius:0}' + h + ':hover a:focus{transform:scale(1)}' + h + ' a:focus,' + h + ' a:hover,' + h + ':hover a:hover{outline:0;transform:scale(1.5)}');
                     for (i in p) {
                         if (!p[i] || !p[i][1] || !(k = p[i])[1].length) continue;
                         l = _el('div', false, {
@@ -101,8 +101,8 @@
                                 }
                                 */
                             });
-                            _event.set("click", m, do_click);
-                            _event.set("keydown", m, do_key);
+                            _event.set('click', m, do_click);
+                            _event.set('keydown', m, do_key);
                             _append(l, m);
                         }
                         _append(drop, l);

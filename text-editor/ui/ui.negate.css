@@ -39,6 +39,7 @@
 }
 .text-editor a:focus,
 .text-editor a:hover {color:#789}
+.text-editor a:active {color:#89a}
 .text-editor ::-webkit-input-placeholder {
   opacity:.2;
   color:inherit;
@@ -111,13 +112,16 @@
 .text-editor-button:active {background:#345}
 .text-editor-tool .text-editor-button {
   background:0 0;
+  color:#678;
   padding:0;
   float:left;
   width:2em;
   line-height:2em;
   box-shadow:none;
 }
-.text-editor-tool .text-editor-button:active {color:inherit}
+.text-editor-tool .text-editor-button:focus,
+.text-editor-tool .text-editor-button:hover {color:#789}
+.text-editor-tool .text-editor-button:active {color:#89a}
 .text-editor-button.x,
 .text-editor-button[disabled] { /* disabled */
   cursor:default;
@@ -282,8 +286,10 @@
   box-shadow:none;
   border-radius:0;
 }
+.text-editor-drop.menu:hover .text-editor-button:focus {color:#678}
 .text-editor-drop.menu .text-editor-button:focus,
-.text-editor-drop.menu .text-editor-button:hover {color:#789}
+.text-editor-drop.menu .text-editor-button:hover,
+.text-editor-drop.menu:hover .text-editor-button:hover {color:#789}
 .text-editor-drop.menu .text-editor-label {
   display:block;
   height:1em;
@@ -304,8 +310,7 @@
   border-top:1px solid;
   border-color:inherit;
 }
-.text-editor-drop.menu .text-editor-label[title]:after {
-  content:attr(title);
+.text-editor-drop.menu .text-editor-label span {
   position:absolute;
   top:0;
   font-weight:bold;

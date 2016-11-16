@@ -60,7 +60,7 @@ editor.ui({
         "": 'text-editor',
         i: 'icon icon-%1 fa fa-%1'
     },
-    debounce: 250
+    debounce: 500
 });
 ~~~
 
@@ -99,6 +99,84 @@ editor.create({
 ~~~
 
 ### Utility
+
+Function helpers:
+
+~~~ .javascript
+editor._.is('Markdown'); // check if editor type is `Markdown`
+
+editor._.is.a(x); // check if `x` is array
+editor._.is.b(x); // check if `x` is a boolean
+editor._.is.e(x); // check if `x` is a HTML node
+editor._.is.f(x); // check if `x` is a function
+editor._.is.i(x); // check if `x` is a number
+editor._.is.n(x); // check if `x` is `null`
+editor._.is.o(x); // check if `x` is array or object
+editor._.is.r(x); // check if `x` is a regular expression
+editor._.is.s(x); // check if `x` is a string
+editor._.is.x(x); // check if `x` is not set
+
+editor._.x(s); // escape regular expression character(s) in `s`
+editor._.extend(a, b); // extend `a` object with `b` object
+editor._.each(a, function(value, key, a) {}); // iterate over `a`
+editor._.trim(s); // trim white-space before and after `s`
+editor._.trim(s, 0); // trim white-space before `s`
+editor._.trim(s, 1); // trim white-space after `s`
+editor._.css(node, 'font-size'); // get CSS `font-size` value from `node`
+editor._.css(node, {'font-size': '200%'}); // set CSS `font-size` as `200%` to `node`
+
+editor._.time(); // get time data as year, month, date, hour, minute, second and millisecond
+editor._.replace(); // replace multiple
+editor._.format(); // replace variable(s) in string
+
+editor._.dom.set(container, node); // append `node` to `container`
+editor._.dom.reset(container, node); // remove `node` from `container`
+editor._.dom.get('#foo'); // get HTML element with ID of `foo`
+
+editor._.dom.id(node); // set a unique ID to the `node` if it does not have ID
+editor._.dom.copy(node); // clone `node`
+
+editor._.dom.classes.set(node, 'foo'); // add `foo` class to `node`
+editor._.dom.classes.reset(node, 'foo'); // remove `foo` class from `node`
+editor._.dom.classes.get(node, 'foo'); // check if `node` contains `foo` class
+
+editor._.dom.attributes.set(node, 'href', '/'); // add `href` attribute with value of `/` to `node`
+editor._.dom.attributes.reset(node, 'href'); // remove `href` attribute from `node`
+editor._.dom.attributes.get(node, 'href'); // get `href` attribute value from `node`
+
+editor._.dom.data.set(node, 'foo', 'bar'); // add `data-foo` attribute with value of `bar` to `node`
+editor._.dom.data.reset(node, 'foo'); // remove `data-foo` attribute from `node`
+editor._.dom.data.get(node, 'foo'); // get `data-foo` attribute value from `node`
+
+editor._.dom.offset(node); // get `l` (left) and `t` (top) offset of `node` relative to its parent
+editor._.dom.point(node, e); // get `x` (horizontal) and `y` (vertical) offset of mouse pointer relative to `node`
+editor._.dom.size(node); // get `w` (width) and `h` (height) of `node`
+
+editor._.dom.content.set(node, 'foo'); // set `node` content with `foo`
+editor._.dom.content.reset(node); // remove `node` content
+editor._.dom.content.get(node); // get `node` content
+
+editor._.dom.parent(node); // get `node` parent
+editor._.dom.children(node); // get `node` children
+editor._.dom.next(node); // get closest `node` next sibling
+editor._.dom.previous(node); // get closest `node` previous sibling
+
+editor._.dom.before(container, node); // put `node` before `container`
+editor._.dom.after(container, node); // put `node` after `container`
+editor._.dom.prepend(container, node); // put `node` at the top of the `container` content
+editor._.dom.append(container, node); // put `node` at the end of the `container` content
+
+node = editor._.el('div', 'content', {'id': 'foo'}); // create `node` as `<div id="foo">content</div>`
+
+editor._.event.set('click', node, handler); // add HTML click event to `node`
+editor._.event.reset('click', node, handler); // remove HTML click event from `node`
+editor._.event.fire('click', node, []); // trigger HTML click event in `node`
+editor._.event.x(e); // prevent default event behaviour
+
+editor._.hook.set('foo', handler); // add custom event named as `foo`
+editor._.hook.reset('foo'); // remove `foo` custom event
+editor._.hook.fire('foo', []); // trigger `foo` event
+~~~
 
 #### Format
 
