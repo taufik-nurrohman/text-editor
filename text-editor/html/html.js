@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.2.4
+ *  HTML TEXT EDITOR PLUGIN 1.2.5
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -281,8 +281,8 @@ TE.HTML = function(target, o) {
                         if (!auto_p_(e, $).$().length) {
                             $.insert(placeholders[""]);
                         }
-                        extra = config.advance_a && x ? format('%4rel%1%2nofollow%3%4target%1%2_blank%3', data) : "";
-                        $.i().format(format(a + '%4href%1%2' + href + '%3', data) + (title ? format('%4title%1%2' + title + '%3', data) : "") + extra);
+                        extra = config.advance_a && x ? data[3] + 'rel' + data[0] + data[1] + 'nofollow' + data[2] + data[3] + 'target' + data[0] + data[1] + '_blank' + data[2] : "";
+                        $.i().format(a + data[3] + 'href' + data[0] + data[1] + href + data[2] + (title ? data[3] + 'title' + data[0] + data[1] + title + data[2] : "") + extra);
                     });
                 }), false;
             }
@@ -309,12 +309,12 @@ TE.HTML = function(target, o) {
                         alt = attr_title(alt);
                         $[0]();
                         if (advance && title) {
-                            $.tidy('\n\n', "").insert(unit[0] + figure + unit[1] + '\n' + tab + unit[0] + img + format('%4alt%1%2' + alt + '%3%4src%1%2' + src + '%3', data) + suffix + '\n' + tab + unit[0] + figcaption + unit[1] + title + unit[0] + unit[2] + get_o(figcaption) + unit[1] + '\n' + unit[0] + unit[2] + get_o(figure) + unit[1] + '\n\n', 0, 1);
+                            $.tidy('\n\n', "").insert(unit[0] + figure + unit[1] + '\n' + tab + unit[0] + img + data[3] + 'alt' + data[0] + data[1] + alt + data[2] + data[3] + 'src' + data[0] + data[1] + src + data[2] + suffix + '\n' + tab + unit[0] + figcaption + unit[1] + title + unit[0] + unit[2] + get_o(figcaption) + unit[1] + '\n' + unit[0] + unit[2] + get_o(figure) + unit[1] + '\n\n', 0, 1);
                             if (auto_p) {
                                 ui.tools.p.click(e, $);
                             }
                         } else {
-                            auto_p_(e, $).tidy(pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + esc_unit[2] + ']+?' + esc_unit[1] + '\\s*$').test($.$().before) ? "" : ' ', "").insert(unit[0] + img + format('%4alt%1%2' + alt + '%3%4src%1%2' + src + '%3', data) + (title ? format('%4title%1%2' + title + '%3', data) : "") + suffix + ' ', 0, 1);
+                            auto_p_(e, $).tidy(pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + esc_unit[2] + ']+?' + esc_unit[1] + '\\s*$').test($.$().before) ? "" : ' ', "").insert(unit[0] + img + data[3] + 'alt' + data[0] + data[1] + alt + data[2] + data[3] + 'src' + data[0] + data[1] + src + data[2] + (title ? data[3] + 'title' + data[0] + data[1] + title + data[2] : "") + suffix + ' ', 0, 1);
                         }
                         $[1]();
                     });
@@ -362,11 +362,11 @@ TE.HTML = function(target, o) {
                     abbr_end = esc_unit[0] + esc_unit[2] + esc(abbr_o) + esc_unit[1],
                     abbr_html = pattern(abbr_begin + content + abbr_end), state, i;
                 g.replace(abbr_html, function(a, b, c) {
-                    if (c = trim(c)) states.abbr[c] = (b.match(pattern(format('%4+title%1%2\\s*(.*?)\\s*%3', esc_data))) || ["", ""])[1];
+                    if (c = trim(c)) states.abbr[c] = (b.match(pattern(esc_data[3] + '+title' + esc_data[0] + esc_data[1] + '\\s*(.*?)\\s*' + esc_data[2])) || ["", ""])[1];
                 });
                 state = states.abbr;
                 if (x && state[x]) {
-                    return $.i().format(abbr + format('%4title%1%2' + state[x] + '%3', data)), false;
+                    return $.i().format(abbr + data[3] + 'title' + data[0] + data[1] + state[x] + data[2]), false;
                 }
                 return $.record().ui.prompt(['abbr[title]', i18n.title], state[abbr_content] || i18n.placeholder, !state[x], function(e, $, v, w) {
                     v = attr_title(v || w);
@@ -381,7 +381,7 @@ TE.HTML = function(target, o) {
                             break;
                         }
                     }
-                    auto_p_(e, $).unwrap(pattern(abbr_begin_alt), pattern(abbr_end)).unwrap(pattern(abbr_begin_alt), pattern(abbr_end), 1).i().format(abbr + format('%4title%1%2' + v + '%3', data))[1]();
+                    auto_p_(e, $).unwrap(pattern(abbr_begin_alt), pattern(abbr_end)).unwrap(pattern(abbr_begin_alt), pattern(abbr_end), 1).i().format(abbr + data[3] + 'title' + data[0] + data[1] + v + data[2])[1]();
                 }), false;
             }
         },
