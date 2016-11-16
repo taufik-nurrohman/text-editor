@@ -1,6 +1,8 @@
 Internationalization
 --------------------
 
+[View Demo](https://rawgit.com/tovic/text-editor/master/text-editor/ui/language/language.html)
+
 Include the script just after the plugin instances:
 
 ~~~ .html
@@ -12,5 +14,3 @@ var editor = new TE.HTML(document.querySelector('textarea'));
 </script>
 <script src="../text-editor/ui/language/id-id.min.js"></script>
 ~~~
-
-[View Demo](https://rawgit.com/tovic/text-editor/master/text-editor/ui/language/language.html)

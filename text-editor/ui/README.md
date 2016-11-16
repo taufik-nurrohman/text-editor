@@ -133,6 +133,8 @@ editor._.dom.set(container, node); // append `node` to `container`
 editor._.dom.reset(container, node); // remove `node` from `container`
 editor._.dom.get('#foo'); // get HTML element with ID of `foo`
 
+editor._.dom.is(node, 'i'); // check if `node` is an `<i>` tag
+
 editor._.dom.id(node); // set a unique ID to the `node` if it does not have ID
 editor._.dom.copy(node); // clone `node`
 
