@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  STRING CONVERTER PLUGIN FOR USER INTERFACE MODULE 1.0.3
+ *  STRING CONVERTER PLUGIN FOR USER INTERFACE MODULE 1.0.4
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -25,12 +25,13 @@ TE.each(function($) {
         _event = _.event,
         _replace = _.replace,
         _extend = _.extend,
+        _timer = _.timer,
         _append = _dom.append,
         _content = _dom.content.get;
 
     function check(a, b) {
         if (!$.$().length) {
-            return setTimeout(function() {
+            return _timer.set(function() {
                 modals = config.languages.modals[converter];
                 ui.alert(a || modals.title, b || modals.description);
             }, 1), false;

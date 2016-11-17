@@ -183,6 +183,14 @@
         return a;
     }
 
+    function timer_set(fn, i) {
+        return setTimeout(fn, i || 0);
+    }
+
+    function timer_reset(timer_set_fn) {
+        return clearTimeout(timer_set_fn);
+    }
+
     (function($) {
 
         // key maps for the deprecated `KeyboardEvent.keyCode`
@@ -567,7 +575,12 @@
                 counts = count(arg),
                 s = $.$(),
                 id = 'TE.scroll';
-            $.save(id, [html[top], body[top], target[top]]).focus();
+            $.save(id, [html[top], body[top], target[top], function() {
+                o = bin[id];
+                html[top] = o[0];
+                body[top] = o[1];
+                target[top] = o[2];
+            }, html, body, target]).focus();
             if (counts === 0) { // restore selection with `$.select()`
                 arg[0] = s.start;
                 arg[1] = s.end;
@@ -578,10 +591,7 @@
                 arg[1] = arg[0];
             }
             target.setSelectionRange(arg[0], arg[1]); // default `$.select(7, 100)`
-            o = $.restore(id, [0, 0, 0]);
-            html[top] = o[0];
-            body[top] = o[1];
-            target[top] = o[2];
+            $.restore(id)[3]();
             return $; // `select` method does not populate history data
         };
 
@@ -827,7 +837,11 @@
             css: css,
             edge: edge,
             pattern: pattern,
-            i: num
+            i: num,
+            timer: {
+                set: timer_set,
+                reset: timer_reset
+            }
         };
 
         // the target element

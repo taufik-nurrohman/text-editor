@@ -1,13 +1,13 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.5
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.6
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
  * ----------------------------------------------------------
  */
 
-TE.prototype.ui = function(o) {
+TE.prototype.ui = function(o, p) {
 
     var _u2318 = '\u2318', // command sign
         _u2026 = '\u2026', // horizontal ellipsis
@@ -25,6 +25,8 @@ TE.prototype.ui = function(o) {
         edge = _.edge,
         pattern = _.pattern,
         trim = _.trim,
+        timer_set = _.timer.set,
+        timer_reset = _.timer.reset,
         is = $.is,
         is_dom = is.e,
         is_function = is.f,
@@ -297,14 +299,6 @@ TE.prototype.ui = function(o) {
             }
         }
         return $;
-    }
-
-    function timer_set(fn, i) {
-        return setTimeout(fn, i);
-    }
-
-    function timer_reset(timer_set_fn) {
-        return clearTimeout(timer_set_fn);
     }
 
     function sanitize(s, from, to) {
@@ -700,7 +694,7 @@ TE.prototype.ui = function(o) {
         var tools = str_split(config.tools),
             button = _prefix + '-button',
             separator = _prefix + '-separator',
-            id, tool, icon, is_button, i, v;
+            id, tool, icon, is_button, s, i, v;
         config.tools = tools;
         for (i in tools) {
             v = tools[i];
@@ -712,16 +706,17 @@ TE.prototype.ui = function(o) {
                 icon = slug(icon);
             }
             is_button = icon !== '|';
-            _button = el_set(is_button ? button : separator, is_button ? 'a' : 'span');
+            s = slug(icon).replace(/\s/g, "");
+            _button = el_set(is_button ? button + ' ' + button + '-' + s : separator + ' ' + separator + '-' + i, is_button ? 'a' : 'span');
             if (is_button) {
-                id = button + ':' + slug(v).replace(/\s/g, "");
+                id = button + ':' + s;
                 attr_set(_button, {
                     'href': js,
                     'id': id,
                     'tabindex': -1
                 });
                 data_set(_button, data_tool_id, v);
-                icon = icon[0] === '<' ? icon : '<i class="' + format(_i, [icon]) + ' ' + id + '"></i>';
+                icon = icon[0] === '<' ? icon : '<i class="' + format(_i, [icon]) + '"></i>';
                 if (is_disabled_tool(tool)) {
                     class_set(_button, 'x');
                 }
@@ -736,7 +731,7 @@ TE.prototype.ui = function(o) {
                 }
                 event_set(_CLICK, _button, do_click_tool);
             } else {
-                _button.id = _prefix + '-separator:' + i;
+                _button.id = separator + ':' + i;
             }
             ui.tools[v].target = _button;
             dom_set(_tool, _button);
@@ -844,7 +839,7 @@ TE.prototype.ui = function(o) {
     }
 
     function do_update_contents_debounce(e) {
-        if (/^focus|blur$/.test(e.type)) {
+        if (/^(focus|blur)$/.test(e.type)) {
             do_keys_reset(1);
         }
         timer_reset(bounce);
@@ -1197,7 +1192,7 @@ TE.prototype.ui = function(o) {
         });
         event_set(_KEYDOWN, okay, function(e) {
             var key = e.TE.key;
-            if (key(/^escape|enter$/)) {
+            if (key(/^(escape|enter)$/)) {
                 return event_fire(_CLICK, okay, [e]), event_exit(e);
             }
         });
@@ -1315,7 +1310,7 @@ TE.prototype.ui = function(o) {
         });
         event_set(_KEYDOWN, cancel, function(e) {
             key = e.TE.key;
-            if (key(/^enter|escape$/)) return nope(e);
+            if (key(/^(enter|escape)$/)) return nope(e);
             if (key('arrowup')) return input.focus(), event_exit(e);
             if (key(/^arrow(right|down)$/)) return freeze(e);
             if (key('arrowleft')) return okay.focus(), event_exit(e);

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.0.2
+ *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.0.3
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -1345,6 +1345,7 @@
             _trim = _.trim,
             _event = _.event,
             _css = _.css,
+            _timer = _.timer,
             _dom = _.dom,
             _append = _dom.append,
             _data = _dom.data,
@@ -1428,7 +1429,7 @@
                         }
                         _append(drop, l);
                     }
-                    setTimeout(function() {
+                    _timer.set(function() {
                         r(r(drop)[0])[0].focus();
                     }, 1);
                 }), false;

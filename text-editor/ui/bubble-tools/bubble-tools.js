@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.2
+ *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.3
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -16,7 +16,7 @@ TE.each(function($) {
         tools_alt,
         tools_alt_default = [
             'b i a img pre,code',
-            'p blockquote,q p,h1,h2,h3,h4,h5,h6 ol ul hr table'
+            'p blockquote,q p,h1,h2,h3,h4,h5,h6 ol ul hr'
         ],
         tools_class = 'tool ' + c + '-tool',
         target = $.target,
@@ -30,6 +30,7 @@ TE.each(function($) {
         _hook = _.hook,
         _edge = _.edge,
         _format = _.format,
+        _timer_set = _.timer.set,
         _dom = _.dom,
         _data = _dom.data.get,
         _get = _dom.get,
@@ -37,11 +38,10 @@ TE.each(function($) {
         _previous = _dom.previous,
         _is = _dom.is,
         _append = _dom.append,
-        _timer = setTimeout,
         _refresh = function() {
-            _timer(function() {
+            _timer_set(function() {
                 ui.bubble.fit(); // refresh bubble position ...
-            }, 0);
+            });
         },
 
         block, d, e, f, g, h, i, j, k, l, m;
@@ -59,17 +59,16 @@ TE.each(function($) {
     }
 
     function do_tools(f, id, bubble) {
-        g = f.target ? _dom.copy(f.target) : (function() {
-            f = config.languages.tools[id];
-            return _el('a', '<i class="' + _format(icon, [(tools[id] && tools[id].i) || id]) + '"></i>', {
-                'class': c + '-button',
-                'title': typeof f === "object" ? f[0] + (f[1] ? '(' + f[1] + ')' : "") : f,
-                'href': 'javascript:;',
-                'data': {
-                    'tool-id': id
-                }
-            });
-        })();
+        e = config.languages.tools[id];
+        f = (tools[id] && tools[id].i) || id;
+        g = _el('a', f[0] === '<' ? f : '<i class="' + _format(icon, [f]) + '"></i>', {
+            'class': c + '-button',
+            'href': 'javascript:;',
+            'title': typeof e === "object" ? e[0] + (e[1] ? ' (' + e[1] + ')' : "") : e,
+            'data': {
+                'tool-id': id
+            }
+        });
         _event.set("keydown", g, function(e) {
             j = this;
             k = e.TE.key;
@@ -107,7 +106,7 @@ TE.each(function($) {
                     _event.set("keydown", m, function(e) {
                         k = e.TE.key;
                         l = this.value;
-                        if (k('escape') || (k('backspace') && !l)) {
+                        if (k('escape') || (k(/^(backspace|enter)$/) && !l)) {
                             return ui.bubble.exit(1), _event.x(e);
                         }
                         if (k('enter')) {
@@ -115,10 +114,10 @@ TE.each(function($) {
                         }
                     });
                     _append(bubble, m);
-                    _timer(function() {
+                    _timer_set(function() {
                         m.focus();
                         m.select();
-                    }, 1);
+                    });
                 });
             }
             return _refresh(), _event.x(e);
