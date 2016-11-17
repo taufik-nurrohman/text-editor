@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.1
+ *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -16,7 +16,7 @@ TE.each(function($) {
         tools_alt,
         tools_alt_default = [
             'b i a img pre,code',
-            'p p,h1,h2,h3,h4,h5,h6 blockquote,q hr table'
+            'p blockquote,q p,h1,h2,h3,h4,h5,h6 ol ul hr table'
         ],
         tools_class = 'tool ' + c + '-tool',
         target = $.target,
@@ -60,8 +60,10 @@ TE.each(function($) {
 
     function do_tools(f, id, bubble) {
         g = f.target ? _dom.copy(f.target) : (function() {
+            f = config.languages.tools[id];
             return _el('a', '<i class="' + _format(icon, [(tools[id] && tools[id].i) || id]) + '"></i>', {
                 'class': c + '-button',
+                'title': typeof f === "object" ? f[0] + (f[1] ? '(' + f[1] + ')' : "") : f,
                 'href': 'javascript:;',
                 'data': {
                     'tool-id': id
@@ -95,9 +97,11 @@ TE.each(function($) {
                     _css(bubble, {
                         'font-size': '80%'
                     });
+                    l = k.value;
                     m = _el('input', false, {
                         'type': 'text',
-                        'value': k.value,
+                        'value': l,
+                        'placeholder': l,
                         'class': c + '-input'
                     });
                     _event.set("keydown", m, function(e) {
