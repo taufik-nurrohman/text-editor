@@ -157,5 +157,7 @@ TE.each(function($) {
             ui.bubble.exit();
         }
     });
+
     _hook.set('enter.bubble', _refresh);
+
 });
