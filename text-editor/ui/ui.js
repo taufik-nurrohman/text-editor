@@ -7,7 +7,7 @@
  * ----------------------------------------------------------
  */
 
-TE.prototype.ui = function(o, p) {
+TE.prototype.ui = function(o) {
 
     var _u2318 = '\u2318', // command sign
         _u2026 = '\u2026', // horizontal ellipsis
