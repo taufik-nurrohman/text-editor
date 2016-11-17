@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BBCODE TEXT EDITOR PLUGIN 1.0.5
+ *  BBCODE TEXT EDITOR PLUGIN 1.0.6
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -56,7 +56,7 @@ TE.BBCode = function(target, o) {
         hook = _.hook,
         event = _.event,
         esc_unit = $.config.unit[1][0],
-        esc_data = $.config.unit[1][1];
+        esc_data = $.config.unit[1][1], k;
 
     $.update(o, 0);
 
@@ -135,14 +135,14 @@ TE.BBCode = function(target, o) {
                 var x = config.auto_encode_html,
                     code = formats.code,
                     code_o = get_o(code);
-                function encode(a) {
+                function enc(a) {
                     return x ? replace(a, ['&', '<', '>'], ['&amp;', '&lt;', '&gt;']) : a;
                 }
-                function decode(a) {
+                function dec(a) {
                     return x ? replace(a, ['&amp;', '&lt;', '&gt;'], ['&', '<', '>']) : a;
                 }
                 return $[0]().format(code, 0, '\n\n', '\n').replace(/^[\s\S]*?$/, function(a) {
-                    return pattern('^\\s*' + esc_unit[0] + esc_unit[2] + esc(code_o) + esc_unit[1]).test($.$().after) ? encode(a) : decode(a);
+                    return pattern('^\\s*' + esc_unit[0] + esc_unit[2] + esc(code_o) + esc_unit[1]).test($.$().after) ? enc(a) : dec(a);
                 })[1](), false;
             }
         }
@@ -154,7 +154,6 @@ TE.BBCode = function(target, o) {
 
     // table caption is not supported in **BBCode** so we have to remove that "add caption" modal prompt here
     hook.set('enter.modal.prompt:table>caption', function($) {
-        var k;
         if (!formats.caption && (k = ui.el.modal.querySelector('[name=y]'))) {
             event.fire("click", k); // force to click the submit button
         }

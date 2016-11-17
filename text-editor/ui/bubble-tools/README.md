@@ -28,4 +28,12 @@ Options
 editor.update({
     tools_alt: 'b i | a img'
 });
+
+~~~ .javascript
+editor.update({
+    tools_alt: [
+        'b i u', // span
+        'p hr table' // block
+    ]
+});
 ~~~

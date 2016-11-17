@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.2.5
+ *  HTML TEXT EDITOR PLUGIN 1.2.6
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -407,7 +407,7 @@ TE.HTML = function(target, o) {
                             $.wrap(unit[0] + unit[2] + p_o + unit[1] + '\n' + dent + unit[0] + p_o + match[1] + unit[1], "").insert(placeholder);
                         }
                     } else {
-                        $.format(p, 0, '\n\n');
+                        $.tidy('\n\n').format(p, 0, '\n\n');
                     }
                 } else {
                     var par = pattern('^(?:\\s*' + esc_unit[0] + esc(p_o) + attrs + esc_unit[1] + '\\s*)+' + content + '(?:\\s*' + esc_unit[0] + esc_unit[2] + esc(p_o) + esc_unit[1] + '\\s*)+$');
@@ -510,23 +510,23 @@ TE.HTML = function(target, o) {
                     before = pattern(B + '\\s*$'),
                     after = pattern('^\\s*' + A),
                     any = pattern('^' + content + '$');
-                function encode(a) {
+                function enc(a) {
                     return x ? replace(a, ['&', '<', '>'], ['&amp;', '&lt;', '&gt;']) : a;
                 }
-                function decode(a) {
+                function dec(a) {
                     return x ? replace(a, ['&amp;', '&lt;', '&gt;'], ['&', '<', '>']) : a;
                 }
                 // block
                 if (pattern('(^|\\n|' + B + ')$').test(s.before)) {
                     if (before.test(s.before) && after.test(s.after)) {
-                        $[0]().unwrap(pattern(before), pattern(after)).replace(any, decode)[1]();
+                        $[0]().unwrap(pattern(before), pattern(after)).replace(any, dec)[1]();
                     } else {
-                        $[0]().tidy('\n\n').wrap(unit[0] + pre + unit[1] + unit[0] + code + unit[1], unit[0] + unit[2] + code_o + unit[1] + unit[0] + unit[2] + pre_o + unit[1]).insert(v || placeholders[""]).replace(any, encode)[1]();
+                        $[0]().tidy('\n\n').wrap(unit[0] + pre + unit[1] + unit[0] + code + unit[1], unit[0] + unit[2] + code_o + unit[1] + unit[0] + unit[2] + pre_o + unit[1]).insert(v || placeholders[""]).replace(any, enc)[1]();
                     }
                 // span
                 } else {
                     $[0]().format(code).replace(any, function(a) {
-                        return force_i(pattern('^\\s*' + esc_unit[0] + esc_unit[2] + esc(code_o) + esc_unit[1]).test($.$().after) ? encode(a) : decode(a));
+                        return force_i(pattern('^\\s*' + esc_unit[0] + esc_unit[2] + esc(code_o) + esc_unit[1]).test($.$().after) ? enc(a) : dec(a));
                     })[1]();
                 }
                 return false;

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.0
+ *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -12,18 +12,25 @@ TE.each(function($) {
         ui = $.ui,
         config = $.config,
         c = config.classes[""],
+        icon = config.classes.i,
         tools = ui.tools,
-        tools_alt = config.tools_alt || 'b i a blockquote,q pre,code',
+        tools_alt,
+        tools_alt_default = [
+            'b i a img pre,code',
+            'p p,h1,h2,h3,h4,h5,h6 blockquote,q hr table'
+        ],
         tools_class = 'tool ' + c + '-tool',
         target = $.target,
         modal = ui.el.modal,
         _ = $._,
         _el = _.el,
+        _extend = _.extend,
         _css = _.css,
         _trim = _.trim,
         _event = _.event,
         _hook = _.hook,
         _edge = _.edge,
+        _format = _.format,
         _dom = _.dom,
         _data = _dom.data.get,
         _get = _dom.get,
@@ -32,7 +39,13 @@ TE.each(function($) {
         _is = _dom.is,
         _append = _dom.append,
         _timer = setTimeout,
-        d, e, f, g, h, i, j, k, l, m;
+        _refresh = function() {
+            _timer(function() {
+                ui.bubble.fit(); // refresh bubble position ...
+            }, 0);
+        },
+
+        block, d, e, f, g, h, i, j, k, l, m;
 
     function do_modals(id, data, $) {
         ui.tools[id].click(null, $);
@@ -46,8 +59,16 @@ TE.each(function($) {
         }
     }
 
-    function do_tools(f, bubble) {
-        g = _dom.copy(f.target);
+    function do_tools(f, id, bubble) {
+        g = f.target ? _dom.copy(f.target) : (function() {
+            return _el('a', '<i class="' + _format(icon, [(tools[id] && tools[id].i) || id]) + '"></i>', {
+                'class': c + '-button',
+                'href': 'javascript:;',
+                'data': {
+                    'tool-id': id
+                }
+            });
+        })();
         _event.set("keydown", g, function(e) {
             j = this;
             k = e.TE.key;
@@ -97,7 +118,7 @@ TE.each(function($) {
                     }, 1);
                 });
             }
-            return _event.x(e);
+            return _refresh(), _event.x(e);
         });
         _append(bubble, g);
     }
@@ -110,27 +131,31 @@ TE.each(function($) {
         }
     });
 
-    _event.set("copy cut focus input keyup mouseup paste scroll", target, function(e) {
+    _event.set("copy cut keyup mouseup paste scroll", target, function(e) {
         k = $.$();
-        if (k.length) {
+        block = target.value && /(^|\n)$/.test(k.before) && /(\n|$)$/.test(k.after);
+        if (k.length || block) {
             ui.bubble(tools_class, function(bubble) {
                 _css(bubble, {
                     'padding': 0,
                     'font-size': '80%'
                 });
-                d = _trim(tools_alt).split(/\s+/);
+                tools_alt = config.tools_alt || tools_alt_default;
+                if (typeof tools_alt === "string") {
+                    tools_alt = [tools_alt, tools_alt];
+                } else {
+                    tools_alt = _extend(tools_alt, tools_alt_default);
+                }
+                d = _trim(tools_alt[block ? 1 : 0]).split(/\s+/);
                 for (j in d) {
-                    if (!(f = tools[d[j]])) continue;
-                    do_tools(f, bubble);
+                    j = d[j];
+                    if (!(f = tools[j])) continue;
+                    do_tools(f, j, bubble);
                 }
             });
         } else {
             ui.bubble.exit();
         }
     });
-    _hook.set('enter.bubble', function() {
-        _timer(function() {
-            ui.bubble.fit(); // refresh bubble position ...
-        }, 1);
-    });
+    _hook.set('enter.bubble', _refresh);
 });
