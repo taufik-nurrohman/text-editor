@@ -28,6 +28,7 @@ Options
 editor.update({
     tools_alt: 'b i | a img'
 });
+~~~
 
 ~~~ .javascript
 editor.update({

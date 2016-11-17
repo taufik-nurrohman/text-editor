@@ -8,8 +8,7 @@
  */
 
 TE.each(function($) {
-    var busy = 0,
-        ui = $.ui,
+    var ui = $.ui,
         config = $.config,
         c = config.classes[""],
         icon = config.classes.i,
