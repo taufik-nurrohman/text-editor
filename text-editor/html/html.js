@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.2.6
+ *  HTML TEXT EDITOR PLUGIN 1.2.7
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -200,8 +200,8 @@ TE.HTML = function(target, o) {
             if (auto_p) {
                 ui.tools.p.click(e, $);
             }
-            return $[1](), false;
         }
+        return $[1](), false;
     }
 
     function auto_p_(e, $) {
@@ -417,9 +417,9 @@ TE.HTML = function(target, o) {
                         $.tidy('\n\n').format(p, 0, '\n\n');
                     }
                 } else {
-                    var par = _pattern('^(?:\\s*' + esc_unit[0] + _esc(p_o) + attrs + esc_unit[1] + '\\s*)+' + content + '(?:\\s*' + esc_unit[0] + esc_unit[2] + _esc(p_o) + esc_unit[1] + '\\s*)+$');
-                    if (par.test(v)) {
-                        $.replace(par, '$1')
+                    var para = _pattern('^(?:\\s*' + esc_unit[0] + _esc(p_o) + attrs + esc_unit[1] + '\\s*)+' + content + '(?:\\s*' + esc_unit[0] + esc_unit[2] + _esc(p_o) + esc_unit[1] + '\\s*)+$');
+                    if (para.test(v)) {
+                        $.replace(para, '$1')
                             .replace(_pattern('\\s*' + esc_unit[0] + esc_unit[2] + _esc(p_o) + esc_unit[1] + '\\s*' + esc_unit[0] + _esc(p_o) + attrs + esc_unit[1] + '\\s*', 'g'), '\n\n')
                             .replace(_pattern('\\s*' + esc_unit[0] + _esc(br_o) + attrs + esc_unit[1] + '\\s*', 'g'), '\n');
                     } else {
@@ -480,18 +480,28 @@ TE.HTML = function(target, o) {
                     q = formats.q,
                     p = formats.p,
                     p_o = get_o(p),
-                    para = esc_unit[0] + _esc(p_o) + attrs + esc_unit[1];
+                    esc_p_o = _esc(p_o),
+                    has_p = _pattern(esc_unit[0] + esc_unit[2] + esc_p_o + esc_unit[1]),
+                    placeholder = placeholders[""], start;
                 // block
-                if (_pattern('(^|\\n|' + para + ')$').test(s.before)) {
-                    if (auto_p && (v === placeholders[""] || _pattern('(' + para + ')$').test(s.before))) {
-                        return $.select(), false;
+                if (/(^|\n)$/.test(s.before)) {
+                    if (auto_p && !has_p.test(v)) {
+                        ui.tools.p.click(e, $);
                     }
-                    $[0]().format(blockquote, 0, '\n\n', '\n');
-                    if (auto_p) {
-                        if (!v || $.match(_pattern('^[^' + esc_unit[0] + '\\n]*?[^' + esc_unit[1] + ']$'))) {
-                            $.wrap(tab + unit[0] + p + unit[1], unit[0] + unit[2] + p_o + unit[1]);
-                        } else {
-                            $[_pattern('((^|\\n)' + _esc(tab) + ')+').test(v) ? 'outdent' : 'indent'](tab);
+                    s = $.$();
+                    v = s.value;
+                    if (!has_p.test(v)) { // `<p>`s are outside the selection
+                        $.select(s.start - (unit[0] + p + unit[1]).length, s.end + (unit[0] + unit[2] + p_o + unit[1]).length); // include `<p>` to selection
+                    }
+                    if (v === placeholder) {
+                        $.format(blockquote, 0, '\n\n', '\n').replace(_pattern('^(\\s*' + esc_unit[0] + ')', 'gm'), tab + '$1').loss().loss();
+                        s = $.$();
+                        start = s.start + (unit[0] + p + unit[1] + tab).length;
+                        $.select(start, start + placeholder.length); // exclude `<p>` from selection
+                    } else {
+                        $.tidy('\n\n').insert(unit[0] + blockquote + unit[1] + '\n' + $.$().value.replace(_pattern('^(\\s*' + esc_unit[0] + ')', 'gm'), tab + '$1') + '\n' + unit[0] + unit[2] + get_o(blockquote) + unit[1] + '\n\n', 0, 1);
+                        if (auto_p) {
+                            ui.tools.p.click(e, $);
                         }
                     }
                     $[1]();

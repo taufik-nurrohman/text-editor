@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.6
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.7
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -600,7 +600,8 @@ TE.prototype.ui = function(o) {
         if (!is_object(node)) node = [node];
         if (!is_set(gap_1)) gap_1 = ' ';
         if (!is_set(gap_2)) gap_2 = "";
-        var s = $.$(),
+        var current = $.h,
+            s = $[0]().$(),
             a = (node[0] ? unit[0] + node[0] + unit[1] : "") + gap_2,
             b = gap_2 + (node[0] ? unit[0] + unit[2] + (node[1] || node[0].split(pattern('(' + esc_data[3] + ')+'))[0]) + unit[1] : ""),
             A = esc(a),
@@ -611,7 +612,7 @@ TE.prototype.ui = function(o) {
             before = s.before,
             after = s.after;
         if (!s.length) {
-            $.insert(i18n.placeholders[""]).loss();
+            $.insert(i18n.placeholders[""]);
         } else {
             gap_1 = false;
         }
@@ -622,14 +623,14 @@ TE.prototype.ui = function(o) {
             [
                 // first toggle
                 function($) {
-                    $.unwrap(a, b, 1).tidy(pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + esc_unit[2] + ']+?' + esc_unit[1] + '$').test(before) ? "" : gap_1, pattern('^' + esc_unit[0] + esc_unit[2] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1]).test(after) ? "" : gap_1).loss().wrap(a, b, wrap);
+                    $.unwrap(a, b, 1).tidy(pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + esc_unit[2] + ']+?' + esc_unit[1] + '$').test(before) ? "" : gap_1, pattern('^' + esc_unit[0] + esc_unit[2] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1]).test(after) ? "" : gap_1).wrap(a, b, wrap);
                 },
                 // second toggle (the reset state)
                 function($) {
                     $.unwrap(a, b, wrap);
                 }
             ]
-        );
+        )[1]()[current]();
     };
 
     var _c = config.classes,

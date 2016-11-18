@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  MARKDOWN TEXT EDITOR PLUGIN 1.2.4
+ *  MARKDOWN TEXT EDITOR PLUGIN 1.2.5
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -125,7 +125,8 @@ TE.Markdown = function(target, o) {
         if (!is_object(str)) str = [str];
         if (!is_set(gap_1)) gap_1 = ' ';
         if (!is_set(gap_2)) gap_2 = "";
-        var s = $.$(),
+        var current = $.h,
+            s = $[0]().$(),
             a = str[0] + gap_2,
             b = gap_2 + (is_set(str[1]) ? str[1] : str[0]),
             c = s.value,
@@ -137,7 +138,7 @@ TE.Markdown = function(target, o) {
             before = s.before,
             after = s.after;
         if (!c) {
-            $.insert(placeholders[""]).loss();
+            $.insert(placeholders[""]);
         } else {
             gap_1 = false;
         }
@@ -148,14 +149,14 @@ TE.Markdown = function(target, o) {
             [
                 // first toggle
                 function($) {
-                    $.unwrap(a, b, 1).tidy(/<[^\/<>]+?>$/.test(before) ? "" : gap_1, /^<\/[^<>]+?>/.test(after) ? "" : gap_1).loss().wrap(a, b, wrap);
+                    $.unwrap(a, b, 1).tidy(/<[^\/<>]+?>$/.test(before) ? "" : gap_1, /^<\/[^<>]+?>/.test(after) ? "" : gap_1).wrap(a, b, wrap);
                 },
                 // second toggle (the reset state)
                 function($) {
                     $.unwrap(a, b, wrap);
                 }
             ]
-        );
+        )[1]()[current]();
     };
 
     _extend(ui.tools, {

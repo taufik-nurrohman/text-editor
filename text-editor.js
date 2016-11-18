@@ -372,7 +372,6 @@
         var $ = this,
             any = /^([\s\S]*?)$/,
             history = 0, // current state of history
-            history_x = 0, // history feature is active
             history_count = 1, // cache of history length
             bin = {}, // storage
             indent = '\t',
@@ -415,6 +414,7 @@
 
         $.type = ""; // default editor type
         $.x = '!$^*()-=+[]{}\\|:<>,./?'; // character(s) to escape
+        $.h = 1; // history feature is active
 
         function esc(x) {
             if (is_array(x)) {
@@ -741,7 +741,7 @@
 
         // save state to history
         $[rec] = function(a, i) {
-            if (history_x) return $;
+            if (!$.h) return $;
             o = H[history];
             s = $.$();
             v = val();
@@ -749,9 +749,9 @@
             x = s.end;
             a = is_set(a) ? a : [v, w, x, $[scroll]()[0]];
             if (o && is_object(o) && (
-                o[0] === v &&
-                o[1] === w &&
-                o[2] === x
+                o[0] === a[0] &&
+                o[1] === a[1] &&
+                o[2] === a[2]
             )) return $; // prevent duplicate history data
             history++;
             H[is_set(i) ? i : history] = a;
@@ -795,12 +795,12 @@
 
         // disable the history feature
         $[0] = function() {
-            return history_x = 1, $;
+            return $.h = 0, $;
         };
 
         // enable the history feature
         $[1] = function(x) {
-            return history_x = 0, (x === false ? $ : $[rec]());
+            return $.h = 1, (x === false ? $ : $[rec]());
         };
 
         // logic ...
