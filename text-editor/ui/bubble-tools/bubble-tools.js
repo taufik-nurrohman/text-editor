@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.3
+ *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.4
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -129,8 +129,9 @@ TE.each(function($) {
 
     _event.set("keydown", target, function(e) {
         k = e.TE.key;
-        if (k('arrowup')) return _event.x(e);
-        if (k('arrowdown')) {
+        l = !e.TE.shift();
+        if (l && k('arrowup')) return _event.x(e);
+        if (l && k('arrowdown')) {
             return _dom_get('a', ui.el.bubble)[0].focus(), _event.x(e);
         }
     });

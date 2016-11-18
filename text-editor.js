@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.6.5
+ *  TEXT EDITOR PLUGIN 2.6.6
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -318,9 +318,14 @@
                 }
                 k = cl(k);
                 function ret(x, y) {
-                    if (!x || x === true) return k;
                     if (is_string(y)) {
                         y = t[y + 'Key'];
+                    }
+                    if (!x || x === true) {
+                        if (is_boolean(y)) {
+                            return y;
+                        }
+                        return k;
                     }
                     if (is_pattern(x)) return y && x.test(k);
                     return x = cl(x), y && (keys_alias[x] || x) === k;
@@ -346,7 +351,7 @@
         });
 
         // plugin version
-        $.version = '2.6.5';
+        $.version = '2.6.6';
 
         // collect all instance(s)
         $[instance] = {};
