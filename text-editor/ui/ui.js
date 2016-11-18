@@ -816,16 +816,16 @@ TE.prototype.ui = function(o) {
                     if (n === 'backspace' && before.slice(-2) !== '\\' + i) {
                         return $.unwrap(i, m), event_exit(e);
                     } else if (auto_tab && n === 'enter' && i !== m) {
-                        return $.tidy('\n' + dent + tab, '\n' + dent).scroll(true), event_exit(e);
+                        return $.tidy('\n' + dent + tab, '\n' + dent), event_exit(e);
                     }
                 }
             }
         }
         if (auto_tab && !length) {
             if (n === 'backspace' && pattern(esc(tab) + '$').test(before)) {
-                return $.outdent(tab).scroll(true), event_exit(e);
+                return $.outdent(tab), event_exit(e);
             } else if (n === 'enter' && pattern('(^|\\n)(' + esc(tab) + ')+.*$').test(before)) {
-                return $.insert('\n' + dent, 0, 1).scroll(true), event_exit(e);
+                return $.insert('\n' + dent, 0, 1), event_exit(e);
             }
         }
     }

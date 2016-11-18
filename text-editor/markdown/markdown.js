@@ -588,7 +588,7 @@ TE.Markdown = function(target, o) {
             if (!is_string(br) && br) {
                 br = '  \n';
             }
-            return $.trim().insert(br || '\n', 0).scroll(true), false;
+            return $.trim().insert(br || '\n', 0), false;
         },
         'enter': function(e, $) {
             var s = $.$(),
@@ -603,9 +603,9 @@ TE.Markdown = function(target, o) {
                     return $.outdent(_pattern(regex)), false;
                 } else if (_pattern('\\s*' + esc_ol + '\\s*').test(match[1])) {
                     var i = _int(_trim(match[1]));
-                    return $.insert('\n' + match[1].replace(/\d+/, i + 1), 0).scroll(true), false;
+                    return $.insert('\n' + match[1].replace(/\d+/, i + 1), 0), false;
                 }
-                return $.insert('\n' + match[1], 0).scroll(true), false;
+                return $.insert('\n' + match[1], 0), false;
             }
         },
         'shift+tab': function(e, $) {

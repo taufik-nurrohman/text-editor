@@ -19,8 +19,9 @@
         cut = 'substring',
         start = 'selectionStart',
         end = 'selectionEnd',
-        top = 'scrollTop',
         scroll = 'scroll',
+        left = scroll + 'Left',
+        top = scroll + 'Top',
         rec = 'record',
         rec_x = 'loss',
         select = 'select',
@@ -578,14 +579,10 @@
         $[select] = function() {
             var arg = arguments,
                 counts = count(arg),
-                s = $.$(),
-                id = 'TE.scroll';
-            $.save(id, [html[top], body[top], target[top], function() {
-                o = bin[id];
-                html[top] = o[0];
-                body[top] = o[1];
-                target[top] = o[2];
-            }, html, body, target]).focus();
+                s = $.$();
+            x = win.pageXOffset || html[left] || body[left];
+            y = win.pageYOffset || html[top] || body[top];
+            z = target[top];
             if (counts === 0) { // restore selection with `$.select()`
                 arg[0] = s.start;
                 arg[1] = s.end;
@@ -595,8 +592,9 @@
                 }
                 arg[1] = arg[0];
             }
+            target.focus();
             target.setSelectionRange(arg[0], arg[1]); // default `$.select(7, 100)`
-            $.restore(id)[3]();
+            target[top] = z, win.scroll(x, y);
             return $; // `select` method does not populate history data
         };
 
