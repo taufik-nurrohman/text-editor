@@ -1156,8 +1156,8 @@ TE.prototype.ui = function(o) {
         l = (W / 2) - (w / 2);
         t = (H / 2) - (h / 2);
         if (is_object(center)) {
-            l = center[0];
-            t = center[1];
+            is_set(center[0]) && (l = center[0]);
+            is_set(center[1]) && (t = center[1]);
         } else {
             l = edge(l, 0);
             t = edge(t, 0);
@@ -1359,8 +1359,8 @@ TE.prototype.ui = function(o) {
             t = o.t + size(_drop_target).h; // drop!
         }
         if (is_object(center)) {
-            l = center[0];
-            t = center[1];
+            is_set(center[0]) && (l = center[0]);
+            is_set(center[1]) && (t = center[1]);
         } else {
             l = edge(l, 0, Math.max(a.w, win.innerWidth) - b.w);
             t = edge(t, 0, Math.max(a.h, win.innerHeight) - b.h);
@@ -1526,8 +1526,8 @@ TE.prototype.ui = function(o) {
             size_border_v = b[0] + b[1],
             size_border_h = b[2] + b[3];
         if (is_object(center)) {
-            l = center[0];
-            t = center[1];
+            is_set(center[0]) && (l = center[0]);
+            is_set(center[1]) && (t = center[1]);
         } else {
             l = edge(l, o.l, o.l + size_body.w - size_bubble.w - size_border_h);
             t = edge(t, o.t, o.t + size_body.h - size_bubble.h - size_border_v);

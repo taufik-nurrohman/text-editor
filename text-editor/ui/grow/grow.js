@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT AREA GROW PLUGIN FOR USER INTERFACE MODULE 0.0.1
+ *  TEXT AREA GROW PLUGIN FOR USER INTERFACE MODULE 0.0.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -8,23 +8,35 @@
  */
 
 TE.each(function($) {
-    var doc = document,
+
+    var win = window,
+        doc = document,
         html = doc.documentElement,
         body = doc.body,
-        scroll = 'scrollTop',
+        target = $.target,
+
         _ = $._,
+        _css = _.css,
         _event_set = _.event.set,
         _timer_set = _.timer.set,
-        a, b, c;
+
+        a, b;
+
     _event_set("copy cut input keydown paste", $.target, function() {
         a = this;
-        c = [html[scroll], body[scroll]];
+        b = [
+            win.pageXOffset || (html || body).scrollLeft,
+            win.pageYOffset || (html || body).scrollTop
+        ];
         _timer_set(function() {
             a.style.height = 0;
-            b = a.scrollHeight;
-            a.style.height = b + 'px';
-            html[scroll] = c[0];
-            body[scroll] = c[1];
-        }, 1);
+            a.style.height = a.scrollHeight + 'px';
+            win.scroll(b[0], b[1]);
+        });
     });
+
+    _css(target, {
+        'min-height': _css(target, 'height') + 'px'
+    });
+
 });
