@@ -490,16 +490,18 @@ TE.HTML = function(target, o) {
                     }
                     s = $.$();
                     v = s.value;
-                    if (!has_p.test(v)) { // `<p>`s are outside the selection
+                    if (!has_p.test(v) && auto_p) { // `<p>`s are outside the selection
                         $.select(s.start - (unit[0] + p + unit[1]).length, s.end + (unit[0] + unit[2] + p_o + unit[1]).length); // include `<p>` to selection
                     }
-                    if (v === placeholder) {
-                        $.format(blockquote, 0, '\n\n', '\n').replace(_pattern('^(\\s*' + esc_unit[0] + ')', 'gm'), tab + '$1').loss().loss();
-                        s = $.$();
-                        start = s.start + (unit[0] + p + unit[1] + tab).length;
-                        $.select(start, start + placeholder.length); // exclude `<p>` from selection
+                    if (v === placeholder || !auto_p) {
+                        $[0]().format(blockquote, 0, '\n\n', '\n').loss().replace(_pattern('^(\\s*' + esc_unit[0] + ')', 'gm'), tab + '$1');
+                        if (auto_p) {
+                            s = $.$();
+                            start = s.start + (unit[0] + p + unit[1] + tab).length;
+                            $.select(start, start + placeholder.length); // exclude `<p>` from selection
+                        }
                     } else {
-                        $.tidy('\n\n').insert(unit[0] + blockquote + unit[1] + '\n' + $.$().value.replace(_pattern('^(\\s*' + esc_unit[0] + ')', 'gm'), tab + '$1') + '\n' + unit[0] + unit[2] + get_o(blockquote) + unit[1] + '\n\n', 0, 1);
+                        $[0]().tidy('\n\n').insert(unit[0] + blockquote + unit[1] + '\n' + $.$().value.replace(_pattern('^(\\s*' + esc_unit[0] + ')', 'gm'), tab + '$1') + '\n' + unit[0] + unit[2] + get_o(blockquote) + unit[1] + '\n\n', 0, 1);
                         if (auto_p) {
                             ui.tools.p.click(e, $);
                         }
