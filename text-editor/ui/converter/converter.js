@@ -20,18 +20,16 @@ TE.each(function($) {
         modals, menus, a,
 
         _ = $._,
-        _el = _.el,
         _dom = _.dom,
-        _event = _.event,
-        _replace = _.replace,
+        _dom_content_get = _dom.content.get,
+        _el = _.el,
         _extend = _.extend,
-        _timer = _.timer,
-        _append = _dom.append,
-        _content = _dom.content.get;
+        _replace = _.replace,
+        _timer_set = _.timer.set;
 
     function check(a, b) {
         if (!$.$().length) {
-            return _timer.set(function() {
+            return _timer_set(function() {
                 modals = config.languages.modals[converter];
                 ui.alert(a || modals.title, b || modals.description);
             }, 1), false;
@@ -123,12 +121,12 @@ TE.each(function($) {
         '%2': 1, // label
         html_decode: function(e, $) {
             return check() && $.record().replace(any, function(a) {
-                return _replace(_content(_el('div', a)), ['&amp;', '&lt;', '&gt;'], ['&', '<', '>']);
+                return _replace(_dom_content_get(_el('div', a)), ['&amp;', '&lt;', '&gt;'], ['&', '<', '>']);
             }), false;
         },
         js_decode: function(e, $) {
             return check() && $.record().replace(any, function(a) {
-                return _replace(_content(_el('div', a.replace(/\\u([a-f\d]{4})/gi, '&#x$1;'))), ['&amp;', '&lt;', '&gt;'], ['&', '<', '>']);
+                return _replace(_dom_content_get(_el('div', a.replace(/\\u([a-f\d]{4})/gi, '&#x$1;'))), ['&amp;', '&lt;', '&gt;'], ['&', '<', '>']);
             }), false;
         },
         url_decode: function(e, $) {

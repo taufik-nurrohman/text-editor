@@ -8,10 +8,11 @@
  */
 
 TE.each(function($) {
-    var ui = $.ui,
-        config = $.config,
+
+    var config = $.config,
         c = config.classes[""],
         icon = config.classes.i,
+        ui = $.ui,
         tools = ui.tools,
         tools_alt,
         tools_alt_default = [
@@ -21,23 +22,24 @@ TE.each(function($) {
         tools_class = 'tool ' + c + '-tool',
         target = $.target,
         modal = ui.el.modal,
+
         _ = $._,
-        _el = _.el,
-        _extend = _.extend,
         _css = _.css,
-        _trim = _.trim,
-        _event = _.event,
-        _hook = _.hook,
-        _edge = _.edge,
-        _format = _.format,
-        _timer_set = _.timer.set,
         _dom = _.dom,
-        _data = _dom.data.get,
-        _get = _dom.get,
-        _next = _dom.next,
-        _previous = _dom.previous,
-        _is = _dom.is,
-        _append = _dom.append,
+        _dom_append = _dom.append,
+        _dom_data_get = _dom.data.get,
+        _dom_get = _dom.get,
+        _dom_is = _dom.is,
+        _dom_next = _dom.next,
+        _dom_previous = _dom.previous,
+        _edge = _.edge,
+        _el = _.el,
+        _event = _.event,
+        _extend = _.extend,
+        _format = _.format,
+        _hook = _.hook,
+        _timer_set = _.timer.set,
+        _trim = _.trim,
         _refresh = function() {
             _timer_set(function() {
                 ui.bubble.fit(); // refresh bubble position ...
@@ -49,9 +51,9 @@ TE.each(function($) {
     function do_modals(id, data, $) {
         ui.tools[id].click(null, $);
         for (i in data) {
-            if (j = _get('[name=data]', modal)[0]) {
+            if (j = _dom_get('[name=data]', modal)[0]) {
                 j.value = data[i];
-                if (k = _get('[name=y]', modal)[0]) {
+                if (k = _dom_get('[name=y]', modal)[0]) {
                     _event.fire("click", k);
                 }
             }
@@ -74,24 +76,24 @@ TE.each(function($) {
             k = e.TE.key;
             if (k('arrowdown')) return _event.x(e);
             if (k('arrowup')) return $.select(), _event.x(e);
-            if (k('arrowright') && (m = _next(j))) {
-                while (!_is(m, 'a')) {
+            if (k('arrowright') && (m = _dom_next(j))) {
+                while (!_dom_is(m, 'a')) {
                     if (!m) break;
-                    m = _next(m);
+                    m = _dom_next(m);
                 }
                 m.focus();
-            } else if (k('arrowleft') && (m = _previous(j))) {
-                while (!_is(m, 'a')) {
+            } else if (k('arrowleft') && (m = _dom_previous(j))) {
+                while (!_dom_is(m, 'a')) {
                     if (!m) break;
-                    m = _previous(m);
+                    m = _dom_previous(m);
                 }
                 m.focus();
             }
         });
         _event.set("click", g, function(e) {
-            h = _data(this, 'tool-id');
+            h = _dom_data_get(this, 'tool-id');
             tools[h].click(e, $, h);
-            if (k = _get('[name=data]', modal)[0]) {
+            if (k = _dom_get('[name=data]', modal)[0]) {
                 ui.bubble(tools_class, function(bubble) {
                     _css(bubble, {
                         'font-size': '80%'
@@ -113,7 +115,7 @@ TE.each(function($) {
                             return do_modals(h, [l, "", ""], $), _event.x(e);
                         }
                     });
-                    _append(bubble, m);
+                    _dom_append(bubble, m);
                     _timer_set(function() {
                         m.focus();
                         m.select();
@@ -122,14 +124,14 @@ TE.each(function($) {
             }
             return _refresh(), _event.x(e);
         });
-        _append(bubble, g);
+        _dom_append(bubble, g);
     }
 
     _event.set("keydown", target, function(e) {
         k = e.TE.key;
         if (k('arrowup')) return _event.x(e);
         if (k('arrowdown')) {
-            return _get('a', ui.el.bubble)[0].focus(), _event.x(e);
+            return _dom_get('a', ui.el.bubble)[0].focus(), _event.x(e);
         }
     });
 

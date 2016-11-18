@@ -46,17 +46,21 @@ TE.BBCode = function(target, o) {
                 caption: ""
             }
         }),
-        ui = $.ui,
+
+        ui = $.ui, k,
+
         _ = $._,
-        esc = _.x,
-        extend = _.extend,
-        trim = _.trim,
-        replace = _.replace,
-        pattern = _.pattern,
-        hook = _.hook,
-        event = _.event,
+        _dom_get = _.dom.get,
+        _esc = _.x,
+        _extend = _.extend,
+        _event_fire = _.event.fire,
+        _hook_set = _.hook.set,
+        _pattern = _.pattern,
+        _replace = _.replace,
+        _trim = _.trim,
+
         esc_unit = $.config.unit[1][0],
-        esc_data = $.config.unit[1][1], k;
+        esc_data = $.config.unit[1][1];
 
     $.update(o, 0);
 
@@ -64,29 +68,31 @@ TE.BBCode = function(target, o) {
     $.type = 'BBCode';
 
     function get_o(s) {
-        return s.split(pattern('(' + esc_data[3] + ')+'))[0];
+        return s.split(_pattern('(' + esc_data[3] + ')+'))[0];
     }
 
     function force_i(s) {
-        return trim(s.replace(/\s+/g, ' '));
+        return _trim(s.replace(/\s+/g, ' '));
     }
 
     function attr_title(s) {
-        return replace(force_i(s), [/(<.*?>)|(\[.*?\])/g, '"', "'", '(', ')', '[', ']'], ["", '&#34;', '&#39;', '&#40;', '&#41;', '&#91;', '&#93;']);
+        return _replace(force_i(s), [/(<.*?>)|(\[.*?\])/g, '"', "'", '(', ')', '[', ']'], ["", '&#34;', '&#39;', '&#40;', '&#41;', '&#91;', '&#93;']);
     }
 
     function attr_url(s) {
-        return replace(force_i(s), [/(<.*?>)|(\[.*?\])/g, /\s/g, '"', '(', ')', '[', ']'], ["", '%20', '%22', '%28', '%29', '%5B', '%5D']);
+        return _replace(force_i(s), [/(<.*?>)|(\[.*?\])/g, /\s/g, '"', '(', ')', '[', ']'], ["", '%20', '%22', '%28', '%29', '%5B', '%5D']);
     }
 
     var config = $.config,
-        states = config.states,
-        languages = config.languages,
+
         formats = config.formats,
+        languages = config.languages,
+        states = config.states,
         tab = config.tab,
+
         placeholders = languages.placeholders;
 
-    extend(ui.tools, {
+    _extend(ui.tools, {
         a: {
             click: function(e, $) {
                 var a = formats.a,
@@ -99,9 +105,9 @@ TE.BBCode = function(target, o) {
                 } else if (/^[\w.-]+@[\w.-]+(?:\.[\w.-]+)?$/i.test(v)) {
                     return $.format(formats.email), false;
                 }
-                return $.record().ui.prompt(['a[href]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
+                return ui.prompt(['a[href]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
                     $.format(a + '=' + attr_url(v));
-                }), false;
+                }).record(), false;
             }
         },
         img: {
@@ -109,9 +115,9 @@ TE.BBCode = function(target, o) {
                 var img = formats.img,
                     i18n = languages.modals.img;
                 if (!$.$().length) {
-                    return $.record().ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
+                    return ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
                         $[0]().format(img).insert(attr_url(v))[1]();
-                    }), false;
+                    }).record(), false;
                 }
                 return $.format(img), false;
             }
@@ -136,26 +142,26 @@ TE.BBCode = function(target, o) {
                     code = formats.code,
                     code_o = get_o(code);
                 function enc(a) {
-                    return x ? replace(a, ['&', '<', '>'], ['&amp;', '&lt;', '&gt;']) : a;
+                    return x ? _replace(a, ['&', '<', '>'], ['&amp;', '&lt;', '&gt;']) : a;
                 }
                 function dec(a) {
-                    return x ? replace(a, ['&amp;', '&lt;', '&gt;'], ['&', '<', '>']) : a;
+                    return x ? _replace(a, ['&amp;', '&lt;', '&gt;'], ['&', '<', '>']) : a;
                 }
                 return $[0]().format(code, 0, '\n\n', '\n').replace(/^[\s\S]*?$/, function(a) {
-                    return pattern('^\\s*' + esc_unit[0] + esc_unit[2] + esc(code_o) + esc_unit[1]).test($.$().after) ? enc(a) : dec(a);
+                    return _pattern('^\\s*' + esc_unit[0] + esc_unit[2] + _esc(code_o) + esc_unit[1]).test($.$().after) ? enc(a) : dec(a);
                 })[1](), false;
             }
         }
     });
 
-    extend(ui.keys, {
+    _extend(ui.keys, {
         'control+shift+?': 0
     });
 
     // table caption is not supported in **BBCode** so we have to remove that "add caption" modal prompt here
-    hook.set('enter.modal.prompt:table>caption', function($) {
-        if (!formats.caption && (k = ui.el.modal.querySelector('[name=y]'))) {
-            event.fire("click", k); // force to click the submit button
+    _hook_set('enter.modal.prompt:table>caption', function($) {
+        if (!formats.caption && (k = _dom_get('[name=y]', ui.el.modal))) {
+            _event_fire("click", k); // force to click the submit button
         }
     });
 

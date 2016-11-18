@@ -493,6 +493,7 @@ Modules
    - [Common String Converter](https://github.com/tovic/text-editor/tree/master/text-editor/ui/converter)
    - [Native Emoji](https://github.com/tovic/text-editor/tree/master/text-editor/ui/emoji)
    - [Bubble Tools](https://github.com/tovic/text-editor/tree/master/text-editor/ui/bubble-tools)
+   - [Editor Grow (No Scroll–Bar)](https://github.com/tovic/text-editor/tree/master/text-editor/ui/grow)
 
 Plugins
 -------

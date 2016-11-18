@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.0.3
+ *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.0.4
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -1338,33 +1338,37 @@
             config = $.config,
             prefix = config.classes[""],
             ui = $.ui,
+
             is_string = $.is.s,
+
             _ = $._,
-            _el = _.el,
-            _extend = _.extend,
-            _trim = _.trim,
-            _event = _.event,
             _css = _.css,
-            _timer = _.timer,
             _dom = _.dom,
-            _append = _dom.append,
-            _data = _dom.data,
-            _content = _dom.content,
+            _dom_append = _dom.append,
+            _dom_content_get = _dom.content.get,
+            _dom_data_get = _dom.data.get,
+            _el = _.el,
+            _event = _.event,
+            _extend = _.extend,
+            _timer_set = _.timer.set,
+            _trim = _.trim,
+
             style = _el('style', false, {
                 'id': prefix + ':style-emoji' + uniq
             }),
+
             h = '.' + prefix + '-drop.emoji' + uniq,
             i, j, k, l, m, n, o, p, q, r;
 
-        _append(document.head, style);
+        _dom_append(document.head, style);
 
         config.languages.tools.emoji = ['Emoji', '\u2318+\u21e7+E'];
         config.emoji = _extend(emoji, config.emoji || {});
 
         function do_click(e) {
             i = this;
-            j = _content.get(i);
-            k = _data.get(i, 'text');
+            j = _dom_content_get(i);
+            k = _dom_data_get(i, 'text');
             l = config.emoji[0]; // recent emoji ...
             n = 0;
             q = o.before;
@@ -1387,11 +1391,15 @@
         function do_key(e) {
             j = this;
             k = e.TE.key;
-            l = _event.x;
+            l = _dom.get('a', ui.el.drop)[0];
             if (
-                k('arrowright') && (m = (_dom.next(j) || _dom.get('a:first-child', _dom.next(_dom.parent(j)))[0])) ||
-                k('arrowleft') && (m = (_dom.previous(j) || _dom.get('a:last-child', _dom.previous(_dom.parent(j)))[0]))
-            ) return m.focus(), l(e);
+                k('arrowright') && (m = (_dom.next(j) || _dom.get('a:first-child', _dom.next(_dom.parent(j)))[0] || l)) ||
+                k('arrowleft') && (m = (_dom.previous(j) || _dom.get('a:last-child', _dom.previous(_dom.parent(j)))[0] || l)) ||
+                k('arrowdown') && (m = (_dom.get('a', _dom.next(_dom.parent(j)))[0] || l)) ||
+                k('arrowup') && (m = (_dom.get('a', _dom.previous(_dom.parent(j)))[0] || l))
+            ) {
+                return m.focus(), _event.x(e);
+            }
         }
 
         ui.tool('emoji', {
@@ -1425,11 +1433,11 @@
                             });
                             _event.set("click", m, do_click);
                             _event.set("keydown", m, do_key);
-                            _append(l, m);
+                            _dom_append(l, m);
                         }
-                        _append(drop, l);
+                        _dom_append(drop, l);
                     }
-                    _timer.set(function() {
+                    _timer_set(function() {
                         r(r(drop)[0])[0].focus();
                     }, 1);
                 }), false;

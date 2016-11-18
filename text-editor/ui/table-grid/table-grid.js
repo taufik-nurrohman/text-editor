@@ -11,29 +11,36 @@ TE.each(function($) {
 
     var busy = 0,
         uniq = Date.now(),
+
         config = $.config,
-        states = config.states,
+
         classes = config.classes,
+        states = config.states,
+
+        save_id = 'TE.grid',
+        grid_id = 'grid-id',
+
         ui = $.ui,
+
         _ = $._,
-        _hook = _.hook,
-        _event = _.event,
-        _el = _.el,
         _css = _.css,
         _dom = _.dom,
-        _prepend = _dom.prepend,
-        _class = _dom.classes,
-        _data = _dom.data,
-        _get = _dom.get,
+        _dom_class = _dom.classes,
+        _dom_data = _dom.data,
+        _dom_get = _dom.get,
+        _dom_prepend = _dom.prepend,
+        _el = _.el,
+        _event = _.event,
+        _hook_set = _.hook.set,
+
         $el = $.ui.el,
         $container = $el.container,
         $modal = $el.modal,
-        save_id = 'TE.grid',
-        grid_id = 'grid-id',
+
         s = classes[""],
         prefix = '.' + s + '-grid',
         style = _el('style'),
-        css, i, j, k, l, m;
+        i, j, k, l, m;
 
     function do_modals(id, data, $) {
         busy = 1;
@@ -41,11 +48,11 @@ TE.each(function($) {
         ui.tools[id].click(null, $);
         // [2]. access the visible modal prompt HTML through `$.ui.el.modal`
         for (i in data) {
-            if (j = _get('[name=data]', $modal)[0]) {
+            if (j = _dom_get('[name=data]', $modal)[0]) {
                 // [3]. set value to the prompt field
                 j.value = data[i];
                 // [4]. trigger click event to the submit button
-                if (k = _get('[name=y]', $modal)[0]) {
+                if (k = _dom_get('[name=y]', $modal)[0]) {
                     _event.fire("click", k);
                 }
             }
@@ -53,13 +60,13 @@ TE.each(function($) {
         busy = 0;
     }
 
-    _prepend(document.head, style);
+    _dom_prepend(document.head, style);
 
-    _data.set($container, grid_id, uniq);
-    _hook.set('enter.modal.prompt:table>td', function($) {
+    _dom_data.set($container, grid_id, uniq);
+    _hook_set('enter.modal.prompt:table>td', function($) {
         if (busy) return;
         l = prefix.slice(1);
-        uniq = '-' + _data.get($container, grid_id);
+        uniq = '-' + _dom_data.get($container, grid_id);
         ui.drop(l + ' ' + l + uniq, function(drop) {
             var container = _el('div'),
                 rows = states.tr,
@@ -71,7 +78,7 @@ TE.each(function($) {
                     'border-bottom-color',
                     'background-color'
                 ]),
-                color = _css(_get('a', $container)[0], 'color'),
+                color = _css(_dom_get('a', $container)[0], 'color'),
                 border = container_css[0] || container_css[1],
                 background = container_css[2],
                 data, results, tr, td, tr_index, td_index, i, j;
@@ -91,7 +98,7 @@ TE.each(function($) {
                 while (tr_index--) {
                     td_index = container[c][tr_index][c].length;
                     while (td_index--) {
-                        _class[tr_index <= results[1] - 1 && td_index <= results[0] - 1 ? 'set' : 'reset'](container[c][tr_index][c][td_index], 'active');
+                        _dom_class[tr_index <= results[1] - 1 && td_index <= results[0] - 1 ? 'set' : 'reset'](container[c][tr_index][c][td_index], 'active');
                     }
                 }
             }
@@ -108,11 +115,11 @@ TE.each(function($) {
                     });
                     _event.set("mouseover touchstart", td, do_over);
                     _event.set("click", td, do_click);
-                    _prepend(tr, td);
+                    _dom_prepend(tr, td);
                 }
-                _prepend(container, tr);
+                _dom_prepend(container, tr);
             }
-            _prepend(drop, container);
+            _dom_prepend(drop, container);
         });
     }, 'table-grid');
 }, 250);
