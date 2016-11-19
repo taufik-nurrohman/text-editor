@@ -443,15 +443,12 @@ TE.prototype.ui = function(o) {
     }
 
     function dom_id(node) {
-        var id = node.id,
-            the_id = _prefix + '-dom:' + Date.now();
+        var id = node.id;
         if (!id) {
-            node.id = the_id;
-        } else if (dom_get('#' + esc(the_id))[0]) {
-            the_id += '_';
-            node.id = the_id;
+            id = _prefix + '-dom:' + Date.now();
+            node.id = id;
         }
-        return node.id;
+        return id;
     }
 
     function content_set(node, s) {
