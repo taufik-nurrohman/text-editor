@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.7
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.8
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -443,12 +443,15 @@ TE.prototype.ui = function(o) {
     }
 
     function dom_id(node) {
-        var id = node.id;
+        var id = node.id,
+            the_id = _prefix + '-dom:' + Date.now();
         if (!id) {
-            id = _prefix + '-dom:' + Date.now();
-            node.id = id;
+            node.id = the_id;
+        } else if (dom_get('#' + esc(the_id))[0]) {
+            the_id += '_';
+            node.id = the_id;
         }
-        return id;
+        return node.id;
     }
 
     function content_set(node, s) {
@@ -630,7 +633,7 @@ TE.prototype.ui = function(o) {
                     $.unwrap(a, b, wrap);
                 }
             ]
-        )[1]()[current]();
+        )[current]();
     };
 
     var _c = config.classes,
@@ -690,6 +693,44 @@ TE.prototype.ui = function(o) {
         return (tools[k] = tool), tool;
     }
 
+    function do_click_tool(e) {
+        ui.exit(0, 0, 0);
+        var id = data_get(this, data_tool_id),
+            tools = ui.tools,
+            tool = tools[id];
+        _drop_target = e.currentTarget || e.target;
+        if (!is_disabled_tool(tool) && is_function(j = tool.click)) {
+            j = j(e, $, id);
+            hook_fire('on:change', [e, $, id]);
+            if (j === false) return event_exit(e);
+        }
+        return $.select(), event_exit(e);
+    }
+
+    function do_key_tool(e) {
+        t = this;
+        k = e.TE.key;
+        if (k(/^(escape|f10)$/)) {
+            ui.exit(1);
+        } else if (k('enter')) {
+            _drop_target = t;
+            event_fire(_CLICK, t, [e]);
+        } else if (k('arrowright') && (l = dom_next(t))) {
+            while (!dom_is(l, 'a')) {
+                if (!l) break;
+                l = dom_next(l);
+            }
+            l && l.focus();
+        } else if (k('arrowleft') && (l = dom_previous(t))) {
+            while (!dom_is(l, 'a')) {
+                if (!l) break;
+                l = dom_previous(l);
+            }
+            l && l.focus();
+        }
+        return event_exit(e);
+    }
+
     function do_update_tools() {
         content_reset(_tool, false);
         var tools = str_split(config.tools),
@@ -731,6 +772,7 @@ TE.prototype.ui = function(o) {
                     _button.title = is_object(j) ? j[0] + (j[1] ? ' (' + j[1] + ')' : "") : j;
                 }
                 event_set(_CLICK, _button, do_click_tool);
+                event_set(_KEYDOWN, _button, do_key_tool);
             } else {
                 _button.id = separator + ':' + i;
             }
@@ -847,20 +889,6 @@ TE.prototype.ui = function(o) {
         bounce = timer_set(function() {
             do_update_contents(e);
         }, config.debounce || 0);
-    }
-
-    function do_click_tool(e) {
-        ui.exit(0, 0, 0);
-        var id = data_get(this, data_tool_id),
-            tools = ui.tools,
-            tool = tools[id];
-        _drop_target = e.currentTarget || e.target;
-        if (!is_disabled_tool(tool) && is_function(j = tool.click)) {
-            j = j(e, $, id);
-            hook_fire('on:change', [e, $, id]);
-            if (j === false) return event_exit(e);
-        }
-        return $.select(), event_exit(e);
     }
 
     $.create = function(o, hook) {
@@ -1378,7 +1406,8 @@ TE.prototype.ui = function(o) {
 
     ui.menu = function(id, str, data, i) {
         str = (!is_object(str) && data[str] && data[str].text) || str;
-        var current = '<span class="' + _prefix + '-current menu">%1</span>',
+        var tools = ui.tools,
+            current = '<span class="' + _prefix + '-current menu">%1</span>',
             icon = "",
             index = 0, v;
         if (str === false) {
@@ -1390,27 +1419,27 @@ TE.prototype.ui = function(o) {
             str = (str && data[str] && data[str].text) || str;
             current = icon + (str !== 0 ? ' ' + current : "");
         }
-        return ui.tool(id, {
+        ui.tool(id, {
             i: icon,
             text: str ? format(current, [str, icon]) : 0,
             click: function(e) {
                 return ui.drop('menu menu-' + slug(id), function(drop) {
                     function _do_click(e) {
-                        v = this;
-                        m = data[data_get(v, data_tool_id)];
-                        m = is_string(m) ? ui.tools[m] : (m || {});
-                        n = content_get(v);
+                        t = this;
+                        m = data[data_get(t, data_tool_id)];
+                        m = is_string(m) ? tools[m] : (m || {});
+                        n = content_get(t);
                         if (!is_disabled_tool(m) && is_function(i = m.click)) {
                             i = i(e, $);
                             if (str !== false && _drop_target) {
-                                s = dom_children(_drop_target)[0] || _drop_target;
-                                if (!dom_is(s, 'i')) {
-                                    content_set(s, format(current, [n, icon]));
+                                c = dom_children(_drop_target)[0] || _drop_target;
+                                if (!dom_is(c, 'i')) {
+                                    content_set(c, format(current, [n, icon]));
                                 }
-                                if(is_object(m.text) && (t = dom_children(s)[0])) {
-                                    if (dom_is(t, 'i')) {
-                                        class_reset(t);
-                                        class_set(t, format(_i, [m.text[0]]));
+                                if(is_object(m.text) && (c = dom_children(c)[0])) {
+                                    if (dom_is(c, 'i')) {
+                                        class_reset(c);
+                                        class_set(c, format(_i, [m.text[0]]));
                                     }
                                 }
                             }
@@ -1419,29 +1448,43 @@ TE.prototype.ui = function(o) {
                         return $.select(), event_exit(e);
                     }
                     function _do_key(e) {
-                        v = this;
+                        t = this;
                         k = e.TE.key;
-                        if (k('escape')) return ui.exit(1), event_exit(e);
-                        if (k('arrowdown') && (l = dom_next(v))) {
+                        if (k('escape')) {
+                            ui.exit(1);
+                        } else if (k('enter')) {
+                            event_fire(_CLICK, t, [e]);
+                        } else if (k('f10') && _drop_target) {
+                            _drop_target.focus();
+                        } else if (k('arrowdown') && (l = dom_next(t))) {
                             while (!dom_is(l, 'a')) {
                                 if (!l) break;
                                 l = dom_next(l);
                             }
-                            return l && l.focus(), event_exit(e);
-                        } else if (k('arrowup') && (l = dom_previous(v))) {
+                            l && l.focus();
+                        } else if (k('arrowup') && (l = dom_previous(t))) {
                             while (!dom_is(l, 'a')) {
                                 if (!l) break;
                                 l = dom_previous(l);
                             }
-                            return l && l.focus(), event_exit(e);
+                            if (!l && _drop_target) {
+                                ui.exit();
+                                _drop_target.focus();
+                            } else {
+                                l && l.focus();
+                            }
+                        } else if (k('arrowup') && _drop_target) {
+                            ui.exit();
+                            _drop_target.focus();
                         }
+                        return event_exit(e);
                     }
                     for (i in data) {
                         v = data[i];
                         w = i[0] === '%';
-                        v = is_string(v) && !w ? ui.tools[v] : v;
+                        v = is_string(v) && !w ? tools[v] : v;
                         if (!v) continue;
-                        v = do_attributes(v, i, ui.tools);
+                        v = do_attributes(v, i, tools);
                         var attributes = {
                             'href': w ? null : js,
                             'class': _prefix + '-' + (w ? 'label' : 'button')
@@ -1480,7 +1523,14 @@ TE.prototype.ui = function(o) {
                     }, 1);
                 }), false;
             }
-        }, i), (ui.tools[id].data = data), $;
+        }, i);
+        event_set(_KEYDOWN, tools[id].target, function(f) {
+            if (f.TE.key('arrowdown')) {
+                _drop_target = this;
+                return tools[id].click(e, $), event_exit(f);
+            }
+        });
+        return (tools[id].data = data), $;
     };
 
     ui.bubble = function() {
@@ -1632,8 +1682,8 @@ TE.prototype.ui = function(o) {
     };
 
     function do_click_preview(e) {
-        v = $.get();
-        w = "";
+        var v = $.get(),
+            w = "";
         if (v.indexOf('</html>') === -1) {
             w = '<!DOCTYPE html><html dir="' + config.dir + '"><head><meta charset="utf-8"><style>' + config.css + '</style></head><body>' + v + '</body></html>';
         }
@@ -1670,8 +1720,13 @@ TE.prototype.ui = function(o) {
     ui.keys = {
         'control+y': 'redo',
         'control+z': 'undo',
+        // preview
         'f5': function(e, $) {
             return do_click_preview(e);
+        },
+        // tools focus
+        'f10': function(e, $) {
+            return dom_get('a', _tool)[0].focus(), false;
         },
         'shift+tab': auto_tab ? 'outdent' : 0,
         'tab': auto_tab ? 'indent' : 0,

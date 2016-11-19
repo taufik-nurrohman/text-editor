@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXTILE TEXT EDITOR PLUGIN 1.2.5
+ *  TEXTILE TEXT EDITOR PLUGIN 1.2.6
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -118,7 +118,7 @@ TE.Textile = function(target, o) {
                     $.unwrap(a, b, wrap);
                 }
             ]
-        )[1]()[current]();
+        )[current]();
     };
 
     function toggle_block(L) {

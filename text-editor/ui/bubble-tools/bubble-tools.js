@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.4
+ *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.5
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -20,8 +20,10 @@ TE.each(function($) {
             'p blockquote,q p,h1,h2,h3,h4,h5,h6 ol ul hr'
         ],
         tools_class = 'tool ' + c + '-tool',
-        target = $.target,
-        modal = ui.el.modal,
+
+        $modal = ui.el.modal,
+        $bubble = ui.el.bubble,
+        $target = $.target,
 
         _ = $._,
         _css = _.css,
@@ -51,9 +53,9 @@ TE.each(function($) {
     function do_modals(id, data, $) {
         ui.tools[id].click(null, $);
         for (i in data) {
-            if (j = _dom_get('[name=data]', modal)[0]) {
+            if (j = _dom_get('[name=data]', $modal)[0]) {
                 j.value = data[i];
-                if (k = _dom_get('[name=y]', modal)[0]) {
+                if (k = _dom_get('[name=y]', $modal)[0]) {
                     _event.fire("click", k);
                 }
             }
@@ -74,8 +76,11 @@ TE.each(function($) {
         _event.set("keydown", g, function(e) {
             j = this;
             k = e.TE.key;
-            if (k('arrowdown')) return _event.x(e);
-            if (k('arrowup')) return $.select(), _event.x(e);
+            l = $.$();
+            if (k('arrowdown')) {
+                return $.select(l.end + (l.after[0] === '\n' ? 1 : 0)), _event.x(e);
+            }
+            if (k(/^(arrowup|escape)$/)) return $.select(), _event.x(e);
             if (k('arrowright') && (m = _dom_next(j))) {
                 while (!_dom_is(m, 'a')) {
                     if (!m) break;
@@ -93,7 +98,7 @@ TE.each(function($) {
         _event.set("click", g, function(e) {
             h = _dom_data_get(this, 'tool-id');
             tools[h].click(e, $, h);
-            if (k = _dom_get('[name=data]', modal)[0]) {
+            if (k = _dom_get('[name=data]', $modal)[0]) {
                 ui.bubble(tools_class, function(bubble) {
                     _css(bubble, {
                         'font-size': '80%'
@@ -127,18 +132,21 @@ TE.each(function($) {
         _dom_append(bubble, g);
     }
 
-    _event.set("keydown", target, function(e) {
+    _event.set("keydown", $target, function(e) {
         k = e.TE.key;
-        l = !e.TE.shift();
-        if (l && k('arrowup')) return _event.x(e);
+        l = !e.TE.shift() && _dom_get($bubble)[0];
+        m = $.$();
+        if (l && k('arrowup')) {
+            return $.select(m.start - (m.before.slice(-1) === '\n' ? 1 : 0)), _event.x(e);
+        }
         if (l && k('arrowdown')) {
-            return _dom_get('a', ui.el.bubble)[0].focus(), _event.x(e);
+            return _dom_get('a', $bubble)[0].focus(), _event.x(e);
         }
     });
 
-    _event.set("copy cut keyup mouseup paste scroll", target, function(e) {
+    _event.set("copy cut keyup mouseup paste scroll", $target, function(e) {
         k = $.$();
-        block = target.value && /(^|\n)$/.test(k.before) && /(\n|$)$/.test(k.after);
+        block = $.get(0) && /(^|\n)$/.test(k.before) && /(\n|$)$/.test(k.after);
         if (k.length || block) {
             ui.bubble(tools_class, function(bubble) {
                 _css(bubble, {

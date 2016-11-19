@@ -1,11 +1,13 @@
 /*!
  * ==========================================================
- *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.0.3
+ *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.0.4
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
  * ----------------------------------------------------------
  */
+
+// TODO: select table grid with keyboard
 
 TE.each(function($) {
 
@@ -17,7 +19,6 @@ TE.each(function($) {
         classes = config.classes,
         states = config.states,
 
-        save_id = 'TE.grid',
         grid_id = 'grid-id',
 
         ui = $.ui,
@@ -40,7 +41,7 @@ TE.each(function($) {
         s = classes[""],
         prefix = '.' + s + '-grid',
         style = _el('style'),
-        i, j, k, l, m;
+        results, i, j, k, l, m;
 
     function do_modals(id, data, $) {
         busy = 1;
@@ -81,19 +82,18 @@ TE.each(function($) {
                 color = _css(_dom_get('a', $container)[0], 'color'),
                 border = container_css[0] || container_css[1],
                 background = container_css[2],
-                data, results, tr, td, tr_index, td_index, i, j;
+                data, tr, td, tr_index, td_index, i, j;
             // if normal state color is the same as the hover state ...
             if (color === border) {
                 color = '#39f'; // ... force hover color to `#39f`
             }
             m = prefix + uniq;
-            _el(style, m + ' div{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;background:' + border + ';border:1px solid ' + background + ';overflow:hidden}' + m + ' div>div{border-width:0}' + m + '>div>div+div{border-top-width:1px}' + m + '>div>div>div{width:1em;height:1em;float:left;border-width:0;cursor:pointer}' + m + '>div>div>div+div{border-left-width:1px}' + m + '>div>div>.active{background:' + color + '}', {
+            _el(style, m + ' div{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;background:' + border + ';border:1px solid ' + background + ';overflow:hidden}' + m + ' div div{border-width:0}' + m + ' div+div{border-top-width:1px}' + m + ' a{width:1em;height:1em;float:left;border:0 solid;border-color:inherit;cursor:pointer}' + m + ' a+a{border-left-width:1px}' + m + ' a:focus,' + m + ' .active{background:' + color + '}', {
                 'id': s + '-style:grid' + uniq
             });
             function do_over() {
                 data = this.title.split(x);
                 results = [+data[0], +data[1]];
-                $.save(save_id, results);
                 tr_index = container[c].length;
                 while (tr_index--) {
                     td_index = container[c][tr_index][c].length;
@@ -102,15 +102,16 @@ TE.each(function($) {
                     }
                 }
             }
-            function do_click() {
-                do_modals('table', $.restore(save_id), $);
+            function do_click(e) {
+                return do_modals('table', results, $), _event.exit(e);
             }
             i = rows[1]; // number of rows
             while (i--) {
                 tr = _el('div');
                 j = columns[1]; // number of columns
                 while (j--) {
-                    td = _el('div', "", {
+                    td = _el('a', "", {
+                        'href': 'javascript:;',
                         'title': (j + 1) + x + (i + 1)
                     });
                     _event.set("mouseover touchstart", td, do_over);
