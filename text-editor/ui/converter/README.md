@@ -7,14 +7,16 @@ Converter › Text Editor
 
 [View Demo](https://rawgit.com/tovic/text-editor/master/text-editor/ui/converter/converter.html)
 
-Include the script just after the plugin instances:
+Include the script just after the plugin instances, then set a new configuration data called `converters` with a value of `true`:
 
 ~~~ .html
 <script src="../text-editor.min.js"></script>
 <script src="../text-editor/ui/ui.min.js"></script>
 <script>
 var editor = new TE(document.querySelector('textarea')),
-    ui = editor.ui();
+    ui = editor.ui({
+        converters: true
+    });
 </script>
 <script src="../text-editor/ui/converter/converter.min.js"></script>
 ~~~
@@ -28,9 +30,10 @@ Options
 editor.update({
     converters: {
         my_converter: function(e, $) {
-            $.ui.tools.converter.check(); // check for empty text selection
-            $.replace(/she/gi, 'he'); // replace `she` with `he`
-            return false;
+            if ($.ui.tools.converter.check()) { // check for empty text selection
+                $.replace(/she/gi, 'he'); // replace `she` with `he`
+                return false;
+            }
         }
     },
     languages: {

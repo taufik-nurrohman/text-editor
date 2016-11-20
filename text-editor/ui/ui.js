@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.8
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.9
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -657,7 +657,6 @@ TE.prototype.ui = function(o) {
         _description_right = el_set('right', 'span'),
         _preview = el_set(_prefix + '-preview', 'a'),
         _p = 0,
-        _drop_target = 0,
         _button, _icon;
 
     if (!config.suffix) {
@@ -695,7 +694,7 @@ TE.prototype.ui = function(o) {
         var id = data_get(this, data_tool_id),
             tools = ui.tools,
             tool = tools[id];
-        _drop_target = e.currentTarget || e.target;
+        ui.drop.target = e.currentTarget || e.target;
         if (!is_disabled_tool(tool) && is_function(j = tool.click)) {
             j = j(e, $, id);
             hook_fire('on:change', [e, $, id]);
@@ -710,7 +709,7 @@ TE.prototype.ui = function(o) {
         if (k(/^(escape|f10)$/)) {
             ui.exit(1);
         } else if (k('enter')) {
-            _drop_target = t;
+            ui.drop.target = t;
             event_fire(_CLICK, t, [e]);
         } else if (k('arrowright') && (l = dom_next(t))) {
             while (!dom_is(l, 'a')) {
@@ -1054,11 +1053,11 @@ TE.prototype.ui = function(o) {
     }
 
     function do_drop_exit(e) {
-        a = _drop_target;
+        a = ui.drop.target;
         b = _drop;
         c = (e && e.target) || 0;
         if (!c || (c !== a && closest(c, a) !== a)) {
-            _drop_target = 0;
+            ui.drop.target = 0;
             dom_content_reset(_drop);
             event_reset(_CLICK, doc, do_drop_exit);
             event_reset(_RESIZE, win, do_drop_exit);
@@ -1377,12 +1376,13 @@ TE.prototype.ui = function(o) {
     ui.drop.fit = function(center) {
         a = size(html);
         b = size(_drop);
+        c = ui.drop.target;
         l = (a.w / 2) - (b.w / 2);
         t = (a.h / 2) - (b.h / 2);
-        if (!is_set(center) && _drop_target) {
-            o = offset(_drop_target);
+        if (!is_set(center) && c) {
+            o = offset(c);
             l = o.l;
-            t = o.t + size(_drop_target).h; // drop!
+            t = o.t + size(c).h; // drop!
         }
         if (is_object(center)) {
             is_set(center[0]) && (l = center[0]);
@@ -1421,6 +1421,7 @@ TE.prototype.ui = function(o) {
             text: str ? format(current, [str, icon]) : 0,
             click: function(e) {
                 return ui.drop('menu menu-' + slug(id), function(drop) {
+                    a = ui.drop.target;
                     function _do_click(e) {
                         t = this;
                         m = data[data_get(t, data_tool_id)];
@@ -1428,8 +1429,8 @@ TE.prototype.ui = function(o) {
                         n = content_get(t);
                         if (!is_disabled_tool(m) && is_function(i = m.click)) {
                             i = i(e, $);
-                            if (str !== false && _drop_target) {
-                                c = dom_children(_drop_target)[0] || _drop_target;
+                            if (str !== false && a) {
+                                c = dom_children(a)[0] || a;
                                 if (!dom_is(c, 'i')) {
                                     content_set(c, format(current, [n, icon]));
                                 }
@@ -1451,8 +1452,8 @@ TE.prototype.ui = function(o) {
                             ui.exit(1);
                         } else if (k('enter')) {
                             event_fire(_CLICK, t, [e]);
-                        } else if (k('f10') && _drop_target) {
-                            _drop_target.focus();
+                        } else if (k('f10') && a) {
+                            a.focus();
                         } else if (k('arrowdown') && (l = dom_next(t))) {
                             while (!dom_is(l, 'a')) {
                                 if (!l) break;
@@ -1464,15 +1465,15 @@ TE.prototype.ui = function(o) {
                                 if (!l) break;
                                 l = dom_previous(l);
                             }
-                            if (!l && _drop_target) {
+                            if (!l && a) {
                                 ui.exit();
-                                _drop_target.focus();
+                                a.focus();
                             } else {
                                 l && l.focus();
                             }
-                        } else if (k('arrowup') && _drop_target) {
+                        } else if (k('arrowup') && a) {
                             ui.exit();
-                            _drop_target.focus();
+                            a.focus();
                         }
                         return event_exit(e);
                     }
@@ -1523,7 +1524,7 @@ TE.prototype.ui = function(o) {
         }, i);
         event_set(_KEYDOWN, tools[id].target, function(f) {
             if (f.TE.key('arrowdown')) {
-                _drop_target = this;
+                ui.drop.target = this;
                 return tools[id].click(e, $), event_exit(f);
             }
         });

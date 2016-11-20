@@ -359,7 +359,7 @@
 
         // plug to all instance(s)
         $.each = function(fn, t) {
-            return setTimeout(function() {
+            return timer_set(function() {
                 j = $[instance];
                 for (i in j) {
                     fn(j[i], i, j);
@@ -494,9 +494,6 @@
             };
             return body[reset](div), o;
         }
-
-        // access editor instance from `this` scope with `this.TE`
-        target.TE = $;
 
         // store editor instance to `TE.__instance__`
         TE[instance][target.id || target.name || count(Object.keys(TE[instance]))] = $;

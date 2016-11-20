@@ -463,8 +463,6 @@ editor.target.onkeydown = function(e) {
 
     console.log(e.TE.control('b')); // return `true` if control and `b` keys are pressed
 
-    console.log(this.TE); // is equal to the current `editor`
-
     // check for current key character (try pressing the control key)
     if (e.TE.key('ctrl')) { … } // `ctrl` is an alias for `control`, this will return `true`
     if (e.TE.key() === 'ctrl') { … } // comparing `ctrl` outside the function, this will return `false`
@@ -493,7 +491,8 @@ Modules
    - [Common String Converter](https://github.com/tovic/text-editor/tree/master/text-editor/ui/converter)
    - [Native Emoji](https://github.com/tovic/text-editor/tree/master/text-editor/ui/emoji)
    - [Bubble Tools](https://github.com/tovic/text-editor/tree/master/text-editor/ui/bubble-tools)
-   - [Editor Grow (No Scroll–Bar)](https://github.com/tovic/text-editor/tree/master/text-editor/ui/grow)
+   - [Editor Grow](https://github.com/tovic/text-editor/tree/master/text-editor/ui/grow)
+   - [HTML Auto–Complete](https://github.com/tovic/text-editor/tree/master/text-editor/ui/auto-complete-html)
 
 Plugins
 -------

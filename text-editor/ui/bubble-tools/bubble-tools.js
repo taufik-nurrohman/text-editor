@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.5
+ *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.6
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -50,6 +50,8 @@ TE.each(function($) {
 
         block, d, e, f, g, h, i, j, k, l, m;
 
+    if (!config.tools_alt) return;
+
     function do_modals(id, data, $) {
         ui.tools[id].click(null, $);
         for (i in data) {
@@ -65,7 +67,10 @@ TE.each(function($) {
     function do_tools(f, id, bubble) {
         e = config.languages.tools[id];
         f = (tools[id] && tools[id].i) || id;
-        g = _el('a', f[0] === '<' ? f : '<i class="' + _format(icon, [f]) + '"></i>', {
+        g = id === '|';
+        h = _el(g ? 'span' : 'a', g ? false : (f[0] === '<' ? f : '<i class="' + _format(icon, [f]) + '"></i>'), g ? {
+            'class': c + '-separator'
+        } : {
             'class': c + '-button',
             'href': 'javascript:;',
             'title': typeof e === "object" ? e[0] + (e[1] ? ' (' + e[1] + ')' : "") : e,
@@ -73,7 +78,7 @@ TE.each(function($) {
                 'tool-id': id
             }
         });
-        _event.set("keydown", g, function(e) {
+        _event.set("keydown", h, function(e) {
             j = this;
             k = e.TE.key;
             l = $.$();
@@ -95,9 +100,9 @@ TE.each(function($) {
                 m.focus();
             }
         });
-        _event.set("click", g, function(e) {
-            h = _dom_data_get(this, 'tool-id');
-            tools[h].click(e, $, h);
+        _event.set("click", h, function(e) {
+            i = _dom_data_get(this, 'tool-id');
+            tools[i].click(e, $, i);
             if (k = _dom_get('[name=data]', $modal)[0]) {
                 ui.bubble(tools_class, function(bubble) {
                     _css(bubble, {
@@ -117,7 +122,7 @@ TE.each(function($) {
                             return ui.bubble.exit(1), _event.x(e);
                         }
                         if (k('enter')) {
-                            return do_modals(h, [l, "", ""], $), _event.x(e);
+                            return do_modals(i, [l, "", ""], $), _event.x(e);
                         }
                     });
                     _dom_append(bubble, m);
@@ -129,7 +134,7 @@ TE.each(function($) {
             }
             return _refresh(), _event.x(e);
         });
-        _dom_append(bubble, g);
+        _dom_append(bubble, h);
     }
 
     _event.set("keydown", $target, function(e) {
@@ -153,7 +158,8 @@ TE.each(function($) {
                     'padding': 0,
                     'font-size': '80%'
                 });
-                tools_alt = config.tools_alt || tools_alt_default;
+                tools_alt = config.tools_alt;
+                tools_alt = tools_alt === true ? tools_alt_default : tools_alt;
                 if (typeof tools_alt === "string") {
                     tools_alt = [tools_alt, tools_alt];
                 } else {

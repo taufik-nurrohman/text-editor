@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  STRING CONVERTER PLUGIN FOR USER INTERFACE MODULE 1.0.4
+ *  STRING CONVERTER PLUGIN FOR USER INTERFACE MODULE 1.0.6
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -16,7 +16,6 @@ TE.each(function($) {
         converter = 'converter',
         from = ' \u2190 ',
         to = ' \u2192 ',
-        advance = config.advance_converter,
         modals, menus, a,
 
         _ = $._,
@@ -26,6 +25,8 @@ TE.each(function($) {
         _extend = _.extend,
         _replace = _.replace,
         _timer_set = _.timer.set;
+
+    if (!config[converter + 's']) return;
 
     function check(a, b) {
         if (!$.$().length) {
@@ -145,7 +146,10 @@ TE.each(function($) {
         } : 0
     };
 
-    if (a = config[converter + 's']) {
+    a = config[converter + 's'];
+    a = typeof a === "object" ? a : {};
+
+    if (a && Object.keys(a).length) {
         menus['%3'] = 1;
         _extend(menus, a);
     }

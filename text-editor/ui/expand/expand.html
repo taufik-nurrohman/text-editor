@@ -32,24 +32,13 @@
     <script>
 
     var area = document.querySelectorAll('textarea');
-    var grid_settings = {
-        tr: [0, 7],
-        td: [0, 7]
-    };
 
-    var editor_1 = new TE.HTML(area[0], {
-            states: grid_settings
-        }),
+    var editor_1 = new TE.HTML(area[0]),
         editor_2 = new TE.Markdown(area[1], {
-            extra: true,
-            states: grid_settings
+            extra: true
         }),
-        editor_3 = new TE.Textile(area[2], {
-            states: grid_settings
-        }),
-        editor_4 = new TE.BBCode(area[3], {
-            states: grid_settings
-        });
+        editor_3 = new TE.Textile(area[2]),
+        editor_4 = new TE.BBCode(area[3]);
 
     </script>
     <script src="../../../text-editor/ui/expand/expand.min.js"></script>

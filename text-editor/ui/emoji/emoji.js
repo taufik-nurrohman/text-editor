@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.0.4
+ *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.0.5
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -1360,10 +1360,12 @@
             h = '.' + prefix + '-drop.emoji' + uniq,
             i, j, k, l, m, n, o, p, q, r;
 
+        if (!config.emoji) return;
+
         _dom_append(document.head, style);
 
         config.languages.tools.emoji = ['Emoji', '\u2318+\u21e7+E'];
-        config.emoji = _extend(emoji, config.emoji || {});
+        config.emoji = _extend(emoji, config.emoji === true ? {} : config.emoji);
 
         function do_click(e) {
             i = this;
@@ -1406,6 +1408,7 @@
             i: 'smile-o',
             click: function(e, $) {
                 return ui.drop('emoji emoji' + uniq, function(drop) {
+                    ui.drop.target = ui.tools.emoji.target;
                     o = $.$();
                     p = config.emoji;
                     q = _css(drop, ['background-color', 'color', 'padding-top']);

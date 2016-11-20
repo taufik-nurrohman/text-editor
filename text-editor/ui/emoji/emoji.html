@@ -33,7 +33,9 @@ Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming 
     <script src="../../../text-editor/html/html.min.js"></script>
     <script>
 
-    var editor = new TE.HTML(document.querySelector('textarea'));
+    var editor = new TE.HTML(document.querySelector('textarea'), {
+        emoji: true
+    });
 
     </script>
     <script src="../../../text-editor/ui/emoji/emoji.min.js"></script>

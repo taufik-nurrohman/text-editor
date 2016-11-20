@@ -7,14 +7,16 @@ Bubble Tools › Text Editor
 
 [View Demo](https://rawgit.com/tovic/text-editor/master/text-editor/ui/bubble-tools/bubble-tools.html)
 
-Include the script just after the plugin instances:
+Include the script just after the plugin instances, then set a new configuration data called `tools_alt` with a value of `true`:
 
 ~~~ .html
 <script src="../text-editor.min.js"></script>
 <script src="../text-editor/ui/ui.min.js"></script>
 <script src="../text-editor/html/html.min.js"></script>
 <script>
-var editor = new TE.HTML(document.querySelector('textarea'));
+var editor = new TE.HTML(document.querySelector('textarea'), {
+    tools_alt: true
+});
 </script>
 <script src="../text-editor/ui/bubble-tools/bubble-tools.min.js"></script>
 ~~~
