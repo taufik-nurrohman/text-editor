@@ -728,7 +728,7 @@ TE.HTML = function(target, o) {
                     after = s.after,
                     end = esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + ']+?' + esc_unit[1];
                 if (!v && _pattern(end + '$').test(before)) {
-                    tag = before.split(unit[0]).pop().match(_pattern('^([^' + esc_unit[2] + '\\s]+).*?' + esc_unit[1] + '$'));
+                    tag = before.split(unit[0]).pop().match(_pattern('^([^' + esc_unit[2] + '\\s]+).*?' + esc_unit[1] + '\\s*$'));
                     tag = (tag && tag[1]) || 0;
                     if (tag && _pattern('^\\s*' + esc_unit[0] + esc_unit[2] + _esc(tag) + esc_unit[1]).test(after)) {
                         $.unwrap(_pattern(esc_unit[0] + _esc(tag) + attrs + esc_unit[1]), _pattern('\\s*' + esc_unit[0] + esc_unit[2] + _esc(tag) + esc_unit[1]));

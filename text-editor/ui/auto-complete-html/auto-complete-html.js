@@ -29,6 +29,12 @@ TE.each(function($) {
         is_tag_open = _pattern(tag_open + '$'),
         is_tag_close = _pattern('^' + tag_close),
 
+        insert_before = 'insertBefore',
+        insert_after = 'insertAfter',
+
+        replace_before = 'replaceBefore',
+        replace_after = 'replaceAfter',
+
         k, l, m, n;
 
     if (!config.auto_close_html) return;
@@ -39,43 +45,35 @@ TE.each(function($) {
     }
 
     _event.set("keydown", $.target, function(e) {
+        $[0]();
         k = e.TE.key;
-        if (k('enter')) {
-            $[0]();
-            _timer_set(function() {
-                l = $.$();
-                if (_pattern(tag_open + '\\n[\\t ]*$').test(l.before) && is_tag_close.test(l.after)) {
-                    $.insertBefore(config.tab).insertAfter('\n' + get_indent(l.before));
+        _timer_set(function() {
+            l = $.$();
+            var l_before = l.before,
+                l_after = l.after;
+            if (k('enter')) {
+                if (_pattern(tag_open + '\\n[\\t ]*$').test(l_before) && is_tag_close.test(l_after)) {
+                    $[insert_before](config.tab)[insert_after]('\n' + get_indent(l_before));
                 }
-                $[1]();
-            });
-        } else if (k('>')) {
-            $[0]();
-            _timer_set(function() {
-                l = $.$();
-                m = l.before.match(is_tag_open) || ["", ""];
+            } else if (k('>') && !is_tag_close.test(l_after)) {
+                m = l_before.match(is_tag_open) || ["", ""];
                 if (is_void.test(m[1])) {
-                    $.replaceBefore(_pattern(esc_unit[1] + '$'), suffix);
+                    $[replace_before](_pattern(esc_unit[1] + '$'), suffix);
                 } else {
-                    $.replaceAfter(/^/, unit[0] + unit[2] + m[1] + unit[1]);
+                    $[replace_after](/^/, unit[0] + unit[2] + m[1] + unit[1]);
                 }
-                $[1]();
-            });
-        } else if (k(' ')) {
-            $[0]();
-            _timer_set(function() {
-                l = $.$();
-                m = l.before.match(_pattern(tag_open.slice(0, tag_open.length - esc_unit[1].length) + '$')) || ["", ""];
+            } else if (k(' ')) {
+                m = l_before.match(_pattern(tag_open.slice(0, tag_open.length - esc_unit[1].length) + '$')) || ["", ""];
                 if (m[1] === 'a') {
-                    $.insertBefore('href' + data[0] + data[1]).insertAfter(data[1]);
+                    $[insert_before]('href' + data[0] + data[1])[insert_after](data[1]);
                 } else if (m[1] === 'img') {
-                    $.insertBefore('alt' + data[0] + data[1] + data[2] + data[3] + 'src' + data[0] + data[1]).insertAfter(data[2]).replaceAfter(_pattern('^' + esc_data[2] + esc_unit[1]), data[2] + suffix);
+                    $[insert_before]('alt' + data[0] + data[1] + data[2] + data[3] + 'src' + data[0] + data[1])[insert_after](data[2])[replace_after](_pattern('^' + esc_data[2] + esc_unit[1]), data[2] + suffix);
                 } else if (m[1] === 'input') {
-                    $.insertBefore('type' + data[0] + data[1]).insertAfter(data[2]).replaceAfter(_pattern('^' + esc_data[2] + esc_unit[1]), data[2] + suffix);
+                    $[insert_before]('type' + data[0] + data[1])[insert_after](data[2])[replace_after](_pattern('^' + esc_data[2] + esc_unit[1]), data[2] + suffix);
                 }
-                $[1]();
-            });
-        }
+            }
+            $[1]();
+        });
     });
 
 });

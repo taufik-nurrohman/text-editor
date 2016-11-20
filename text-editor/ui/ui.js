@@ -827,7 +827,7 @@ TE.prototype.ui = function(o) {
         }
         timer_set(function() {
             $.record();
-        }, 1);
+        });
         for (i in keys) {
             k = explode(i);
             c = 0;
