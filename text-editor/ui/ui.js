@@ -75,6 +75,7 @@ TE.prototype.ui = function(o) {
             languages: {
                 tools: {
                     preview: ['Preview', 'F5'],
+                    tools: ['Focus Tools', 'F10'],
                     undo: ['Undo', _u2318 + '+Z'],
                     redo: ['Redo', _u2318 + '+Y'],
                     indent: ['Indent',  _u21E5],
@@ -482,6 +483,12 @@ TE.prototype.ui = function(o) {
 
     function dom_previous(node) {
         return node && node.previousSibling;
+    }
+
+    function dom_index(node) {
+        i = -1;
+        while (node = dom_previous(node)) ++i;
+        return i;
     }
 
     function dom_is(node, s) {
@@ -1421,8 +1428,8 @@ TE.prototype.ui = function(o) {
             i: icon,
             text: str ? format(current, [str, icon]) : 0,
             click: function(e) {
+                var a = ui.drop.target = tools[id].target;
                 return ui.drop('menu menu-' + slug(id), function(drop) {
-                    a = ui.drop.target;
                     function _do_click(e) {
                         t = this;
                         m = data[data_get(t, data_tool_id)];
@@ -1826,6 +1833,7 @@ TE.prototype.ui = function(o) {
             children: dom_children,
             next: dom_next,
             previous: dom_previous,
+            index: dom_index,
             before: dom_before,
             after: dom_after,
             prepend: dom_begin,

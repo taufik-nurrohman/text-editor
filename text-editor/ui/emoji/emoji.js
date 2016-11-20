@@ -1396,11 +1396,18 @@
             l = _dom.get('div > a:first-child', ui.el.drop);
             if (k('escape')) return ui.exit(1), _event.x(e);
             if (k('f10')) return ui.exit(), ui.drop.target.focus(), _event.x(e);
+            var next = _dom.next,
+                previous = _dom.previous,
+                parent = _dom.parent,
+                index = _dom.index,
+                get = _dom.get;
             if (
-                k('arrowright') && (m = (_dom.next(j) || _dom.get('a:first-child', _dom.next(_dom.parent(j)))[0] || l[0])) ||
-                k('arrowleft') && (m = (_dom.previous(j) || _dom.get('a:last-child', _dom.previous(_dom.parent(j)))[0] || l[0])) ||
-                k('pagedown') && (m = (_dom.get('a', _dom.next(_dom.parent(j)))[0] || l[0])) ||
-                k('pageup') && (m = (_dom.get('a', _dom.previous(_dom.parent(j)))[0] || l.pop()))
+                k('arrowright') && (m = (next(j) || get('a:first-child', next(parent(j)))[0] || l[0])) ||
+                k('arrowleft') && (m = (previous(j) || get('a:last-child', previous(parent(j)))[0] || l[0])) ||
+                k('arrowdown') && (m = (get('a', parent(j))[index(j) + 11] || get('a:first-child', next(parent(j)))[0] || l[0])) ||
+                k('arrowup') && (m = (get('a', parent(j))[index(j) - 9] || get('a:last-child', previous(parent(j)))[0] || l[0])) ||
+                k('pagedown') && (m = (get('a', next(parent(j)))[0] || l[0])) ||
+                k('pageup') && (m = (get('a', previous(parent(j)))[0] || l.pop()))
             ) {
                 return m.focus(), _event.x(e);
             }

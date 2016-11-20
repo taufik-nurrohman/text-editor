@@ -31,7 +31,7 @@ TE.HTML = function(target, o) {
         ui = $.ui(_extend({
             auto_encode_html: 1,
             auto_p: 1,
-            tools: 'clear | b i u s | sub sup | abbr br | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
+            tools: 'clear | b i u s | sub sup | abbr | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
             states: {
                 tr: [1, 10], // minimum and maximum table row(s)
                 td: [1, 10], // minimum and maximum table column(s)
@@ -39,7 +39,6 @@ TE.HTML = function(target, o) {
             },
             languages: {
                 tools: {
-                    tools: ['Focus Tools', 'F10'],
                     clear: ['Clear Format', _u2718],
                     b: ['Bold', _u2318 + '+B'],
                     i: ['Italic', _u2318 + '+I'],

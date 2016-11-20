@@ -229,7 +229,7 @@ SOFTWARE.</textarea></p>
     });
 
     // test bubble
-    var events = 'blur copy cut focus input keyup mouseup paste scroll';
+    var events = 'blur copy cut input keyup mouseup paste scroll';
     function test_bubble(e) {
         if (editor.$().length && e.type !== 'blur') {
             editor.ui.bubble('my-bubble', function(bubble) {
