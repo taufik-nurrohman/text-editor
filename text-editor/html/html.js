@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.2.7
+ *  HTML TEXT EDITOR PLUGIN 1.2.8
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -31,7 +31,7 @@ TE.HTML = function(target, o) {
         ui = $.ui(_extend({
             auto_encode_html: 1,
             auto_p: 1,
-            tools: 'clear | b i u s | sub sup | abbr | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
+            tools: 'clear | b i u s | sub sup | abbr br | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
             states: {
                 tr: [1, 10], // minimum and maximum table row(s)
                 td: [1, 10], // minimum and maximum table column(s)
@@ -39,6 +39,7 @@ TE.HTML = function(target, o) {
             },
             languages: {
                 tools: {
+                    tools: ['Focus Tools', 'F10'],
                     clear: ['Clear Format', _u2718],
                     b: ['Bold', _u2318 + '+B'],
                     i: ['Italic', _u2318 + '+I'],
@@ -50,6 +51,7 @@ TE.HTML = function(target, o) {
                     sup: ['Superscript',  _u2318 + '+' + _u2191],
                     abbr: ['Abbreviation',  _u2318 + '+' + _u21E7 + '+?'],
                     p: ['Paragraph',  _u2318 + '+' + _u21B5],
+                    br: ['Line Break',  _u21E7 + '+' + _u21B5],
                     'p,h1,h2,h3,h4,h5,h6': ['H1 ' + _u2013 + ' H6',  _u2318 + '+H'],
                     'blockquote,q': ['Quote',  _u2318 + '+Q'],
                     'pre,code': ['Code',  _u2318 + '+K'],
@@ -434,6 +436,13 @@ TE.HTML = function(target, o) {
                 return $[1](), false;
             }
         },
+        br: {
+            i: 'level-down',
+            click: function(e, $) {
+                dent = get_indent($.$().before);
+                return $.tidy('\n', "").insert(dent + unit[0] + formats.br + suffix + '\n', 0), false;
+            }
+        },
         'p,h1,h2,h3,h4,h5,h6': {
             i: 'header',
             click: function(e, $) {
@@ -676,10 +685,7 @@ TE.HTML = function(target, o) {
             'control+arrowup': 'sup',
             'control+shift+?': 'abbr',
             'control+enter': 'p',
-            'shift+enter': function(e, $) {
-                dent = get_indent($.$().before);
-                return $.tidy('\n', "").insert(dent + unit[0] + formats.br + suffix + '\n', 0), false;
-            },
+            'shift+enter': 'br',
             'enter': function(e, $) {
                 var s = $.$(),
                     v = s.value,

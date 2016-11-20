@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.9
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.4.10
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -74,11 +74,11 @@ TE.prototype.ui = function(o) {
             },
             languages: {
                 tools: {
+                    preview: ['Preview', 'F5'],
                     undo: ['Undo', _u2318 + '+Z'],
                     redo: ['Redo', _u2318 + '+Y'],
                     indent: ['Indent',  _u21E5],
-                    outdent: ['Outdent',  _u21E7 + '+' + _u21E5],
-                    preview: ['Preview', 'F5']
+                    outdent: ['Outdent',  _u21E7 + '+' + _u21E5]
                 },
                 buttons: {
                     okay: 'OK',
@@ -920,8 +920,7 @@ TE.prototype.ui = function(o) {
         event_set(_MOUSEDOWN, _resize, do_resize_down);
         event_set(_MOUSEMOVE, doc, do_resize_move);
         event_set(_MOUSEUP, body, do_resize_up);
-        if (_i18n_others.preview) {
-            s = _i18n_tools.preview;
+        if (s = _i18n_tools.preview) {
             attr_set(_preview, {
                 'href': js,
                 'title': is_object(s) ? s[0] + (s[1] ? ' (' + s[1] + ')' : "") : s
@@ -1658,28 +1657,7 @@ TE.prototype.ui = function(o) {
         return do_update_keys(), $;
     };
 
-    // default tool(s)
-    ui.tools = {
-        '|': {}, // separator
-        undo: {
-            i: 'undo',
-            click: function(e, $) {
-                return $.undo(), false;
-            }
-        },
-        redo: {
-            i: 'repeat',
-            click: function(e, $) {
-                return $.redo(), false;
-            }
-        },
-        indent: function(e, $) {
-            return $.indent(tab), false;
-        },
-        outdent: function(e, $) {
-            return $.outdent(tab), false;
-        }
-    };
+    var is_preview = false;
 
     function do_click_preview(e) {
         var v = $.get(),
@@ -1707,23 +1685,57 @@ TE.prototype.ui = function(o) {
                 event_set(_RESIZE, win, frame_resize);
                 hook_fire('enter.overlay.preview', [e, $, [v, w], o]);
             });
+            is_preview = true;
         } else {
             event_reset(_RESIZE, win, frame_resize);
             do_overlay_exit();
+            is_preview = false;
         }
         return event_exit(e);
     }
 
     event_set(_CLICK, _preview, do_click_preview);
 
+    // default tool(s)
+    ui.tools = {
+        '|': {}, // separator
+        preview: {
+            i: 'eye',
+            click: function(e) {
+                if (is_preview) {
+                    do_overlay_exit();
+                    is_preview = false;
+                } else {
+                    do_click_preview(e);
+                }
+                return false;
+            }
+        },
+        undo: {
+            i: 'undo',
+            click: function(e, $) {
+                return $.undo(), false;
+            }
+        },
+        redo: {
+            i: 'repeat',
+            click: function(e, $) {
+                return $.redo(), false;
+            }
+        },
+        indent: function(e, $) {
+            return $.indent(tab), false;
+        },
+        outdent: function(e, $) {
+            return $.outdent(tab), false;
+        }
+    };
+
     // default hotkey(s)
     ui.keys = {
         'control+y': 'redo',
         'control+z': 'undo',
-        // preview
-        'f5': function(e, $) {
-            return do_click_preview(e);
-        },
+        'f5': 'preview',
         // tools focus
         'f10': function(e, $) {
             return dom_get('a', _tool)[0].focus(), false;
