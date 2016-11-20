@@ -7,14 +7,16 @@ Emoji › Text Editor
 
 [View Demo](https://rawgit.com/tovic/text-editor/master/text-editor/ui/emoji/emoji.html)
 
-Include the script just after the plugin instances:
+Include the script just after the plugin instances, then set a new configuration data called `emoji` with a value of `true`:
 
 ~~~ .html
 <script src="../text-editor.min.js"></script>
 <script src="../text-editor/ui/ui.min.js"></script>
 <script>
 var editor = new TE(document.querySelector('textarea')),
-    ui = editor.ui();
+    ui = editor.ui({
+        emoji: true
+    });
 </script>
 <script src="../text-editor/ui/emoji/emoji.min.js"></script>
 ~~~
