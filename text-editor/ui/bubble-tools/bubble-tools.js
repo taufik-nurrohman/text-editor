@@ -143,8 +143,7 @@ TE.each(function($) {
         m = $.$();
         if (l && k('arrowup')) {
             return $.select(m.start - (m.before.slice(-1) === '\n' ? 1 : 0)), _event.x(e);
-        }
-        if (l && k('arrowdown')) {
+        } else if (l && k('arrowdown')) {
             return _dom_get('a', $bubble)[0].focus(), _event.x(e);
         }
     });

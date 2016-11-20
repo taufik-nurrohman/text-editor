@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.0.4
+ *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.0.5
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -42,6 +42,8 @@ TE.each(function($) {
         prefix = '.' + s + '-grid',
         style = _el('style'),
         results, i, j, k, l, m;
+
+    if (!ui.tools.table) return;
 
     function do_modals(id, data, $) {
         busy = 1;

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.0.5
+ *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.0.6
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -1393,12 +1393,14 @@
         function do_key(e) {
             j = this;
             k = e.TE.key;
-            l = _dom.get('a', ui.el.drop)[0];
+            l = _dom.get('div > a:first-child', ui.el.drop);
+            if (k('escape')) return ui.exit(1), _event.x(e);
+            if (k('f10')) return ui.exit(), ui.drop.target.focus(), _event.x(e);
             if (
-                k('arrowright') && (m = (_dom.next(j) || _dom.get('a:first-child', _dom.next(_dom.parent(j)))[0] || l)) ||
-                k('arrowleft') && (m = (_dom.previous(j) || _dom.get('a:last-child', _dom.previous(_dom.parent(j)))[0] || l)) ||
-                k('arrowdown') && (m = (_dom.get('a', _dom.next(_dom.parent(j)))[0] || l)) ||
-                k('arrowup') && (m = (_dom.get('a', _dom.previous(_dom.parent(j)))[0] || l))
+                k('arrowright') && (m = (_dom.next(j) || _dom.get('a:first-child', _dom.next(_dom.parent(j)))[0] || l[0])) ||
+                k('arrowleft') && (m = (_dom.previous(j) || _dom.get('a:last-child', _dom.previous(_dom.parent(j)))[0] || l[0])) ||
+                k('pagedown') && (m = (_dom.get('a', _dom.next(_dom.parent(j)))[0] || l[0])) ||
+                k('pageup') && (m = (_dom.get('a', _dom.previous(_dom.parent(j)))[0] || l.pop()))
             ) {
                 return m.focus(), _event.x(e);
             }
@@ -1407,8 +1409,8 @@
         ui.tool('emoji', {
             i: 'smile-o',
             click: function(e, $) {
+                ui.drop.target = ui.tools.emoji.target;
                 return ui.drop('emoji emoji' + uniq, function(drop) {
-                    ui.drop.target = ui.tools.emoji.target;
                     o = $.$();
                     p = config.emoji;
                     q = _css(drop, ['background-color', 'color', 'padding-top']);

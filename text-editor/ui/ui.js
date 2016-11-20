@@ -494,7 +494,9 @@ TE.prototype.ui = function(o) {
     }
 
     function dom_get(s, parent) {
-        parent = parent || doc;
+        if (!(parent = is_set(parent) ? parent : doc)) {
+            return [];
+        }
         o = [];
         if (is_string(s)) {
             if (/^([#.]?[\w-]+|\*)$/.test(s)) {
