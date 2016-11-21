@@ -36,6 +36,7 @@
 .text-editor-button:hover {background:#469043}
 .text-editor-tool .text-editor-button {
   background:0 0;
+  color:inherit;
   text-shadow:none;
   box-shadow:none;
   border-radius:0;

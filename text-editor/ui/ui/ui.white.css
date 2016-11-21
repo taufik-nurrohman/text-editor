@@ -33,6 +33,7 @@
 }
 .text-editor-button:focus,
 .text-editor-button:hover {background:#e5e5e5}
+.text-editor-tool .text-editor-button {color:inherit}
 .text-editor-tool .text-editor-button:hover {background:0 0}
 .text-editor-tool .text-editor-button:focus,
 .text-editor-tool .text-editor-button:active {

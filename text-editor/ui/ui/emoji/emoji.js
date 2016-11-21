@@ -9,7 +9,7 @@
 
 (function() {
 
-    var emoji = [
+    var emojies = [
         [
             ["Recently Used", ""],
             []
@@ -1339,6 +1339,8 @@
             prefix = config.classes[""],
             ui = $.ui,
 
+            emoji = 'emoji',
+
             is_string = TE.is.s,
 
             _ = $._,
@@ -1354,24 +1356,24 @@
             _trim = _.trim,
 
             style = _el('style', false, {
-                'id': prefix + ':style-emoji' + uniq
+                'id': prefix + ':style-' + emoji + uniq
             }),
 
-            h = '.' + prefix + '-drop.emoji' + uniq,
+            h = '.' + prefix + '-drop.' + emoji + uniq,
             i, j, k, l, m, n, o, p, q, r;
 
-        if (!config.emoji) return;
+        if (!config[emoji]) return;
 
         _dom_append(document.head, style);
 
-        config.languages.tools.emoji = ['Emoji', '\u2318+\u21e7+E'];
-        config.emoji = _extend(emoji, config.emoji === true ? {} : config.emoji);
+        config.languages.tools[emoji] = ['Emoji', '\u2318+\u21e7+E'];
+        config[emoji] = _extend(emojies, config[emoji] === true ? {} : config[emoji]);
 
         function do_click(e) {
             i = this;
             j = _dom_content_get(i);
             k = _dom_data_get(i, 'text');
-            l = config.emoji[0]; // recent emoji ...
+            l = config[emoji][0]; // recent emoji ...
             n = 0;
             q = o.before;
             r = o.after;
@@ -1391,16 +1393,16 @@
         }
 
         function do_key(e) {
-            j = this;
-            k = e.TE.key;
-            l = _dom.get('div > a:first-child', ui.el.drop);
-            if (k('escape')) return ui.exit(1), _event.x(e);
-            if (k('f10')) return ui.exit(), ui.drop.target.focus(), _event.x(e);
             var next = _dom.next,
                 previous = _dom.previous,
                 parent = _dom.parent,
                 index = _dom.index,
                 get = _dom.get;
+            j = this;
+            k = e.TE.key;
+            l = get('div > a:first-child', ui.el.drop);
+            if (k('escape')) return ui.exit(1), _event.x(e);
+            if (k('f10')) return ui.exit(), ui.drop.target.focus(), _event.x(e);
             if (
                 k('arrowright') && (m = (next(j) || get('a:first-child', next(parent(j)))[0] || l[0])) ||
                 k('arrowleft') && (m = (previous(j) || get('a:last-child', previous(parent(j)))[0] || l[0])) ||
@@ -1413,13 +1415,13 @@
             }
         }
 
-        ui.tool('emoji', {
+        ui.tool(emoji, {
             i: 'smile-o',
             click: function(e, $) {
-                ui.drop.target = ui.tools.emoji.target;
-                return ui.drop('emoji emoji' + uniq, function(drop) {
+                ui.drop.target = ui.tools[emoji].target;
+                return ui.drop(emoji + ' ' + emoji + uniq, function(drop) {
                     o = $.$();
-                    p = config.emoji;
+                    p = config[emoji];
                     q = _css(drop, ['background-color', 'color', 'padding-top']);
                     r = _dom.children;
                     _el(style, h + '{max-height:20em;overflow:auto}' + h + ' div{max-width:20em;margin:0 0 ' + q[2] + 'px;background:rgba(0,0,0,.025);border-color:inherit;font-size:100%;overflow:hidden}' + h + ' div[title]:before{content:attr(title);display:block;padding:.5em;background:' + q[0] + ';border-bottom:1px solid;border-color:inherit}' + h + ' a{float:left;width:10%;height:2em;line-height:2em;text-align:center;color:inherit;text-decoration:none;overflow:hidden;white-space:nowrap;transition:transform .05s ease-out}' + h + ' a img{display:block;width:60%;height:60%;max-width:none;max-height:none;min-width:0;min-height:0;margin:20%;background:0 0;border:0;outline:0;box-shadow:none;border-radius:0}' + h + ':hover a:focus{transform:scale(1)}' + h + ' a:focus,' + h + ' a:hover,' + h + ':hover a:hover{outline:0;transform:scale(1.5)}');
@@ -1456,8 +1458,16 @@
             }
         });
 
+        _event.set("keydown", ui.tools[emoji].target, function(e) {
+            if (e.TE.key('arrowdown')) {
+                return _timer_set(function() {
+                    _dom.get('a', ui.el.drop)[0].focus();
+                }), _event.fire("click", this, [e]), _event.x(e);
+            }
+        });
+
         // press `control+shift+e` for "emoji"
-        ui.key('control+shift+e', 'emoji');
+        ui.key('control+shift+e', emoji);
 
     });
 
