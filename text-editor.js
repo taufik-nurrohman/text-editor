@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.6.6
+ *  TEXT EDITOR PLUGIN 2.7.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -13,15 +13,18 @@
 
         insert = 'insert',
         replace = 'replace',
+        children = 'children',
         set = 'appendChild',
         reset = 'removeChild',
-        content = 'textContent',
+        content = 'innerHTML',
         cut = 'substring',
         start = 'selectionStart',
         end = 'selectionEnd',
         scroll = 'scroll',
         left = scroll + 'Left',
         top = scroll + 'Top',
+        left_o = 'offsetLeft',
+        top_o = 'offsetTop',
         rec = 'record',
         rec_x = 'loss',
         select = 'select',
@@ -34,6 +37,10 @@
 
     function cu(s) {
         return s.toUpperCase();
+    }
+
+    function enc(s) {
+        return s[replace](/&/g, '&amp;')[replace](/</g, '&lt;')[replace](/>/g, '&gt;');
     }
 
     function count(x) {
@@ -352,7 +359,7 @@
         });
 
         // plugin version
-        $.version = '2.6.6';
+        $.version = '2.7.0';
 
         // collect all instance(s)
         $[instance] = {};
@@ -367,54 +374,8 @@
             }, t === 0 ? 0 : (t || 1)), $;
         };
 
-    })(win.TE = function(target) {
-
-        var $ = this,
-            any = /^([\s\S]*?)$/,
-            history = 0, // current state of history
-            history_count = 1, // cache of history length
-            bin = {}, // storage
-            indent = '\t',
-            html = doc.documentElement,
-            body = doc.body,
-            div = doc[create]('div'),
-            span = doc[create]('span'),
-            scroll_width = (function() {
-                a = '-200px';
-                b = '200px';
-                body[set](div);
-                css(div, {
-                    'position': 'absolute',
-                    'top': a,
-                    'left': a,
-                    'width': b,
-                    'height': b,
-                    'overflow': 'scroll',
-                    'visibility': 'hidden'
-                });
-                c = div.offsetWidth - div.clientWidth;
-                return body[reset](div), c;
-            })(), H;
-
-        if (!is_set(target)) {
-            target = doc[create]('textarea');
-        }
-
-        function val() {
-            return target.value[replace](/\r/g, "");
-        }
-
-        // load the first history data
-        H = [[val(), 0, 0, 0]];
-
-        // return a new instance if `TE` was called without the `new` operator
-        if (!($ instanceof TE)) {
-            return new TE(target);
-        }
-
-        $.type = ""; // default editor type
-        $.x = '!$^*()-=+[]{}\\|:<>,./?'; // character(s) to escape
-        $.h = 1; // history feature is active
+        // character(s) to escape
+        $.x = '!$^*()-=+[]{}\\|:<>,./?';
 
         function esc(x) {
             if (is_array(x)) {
@@ -427,13 +388,58 @@
             return x[replace](pattern('[' + $.x[replace](/./g, '\\$&') + ']', 'g'), '\\$&');
         }
 
+        // utility ...
+        $._ = {
+            x: esc,
+            extend: extend,
+            each: each,
+            trim: trim,
+            css: css,
+            edge: edge,
+            pattern: pattern,
+            i: num,
+            timer: {
+                set: timer_set,
+                reset: timer_reset
+            }
+        };
+
+        $.is = {
+            a: is_array,
+            b: is_boolean,
+            e: is_dom,
+            f: is_function,
+            i: is_number,
+            n: function(x) {
+                return x === null;
+            },
+            o: is_object,
+            r: is_pattern,
+            s: is_string,
+            x: function(x) {
+                return !is_set(x);
+            }
+        };
+
+    })(win.TE = function(target) {
+
+        var $ = this,
+            any = /^([\s\S]*?)$/,
+            history = 0, // current state of history
+            history_count = 1, // cache of history length
+            bin = {}, // storage
+            indent = '\t',
+            html = doc.documentElement,
+            body = doc.body,
+            div = doc[create]('div'), H;
+
         function get_pattern(x) {
-            return is_pattern(x) || esc(x);
+            return is_pattern(x) || TE._.x(x);
         }
 
-        // <https://github.com/component/textarea-caret-position>
-        function offset(x) {
-            var font = 'font-',
+        function get_caret_px(s) {
+            var span = '<span></span>',
+                font = 'font-',
                 text = 'text-',
                 padding = 'padding-',
                 border = 'border-',
@@ -456,7 +462,6 @@
                     'height',
                     'letter-spacing',
                     'line-height',
-                    'overflow-x',
                     padding + 'bottom',
                     padding + 'left',
                     padding + 'right',
@@ -471,29 +476,50 @@
                 ];
             i = count(properties);
             body[set](div);
+            if (!s) return;
             t = css(target, properties);
             u = {};
             for (i in properties) {
                 u[properties[i]] = t[i];
             }
-            w = t[26];
-            span[content] = val()[cut](x) || '.';
+            div[content] = enc(s.before) + span + enc(s.value) + span + enc(s.after);
             css(div, extend(u, {
-                'width': is_set(win.mozInnerScreenX) ? w : w + scroll_width, // Firefox :(
-                'overflow-y': target.scrollHeight > t[13] ? 'scroll' : 'auto',
+                'width': t[25] + 'px',
                 'white-space': 'pre-wrap',
                 'word-wrap': 'break-word',
                 'position': 'absolute',
+                'top': 0,
+                'left': 0,
+                'overflow': 'auto',
                 'visibility': 'hidden'
             }));
-            div[content] = val()[cut](0, x);
-            div[set](span);
-            o = {
-                x: span.offsetLeft + t[1],
-                y: span.offsetTop + t[3]
-            };
-            return body[reset](div), o;
+            return [{
+                x: div[children][0][left_o] + t[1],
+                y: div[children][0][top_o] + t[3]
+            }, {
+                x: div[children][1][left_o] + t[1],
+                y: div[children][1][top_o] + t[3]
+            }];
         }
+
+        if (!is_set(target)) {
+            target = doc[create]('textarea');
+        }
+
+        function val() {
+            return target.value[replace](/\r/g, "");
+        }
+
+        // load the first history data
+        H = [[val(), 0, 0, 0]];
+
+        // return a new instance if `TE` was called without the `new` operator
+        if (!($ instanceof TE)) {
+            return new TE(target);
+        }
+
+        $.type = ""; // default editor type
+        $.h = 1; // history feature is active
 
         // store editor instance to `TE.__instance__`
         TE[instance][target.id || target.name || count(Object.keys(TE[instance]))] = $;
@@ -563,13 +589,14 @@
                 t.value = (e = c[cut](a, b));
                 t.before = c[cut](0, a);
                 t.after = c[cut](b);
-                t.caret = d ? [offset(a), offset(b)] : [];
-                t.length = count(e);
+                t.caret = d ? get_caret_px($.$()) : [];
                 t.toString = function() {
                     return e;
                 };
             }
-            return new $$(target[start], target[end], val(), caret);
+            o = new $$(target[start], target[end], val(), caret);
+            o.length = count(e);
+            return o;
         };
 
         // select value
@@ -809,46 +836,14 @@
             return $.type === s ? $.type : x;
         };
 
-        var check = {
-            a: is_array,
-            b: is_boolean,
-            e: is_dom,
-            f: is_function,
-            i: is_number,
-            n: function(x) {
-                return x === null;
-            },
-            o: is_object,
-            r: is_pattern,
-            s: is_string,
-            x: function(x) {
-                return !is_set(x);
-            }
-        };
-
-        for (i in check) $.is[i] = check[i];
-
-        // utility ...
-        $._ = {
-            x: esc,
-            extend: extend,
-            each: each,
-            trim: trim,
-            css: css,
-            edge: edge,
-            pattern: pattern,
-            i: num,
-            timer: {
-                set: timer_set,
-                reset: timer_reset
-            }
-        };
+        // make a copy of utility ...
+        extend($._ = {}, TE._);
 
         // the target element
         $.target = target;
 
         // return the global object
-        return $;
+        return get_caret_px(), $;
 
     });
 

@@ -39,8 +39,8 @@ d</textarea>
     <script>
 
     TE.prototype.formatInline = function(a, b, c) {
-        A = this._.x(a);
-        B = this._.x(b);
+        A = TE._.x(a);
+        B = TE._.x(b);
         var $ = this.$(),
             m = new RegExp('^' + A + '(.*?)' + B + '$'),
             m_A = new RegExp(A + '$'),
@@ -51,12 +51,12 @@ d</textarea>
             // do ...
             [
                 // first toggle
-                function(r) {
-                    r.wrap(a, b, c);
+                function($) {
+                    $.wrap(a, b, c);
                 },
                 // second toggle (the reset state)
-                function(r) {
-                    r.unwrap(a, b, c);
+                function($) {
+                    $.unwrap(a, b, c);
                 }
             ]
         );

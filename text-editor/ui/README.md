@@ -10,6 +10,7 @@ UI › Text Editor
 ~~~ .html
 <link href="../font-awesome.min.css" rel="stylesheet">
 <link href="../text-editor/ui/ui.min.css" rel="stylesheet">
+<link href="../text-editor/ui/ui/ui.white.min.css" rel="stylesheet">
 <style>
 .text-editor-content {height:300px} /* adjust editor height */
 </style>
@@ -25,28 +26,19 @@ UI › Text Editor
 Instance
 --------
 
-~~~ .javascript
-var editor = new TE(document.querySelector('textarea'));
-~~~
-
-Methods
--------
-
-### UI
-
 Enable graphic user interface feature in text editor:
 
 ~~~ .javascript
-editor.ui({
+var editor = TE.ui(document.querySelector('textarea'), {
     tab: '  ', // indent size
     dir: 'ltr',
+    resize: true, // allow text area resize
     keys: true, // enable/disable keyboard shortcut feature
     tools: 'indent outdent | undo redo',
     attributes: {
         'spellcheck': 'false'
     },
-    css: 'body{background:#fff;color:#000}', // CSS for iframe content
-    auto_tab: true,
+    auto_tab: true, // press ⇥ key to indent
     auto_close: {
         '"': '"',
         "'": "'",
@@ -63,6 +55,9 @@ editor.ui({
     debounce: 500
 });
 ~~~
+
+Methods
+-------
 
 ### Update
 
@@ -100,84 +95,100 @@ editor.create({
 
 ### Utility
 
-Function helpers:
+Helper functions:
 
 ~~~ .javascript
+// static
+TE._.is.a(x); // check if `x` is array
+TE._.is.b(x); // check if `x` is a boolean
+TE._.is.e(x); // check if `x` is a HTML node
+TE._.is.f(x); // check if `x` is a function
+TE._.is.i(x); // check if `x` is a number
+TE._.is.n(x); // check if `x` is `null`
+TE._.is.o(x); // check if `x` is array or object
+TE._.is.r(x); // check if `x` is a regular expression
+TE._.is.s(x); // check if `x` is a string
+TE._.is.x(x); // check if `x` is not set
+
+TE._.x(s); // escape regular expression character(s) in `s`
+TE._.extend(a, b); // extend `a` object with `b` object
+TE._.each(a, function(value, key, a) {}); // iterate over `a`
+TE._.trim(s); // trim white-space before and after `s`
+TE._.trim(s, 0); // trim white-space before `s`
+TE._.trim(s, 1); // trim white-space after `s`
+TE._.css(node, 'font-size'); // get CSS `font-size` value from `node`
+TE._.css(node, {'font-size': '200%'}); // set CSS `font-size` as `200%` to `node`
+
+TE._.time(); // get time data as year, month, date, hour, minute, second and millisecond
+TE._.replace(); // replace multiple
+TE._.format(); // replace variable(s) in string
+
+timer = TE._.timer.set(function() {}, 1000); // set time out in 1000 milliseconds
+TE._.timer.reset(timer); // reset time out
+
+TE._.dom.set(container, node); // append `node` to `container`
+TE._.dom.reset(container, node); // remove `node` from `container`
+TE._.dom.get('#foo'); // get HTML element with ID of `foo`
+
+TE._.dom.is(node, 'i'); // check if `node` is an `<i>` tag
+
+TE._.dom.id(node); // set a unique ID to the `node` if it does not have ID
+TE._.dom.copy(node); // clone `node`
+
+TE._.dom.classes.set(node, 'foo'); // add `foo` class to `node`
+TE._.dom.classes.reset(node, 'foo'); // remove `foo` class from `node`
+TE._.dom.classes.get(node, 'foo'); // check if `node` contains `foo` class
+
+TE._.dom.attributes.set(node, 'href', '/'); // add `href` attribute with value of `/` to `node`
+TE._.dom.attributes.reset(node, 'href'); // remove `href` attribute from `node`
+TE._.dom.attributes.get(node, 'href'); // get `href` attribute value from `node`
+
+TE._.dom.data.set(node, 'foo', 'bar'); // add `data-foo` attribute with value of `bar` to `node`
+TE._.dom.data.reset(node, 'foo'); // remove `data-foo` attribute from `node`
+TE._.dom.data.get(node, 'foo'); // get `data-foo` attribute value from `node`
+
+TE._.dom.offset(node); // get `l` (left) and `t` (top) offset of `node` relative to its parent
+TE._.dom.pointer(node, e); // get `x` (horizontal) and `y` (vertical) offset of mouse pointer relative to `node`
+TE._.dom.size(node); // get `w` (width) and `h` (height) of `node`
+
+TE._.dom.content.set(node, 'foo'); // set `node` content with `foo`
+TE._.dom.content.reset(node); // remove `node` content
+TE._.dom.content.get(node); // get `node` content
+
+TE._.dom.parent(node); // get `node` parent
+TE._.dom.children(node); // get `node` children
+TE._.dom.next(node); // get closest `node` next sibling
+TE._.dom.previous(node); // get closest `node` previous sibling
+TE._.dom.index(node); // get `node` index order from its siblings
+
+TE._.dom.before(container, node); // put `node` before `container`
+TE._.dom.after(container, node); // put `node` after `container`
+TE._.dom.prepend(container, node); // put `node` at the top of the `container` content
+TE._.dom.append(container, node); // put `node` at the end of the `container` content
+
+node = TE._.el('div', 'content', {'id': 'foo'}); // create `node` as `<div id="foo">content</div>`
+
+TE._.event.set('click', node, handler); // add HTML click event to `node`
+TE._.event.reset('click', node, handler); // remove HTML click event from `node`
+TE._.event.fire('click', node, []); // trigger HTML click event in `node`
+TE._.event.x(e); // prevent default event behaviour
+
+// not static
 editor._.is('Markdown'); // check if editor type is `Markdown`
-
-editor._.is.a(x); // check if `x` is array
-editor._.is.b(x); // check if `x` is a boolean
-editor._.is.e(x); // check if `x` is a HTML node
-editor._.is.f(x); // check if `x` is a function
-editor._.is.i(x); // check if `x` is a number
-editor._.is.n(x); // check if `x` is `null`
-editor._.is.o(x); // check if `x` is array or object
-editor._.is.r(x); // check if `x` is a regular expression
-editor._.is.s(x); // check if `x` is a string
-editor._.is.x(x); // check if `x` is not set
-
-editor._.x(s); // escape regular expression character(s) in `s`
-editor._.extend(a, b); // extend `a` object with `b` object
-editor._.each(a, function(value, key, a) {}); // iterate over `a`
-editor._.trim(s); // trim white-space before and after `s`
-editor._.trim(s, 0); // trim white-space before `s`
-editor._.trim(s, 1); // trim white-space after `s`
-editor._.css(node, 'font-size'); // get CSS `font-size` value from `node`
-editor._.css(node, {'font-size': '200%'}); // set CSS `font-size` as `200%` to `node`
-
-editor._.time(); // get time data as year, month, date, hour, minute, second and millisecond
-editor._.replace(); // replace multiple
-editor._.format(); // replace variable(s) in string
-
-editor._.dom.set(container, node); // append `node` to `container`
-editor._.dom.reset(container, node); // remove `node` from `container`
-editor._.dom.get('#foo'); // get HTML element with ID of `foo`
-
-editor._.dom.is(node, 'i'); // check if `node` is an `<i>` tag
-
-editor._.dom.id(node); // set a unique ID to the `node` if it does not have ID
-editor._.dom.copy(node); // clone `node`
-
-editor._.dom.classes.set(node, 'foo'); // add `foo` class to `node`
-editor._.dom.classes.reset(node, 'foo'); // remove `foo` class from `node`
-editor._.dom.classes.get(node, 'foo'); // check if `node` contains `foo` class
-
-editor._.dom.attributes.set(node, 'href', '/'); // add `href` attribute with value of `/` to `node`
-editor._.dom.attributes.reset(node, 'href'); // remove `href` attribute from `node`
-editor._.dom.attributes.get(node, 'href'); // get `href` attribute value from `node`
-
-editor._.dom.data.set(node, 'foo', 'bar'); // add `data-foo` attribute with value of `bar` to `node`
-editor._.dom.data.reset(node, 'foo'); // remove `data-foo` attribute from `node`
-editor._.dom.data.get(node, 'foo'); // get `data-foo` attribute value from `node`
-
-editor._.dom.offset(node); // get `l` (left) and `t` (top) offset of `node` relative to its parent
-editor._.dom.point(node, e); // get `x` (horizontal) and `y` (vertical) offset of mouse pointer relative to `node`
-editor._.dom.size(node); // get `w` (width) and `h` (height) of `node`
-
-editor._.dom.content.set(node, 'foo'); // set `node` content with `foo`
-editor._.dom.content.reset(node); // remove `node` content
-editor._.dom.content.get(node); // get `node` content
-
-editor._.dom.parent(node); // get `node` parent
-editor._.dom.children(node); // get `node` children
-editor._.dom.next(node); // get closest `node` next sibling
-editor._.dom.previous(node); // get closest `node` previous sibling
-
-editor._.dom.before(container, node); // put `node` before `container`
-editor._.dom.after(container, node); // put `node` after `container`
-editor._.dom.prepend(container, node); // put `node` at the top of the `container` content
-editor._.dom.append(container, node); // put `node` at the end of the `container` content
-
-node = editor._.el('div', 'content', {'id': 'foo'}); // create `node` as `<div id="foo">content</div>`
-
-editor._.event.set('click', node, handler); // add HTML click event to `node`
-editor._.event.reset('click', node, handler); // remove HTML click event from `node`
-editor._.event.fire('click', node, []); // trigger HTML click event in `node`
-editor._.event.x(e); // prevent default event behaviour
-
+editor._.is(/^(html|markdown)$/i); // check if editor type is `HTML` or `Markdown`
 editor._.hook.set('foo', handler); // add custom event named as `foo`
 editor._.hook.reset('foo'); // remove `foo` custom event
 editor._.hook.fire('foo', []); // trigger `foo` event
+~~~
+
+#### Replace Multiple
+
+Can accept string or a `RegExp` instance. The string version is always global:
+
+~~~ .javascript
+function encode_html(s) {
+    return TE._.replace(s, ['&', '<', '>', /\n/g], ['&amp;', '&lt;', '&gt;', '<br>']);
+}
 ~~~
 
 #### Format
@@ -185,7 +196,7 @@ editor._.hook.fire('foo', []); // trigger `foo` event
 Replace pattern in a string with custom text:
 
 ~~~ .javascript
-var s = editor._.format('Lorem %1 ipsum dolor %2 sit amet.', ['apple', 'orange']);
+var s = TE._.format('Lorem %1 ipsum dolor %2 sit amet.', ['apple', 'orange']);
 ~~~
 
 #### Element
@@ -193,7 +204,7 @@ var s = editor._.format('Lorem %1 ipsum dolor %2 sit amet.', ['apple', 'orange']
 Create HTML elements:
 
 ~~~ .javascript
-var div = editor._.el('div', 'yo!', {
+var div = TE._.el('div', 'yo!', {
     id: 'foo',
     title: 'Test element.',
     style: {
@@ -202,15 +213,15 @@ var div = editor._.el('div', 'yo!', {
     }
 });
 
-var input = editor._.el('input', false, {
+var input = TE._.el('input', false, {
     type: 'text',
     value: 'yo!'
 });
 
-var select = editor._.el('select', [
-    editor._.el('option', 'Option 1', { value: 1 }),
-    editor._.el('option', 'Option 2', { value: 2 }),
-    editor._.el('option', 'Option 3', { value: 3 })
+var select = TE._.el('select', [
+    TE._.el('option', 'Option 1', { value: 1 }),
+    TE._.el('option', 'Option 2', { value: 2 }),
+    TE._.el('option', 'Option 3', { value: 3 })
 ], {
     name: 'category',
     id: 'foo:123'
@@ -228,13 +239,13 @@ function handler(e) {
 }
 
 // add
-editor._.event.set('click', element, handler);
+TE._.event.set('click', element, handler);
 
 // remove
-editor._.event.reset('click', element, handler);
+TE._.event.reset('click', element, handler);
 
 // trigger
-editor._.event.fire('click', element, []);
+TE._.event.fire('click', element, []);
 ~~~
 
 #### Hooks
@@ -283,24 +294,25 @@ editor.i();
 
 ### Modal
 
-![Modal](https://cloud.githubusercontent.com/assets/1669261/20048290/0bfb8fc0-a4ee-11e6-81ee-79827bc30ac3.png)
-
 ~~~ .javascript
-// create a modal button
-var button = editor._.el('button', 'OK');
-
-// set event
-editor._.event.set('click', button, function() {
-    editor.ui.exit(true); // restore selection on modal hide
-});
-
 editor.ui.modal('my-modal', {
     // title
     header: 'Modal Title',
     // description
     body: 'Modal content.',
     // action(s)
-    footer: button
+    footer: {
+        'OK': function(e, $) {
+            editor.insert('[ok]');
+            editor.ui.exit(true);
+            return false;
+        },
+        'Cancel': function(e, $) {
+            editor.insert('[cancel]');
+            editor.ui.exit(true);
+            return false;
+        }
+    }
 });
 ~~~
 
@@ -313,15 +325,11 @@ editor.ui.modal.fit([10, 40]); // set modal position 10 pixels from left and 40 
 
 ### Alert › Modal
 
-![Alert › Modal](https://cloud.githubusercontent.com/assets/1669261/20048093/8967edfc-a4ec-11e6-9fd2-69cbf8c0665f.png)
-
 ~~~ .javascript
 editor.ui.alert('Alert Title', 'Alert content.');
 ~~~
 
 ### Confirm › Modal
-
-![Confirm › Modal](https://cloud.githubusercontent.com/assets/1669261/20048096/89deba04-a4ec-11e6-9806-c491a625192d.png)
 
 ~~~ .javascript
 editor.ui.confirm(
@@ -341,8 +349,6 @@ editor.ui.confirm(
 ~~~
 
 ### Prompt › Modal
-
-![Prompt › Modal](https://cloud.githubusercontent.com/assets/1669261/20048097/89eecac0-a4ec-11e6-9eb9-54f548df5ec6.png)
 
 ~~~ .javascript
 editor.ui.prompt(
@@ -380,17 +386,21 @@ editor.ui.prompt(
 
 ### Overlay
 
-![Overlay](https://cloud.githubusercontent.com/assets/1669261/20048089/895e0940-a4ec-11e6-9b7b-0cbd584d3d1a.png)
-
 A single method to show only the overlay:
 
 ~~~ .javascript
-editor.ui.overlay('Overlay content.', true); // click to exit
+editor.ui.overlay(true); // `true` means: click to exit
+~~~
+
+### Panel
+
+Show panel that will cover the editor area:
+
+~~~ .javascript
+editor.ui.panel('Panel content.');
 ~~~
 
 ### Drop
-
-![Drop](https://cloud.githubusercontent.com/assets/1669261/20048091/8960746e-a4ec-11e6-8127-3b4f7349bf5c.png)
 
 ~~~ .javascript
 editor.ui.drop('my-drop', function(drop) {
@@ -413,8 +423,6 @@ editor.ui.drop.fit([10, 40]); // set drop position 10 pixels from left and 40 pi
 
 ### Bubble
 
-![Bubble](https://cloud.githubusercontent.com/assets/1669261/20048090/896047fa-a4ec-11e6-8871-203b2dc664cf.png)
-
 ~~~ .javascript
 editor.ui.bubble('my-bubble', function(bubble) {
     bubble.classList.add('test-class-add');
@@ -435,7 +443,7 @@ editor.ui.bubble.fit([10, 40]); // set bubble position 10 pixels from left and 4
 
 ### Exit
 
-Hide overlay, modal, drop and bubble:
+Hide overlay, panel, modal, drop and bubble:
 
 ~~~ .javascript
 editor.ui.exit();
@@ -446,24 +454,26 @@ editor.ui.exit(true); // restore selection
 ~~~
 
 ~~~ .javascript
-editor.ui.exit(true, 'drop'); // restore selection, exit drop only
+editor.ui.overlay.exit(true); // exit overlay only, restore selection
+editor.ui.panel.exit(true); // exit panel only, restore selection
+editor.ui.modal.exit(true); // exit modal only, restore selection
+editor.ui.drop.exit(true); // exit drop only, restore selection
+editor.ui.bubble.exit(true); // exit bubble only, restore selection
 ~~~
 
 Tools
 -----
 
-![Tools](https://cloud.githubusercontent.com/assets/1669261/20048094/896c5e82-a4ec-11e6-8a8d-ac6ab5ae9b28.png)
-
 ### Add
 
 ~~~ .javascript
-var pos = 1; // tool position in the tools bar (use negative number to order from the back)
+var index = 1; // tool position in the tools bar (use negative number to order from the back)
 editor.ui.tool('bold', {
     title: 'Bold Text',
     click: function(e, $) {
         return $.format('strong'), false;
     }
-}, pos);
+}, index);
 ~~~
 
 A tool without `i` property will use the tool key as the icon ID:
@@ -524,8 +534,8 @@ Separator › Tools
 -----------------
 
 ~~~ .javascript
-var pos = 4; // tool separator position in the tools bar (use negative number to order from the back)
-editor.ui.tool('|', pos);
+var index = 4; // tool separator position in the tools bar (use negative number to order from the back)
+editor.ui.tool('|', index);
 ~~~
 
 Keyboard Shortcuts
@@ -555,8 +565,6 @@ editor.ui.key('control+b', false);
 
 Menus › Drop
 ------------
-
-![Menus › Drop](https://cloud.githubusercontent.com/assets/1669261/20048092/896350c6-a4ec-11e6-9d6b-38f8767322c5.png)
 
 ### Add
 
@@ -611,11 +619,10 @@ Hooks
  - `update`
  - `update.tools`
  - `update.keys`
- - `update.menus`
  - `destroy`
  - `enter`
+ - `enter.panel`
  - `enter.overlay`
- - `enter.overlay.preview`
  - `enter.modal`
  - `enter.modal.default`
  - `enter.modal.alert`
@@ -629,11 +636,14 @@ Hooks
  - `enter.bubble.default`
  - `enter.bubble.foo` → for `editor.ui.bubble('foo')`
  - `exit`
+ - `exit.panel`
  - `exit.overlay`
  - `exit.modal`
  - `exit.drop`
  - `exit.bubble`
  - `fit`
+ - `fit.panel`
+ - `fit.overlay`
  - `fit.modal`
  - `fit.drop`
  - `fit.bubble`

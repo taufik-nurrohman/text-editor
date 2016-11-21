@@ -111,10 +111,8 @@ d</textarea>
         dump_1 = document.getElementById('dump-1'),
         dump_2 = document.getElementById('dump-2');
     editor_2.target.onkeydown = function(e) {
-        var the = this;
-        // console.log(the);
         setTimeout(function() {
-            the.TE.record(); // update history on every key-press
+            editor_2.record(); // update history on every key-press
             console.log(e.TE);
         }, 1);
     };

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width">
     <title>Text Editor</title>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="ui.min.css" rel="stylesheet">
     <style>
     body {
       background:#fff;
@@ -51,24 +52,26 @@ SOFTWARE.</textarea></p>
       <p>
         <strong>Theme:</strong>
         <select id="select-css">
-          <option value="../../text-editor/ui/ui.min.css">Default</option>
-          <option value="../../text-editor/ui/ui.1960.min.css">1960</option>
-          <option value="../../text-editor/ui/ui.fam-fam-fam.min.css">Fam Fam Fam</option>
-          <option value="../../text-editor/ui/ui.negate.min.css">Negate</option>
+          <option value="ui/ui.white.min.css">White</option>
+          <option value="ui/ui.black.min.css">Black</option>
+          <option value="ui/ui.1960.min.css">1960</option>
+          <option value="ui/ui.fam-fam-fam.min.css">Fam Fam Fam</option>
+          <option value="">None</option>
         </select>
       </p>
       <script>
       // dynamic stylesheet
       var css = document.querySelector('#select-css');
       function select_css() {
-          var link = document.createElement('link'), o;
+          var link = document.createElement('link'),
+              value = this.value || css.value, o;
           link.id = 'the-css';
           link.rel = 'stylesheet';
-          link.href = this.value || css.value;
+          link.href = value;
           if (o = document.querySelector('#the-css')) {
               o.parentNode.removeChild(o);
           }
-          document.querySelector('head').appendChild(link);
+          value && document.querySelector('head').appendChild(link);
       }
       select_css();
       css.onchange = select_css;
@@ -89,16 +92,15 @@ SOFTWARE.</textarea></p>
       </p>
     </form>
     <script src="../../text-editor.min.js"></script>
-    <script src="../../text-editor/ui/ui.min.js"></script>
+    <script src="ui.min.js"></script>
     <script>
 
-    var editor = new TE(document.querySelector('textarea')),
-        ui = editor.ui({
+    var editor = TE.ui(document.querySelector('textarea'), {
             tab: '  '
         });
 
     // add custom tool(s)
-    editor._.extend(ui.tools, {
+    TE._.extend(editor.ui.tools, {
         bold: function(e, $) {
             return $.format('strong'), false;
         },
@@ -112,7 +114,12 @@ SOFTWARE.</textarea></p>
                 return $.ui.modal('foo', {
                     header: 'Modal Title',
                     body: 'Raw modal example.',
-                    footer: '<button class="' + editor.config.classes[""] + '-button">Test Button</button>'
+                    footer: {
+                        'Test Button': function(e, $) {
+                            alert('ok!');
+                            return $.ui.exit(true), false;
+                        }
+                    }
                 }), false;
             }
         },
@@ -162,7 +169,7 @@ SOFTWARE.</textarea></p>
                         i, j, k;
                     for (i in colors) {
                         j = colors[i];
-                        k = $._.el('span', "", {
+                        k = TE._.el('span', "", {
                             title: j,
                             css: {
                                 width: '2em',
@@ -173,7 +180,7 @@ SOFTWARE.</textarea></p>
                                 background: j
                             }
                         });
-                        $._.event.set('click', k, function() {
+                        TE._.event.set('click', k, function() {
                             $[0]()
                                 .unwrap(/<span style="color:\s*.*?">/, '</span>')
                                 .format('span style="color: ' + this.title + ';"')
@@ -216,18 +223,6 @@ SOFTWARE.</textarea></p>
         '<span class="text-em">Italic</span>': 'italic'
     });
 
-    // custom hook(s)
-    editor._.hook.set('enter.overlay.preview', function(e, $, value, container) {
-        var x = /<(script|iframe)(\s[^<>]*?)?>(.*?<\/(script|iframe)>)?/gi,
-            y = x.exec(value[0]);
-        if (y) {
-            container.innerHTML = ""; // stop XSS
-            $.ui.alert('Forbidden Tags', 'Tag <code>&lt;' + y[1] + '&gt;</code> is not allowed.', function(e, $) {
-                $.set($.get().replace(x, ""));
-            });
-        }
-    });
-
     // test bubble
     var events = 'blur copy cut input keyup mouseup paste scroll';
     function test_bubble(e) {
@@ -249,11 +244,11 @@ SOFTWARE.</textarea></p>
     editor._.hook.set('destroy', function() {
         editor.set('destroy!');
         // reset all "bubble" events on editor destroy
-        editor._.event.reset(events, editor.target, test_bubble);
+        TE._.event.reset(events, editor.target, test_bubble);
     });
 
     function apply_bubble_on_create() {
-        editor._.event.set(events, editor.target, test_bubble);
+        TE._.event.set(events, editor.target, test_bubble);
     }
 
     // start "bubble" events

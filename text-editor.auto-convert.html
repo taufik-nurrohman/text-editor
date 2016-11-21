@@ -47,34 +47,34 @@
     };
 
     function convert(e) {
-        var $ = this.TE.$(),
+        var $ = editor.$(),
             before = $.before,
             after = $.after;
         // `CTRL + Z` to undo, `CTRL + Y` to redo
-        if (e.TE.control('z')) return this.TE.undo(), false;
-        if (e.TE.control('y')) return this.TE.redo(), false;
+        if (e.TE.control('z')) return editor.undo(), false;
+        if (e.TE.control('y')) return editor.redo(), false;
         // `Enter` to split HTML paragraph
         if (/^<\/p>/.test(after) && e.TE.key('enter')) { // in paragraph…
             // Escape from HTML paragraph if paragraph is empty
             if (/<p(?:>|\s[^<>]*?>)$/.test(before)) {
-                return this.TE.unwrap(/<p(?:>|\s[^<>]*?>)/, /<\/p>/), false;
+                return editor.unwrap(/<p(?:>|\s[^<>]*?>)/, /<\/p>/), false;
             }
-            return this.TE.insertBefore('</p>\n<p>'), false;
+            return editor.insertBefore('</p>\n<p>'), false;
         }
         // `CTRL + Enter` to insert HTML paragraph
         if (e.TE.control('enter')) {
-            return this.TE.trim('\n', "").wrap('<p>', '</p>'), false;
+            return editor.trim('\n', "").wrap('<p>', '</p>'), false;
         }
         // Replace **Markdown** syntax to HTML when user presses `Enter` or `Space` key
         if (e.TE.key(/^(?: |enter)$/)) {
             for (var i in patterns) {
                 if (!patterns[i].test(before)) continue;
                 before = before.replace(patterns[i], i);
-                this.TE.set(before + after).select(before.length);
+                editor.set(before + after).select(before.length);
                 break;
             }
         }
-        this.TE.record(); // update history…
+        editor.record(); // update history…
     }
 
     editor.target.onkeydown = convert;
