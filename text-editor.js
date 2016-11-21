@@ -594,7 +594,7 @@
                     return e;
                 };
             }
-            o = new $$(target[start], target[end], val(), caret);
+            var o = new $$(target[start], target[end], val(), caret);
             o.length = count(e);
             return o;
         };
