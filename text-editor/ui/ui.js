@@ -56,7 +56,6 @@ TE.ui = function(target, o) {
             attributes: {
                 'spellcheck': 'false'
             },
-            css: 'html,body{background:#fff;color:#000}',
             unit: [
                 [
                     ['\u003C', '\u003E', '\u002F'],
@@ -104,8 +103,7 @@ TE.ui = function(target, o) {
             classes: {
                 "": 'text-editor',
                 i: 'icon icon-%1 fa fa-%1'
-            },
-            debounce: 500
+            }
         }, o),
 
         a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z,

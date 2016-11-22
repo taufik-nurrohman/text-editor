@@ -3,7 +3,7 @@ Text Editor
 
 > A text selection range API written in pure JavaScript, for modern browsers.
 
-[View Demo](https://rawgit.com/tovic/text-editor/master/text-editor.html "View Demo")
+[View Demo](http://tovic.github.io/text-editor "View Demo")
 
 ~~~ .html
 <!DOCTYPE html>
