@@ -492,6 +492,7 @@ Modules
    - [Bubble Tools](https://github.com/tovic/text-editor/tree/master/text-editor/ui/ui/bubble-tools)
    - [Editor Grow](https://github.com/tovic/text-editor/tree/master/text-editor/ui/ui/grow)
    - [HTML Auto–Complete](https://github.com/tovic/text-editor/tree/master/text-editor/ui/ui/auto-complete-html)
+   - [Word Counter](https://github.com/tovic/text-editor/tree/master/text-editor/ui/ui/word-counter)
 
 Plugins
 -------
