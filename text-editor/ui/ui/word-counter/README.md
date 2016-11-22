@@ -1,7 +1,7 @@
 Word Counter › UI › Text Editor
 ===============================
 
-> Counts words in editor text area.
+> Counts words in editor’s text area.
 
 [View Demo](https://rawgit.com/tovic/text-editor/master/text-editor/ui/ui/word-counter/word-counter.html)
 

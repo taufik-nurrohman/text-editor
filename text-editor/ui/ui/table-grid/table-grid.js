@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.0.6
+ *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.0.7
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -139,6 +139,9 @@ TE.each(function($) {
                 ) {
                     l = _dom_children(l)[_dom_index(j)];
                     l && _event.fire("mouseover", l, [e]) && l.focus();
+                } else if (k('arrowup')) {
+                    ui.exit();
+                    ui.tools[table].target.focus();
                 }
                 return _event.x(e);
             }

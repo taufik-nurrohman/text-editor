@@ -80,5 +80,14 @@
 
     </script>
     <script src="table-grid.min.js"></script>
+<script>
+TE.each(function($) {
+    $._.event.set("mouseover", $.ui.container, function(e) {console.log(e.target)
+        if (e.target.title) {
+            console.log(e.target.title);
+        }
+    })
+});
+</script>
   </body>
 </html>
