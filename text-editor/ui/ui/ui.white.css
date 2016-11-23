@@ -25,11 +25,13 @@
   background:#fafafa;
   border-top-color:#ccc;
   color:#666;
+  box-shadow:inset 0 0 1px rgba(0,0,0,.1);
 }
 .text-editor-button,
 .text-editor-separator {
   background:#eee;
   color:inherit;
+  box-shadow:none;
 }
 .text-editor-button:focus,
 .text-editor-button:hover {background:#e5e5e5}
@@ -46,6 +48,9 @@
   border-bottom-color:#ddd;
 }
 .text-editor-overlay {background:rgba(255,255,255,.5)}
+.text-editor-modal,
+.text-editor-drop,
+.text-editor-bubble {box-shadow:0 0 2px rgba(0,0,0,.2)}
 .text-editor-modal-footer {background:#fafafa}
 .text-editor-drop.menu .text-editor-button,
 .text-editor-drop.menu:hover .text-editor-button:focus {

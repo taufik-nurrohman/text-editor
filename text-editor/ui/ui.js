@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.5.0
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.5.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -693,6 +693,9 @@ TE.ui = function(target, o) {
     }
 
     function do_click_tool(e) {
+        if (target.disabled || target.readonly) {
+            return event_exit(e);
+        }
         ui.exit(0, 0, 0);
         var id = data_get(this, 'tool-id'),
             tools = ui.tools,
@@ -984,6 +987,7 @@ TE.ui = function(target, o) {
             config = _extend(config, o);
         }
         var _parent = dom_exist(_content);
+        class_set(_container, _prefix + '-is-can-update');
         class_set(_content, _class);
         if (_parent && dom_is(_parent, 'p')) {
             dom_before(_parent, _container);
@@ -1049,6 +1053,28 @@ TE.ui = function(target, o) {
         }
         dom_content_reset(_container);
         return hook !== 0 ? hook_fire('destroy', [$]) : $;
+    };
+
+    // enable
+    $.enable = function(hook) {
+        _content.disabled = _content.readOnly = false;
+        class_set(_container, _prefix + '-is-can-update');
+        return hook !== 0 ? hook_fire('enable', [$]) : $;
+    };
+
+    // disable
+    $.disable = function(hook) {
+        _content.disabled = true;
+        class_reset(_container, _prefix + '-is-can-update');
+        return hook !== 0 ? hook_fire('disable', [$]) : $;
+    };
+
+    // freeze
+    $.freeze = function(hook) {
+        _content.disabled = false;
+        _content.readOnly = true;
+        class_reset(_container, _prefix + '-is-can-update');
+        return hook !== 0 ? hook_fire('freeze', [$]) : $;
     };
 
     ui.exit = function(select, k, hook) {
@@ -1722,6 +1748,15 @@ TE.ui = function(target, o) {
     ui.keys = {
         'control+y': 'redo',
         'control+z': 'undo',
+        // next focus
+        'escape': function(e, $) {
+            r = ':not([tabindex]):not([disabled])';
+            if (s = dom_get('input' + r + ',button' + r + ',select' + r + ',textarea' + r + ',a[href]' + r + ',[contenteditable]' + r + ',[tabindex]:not([tabindex="-1"])', doc, 0)) {
+                if ((t = s.indexOf(target)) !== -1) {
+                    return (s[t + 1] || doc).focus(), false;
+                }
+            }
+        },
         // tools focus
         'f10': function(e, $) {
             return dom_get('a', _tool)[0].focus(), false;

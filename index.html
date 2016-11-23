@@ -1,33 +1,34 @@
 <!DOCTYPE html>
-<html dir="ltr" class="text-editor-page-">
+<html dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
     <title>Text Editor</title>
     <link href="favicon.ico" rel="shortcut icon">
 
     <link href="index.css" rel="stylesheet">
-    <link href="https://rawgit.com/tovic/text-editor/master/text-editor/ui/ui.min.css" rel="stylesheet">
+    <link href="text-editor/ui/ui.min.css" rel="stylesheet">
 
   </head>
   <body>
-  
+
     <header class="header">
       <h1>Text Editor</h1>
       <p>A text selection range <abbr title="Application Programming Interface">API</abbr> written in pure JavaScript, for modern browsers.</p>
       <p><a class="button" href="https://github.com/tovic/text-editor/archive/master.zip"><i class="fa fa-cloud-download"></i> Download</a> <a class="button" href="text-editor"><i class="fa fa-flask"></i> Documentation</a></p>
       <section>
-        <p><textarea style="height:200px;">Yay! Finally, a documentation page!</textarea></p>
-        <p id="text-editor-theme-select" data-theme-base="https://rawgit.com/tovic/text-editor/master/text-editor/ui/ui"></p>
+        <p><textarea>Yay! Finally, a documentation page!</textarea></p>
+        <p id="text-editor-shell-select" data-shell-base="text-editor/ui/ui"></p>
       </section>
     </header>
-  
+
     <section class="body">
       <h2 id="section:start">Start</h2>
-      <p>You need to include at least the base <abbr title="Cascading Style Sheet">CSS</abbr> file called <code>ui.min.css</code>, a <a href="http://fontawesome.io" rel="nofollow" target="_blank">Font Awesome</a> library and three JavaScript files:</p>
+      <p>You need to include the base <abbr title="Cascading Style Sheet">CSS</abbr> file called <a href="text-editor/ui/ui.min.css" target="_blank"><code>ui.min.css</code></a>, a <a href="http://fontawesome.io" rel="nofollow" target="_blank">Font Awesome</a> library and these JavaScript files:</p>
       <ul>
-        <li><code>text-editor.min.js</code> &rarr; this is the core <abbr title="Application Programming Interface">API</abbr> for doing text area&ndash;based text  selection manipulation.</li>
-        <li><code>ui.min.js</code> &rarr; this is a module to create the <abbr title="Graphic User Interface">GUI</abbr> appearance as you can see in the text editor above.</li>
-        <li><code>html.min.js</code> &rarr; this is a <strong><abbr title="Hyper Text Markup Language">HTML</abbr> Text Editor</strong> plugin for the user interface module, contains tools for editing <abbr title="Hyper Text Markup Language">HTML</abbr> source.</li>
+        <li><a href="text-editor.min.js" target="_blank"><code>text-editor.min.js</code></a> &rarr; this is the core <abbr title="Application Programming Interface">API</abbr> for doing text area&ndash;based text selection manipulation.</li>
+        <li><a href="text-editor/ui/ui.min.js" target="_blank"><code>ui.min.js</code></a> &rarr; this is a module to create the <abbr title="Graphic User Interface">GUI</abbr> appearance as you can see in the text editor above.</li>
+        <li><a href="text-editor/ui/html/html.min.js" target="_blank"><code>html.min.js</code></a> &rarr; this is a plugin for user interface module, contains tools for editing <abbr title="Hyper Text Markup Language">HTML</abbr> source.</li>
       </ul>
       <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html dir="ltr"&gt;
@@ -58,15 +59,15 @@
         <li>Inherits <code>TE.ui()</code>
           <ul>
             <li><code>tab</code> &rarr; <em>string</em> &middot; set custom indent character.</li>
-            <li><code>dir</code> &rarr; <em>string</em> &middot; editor language direction (currently this option will only set a <abbr title="Hyper Text Markup Language">HTML</abbr> &middot; <code>dir</code> attribute to the text editor container).</li>
+            <li><code>dir</code> &rarr; <em>string</em> &middot; editor language direction (currently this option only set a <abbr title="Hyper Text Markup Language">HTML</abbr> <code>dir</code> attribute to the text editor container).</li>
             <li><code>resize</code> &rarr; <em>boolean</em> &middot; enable/disable text area resize handler.</li>
             <li><code>keys</code> &rarr; <em>boolean</em> &middot; enable/disable keyboard shortcut feature.</li>
-            <li><code>tools</code> &rarr; <em>string</em> &middot; list of tools to be included to the tools bar, separated by a space.</li>
+            <li><code>tools</code> &rarr; <em>string</em> &middot; list of tools to be included to the tools bar, each of them separated by a space.</li>
             <li><code>attributes</code> &rarr; <em>object</em> &middot; extra <abbr title="Hyper Text Markup Language">HTML</abbr> attributes to be added to the text area element.</li>
-            <li><code>auto_tab</code> &rarr; <em>boolean</em> &middot; press tab key to indent?</li>
-            <li><code>auto_close</code> &rarr; <em>object</em> &middot; list of character as the object key that will be auto&ndash;completed by its value right after the text area caret.</li>
-            <li><code>languages</code> &rarr; <em>object</em> &middot; list of language string used by the text editor <abbr title="Graphic User Interface">GUI</abbr>.</li>
-            <li><code>classes</code> &rarr; <em>object</em> &middot; list of <abbr title="Hyper Text Markup Language">HTML</abbr> class names used by the text editor <abbr title="Graphic User Interface">GUI</abbr>.</li>
+            <li><code>auto_tab</code> &rarr; <em>boolean</em> &middot; press <kbd title="Tab">&#8677;</kbd> key to indent?</li>
+            <li><code>auto_close</code> &rarr; <em>object</em> &middot; list of character as the object key that will be auto&ndash;closed by its value right after the text area caret.</li>
+            <li><code>languages</code> &rarr; <em>object</em> &middot; list of words/phrases used by the text editor <abbr title="Graphic User Interface">GUI</abbr>.</li>
+            <li><code>classes</code> &rarr; <em>object</em> &middot; list of <abbr title="Hyper Text Markup Language">HTML</abbr> classes used by the text editor <abbr title="Graphic User Interface">GUI</abbr>.</li>
           </ul>
         </li>
         <li>Inherits <code>TE.ui.HTML()</code>
@@ -75,20 +76,20 @@
             <li><code>auto_p</code> &rarr; <em>boolean</em> &middot; automatically insert paragraph tags?</li>
             <li><code>states</code> &rarr; <em>object</em>
               <ul>
-                <li><code>tr</code> &rarr; <em>array</em> &middot; minimum and maximum table rows value for table tool.</li>
-                <li><code>td</code> &rarr; <em>array</em> &middot; minimum and maximum table columns value for table tool.</li>
-                <li><code>abbr</code> &rarr; <em>object</em> &middot; list of default abbreviation for abbreviation tool.</li>
+                <li><code>tr</code> &rarr; <em>array</em> &middot; minimum and maximum table rows for table tool.</li>
+                <li><code>td</code> &rarr; <em>array</em> &middot; minimum and maximum table columns for table tool.</li>
+                <li><code>abbr</code> &rarr; <em>object</em> &middot; list of default abbreviations for abbreviation tool.</li>
               </ul>
             </li>
-            <li><code>advance_a</code> &rarr; <em>boolean</em> &middot; detect external <abbr title="Uniform Resource Locator">URL</abbr> and automatically adds <code>rel="nofollow"</code> and <code>target="_blank"</code> attribute to the link markup?</li>
-            <li><code>advance_img</code> &rarr; <em>boolean</em> &middot; insert image with a <code>&lt;figure&gt;</code> element if title field is defined?</li>
+            <li><code>advance_a</code> &rarr; <em>boolean</em> &middot; detect external <abbr title="Uniform Resource Locator">URL</abbr> and automatically add <code>rel="nofollow"</code> and <code>target="_blank"</code> attribute to the link markup?</li>
+            <li><code>advance_img</code> &rarr; <em>boolean</em> &middot; insert image with a <code>&lt;figure&gt;</code> element as image container and <code>&lt;figcaption&gt;</code> as image caption if title field is defined?</li>
             <li><code>advance_table</code> &rarr; <em>boolean</em> &middot; include <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code> and <code>&lt;tfoot&gt;</code> markup?</li>
             <li><code>formats</code> &rarr; <em>object</em> &middot; list of default <abbr title="Hyper Text Markup Language">HTML</abbr> formats to be outputted.</li>
           </ul>
         </li>
       </ul>
       <h2 id="section:extend">Extend</h2>
-      <p>Here are some extensions for the <strong><abbr title="Hyper Text Markup Language">HTML</abbr> Text Editor</strong> plugin:</p>
+      <p>These are plugins for user interface module, all of them depend on <code>TE.ui.HTML()</code> plugin:</p>
       <ul>
         <li><a href="#">Markdown Text Editor</a></li>
         <li><a href="#">Textile Text Editor</a></li>
@@ -103,11 +104,11 @@
         <li><a href="#">Native Emoji</a></li>
         <li><a href="#">Bubble Tools</a></li>
         <li><a href="#">Editor Grow</a></li>
-        <li><a href="#"><abbr title="Hyper Text Markup Language">HTML</abbr> Auto&ndash; Complete</a></li>
+        <li><a href="#"><abbr title="Hyper Text Markup Language">HTML</abbr> Auto&ndash;Complete</a></li>
         <li><a href="#">Word Counter</a></li>
       </ul>
       <h2 id="section:support">Support</h2>
-      <p>This text editor project was initially cultivated to support the <a href="https://github.com/mecha-cms">Mecha <abbr title="Content Management System">CMS</abbr></a> project that is currently being inactive for a while. But now, this project becomes an individual project which is possible to be applied into any other projects. Making a small donation will keep this project going and allow for further development.</p>
+      <p>This text editor project was initially cultivated to support the <a href="https://github.com/mecha-cms">Mecha <abbr title="Content Management System">CMS</abbr></a> project that is currently being inactive for a while. But now, this project becomes an individual project; makes it possible to be extended into any other projects. Your small donation will keep this project going and allow me to do any further development.</p>
       <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
         <input name="cmd" value="_s-xclick" type="hidden">
         <input name="hosted_button_id" value="TNVGH7NQ7E4EU" type="hidden">
@@ -117,16 +118,16 @@
 
     <footer>
       <span class="left">&copy; 2016 &middot; Made with <i class="fa fa-fw fa-ambulance" onmouseover="this.className='fa fa-fw fa-heart';" ontouchstart="this.className='fa fa-fw fa-heart';"></i> by <a href="">Taufik Nurrohman</a></span>
-      <span class="right"><a href="https://github.com/tovic/text-editor"><i class="fa fa-fw fa-github"></i> GitHub</a></span>
+      <span class="right"><a href="https://github.com/tovic/text-editor"><i class="fa fa-github"></i> GitHub</a></span>
     </footer>
-  
-    <script src="https://rawgit.com/tovic/text-editor/master/text-editor.min.js"></script>
-    <script src="https://rawgit.com/tovic/text-editor/master/text-editor/ui/ui.min.js"></script>
-    <script src="https://rawgit.com/tovic/text-editor/master/text-editor/ui/html/html.min.js"></script>
+
+    <script src="text-editor.min.js"></script>
+    <script src="text-editor/ui/ui.min.js"></script>
+    <script src="text-editor/ui/html/html.min.js"></script>
     <script>
     var editor = TE.ui.HTML(document.querySelector('textarea'));
     </script>
-    <script src="https://rawgit.com/tovic/text-editor/master/text-editor/ui/ui/word-counter/word-counter.min.js"></script>
+    <script src="text-editor/ui/ui/word-counter/word-counter.min.js"></script>
 
     <script src="index.min.js"></script>
 

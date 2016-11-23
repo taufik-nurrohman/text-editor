@@ -23,11 +23,39 @@ abbr {
   cursor:help;
 }
 a abbr,strong abbr {color:inherit}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  margin:0;
+  padding:0;
+  border:0;
+  outline:0;
+}
 button,input,select,textarea {
   font:inherit;
   background:0 0;
   color:inherit;
   border:1px solid;
+  width:12em;
+  padding:.25em .5em;
+}
+button {
+  background:#000;
+  color:#fff;
+  border-width:0;
+  padding:.25em .65em;
+  cursor:pointer;
+}
+button:focus,button:hover {background:#00f}
+button:active {background:#f00}
+button,
+input[type="checkbox"],
+input[type="radio"] {width:auto}
+textarea {
+  display:block;
+  width:100%;
+  height:5em;
+  min-height:5em;
+  resize:vertical;
 }
 blockquote,form,p,pre,section {
   display:block;
@@ -47,12 +75,12 @@ h1,h2,h3,h4,h5,h6 {
 h1 {
   font-size:4.242rem;
   line-height:4.5rem;
-  margin-top:3rem;
+  padding-top:3rem;
 }
 h2 {
   font-size:2.828rem;
   line-height:3rem;
-  margin-top:3rem;
+  padding-top:3rem;
 }
 h3 {font-size:1.414rem}
 h4 {font-size:.707rem}
@@ -71,11 +99,12 @@ pre {
   background:#afa;
   padding:1em 1.2em;
   white-space:pre-wrap;
+  word-wrap:break-word;
 }
 code {color:#900}
 pre code {color:inherit}
 section {
-  max-width:900px;
+  max-width:750px;
   margin-right:auto;
   margin-left:auto;
 }
@@ -91,21 +120,21 @@ footer {
 }
 .left {float:left}
 .right {float:right}
+.center {text-align:center}
 .button,.input,.select,.textarea {
   display:inline-block;
+  background:#fff;
   padding:.5em .8em;
-  border-width:0;
+  position:relative;
 }
 .button {
   background:#000;
   color:#fff;
   padding:.5em 1em;
-  cursor:pointer;
+  border-width:0;
 }
-.input,.select,.textarea {
-  background:#fff;
-  border-width:1px;
-}
+.button,
+.toggle,
 .select {cursor:pointer}
 .button:focus,.button:hover {
   background:#00f;
@@ -115,28 +144,14 @@ footer {
   background:#f00;
   color:#fff;
 }
-@media (max-width:950px) {
+.text-editor-content {
+  height:15em;
+  min-height:15em;
+}
+@media (max-width:800px) {
   section {
     max-width:none;
     margin-right:5%;
     margin-left:5%;
   }
 }
-
-/* theme */
-.text-editor-page-white {color:#666}
-.text-editor-page-white a {color:#6a839d}
-.text-editor-page-white abbr {color:#999}
-.text-editor-page-white a abbr,.text-editor-page-white strong abbr {color:inherit}
-.text-editor-page-white header {background:#f2f7fc}
-.text-editor-page-white .button {
-  background:#6a839d;
-  color:#fff;
-  border-radius:.2em;
-}
-.text-editor-page-white .button:hover,.text-editor-page-white .button:focus {background:#7993ad}
-.text-editor-page-white .button:active {background:#5a7186}
-.text-editor-page-white .input,.text-editor-page-white .select,.text-editor-page-white .textarea {border-color:#ddd}
-.text-editor-page-white pre {background:#f7fafa}
-.text-editor-page-white code {color:#a47d66}
-.text-editor-page-white pre code {color:inherit}

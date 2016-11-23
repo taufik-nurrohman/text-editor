@@ -21,27 +21,28 @@ var ack;
             editor._.timer.reset(t);
         }
     }
-    editor._.timer.set(type, 3000);
+    editor._.timer.set(type, 1000);
 })();
 
 (function() {
-    var css = document.querySelector('#text-editor-theme-select');
+    var css = document.querySelector('#text-editor-shell-select');
     if (!css) return;
     var s = document.createElement('link'),
         select = document.createElement('select'),
         o = {
-            '.': 'Theme&hellip;',
-            "": 'None',
-            'ui.white.min.css': 'White',
-            'ui.black.min.css': 'Black',
-            'ui.1960.min.css': '1960',
-            'ui.fam-fam-fam.min.css': 'Fam Fam Fam'
+            '..': 'Theme&hellip;',
+            '.': 'None',
+            '.white': 'White',
+            '.black': 'Black',
+            '.1960': '1960',
+            '.fam-fam-fam': 'Fam Fam Fam'
         },
         option, i;
     for (i in o) {
         option = document.createElement('option');
-        option.value = i;
         option.innerHTML = o[i];
+        i = i.slice(1);
+        option.value = i;
         if (i === '.') {
             option.disabled = true;
             option.selected = true;
@@ -51,14 +52,14 @@ var ack;
     select.className = 'select';
     css.appendChild(select);
     function select_css() {
-        document.documentElement.className = 'text-editor-page-' + this.value.replace(/ui\.|\.min\.css/g, "");
-        s.id = 'text-editor-theme';
+        document.documentElement.className = 'shell-' + this.value;
+        s.id = 'text-editor-shell';
         s.rel ='stylesheet';
-        s.href = this.parentNode.getAttribute('data-theme-base') + '/' + this.value;
+        s.href = this.parentNode.getAttribute('data-shell-base') + '/ui.' + this.value + '.min.css';
+        document.head.appendChild(s);
         if (!this.value) {
             s.parentNode.removeChild(s);
         }
-        document.head.appendChild(s);
     }
     select.onchange = select_css;
     select.onclick = function() {

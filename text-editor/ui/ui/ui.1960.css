@@ -15,10 +15,6 @@
 .text-editor a:focus,
 .text-editor a:hover,
 .text-editor a:active {color:inherit}
-.text-editor-button,
-.text-editor-input,
-.text-editor-select,
-.text-editor-textarea {box-shadow:none}
 .text-editor-input {background:#ffa}
 .text-editor-select {background:#dfa}
 .text-editor-textarea {background:#def}
