@@ -6,7 +6,7 @@
     <title>Text Editor</title>
     <link href="favicon.ico" rel="shortcut icon">
 
-    <link href="index.css" rel="stylesheet">
+    <link href="index.min.css" rel="stylesheet">
     <link href="text-editor/ui/ui.min.css" rel="stylesheet">
 
   </head>
@@ -88,24 +88,32 @@
           </ul>
         </li>
       </ul>
+      <p>Custom themes can be included just after the <code>ui.min.css</code>.</p>
+      <pre><code>&lt;link href="text-editor/ui/ui.min.css" rel="stylesheet"&gt;
+&lt;link href="text-editor/ui/ui/ui.white.min.css" rel="stylesheet"&gt;</code></pre>
       <h2 id="section:extend">Extend</h2>
-      <p>These are plugins for user interface module, all of them depend on <code>TE.ui.HTML()</code> plugin:</p>
+      <p>Modules:</p>
       <ul>
-        <li><a href="#">Markdown Text Editor</a></li>
-        <li><a href="#">Textile Text Editor</a></li>
-        <li><a href="#">BBCode Text Editor</a></li>
+        <li><a href="text-editor/ui">User Interface</a></li>
+      </ul>
+      <p>These are plugins for user interface module:</p>
+      <ul>
+        <li><a href="text-editor/ui/html"><abbr title="Hyper Text Markup Language">HTML</abbr> Text Editor</a></li>
+        <li><a href="text-editor/ui/markdown">Markdown Text Editor</a> &larr; depend on <code>TE.ui.HTML()</code> plugin</li>
+        <li><a href="text-editor/ui/textile">Textile Text Editor</a> &larr; depend on <code>TE.ui.HTML()</code> plugin</li>
+        <li><a href="text-editor/ui/bbcode">BBCode Text Editor</a> &larr; depend on <code>TE.ui.HTML()</code> plugin</li>
       </ul>
       <p>Miscellaneous:</p>
       <ul>
-        <li><a href="#">Editor Internationalization</a></li>
-        <li><a href="#">Editor Maximize/Minimize</a></li>
-        <li><a href="#">Table Grid Selector</a></li>
-        <li><a href="#">Common String Converters</a></li>
-        <li><a href="#">Native Emoji</a></li>
-        <li><a href="#">Bubble Tools</a></li>
-        <li><a href="#">Editor Grow</a></li>
-        <li><a href="#"><abbr title="Hyper Text Markup Language">HTML</abbr> Auto&ndash;Complete</a></li>
-        <li><a href="#">Word Counter</a></li>
+        <li><a href="text-editor/ui/ui/language">Editor Internationalization</a></li>
+        <li><a href="text-editor/ui/ui/expand">Editor Maximize/Minimize</a></li>
+        <li><a href="text-editor/ui/ui/table-grid">Table Grid Selector</a></li>
+        <li><a href="text-editor/ui/ui/converter">Common String Converters</a></li>
+        <li><a href="text-editor/ui/ui/emoji">Native Emoji</a></li>
+        <li><a href="text-editor/ui/ui/bubble-tools">Bubble Tools</a></li>
+        <li><a href="text-editor/ui/ui/grow">Editor Grow</a></li>
+        <li><a href="text-editor/ui/ui/auto-complete-html"><abbr title="Hyper Text Markup Language">HTML</abbr> Auto&ndash;Complete</a></li>
+        <li><a href="text-editor/ui/ui/word-counter">Word Counter</a></li>
       </ul>
       <h2 id="section:support">Support</h2>
       <p>This text editor project was initially cultivated to support the <a href="https://github.com/mecha-cms">Mecha <abbr title="Content Management System">CMS</abbr></a> project that is currently being inactive for a while. But now, this project becomes an individual project; makes it possible to be extended into any other projects. Your small donation will keep this project going and allow me to do any further development.</p>

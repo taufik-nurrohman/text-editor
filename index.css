@@ -47,9 +47,7 @@ button {
 }
 button:focus,button:hover {background:#00f}
 button:active {background:#f00}
-button,
-input[type="checkbox"],
-input[type="radio"] {width:auto}
+button,input[type="checkbox"],input[type="radio"] {width:auto}
 textarea {
   display:block;
   width:100%;
@@ -133,9 +131,7 @@ footer {
   padding:.5em 1em;
   border-width:0;
 }
-.button,
-.toggle,
-.select {cursor:pointer}
+.button,.toggle,.select {cursor:pointer}
 .button:focus,.button:hover {
   background:#00f;
   color:#fff;
