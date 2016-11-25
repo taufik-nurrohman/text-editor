@@ -12,23 +12,23 @@
   </head>
   <body>
 
-    <header class="header">
+    <header>
       <h1>Text Editor</h1>
       <p>A text selection range <abbr title="Application Programming Interface">API</abbr> written in pure JavaScript, for modern browsers.</p>
       <p><a class="button" href="https://github.com/tovic/text-editor/archive/master.zip"><i class="fa fa-cloud-download"></i> Download</a> <a class="button" href="text-editor"><i class="fa fa-flask"></i> Documentation</a></p>
       <section>
-        <p><textarea>Yay! Finally, a documentation page!</textarea></p>
-        <p id="text-editor-shell-select" data-shell-base="text-editor/ui/ui"></p>
+        <p><textarea class="textarea" id="editor">Yay! Finally, a documentation page!</textarea></p>
+        <p id="text-editor-shell-selector" data-shell-path="text-editor/ui/ui"></p>
       </section>
     </header>
 
-    <section class="body">
+    <section>
       <h2 id="section:start">Start</h2>
       <p>You need to include the base <abbr title="Cascading Style Sheet">CSS</abbr> file called <a href="text-editor/ui/ui.min.css" target="_blank"><code>ui.min.css</code></a>, a <a href="http://fontawesome.io" rel="nofollow" target="_blank">Font Awesome</a> library and these JavaScript files:</p>
       <ul>
-        <li><a href="text-editor.min.js" target="_blank"><code>text-editor.min.js</code></a> &rarr; this is the core <abbr title="Application Programming Interface">API</abbr> for doing text area&ndash;based text selection manipulation.</li>
-        <li><a href="text-editor/ui/ui.min.js" target="_blank"><code>ui.min.js</code></a> &rarr; this is a module to create the <abbr title="Graphic User Interface">GUI</abbr> appearance as you can see in the text editor above.</li>
-        <li><a href="text-editor/ui/html/html.min.js" target="_blank"><code>html.min.js</code></a> &rarr; this is a plugin for user interface module, contains tools for editing <abbr title="Hyper Text Markup Language">HTML</abbr> source.</li>
+        <li><a href="text-editor.min.js" target="_blank"><code>text-editor.min.js</code></a> &rarr; This is the core <abbr title="Application Programming Interface">API</abbr> for doing text area&ndash;based text selection manipulation.</li>
+        <li><a href="text-editor/ui/ui.min.js" target="_blank"><code>ui.min.js</code></a> &rarr; This is a module to create the <abbr title="Graphic User Interface">GUI</abbr> appearance as you can see in the text editor above.</li>
+        <li><a href="text-editor/ui/html/html.min.js" target="_blank"><code>html.min.js</code></a> &rarr; This is a plugin for user interface module, contains tools for editing <abbr title="Hyper Text Markup Language">HTML</abbr> source.</li>
       </ul>
       <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html dir="ltr"&gt;
@@ -56,41 +56,26 @@
       <h3>Configuration</h3>
       <p>The available configuration data are:</p>
       <ul>
-        <li>Inherits <code>TE.ui()</code>
-          <ul>
-            <li><code>tab</code> &rarr; <em>string</em> &middot; set custom indent character.</li>
-            <li><code>dir</code> &rarr; <em>string</em> &middot; editor language direction (currently this option only set a <abbr title="Hyper Text Markup Language">HTML</abbr> <code>dir</code> attribute to the text editor container).</li>
-            <li><code>resize</code> &rarr; <em>boolean</em> &middot; enable/disable text area resize handler.</li>
-            <li><code>keys</code> &rarr; <em>boolean</em> &middot; enable/disable keyboard shortcut feature.</li>
-            <li><code>tools</code> &rarr; <em>string</em> &middot; list of tools to be included to the tools bar, each of them separated by a space.</li>
-            <li><code>attributes</code> &rarr; <em>object</em> &middot; extra <abbr title="Hyper Text Markup Language">HTML</abbr> attributes to be added to the text area element.</li>
-            <li><code>auto_tab</code> &rarr; <em>boolean</em> &middot; press <kbd title="Tab">&#8677;</kbd> key to indent?</li>
-            <li><code>auto_close</code> &rarr; <em>object</em> &middot; list of character as the object key that will be auto&ndash;closed by its value right after the text area caret.</li>
-            <li><code>languages</code> &rarr; <em>object</em> &middot; list of words/phrases used by the text editor <abbr title="Graphic User Interface">GUI</abbr>.</li>
-            <li><code>classes</code> &rarr; <em>object</em> &middot; list of <abbr title="Hyper Text Markup Language">HTML</abbr> classes used by the text editor <abbr title="Graphic User Interface">GUI</abbr>.</li>
-          </ul>
-        </li>
+        <li>Inherits <code>TE.ui()</code> &rarr; <a href="text-editor/ui#section:configure">read more</a></li>
         <li>Inherits <code>TE.ui.HTML()</code>
           <ul>
-            <li><code>auto_encode_html</code> &rarr; <em>boolean</em> &middot; automatically encode <abbr title="Hyper Text Markup Language">HTML</abbr> special characters inside code tags?</li>
-            <li><code>auto_p</code> &rarr; <em>boolean</em> &middot; automatically insert paragraph tags?</li>
-            <li><code>states</code> &rarr; <em>object</em>
+            <li><code>auto_encode_html</code> &rarr; <var>boolean</var> &middot; Automatically encode <abbr title="Hyper Text Markup Language">HTML</abbr> special characters inside code tags?</li>
+            <li><code>auto_p</code> &rarr; <var>boolean</var> &middot; Automatically insert paragraph tags?</li>
+            <li><code>states</code> &rarr; <var>object</var>
               <ul>
-                <li><code>tr</code> &rarr; <em>array</em> &middot; minimum and maximum table rows for table tool.</li>
-                <li><code>td</code> &rarr; <em>array</em> &middot; minimum and maximum table columns for table tool.</li>
-                <li><code>abbr</code> &rarr; <em>object</em> &middot; list of default abbreviations for abbreviation tool.</li>
+                <li><code>tr</code> &rarr; <var>array</var> &middot; Minimum and maximum table rows for table tool.</li>
+                <li><code>td</code> &rarr; <var>array</var> &middot; Minimum and maximum table columns for table tool.</li>
+                <li><code>abbr</code> &rarr; <var>object</var> &middot; List of default abbreviations for abbreviation tool.</li>
               </ul>
             </li>
-            <li><code>advance_a</code> &rarr; <em>boolean</em> &middot; detect external <abbr title="Uniform Resource Locator">URL</abbr> and automatically add <code>rel="nofollow"</code> and <code>target="_blank"</code> attribute to the link markup?</li>
-            <li><code>advance_img</code> &rarr; <em>boolean</em> &middot; insert image with a <code>&lt;figure&gt;</code> element as image container and <code>&lt;figcaption&gt;</code> as image caption if title field is defined?</li>
-            <li><code>advance_table</code> &rarr; <em>boolean</em> &middot; include <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code> and <code>&lt;tfoot&gt;</code> markup?</li>
-            <li><code>formats</code> &rarr; <em>object</em> &middot; list of default <abbr title="Hyper Text Markup Language">HTML</abbr> formats to be outputted.</li>
+            <li><code>advance_a</code> &rarr; <var>boolean</var> &middot; Detect external <abbr title="Uniform Resource Locator">URL</abbr> and automatically add <code>rel="nofollow"</code> and <code>target="_blank"</code> attribute to the link markup?</li>
+            <li><code>advance_img</code> &rarr; <var>boolean</var> &middot; Insert image with <code>&lt;figure&gt;</code> element as image container and <code>&lt;figcaption&gt;</code> as image caption when title field is defined?</li>
+            <li><code>advance_table</code> &rarr; <var>boolean</var> &middot; Include <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code> and <code>&lt;tfoot&gt;</code> markup?</li>
+            <li><code>formats</code> &rarr; <var>object</var> &middot; List of default <abbr title="Hyper Text Markup Language">HTML</abbr> formats to be outputted.</li>
           </ul>
         </li>
       </ul>
-      <p>Custom themes can be included just after the <code>ui.min.css</code>.</p>
-      <pre><code>&lt;link href="text-editor/ui/ui.min.css" rel="stylesheet"&gt;
-&lt;link href="text-editor/ui/ui/ui.white.min.css" rel="stylesheet"&gt;</code></pre>
+      <p>Custom themes can be included just after the <code>ui.min.css</code> &rarr; <a href="text-editor/ui#section:configure">read more</a></p>
       <h2 id="section:extend">Extend</h2>
       <p>Modules:</p>
       <ul>
@@ -99,9 +84,9 @@
       <p>These are plugins for user interface module:</p>
       <ul>
         <li><a href="text-editor/ui/html"><abbr title="Hyper Text Markup Language">HTML</abbr> Text Editor</a></li>
-        <li><a href="text-editor/ui/markdown">Markdown Text Editor</a> &larr; depend on <code>TE.ui.HTML()</code> plugin</li>
-        <li><a href="text-editor/ui/textile">Textile Text Editor</a> &larr; depend on <code>TE.ui.HTML()</code> plugin</li>
-        <li><a href="text-editor/ui/bbcode">BBCode Text Editor</a> &larr; depend on <code>TE.ui.HTML()</code> plugin</li>
+        <li><a href="text-editor/ui/markdown">Markdown Text Editor</a> &larr; depends on <code>TE.ui.HTML()</code> plugin</li>
+        <li><a href="text-editor/ui/textile">Textile Text Editor</a> &larr; depends on <code>TE.ui.HTML()</code> plugin</li>
+        <li><a href="text-editor/ui/bbcode">BBCode Text Editor</a> &larr; depends on <code>TE.ui.HTML()</code> plugin</li>
       </ul>
       <p>Miscellaneous:</p>
       <ul>
@@ -133,7 +118,7 @@
     <script src="text-editor/ui/ui.min.js"></script>
     <script src="text-editor/ui/html/html.min.js"></script>
     <script>
-    var editor = TE.ui.HTML(document.querySelector('textarea'));
+    var editor = TE.ui.HTML(document.querySelector('#editor'));
     </script>
     <script src="text-editor/ui/ui/word-counter/word-counter.min.js"></script>
 

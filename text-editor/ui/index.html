@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>UI &ndash; Core &ndash; Text Editor</title>
+    <link href="favicon.ico" rel="shortcut icon">
+
+    <link href="../../index.min.css" rel="stylesheet">
+    <link href="ui.min.css" rel="stylesheet">
+    <style>
+    .menu-heading-1 span {
+      font-size:170%;
+      line-height:normal;
+    }
+    .menu-heading-2 span {
+      font-size:150%;
+      line-height:normal;
+    }
+    .menu-heading-3 span {
+      font-size:140%;
+      line-height:normal;
+    }
+    .menu-bar span {font-weight:bold}
+    .menu-italic span {font-style:italic}
+    </style>
+
+  </head>
+  <body>
+
+    <header>
+      <h1><a href="../.." rel="prev">Text Editor</a> &rsaquo; <a href="..">Core</a> &rsaquo; UI</h1>
+      <p>This is a module to create the <abbr title="Graphic User Interface">GUI</abbr> appearance as you can see in the text editor below.</p>
+      <section>
+        <p><textarea class="textarea" id="editor" spellcheck="false">Lorem ipsum dolor sit amet.</textarea></p>
+        <p id="text-editor-shell-selector" data-shell-path="ui"></p>
+        <p>
+          <a href="" onclick="return editor.destroy(), false;">Destroy</button> &middot;
+          <a href="" onclick="return editor.destroy(), editor.create(), false;">Create</a> &middot;
+          <a href="" onclick="return editor.disable(), false;">Disable</a> &middot;
+          <a href="" onclick="return editor.enable(), false;">Enable</a> &middot;
+          <a href="" onclick="return editor.freeze(), false;">Freeze</a> &middot;
+          <a href="" onclick="return editor.ui.tools.bold.click(null, editor), false;">Trigger Bold Button</a> &middot;
+          <a href="" onclick="return editor.ui.tool('bold', {active:false}), false;">Disable Bold Button</a> &middot;
+          <a href="" onclick="return editor.ui.tool('bold', {active:true}), false;">Enable Bold Button</a> &middot;
+          <a href="" onclick="return editor.ui.tool('bold', {}, 1), false;">Move Bold Button to 2 from Left</a> &middot;
+          <a href="" onclick="return editor.ui.tool('bold', {}, -1), false;">Move Bold Button to 2 from Right</a> &middot;
+          <a href="" onclick="return editor.ui.tool('bold', {}, 0), false;">Move Bold Button to 1 from Left</a> &middot;
+          <a href="" onclick="return editor.ui.tool('bold', {}, true), false;">Move Bold Button to 1 from Right</a>
+        </p>
+      </section>
+    </header>
+
+    <section>
+      <h2 id="section:start">Start</h2>
+      <p>Include <a href="ui.min.css" target="_blank"><code>ui.min.css</code></a> in the <code>&lt;head&gt;</code> section, include <a href="../../text-editor.min.js" target="_blank"><code>text-editor.min.js</code></a> and <a href="ui.min.js" target="_blank"><code>ui.min.js</code></a> next to the text area:</p>
+      <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html dir="ltr"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Test&lt;/title&gt;
+    &lt;link href="text-editor/ui/ui.min.css" rel="stylesheet"&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;p&gt;&lt;textarea&gt;&lt;/textarea&gt;&lt;/p&gt;
+    &lt;script src="text-editor.min.js"&gt;&lt;/script&gt;
+    &lt;script src="text-editor/ui/ui.min.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+    var editor = TE.ui(document.querySelector('textarea'));
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+      <h2 id="section:configure">Configure</h2>
+      <p><code>TE.ui()</code> contains some default options which you can override it through the second parameter:</p>
+      <pre><code>var editor = TE.ui(document.querySelector('#editor'), {
+    // options goes here&hellip;
+});</code></pre>
+      <p>The available configuration data are:</p>
+      <ul>
+        <li><code>tab</code> &rarr; <var>string</var> &middot; Set custom indent character.</li>
+        <li><code>dir</code> &rarr; <var>string</var> &middot; Editor language direction (currently this option only set a <abbr title="Hyper Text Markup Language">HTML</abbr> <code>dir</code> attribute to the text editor container).</li>
+        <li><code>resize</code> &rarr; <var>boolean</var> &middot; Enable/disable text area resize handler.</li>
+        <li><code>keys</code> &rarr; <var>boolean</var> &middot; Enable/disable keyboard shortcut feature.</li>
+        <li><code>tools</code> &rarr; <var>string</var> &middot; List of tools to be included to the tools bar, each of them separated by a space.</li>
+        <li><code>attributes</code> &rarr; <var>object</var> &middot; Extra <abbr title="Hyper Text Markup Language">HTML</abbr> attributes to be added to the text area element.</li>
+        <li><code>auto_tab</code> &rarr; <var>boolean</var> &middot; Press <kbd>Tab</kbd> key to indent?</li>
+        <li><code>auto_close</code> &rarr; <var>object</var> &middot; List of character as the object key that will be auto&ndash;closed by its value right after the text area caret.</li>
+        <li><code>languages</code> &rarr; <var>object</var> &middot; List of words/phrases used by the text editor <abbr title="Graphic User Interface">GUI</abbr>.</li>
+        <li><code>classes</code> &rarr; <var>object</var> &middot; List of <abbr title="Hyper Text Markup Language">HTML</abbr> classes used by the text editor <abbr title="Graphic User Interface">GUI</abbr>.</li>
+      </ul>
+      <p>Custom themes can be included just after the <code>ui.min.css</code>:</p>
+      <pre><code>&lt;link href="text-editor/ui/ui.min.css" rel="stylesheet"&gt;
+&lt;link href="text-editor/ui/ui/ui.white.min.css" rel="stylesheet"&gt;</code></pre>
+      <h2 id="section:method">Methods</h2>
+      <h3 id="section:method-destroy">Destroy</h3>
+      <h3 id="section:method-create">Create</h3>
+      <h3 id="section:method-update">Update</h3>
+      <h3 id="section:method-disable">Disable</h3>
+      <h3 id="section:method-enable">Enable</h3>
+      <h3 id="section:method-freeze">Freeze</h3>
+      <h3 id="section:method-ui">Components</h3>
+      <h4 id="section:method-ui-tool">Tool</h3>
+      <h4 id="section:method-ui-overlay">Overlay</h3>
+      <h4 id="section:method-ui-panel">Panel</h3>
+      <h4 id="section:method-ui-modal">Modal</h3>
+      <h4 id="section:method-ui-drop">Drop</h3>
+      <h4 id="section:method-ui-bubble">Bubble</h3>
+      <h4 id="section:method-ui-key">Keyboard Shortcut</h3>
+      <h4 id="section:method-ui-tool"><a href="#section:method-ui-tool">Tool</a> &rsaquo; Separator</h3>
+      <h4 id="section:method-ui-alert"><a href="#section:method-ui-modal">Modal</a> &rsaquo; Alert</h3>
+      <h4 id="section:method-ui-confirm"><a href="#section:method-ui-modal">Modal</a> &rsaquo; Confirm</h3>
+      <h4 id="section:method-ui-prompt"><a href="#section:method-ui-modal">Modal</a> &rsaquo; Prompt</h3>
+      <h4 id="section:method-ui-menu"><a href="#section:method-ui-drop">Drop</a> &rsaquo; Menu</h3>
+    </section>
+
+    <footer>
+      <span class="left">&copy; 2016 &middot; Made with <i class="fa fa-fw fa-ambulance" onmouseover="this.className='fa fa-fw fa-heart';" ontouchstart="this.className='fa fa-fw fa-heart';"></i> by <a href="">Taufik Nurrohman</a></span>
+      <span class="right"><a href="https://github.com/tovic/text-editor"><i class="fa fa-github"></i> GitHub</a></span>
+    </footer>
+
+    <script src="../../text-editor.min.js"></script>
+    <script src="ui.min.js"></script>
+    <script>
+
+    var editor = TE.ui(document.querySelector('#editor'));
+
+    // add custom tool(s)
+    TE._.extend(editor.ui.tools, {
+        b: {
+            i: 'bold',
+            click: function(e, $) {
+                return $.format('strong'), false;
+            }
+        },
+        i: {
+            i: 'italic',
+            click: function(e, $) {
+                return $.format('em'), false;
+            }
+        },
+        info: {
+            i: 'info-circle',
+            title: 'Modal Example',
+            click: function(e, $) {
+                return $.ui.modal('foo', {
+                    header: 'Modal Title',
+                    body: 'Modal content.',
+                    footer: {
+                        'Test Button': function(e, $) {
+                            alert('wow');
+                            return $.ui.exit(true), false;
+                        }
+                    }
+                }), false;
+            }
+        },
+        exclamation: {
+            i: 'exclamation-circle',
+            title: 'Alert Modal Example',
+            click: function(e, $) {
+                return $.ui.alert('Alert', 'Alert content.'), false;
+            }
+        },
+        question: {
+            i: 'question-circle',
+            title: 'Confirm Modal Example',
+            click: function(e, $) {
+                return $.ui.confirm(
+                    'Confirm', // title
+                    'Are you sure?', // description
+                    function(e, $) { // if yes ...
+                        return $.insert('[yes]'), false;
+                    },
+                    function(e, $) { // if no ...
+                        return $.insert('[no]'), false;
+                    }
+                ), false;
+            }
+        },
+        plus: {
+            i: 'plus-circle',
+            title: 'Prompt Modal Example',
+            click: function(e, $) {
+                return $.ui.prompt(
+                    'Name', // title
+                    'Anonymous', // placeholder
+                    true, // is required?
+                    function(e, $, value) { // if yes ...
+                        $.insert('Your name is: ' + value);
+                    }
+                ), false;
+            }
+        },
+        color: {
+            i: 'tint',
+            title: 'Drop Example',
+            click: function(e, $) {
+                return $.ui.drop('my-drop', function(drop) {
+                    var colors = ['red', 'orange', 'yellow', 'lime', 'green'],
+                        i, j, k;
+                    for (i in colors) {
+                        j = colors[i];
+                        k = TE._.el('span', "", {
+                            title: j,
+                            css: {
+                                'width': '2em',
+                                'height': '2em',
+                                'display': 'block',
+                                'float': 'left',
+                                'cursor': 'pointer',
+                                'background': j
+                            }
+                        });
+                        TE._.event.set("click", k, function() {
+                            $[0]()
+                                .unwrap(/<span style="color:\s*.*?">/, '</span>')
+                                .format('span style="color: ' + this.title + ';"')
+                            $[1]();
+                        });
+                        drop.appendChild(k);
+                    }
+                }), false;
+            }
+        }
+    });
+
+    // put custom tool(s) to the editor tools bar
+    editor.update({
+        tools: 'b i | indent outdent | undo redo | info exclamation question plus | color | styles'
+    });
+
+    // test menu button(s)
+    editor.ui.menu('styles', 'foo', {
+        'Heading 1': function(e, $) {
+            return $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('h1'), false;
+        },
+        'Heading 2': function(e, $) {
+            return $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('h2'), false;
+        },
+        'Heading 3': function(e, $) {
+            return $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('h3'), false;
+        },
+        'foo': {
+            text: 'Paragraph',
+            click: function(e, $) {
+                return $.unwrap(/<[^\/<>]*?>/, /<\/[^<>]*?>/).format('p'), false;
+            }
+        },
+        'bar': {
+            title: 'Test Title',
+            text: ['bold', 'Bold'],
+            click: 'b'
+        },
+        'Italic': 'i'
+    });
+
+    // test bubble
+    var events = "blur copy cut input keyup mouseup paste scroll";
+    function test_bubble(e) {
+        if (editor.$().length && e.type !== "blur") {
+            editor.ui.bubble('my-bubble', function(bubble) {
+                bubble.innerHTML = '<a href="#">Test bubble&hellip;</a>';
+            });
+        } else {
+            editor.ui.bubble.exit();
+        }
+    }
+
+    editor._.hook.set('create', function() {
+        // set all "bubble" events on editor create
+        apply_bubble_on_create();
+    });
+
+    editor._.hook.set('destroy', function() {
+        // reset all "bubble" events on editor destroy
+        TE._.event.reset(events, editor.target, test_bubble);
+    });
+
+    function apply_bubble_on_create() {
+        TE._.event.set(events, editor.target, test_bubble);
+    }
+
+    // start "bubble" events
+    apply_bubble_on_create();
+
+    </script>
+
+    <script src="../../index.min.js"></script>
+
+  </body>
+</html>

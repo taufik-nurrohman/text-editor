@@ -49,7 +49,8 @@
 .text-editor-drop.menu:hover .text-editor-button:focus {
   background:0 0;
   color:#678;
+  box-shadow:none;
 }
 .text-editor-drop.menu .text-editor-button:focus,
-.text-editor-drop.menu .text-editor-button:hover,
+.text-editor-drop.menu .text-editor-button:active,
 .text-editor-drop.menu:hover .text-editor-button:hover {color:#789}

@@ -1,31 +1,34 @@
 var ack;
 
 (function() {
-    if (!editor) return;
+    var edit = document.querySelector('#editor');
+    if (!edit) return;
     var i = -1,
-        text = editor.get(),
+        text = edit.value,
         text_count = text.length, t;
-    editor._.event.set("scroll", window, function() {
+    window.addEventListener("scroll", function() {
         ack = true;
-    });
-    editor.set("").focus();
+    }, false);
+    edit.value = "";
+    edit.focus();
     function type() {
         ++i;
-        editor.set(editor.get() + text.charAt(i));
+        edit.value += text.charAt(i);
         if (!ack) {
-            editor.focus(true);
+            edit.selectionStart = edit.selectionEnd = edit.value.length;
+            edit.focus();
             window.scroll(0, 0);
         }
-        t = editor._.timer.set(type, 50);
+        t = setTimeout(type, 50);
         if (i === text_count - 1) {
-            editor._.timer.reset(t);
+            clearTimeout(t);
         }
     }
-    editor._.timer.set(type, 1000);
+    setTimeout(type, 1000);
 })();
 
 (function() {
-    var css = document.querySelector('#text-editor-shell-select');
+    var css = document.querySelector('#text-editor-shell-selector');
     if (!css) return;
     var s = document.createElement('link'),
         select = document.createElement('select'),
@@ -37,7 +40,7 @@ var ack;
             '.1960': '1960',
             '.fam-fam-fam': 'Fam Fam Fam'
         },
-        option, i;
+        option, i, v;
     for (i in o) {
         option = document.createElement('option');
         option.innerHTML = o[i];
@@ -45,22 +48,27 @@ var ack;
         option.value = i;
         if (i === '.') {
             option.disabled = true;
+        } else if (i === '1960') {
             option.selected = true;
         }
         select.appendChild(option);
     }
     select.className = 'select';
     css.appendChild(select);
-    function select_css() {
-        document.documentElement.className = 'shell-' + this.value;
+    function add_css(id) {
+        document.documentElement.className = 'shell-' + id;
         s.id = 'text-editor-shell';
         s.rel ='stylesheet';
-        s.href = this.parentNode.getAttribute('data-shell-base') + '/ui.' + this.value + '.min.css';
+        s.href = select.parentNode.getAttribute('data-shell-path') + '/ui.' + id + '.min.css';
         document.head.appendChild(s);
-        if (!this.value) {
+    }
+    function select_css() {
+        v = this.value;
+        add_css(v);
+        if (!v) {
             s.parentNode.removeChild(s);
         }
-    }
+    } add_css('1960');
     select.onchange = select_css;
     select.onclick = function() {
         ack = true;

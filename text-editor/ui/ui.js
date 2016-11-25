@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.5.1
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.5.3
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -102,7 +102,7 @@ TE.ui = function(target, o) {
             },
             classes: {
                 "": 'text-editor',
-                i: 'icon icon-%1 fa fa-%1'
+                i: 'icon icon-%1 icon-%1--%2 fa fa-%2'
             }
         }, o),
 
@@ -318,7 +318,7 @@ TE.ui = function(target, o) {
 
     function slug(s) {
         // exclude ` ` and `/`
-        return _trim(sanitize(s, [/[^ \/a-z\d-]/g, /([ -])+/g, /^-|-$/g], ['-', '$1', ""]));
+        return _trim(sanitize(s.toLowerCase(), [/[^ \/a-z\d-]/g, /([ -])+/g, /^-|-$/g], ['-', '$1', ""]));
     }
 
     function pointer(node, e) {
@@ -693,8 +693,8 @@ TE.ui = function(target, o) {
     }
 
     function do_click_tool(e) {
-        if (target.disabled || target.readonly) {
-            return event_exit(e);
+        if (_content.disabled || _content.readOnly) {
+            return _content.focus(), event_exit(e);
         }
         ui.exit(0, 0, 0);
         var id = data_get(this, 'tool-id'),
@@ -750,7 +750,7 @@ TE.ui = function(target, o) {
                 icon = slug(icon);
             }
             is_button = icon !== '|';
-            s = slug(icon).replace(/\s/g, "");
+            s = slug(v).replace(/[\/\s]/g, '-');
             _button = el_set(is_button ? button + ' ' + button + '-' + s : separator + ' ' + separator + '-' + i, is_button ? 'a' : 'span');
             if (is_button) {
                 _button = tool.target || _button;
@@ -761,9 +761,11 @@ TE.ui = function(target, o) {
                     'tabindex': -1
                 });
                 data_set(_button, 'tool-id', v);
-                icon = icon[0] === '<' ? icon : '<i class="' + format(_i, [icon]) + '"></i>';
+                icon = icon[0] === '<' ? icon : '<i class="' + format(_i, [s, icon]) + '"></i>';
                 if (is_disabled_tool(tool)) {
                     class_set(_button, 'x');
+                } else {
+                    class_reset(_button, 'x');
                 }
                 if (tool.text) {
                     icon = format('<span class="' + _prefix + '-text">' + tool.text + '</span>', [icon]);
@@ -977,7 +979,7 @@ TE.ui = function(target, o) {
             dom_content_reset(_drop);
             event_reset(_CLICK, doc, do_drop_exit);
             event_reset(_RESIZE, win, do_drop_exit);
-            ui.exit(e.target === target);
+            ui.exit(e.target === _content);
         }
     }
 
@@ -988,6 +990,7 @@ TE.ui = function(target, o) {
         }
         var _parent = dom_exist(_content);
         class_set(_container, _prefix + '-is-can-update');
+        class_set(_container, _prefix + '-is-can-copy');
         class_set(_content, _class);
         if (_parent && dom_is(_parent, 'p')) {
             dom_before(_parent, _container);
@@ -1059,6 +1062,7 @@ TE.ui = function(target, o) {
     $.enable = function(hook) {
         _content.disabled = _content.readOnly = false;
         class_set(_container, _prefix + '-is-can-update');
+        class_set(_container, _prefix + '-is-can-copy');
         return hook !== 0 ? hook_fire('enable', [$]) : $;
     };
 
@@ -1066,6 +1070,7 @@ TE.ui = function(target, o) {
     $.disable = function(hook) {
         _content.disabled = true;
         class_reset(_container, _prefix + '-is-can-update');
+        class_reset(_container, _prefix + '-is-can-copy');
         return hook !== 0 ? hook_fire('disable', [$]) : $;
     };
 
@@ -1074,6 +1079,7 @@ TE.ui = function(target, o) {
         _content.disabled = false;
         _content.readOnly = true;
         class_reset(_container, _prefix + '-is-can-update');
+        class_set(_container, _prefix + '-is-can-copy');
         return hook !== 0 ? hook_fire('freeze', [$]) : $;
     };
 
@@ -1100,6 +1106,7 @@ TE.ui = function(target, o) {
                 dom_content_reset(_bubble);
             }
         };
+        do_keys_reset();
         if (!k) {
             for (i in f) f[i]();
         } else {
@@ -1123,7 +1130,6 @@ TE.ui = function(target, o) {
 
     ui.panel = function(s, fn) {
         ui.exit(0, 0, 0);
-        do_keys_reset();
         x = el_set(_prefix + '-x');
         x.title = _i18n_buttons.close;
         function do_panel_exit() {
@@ -1146,7 +1152,6 @@ TE.ui = function(target, o) {
 
     ui.overlay = function(x, fn) {
         ui.exit(0, 0, 0);
-        do_keys_reset();
         dom_set(_body, _overlay);
         if (x) event_set(_CLICK, _overlay, do_overlay_exit);
         if (is_function(fn)) {
@@ -1285,8 +1290,9 @@ TE.ui = function(target, o) {
         event_set(_KEYDOWN, okay, function(e) {
             var key = e.TE.key;
             if (key(/^(escape|enter)$/)) {
-                return event_fire(_CLICK, okay, [e]), event_exit(e);
+                event_fire(_CLICK, okay, [e]);
             }
+            return event_exit(e);
         });
         ui.modal(id, do_modal_dom_set(title, content, okay), fn);
         return okay.focus(), $;
@@ -1313,17 +1319,25 @@ TE.ui = function(target, o) {
         event_set(_CLICK, cancel, nope);
         event_set(_KEYDOWN, okay, function(e) {
             key = e.TE.key;
-            if (key('arrowright')) return cancel.focus(), event_exit(e);
-            if (key('arrowleft')) return event_exit(e);
-            if (key('enter')) return yep(e), event_exit(e);
-            if (key('escape')) return do_modal_exit(e, id + '.y'), event_exit(e);
+            if (key('arrowright')) {
+                cancel.focus();
+            } else if (key('enter')) {
+                yep(e);
+            } else if (key('escape')) {
+                do_modal_exit(e, id + '.y');
+            }
+            return event_exit(e);
         });
         event_set(_KEYDOWN, cancel, function(e) {
             key = e.TE.key;
-            if (key('arrowright')) return event_exit(e);
-            if (key('arrowleft')) return okay.focus(), event_exit(e);
-            if (key('enter')) return nope(e), event_exit(e);
-            if (key('escape')) return do_modal_exit(e, id + '.n'), event_exit(e);
+            if (key('arrowleft')) {
+                okay.focus();
+            } else if (key('enter')){
+                nope(e);
+            } else if (key('escape')) {
+                do_modal_exit(e, id + '.n');
+            }
+            return event_exit(e);
         });
         ui.modal(id, do_modal_dom_set(title, content, [okay, cancel]), fn);
         return cancel.focus(), $;
@@ -1370,42 +1384,47 @@ TE.ui = function(target, o) {
         cancel.name = 'n';
         function prepare() {
             input.focus();
-            if ('placeholder' in input) input.select();
-        }
-        function freeze(e) {
-            return event_exit(e);
+            ('placeholder' in input) && input.select();
         }
         function yep(e) {
             s = input.value;
             if (required && (!_trim(s) || s === value)) {
                 return prepare(), freeze(e);
             }
-            return do_modal_exit(e, id + '.y'), event_exit(e), y(e, $, s !== value ? s : "", value);
+            do_modal_exit(e, id + '.y'), y(e, $, s !== value ? s : "", value);
         }
         function nope(e) {
-            return do_modal_exit(e, id + '.n'), event_exit(e);
+            do_modal_exit(e, id + '.n');
         }
         event_set(_KEYDOWN, input, function(e) {
             key = e.TE.key;
-            if (key('enter')) return yep(e);
-            if (key('escape') || key('backspace') && !this.value) return nope(e);
-            if (key('arrowup')) return freeze(e);
+            if (key('enter')) return yep(e), event_exit(e);
+            if (key('escape') || (key('backspace') && !this.value)) return nope(e), event_exit(e);
             if (key('arrowdown')) return okay.focus(), event_exit(e);
         });
         event_set(_KEYDOWN, okay, function(e) {
             key = e.TE.key;
-            if (key('enter')) return yep(e);
-            if (key('escape')) return nope(e);
-            if (key('arrowup')) return input.focus(), event_exit(e);
-            if (key('arrowright')) return cancel.focus(), event_exit(e);
-            if (key(/^arrow(down|left)$/)) return freeze(e);
+            if (key('enter')) {
+                yep(e);
+            } else if (key('escape')) {
+                nope(e);
+            } else if (key('arrowup')) {
+                input.focus();
+            } else if (key('arrowright')) {
+                cancel.focus();
+            }
+            return event_exit(e);
         });
         event_set(_KEYDOWN, cancel, function(e) {
             key = e.TE.key;
-            if (key(/^(enter|escape)$/)) return nope(e);
-            if (key('arrowup')) return input.focus(), event_exit(e);
-            if (key(/^arrow(right|down)$/)) return freeze(e);
-            if (key('arrowleft')) return okay.focus(), event_exit(e);
+            if (key(/^(enter|escape)$/)) {
+                nope(e);
+            } else if (key('arrowup')) {
+                input.focus();
+            } else if (key('arrowleft')) {
+                okay.focus();
+            }
+            return event_exit(e);
         });
         event_set(_CLICK, okay, yep);
         event_set(_CLICK, cancel, nope);
@@ -1455,7 +1474,7 @@ TE.ui = function(target, o) {
             is_set(center[0]) && (l = center[0]);
             is_set(center[1]) && (t = center[1]);
         } else {
-            l = _edge(l, 0, Math.max(a.w, win.innerWidth) - b.w);
+            l = _edge(l, 0, /* Math.max(a.w, win.innerWidth) */ a.w - b.w);
             t = _edge(t, 0, Math.max(a.h, win.innerHeight) - b.h);
         }
         _css(_drop, {
@@ -1564,7 +1583,8 @@ TE.ui = function(target, o) {
                         r = v.text;
                         r = is_object(r) ? (r[1] || "") : r;
                         j = is_object(j) ? j[0] : j;
-                        s = el(w ? 'span' : 'a', w ? '<span>' + (j || '%' + index) + '</span>' : (v.text || j), _extend(attributes, v.attributes || {}));
+                        s = el(w ? 'span' : 'a', '<span>' + (w ? (j || '%' + index) : (r || j)) + '</span>', _extend(attributes, v.attributes || {}));
+                        class_set(s, 'menu-' + slug(i).replace(/[\/\s]/g, '-'));
                         if (!attributes.title && (t = v.title)) {
                             s.title = is_object(t) ? t[0] + (t[1] ? ' (' + t[1] + ')' : "") : t;
                         }
@@ -1575,6 +1595,8 @@ TE.ui = function(target, o) {
                         } else {
                             if (is_disabled_tool(v)) {
                                 class_set(s, 'x');
+                            } else {
+                                class_reset(s, 'x');
                             }
                             event_set(_CLICK, s, _do_click);
                             event_set(_KEYDOWN, s, _do_key);
@@ -1711,6 +1733,10 @@ TE.ui = function(target, o) {
         return do_update_tools(), $;
     };
 
+    ui.separator = function(data, i) {
+        return ui.tool('|', data, i);
+    };
+
     ui.key = function(keys, data) {
         if (!config.keys) return $;
         if (data === false) {
@@ -1752,7 +1778,7 @@ TE.ui = function(target, o) {
         'escape': function(e, $) {
             r = ':not([tabindex]):not([disabled])';
             if (s = dom_get('input' + r + ',button' + r + ',select' + r + ',textarea' + r + ',a[href]' + r + ',[contenteditable]' + r + ',[tabindex]:not([tabindex="-1"])', doc, 0)) {
-                if ((t = s.indexOf(target)) !== -1) {
+                if ((t = s.indexOf(_content)) !== -1) {
                     return (s[t + 1] || doc).focus(), false;
                 }
             }

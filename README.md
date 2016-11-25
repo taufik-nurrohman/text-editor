@@ -5,14 +5,6 @@ Text Editor
 
 [View Demo](http://tovic.github.io/text-editor "View Demo")
 
-Examples
---------
-
- - [Basic HTML Text Editor](https://rawgit.com/tovic/text-editor/master/text-editor.noob.html)
- - [Auto–Correct/Auto–Convert](https://rawgit.com/tovic/text-editor/master/text-editor.auto-convert.html)
- - [Test for Editor Keys](https://rawgit.com/tovic/text-editor/master/text-editor.key.html)
- - [Test for Caret Position](https://rawgit.com/tovic/text-editor/master/text-editor.$.caret.html)
-
 Modules
 -------
 

@@ -1,10 +1,21 @@
+
 @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
 * {
   margin:0;
   padding:0;
+  font:inherit;
+  text-decoration:none;
   -webkit-box-sizing:border-box;
   -moz-box-sizing:border-box;
   box-sizing:border-box;
+}
+b,strong,th {font-weight:bold}
+i,em,var {font-style:italic}
+ins,u {text-decoration:underline}
+s,del {text-decoration:line-through}
+.fa {
+  font-family:FontAwesome;
+  font-style:normal;
 }
 html {
   font-family:Helmet,FreeSans,Sans-Serif;
@@ -18,9 +29,15 @@ a {
 a:focus,a:active {color:#f00}
 abbr {
   border:0;
-  text-decoration:none;
   color:#090;
   cursor:help;
+}
+kbd {
+  background:#090;
+  color:#fff;
+  font-size:76%;
+  font-weight:bold;
+  padding:.25em .5em;
 }
 a abbr,strong abbr {color:inherit}
 button::-moz-focus-inner,
@@ -31,7 +48,6 @@ input::-moz-focus-inner {
   outline:0;
 }
 button,input,select,textarea {
-  font:inherit;
   background:0 0;
   color:inherit;
   border:1px solid;
@@ -45,8 +61,8 @@ button {
   padding:.25em .65em;
   cursor:pointer;
 }
-button:focus,button:hover {background:#00f}
-button:active {background:#f00}
+button:focus,button:hover {background:#009}
+button:active {background:#900}
 button,input[type="checkbox"],input[type="radio"] {width:auto}
 textarea {
   display:block;
@@ -81,9 +97,8 @@ h2 {
   padding-top:3rem;
 }
 h3 {font-size:1.414rem}
-h4 {font-size:.707rem}
-h5 {font-size:.4713333333333333rem}
-h6 {font-size:.3535rem}
+h5 {font-size:.707rem}
+h6 {font-size:.4713333333333333rem}
 table {
   margin-top:1.5rem;
   border-spacing:0;
@@ -93,13 +108,21 @@ th,td {
   border:1px solid;
   padding:.5em 1em;
 }
+blockquote {
+  border-left:4px solid #faf;
+  padding-left:1.5em;
+}
 pre {
   background:#afa;
   padding:1em 1.2em;
   white-space:pre-wrap;
   word-wrap:break-word;
 }
-code {color:#900}
+code {
+  font-family:"Courier New",Courier,"Nimbus Mono L",Monospace;
+  font-style:normal;
+  color:#900;
+}
 pre code {color:inherit}
 section {
   max-width:750px;
@@ -133,11 +156,11 @@ footer {
 }
 .button,.toggle,.select {cursor:pointer}
 .button:focus,.button:hover {
-  background:#00f;
+  background:#009;
   color:#fff;
 }
 .button:active {
-  background:#f00;
+  background:#900;
   color:#fff;
 }
 .text-editor-content {

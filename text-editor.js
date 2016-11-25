@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR PLUGIN 2.7.0
+ *  TEXT EDITOR 2.7.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -134,11 +134,11 @@
             }
             for (i in b) {
                 j = b[i];
-                a.style[camelize(i[replace](/^\!/, ""))] = j === 0 ? 0 : (j ? (is_string(j) ? j : j + 'px') : "");
+                a.style[camelize(i[replace](/^\0/, ""))] = j === 0 ? 0 : (j ? (is_string(j) ? j : j + 'px') : "");
             }
             return a;
         } else if (b) {
-            if (b[0] === '!') {
+            if (b[0] === '\0') {
                 b = b.slice(1);
                 k = 1;
             }
@@ -148,8 +148,10 @@
         }
         return (function() {
             for (i in o) {
-                j = num(o[i]);
-                h[dasherize(i)] = j === 0 ? 0 : (j || o[i] || "");
+                j = o.getPropertyValue(i);
+                if (!j) continue;
+                k = num(j);
+                h[dasherize(i)] = k === 0 ? 0 : (k || j || "");
             }
             return h;
         })();
@@ -444,7 +446,7 @@
                 padding = 'padding-',
                 border = 'border-',
                 width = '-width',
-                keep = '!',
+                keep = '\0',
                 properties = [
                     border + 'bottom' + width,
                     border + 'left' + width,
@@ -838,6 +840,9 @@
 
         // make a copy of utility ...
         extend($._ = {}, TE._);
+
+        // --ditto
+        for (i in TE.is) $.is[i] = TE.is[i];
 
         // the target element
         $.target = target;
