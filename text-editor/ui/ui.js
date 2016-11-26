@@ -144,11 +144,15 @@ TE.ui = function(target, o) {
         return is_object(s) ? s.join(' ') : s;
     }
 
+    function count(s) {
+        return s.length;
+    }
+
     function hook_set(ev, fn, id) {
         if (!is_set(ev)) return hooks;
         if (!is_set(fn)) return hooks[ev];
         if (!is_set(hooks[ev])) hooks[ev] = {};
-        if (!is_set(id)) id = Object.keys(hooks[ev]).length;
+        if (!is_set(id)) id = count(Object.keys(hooks[ev]));
         return hooks[ev][id] = fn, $;
     }
 
@@ -180,7 +184,7 @@ TE.ui = function(target, o) {
                 attr_set(node, i, a[i]);
             }
         } else {
-            node.setAttribute(a, b);
+            node[(b === null ? 'remove' : 'set') + 'Attribute'](a, b);
         }
     }
 
@@ -195,7 +199,7 @@ TE.ui = function(target, o) {
                 o.push(i);
             }
         }
-        return o.length ? o : (is_set(b) ? b : []);
+        return count(o) ? o : (is_set(b) ? b : []);
     }
 
     function attr_reset(node, a) {
@@ -206,7 +210,7 @@ TE.ui = function(target, o) {
         } else {
             if (!is_set(a)) {
                 attr_reset(node, 'class'); // :(
-                for (i = 0, j = node.attributes, k = j.length; i < k; ++i) {
+                for (i = 0, j = node.attributes, k = count(j); i < k; ++i) {
                     if (j[i]) attr_reset(node, j[i].name);
                 }
             } else {
@@ -236,7 +240,7 @@ TE.ui = function(target, o) {
                 o.push(i);
             }
         }
-        return o.length ? o : (is_set(b) ? b : []);
+        return count(o) ? o : (is_set(b) ? b : []);
     }
 
     function data_reset(node, a) {
@@ -246,7 +250,7 @@ TE.ui = function(target, o) {
             }
         } else {
             if (!is_set(a)) {
-                for (i = 0, j = node.attributes, k = j.length; i < k; ++i) {
+                for (i = 0, j = node.attributes, k = count(j); i < k; ++i) {
                     if (j[i] && j[i].name.slice(0, 5) === 'data-') {
                         attr_reset(node, j[i].name);
                     }
@@ -265,7 +269,7 @@ TE.ui = function(target, o) {
     function event_set(id, node, fn) {
         if (!node) return;
         id = str_split(id);
-        for (i = 0, j = id.length; i < j; ++i) {
+        for (i = 0, j = count(id); i < j; ++i) {
             node.addEventListener(id[i], fn, false);
             hook_set('on:' + id[i], fn, dom_id(node));
         }
@@ -275,7 +279,7 @@ TE.ui = function(target, o) {
     function event_reset(id, node, fn) {
         if (!node) return;
         id = str_split(id);
-        for (i = 0, j = id.length; i < j; ++i) {
+        for (i = 0, j = count(id); i < j; ++i) {
             node.removeEventListener(id[i], fn, false);
             hook_reset('on:' + id[i], dom_id(node));
         }
@@ -288,7 +292,7 @@ TE.ui = function(target, o) {
     function event_fire(id, node, data) {
         id = str_split(id);
         var has_event = 'createEvent' in doc, e;
-        for (i = 0, j = id.length; i < j; ++i) {
+        for (i = 0, j = count(id); i < j; ++i) {
             if (has_event) {
                 e = doc.createEvent('HTMLEvents');
                 e.data = data;
@@ -302,7 +306,7 @@ TE.ui = function(target, o) {
     }
 
     function sanitize(s, from, to) {
-        for (i = 0, j = from.length, k; i < j; ++i) {
+        for (i = 0, j = count(from), k; i < j; ++i) {
             k = from[i];
             s = s.replace(is_pattern(k) ? k : _pattern(_esc(k), 'g'), (to && to[i]) || "");
         }
@@ -374,7 +378,7 @@ TE.ui = function(target, o) {
                 o.push(i);
             }
         }
-        return o.length ? o : (is_set(b) ? b : false);
+        return count(o) ? o : (is_set(b) ? b : false);
     }
 
     function class_reset(node, s) {
@@ -385,6 +389,13 @@ TE.ui = function(target, o) {
             for (i in s) {
                 node.classList.remove(s[i]);
             }
+        }
+    }
+
+    function class_toggle(node, s) {
+        s = str_split(s);
+        for (i in s) {
+            node.classList.toggle(s[i]);
         }
     }
 
@@ -461,7 +472,7 @@ TE.ui = function(target, o) {
 
     function content_reset(node, deep) {
         if (deep !== false && (c = dom_children(node))) {
-            for (i = 0, j = c.length; i < j; ++i) {
+            for (i = 0, j = count(c); i < j; ++i) {
                 content_reset(c[i]);
             }
         }
@@ -506,18 +517,21 @@ TE.ui = function(target, o) {
         o = [];
         if (is_string(s)) {
             if (/^([#.]?[\w-]+|\*)$/.test(s)) {
+                // `#foo`
                 if (s[0] === '#' && (s = parent.getElementById(s.slice(1)))) {
                     return [s];
+                // `.foo`
                 } else if ((s[0] === '.' && (s = parent.getElementsByClassName(s.slice(1)))) || (s = parent.getElementsByTagName(s))) {
-                    for (i = 0, j = s.length; i < j; ++i) {
+                    for (i = 0, j = count(s); i < j; ++i) {
                         o.push(s[i]);
                     }
                     return o;
                 }
                 return [];
             } else {
+                // `#foo .bar [baz=qux]`
                 s = parent.querySelectorAll(s);
-                for (i = 0, j = s.length; i < j; ++i) {
+                for (i = 0, j = count(s); i < j; ++i) {
                     o.push(s[i]);
                 }
                 return o;
@@ -528,7 +542,7 @@ TE.ui = function(target, o) {
 
     function dom_exist(node, dom) {
         var parent = dom_parent(node);
-        if (arguments.length === 1) {
+        if (count(arguments) === 1) {
             return parent || false;
         }
         return node && parent === node ? parent : false;
@@ -792,7 +806,7 @@ TE.ui = function(target, o) {
         ui.keys = (function() {
             var input = Object.keys(ui.keys).sort().reverse(),
                 output = {}, v;
-            for (i = 0, j = input.length; i < j; ++i) {
+            for (i = 0, j = count(input); i < j; ++i) {
                 v = input[i];
                 output[v] = ui.keys[v];
             }
@@ -817,7 +831,7 @@ TE.ui = function(target, o) {
             dent = (before.match(/(?:^|\n)([\t ]*).*$/) || [""]).pop();
         n = e.TE.key();
         maps[n] = 1;
-        o = Object.keys(maps).length;
+        o = count(Object.keys(maps));
         function explode(s) {
             return s.replace(/\+/g, '\n').replace(/\n\n/g, '\n+').split('\n');
         }
@@ -833,7 +847,7 @@ TE.ui = function(target, o) {
                     ++c;
                 }
             }
-            k = k.length;
+            k = count(k);
             if (c === k && o === k) {
                 if (is_string(keys[i])) {
                     keys[i] = ui.tools[keys[i]].click;
@@ -1354,7 +1368,7 @@ TE.ui = function(target, o) {
                 'class': _prefix + '-input block'
             }),
             id = 'prompt',
-            options = [], s, key;
+            options = [], s, key, control;
         if (is_object(title)) {
             id += ':' + title[0];
             title = title[1] || title[0];
@@ -1366,7 +1380,8 @@ TE.ui = function(target, o) {
         if (type === 1) {
             input = el('textarea', value, {
                 'placeholder': value.split('\n')[0],
-                'class': _prefix + '-textarea block'
+                'class': _prefix + '-textarea block',
+                'spellcheck': 'false'
             });
         } else if (type === 2) {
             for (i in value) {
@@ -1389,18 +1404,20 @@ TE.ui = function(target, o) {
         function yep(e) {
             s = input.value;
             if (required && (!_trim(s) || s === value)) {
-                return prepare(), freeze(e);
+                prepare();
+            } else {
+                do_modal_exit(e, id + '.y'), y(e, $, s !== value ? s : "", value);
             }
-            do_modal_exit(e, id + '.y'), y(e, $, s !== value ? s : "", value);
         }
         function nope(e) {
             do_modal_exit(e, id + '.n');
         }
         event_set(_KEYDOWN, input, function(e) {
             key = e.TE.key;
-            if (key('enter')) return yep(e), event_exit(e);
+            control = e.TE.control;
+            if (key('enter') && type !== 1 || control('enter')) return yep(e), event_exit(e);
             if (key('escape') || (key('backspace') && !this.value)) return nope(e), event_exit(e);
-            if (key('arrowdown')) return okay.focus(), event_exit(e);
+            if (key('arrowdown') && type !== 1 && type !== 2 || control('arrowdown')) return okay.focus(), event_exit(e);
         });
         event_set(_KEYDOWN, okay, function(e) {
             key = e.TE.key;
@@ -1437,7 +1454,7 @@ TE.ui = function(target, o) {
         var arg = arguments,
             k = arg[0],
             fn = arg[1];
-        if (arg.length === 1) {
+        if (count(arg) === 1) {
             k = 'default';
             fn = arg[0];
         }
@@ -1614,12 +1631,14 @@ TE.ui = function(target, o) {
         return data_set(tools[id].target, 'ui-drop', id), (tools[id].data = data), $;
     };
 
+    ui.menu.select = function() {}; // TODO: make a method to set menu selection value
+
     ui.bubble = function() {
         ui.exit(0, 0, 0);
         var arg = arguments,
             k = arg[0],
             fn = arg[1];
-        if (arg.length === 1) {
+        if (count(arg) === 1) {
             k = 'default';
             fn = arg[0];
         }
@@ -1844,6 +1863,7 @@ TE.ui = function(target, o) {
             classes: {
                 set: class_set,
                 reset: class_reset,
+                toggle: class_toggle,
                 get: class_get
             },
             attributes: {

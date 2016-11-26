@@ -60,6 +60,7 @@
   font:inherit;
   padding:.25em .5em;
 }
+.text-editor-select {height:2.142857142857143em} /* hacky! :( */
 .text-editor-select,
 .text-editor-toggle {cursor:pointer}
 .text-editor-button,

@@ -35,18 +35,18 @@
         <p><textarea class="textarea" id="editor" spellcheck="false">Lorem ipsum dolor sit amet.</textarea></p>
         <p id="text-editor-shell-selector" data-shell-path="ui"></p>
         <p>
-          <a href="" onclick="return editor.destroy(), false;">Destroy</button> &middot;
+          <a href="" onclick="return editor.destroy(), false;">Destroy</a> &middot;
           <a href="" onclick="return editor.destroy(), editor.create(), false;">Create</a> &middot;
           <a href="" onclick="return editor.disable(), false;">Disable</a> &middot;
           <a href="" onclick="return editor.enable(), false;">Enable</a> &middot;
           <a href="" onclick="return editor.freeze(), false;">Freeze</a> &middot;
-          <a href="" onclick="return editor.ui.tools.bold.click(null, editor), false;">Trigger Bold Button</a> &middot;
-          <a href="" onclick="return editor.ui.tool('bold', {active:false}), false;">Disable Bold Button</a> &middot;
-          <a href="" onclick="return editor.ui.tool('bold', {active:true}), false;">Enable Bold Button</a> &middot;
-          <a href="" onclick="return editor.ui.tool('bold', {}, 1), false;">Move Bold Button to 2 from Left</a> &middot;
-          <a href="" onclick="return editor.ui.tool('bold', {}, -1), false;">Move Bold Button to 2 from Right</a> &middot;
-          <a href="" onclick="return editor.ui.tool('bold', {}, 0), false;">Move Bold Button to 1 from Left</a> &middot;
-          <a href="" onclick="return editor.ui.tool('bold', {}, true), false;">Move Bold Button to 1 from Right</a>
+          <a href="" onclick="return editor.ui.tools.b.click(null, editor), false;">Trigger Bold Button</a> &middot;
+          <a href="" onclick="return editor.ui.tool('b', {active:false}), false;">Disable Bold Button</a> &middot;
+          <a href="" onclick="return editor.ui.tool('b', {active:true}), false;">Enable Bold Button</a> &middot;
+          <a href="" onclick="return editor.ui.tool('b', {}, 1), false;">Move Bold Button to 2 from Left</a> &middot;
+          <a href="" onclick="return editor.ui.tool('b', {}, -1), false;">Move Bold Button to 2 from Right</a> &middot;
+          <a href="" onclick="return editor.ui.tool('b', {}, 0), false;">Move Bold Button to 1 from Left</a> &middot;
+          <a href="" onclick="return editor.ui.tool('b', {}, true), false;">Move Bold Button to 1 from Right</a>
         </p>
       </section>
     </header>
@@ -71,10 +71,14 @@
   &lt;/body&gt;
 &lt;/html&gt;</code></pre>
       <h2 id="section:configure">Configure</h2>
+      <h3 id="section:method--construct">Instance</h3>
+      <p>Initialize a brand new text editor:</p>
+      <pre><code>var editor = TE.ui(document.querySelector('#editor'));</code></pre>
       <p><code>TE.ui()</code> contains some default options which you can override it through the second parameter:</p>
       <pre><code>var editor = TE.ui(document.querySelector('#editor'), {
     // options goes here&hellip;
 });</code></pre>
+      <h3 id="section:method--config">Configuration</h3>
       <p>The available configuration data are:</p>
       <ul>
         <li><code>tab</code> &rarr; <var>string</var> &middot; Set custom indent character.</li>
@@ -88,29 +92,461 @@
         <li><code>languages</code> &rarr; <var>object</var> &middot; List of words/phrases used by the text editor <abbr title="Graphic User Interface">GUI</abbr>.</li>
         <li><code>classes</code> &rarr; <var>object</var> &middot; List of <abbr title="Hyper Text Markup Language">HTML</abbr> classes used by the text editor <abbr title="Graphic User Interface">GUI</abbr>.</li>
       </ul>
-      <p>Custom themes can be included just after the <code>ui.min.css</code>:</p>
+      <p>Custom themes can be included just after the <a href="ui.min.css" target="_blank"><code>ui.min.css</code></a>:</p>
       <pre><code>&lt;link href="text-editor/ui/ui.min.css" rel="stylesheet"&gt;
 &lt;link href="text-editor/ui/ui/ui.white.min.css" rel="stylesheet"&gt;</code></pre>
       <h2 id="section:method">Methods</h2>
-      <h3 id="section:method-destroy">Destroy</h3>
-      <h3 id="section:method-create">Create</h3>
-      <h3 id="section:method-update">Update</h3>
-      <h3 id="section:method-disable">Disable</h3>
-      <h3 id="section:method-enable">Enable</h3>
-      <h3 id="section:method-freeze">Freeze</h3>
+      <h3 id="section:method-destroy">Destroy <sup><a href="javascript:void(window.scroll(0,0),editor.destroy());">test</a></sup></h3>
+      <pre><code>editor.destroy();</code></pre>
+      <h3 id="section:method-create">Create <sup><a href="javascript:void(window.scroll(0,0),editor.create());">test</a></sup></h3>
+      <pre><code>editor.create();</code></pre>
+      <h3 id="section:method-update">Update <sup><a href="javascript:void(window.scroll(0,0),editor.update({tools:'b i | undo redo'}));">test</a></sup></h3>
+      <pre><code>editor.update({
+    tools: 'b i | undo redo'
+});</code></pre>
+      <h3 id="section:method-disable">Disable <sup><a href="javascript:void(window.scroll(0,0),editor.disable());">test</a></sup></h3>
+      <pre><code>editor.disable();</code></pre>
+      <h3 id="section:method-enable">Enable <sup><a href="javascript:void(window.scroll(0,0),editor.enable());">test</a></sup></h3>
+      <pre><code>editor.enable();</code></pre>
+      <h3 id="section:method-freeze">Freeze <sup><a href="javascript:void(window.scroll(0,0),editor.freeze());">test</a></sup></h3>
+      <pre><code>editor.freeze();</code></pre>
       <h3 id="section:method-ui">Components</h3>
-      <h4 id="section:method-ui-tool">Tool</h3>
-      <h4 id="section:method-ui-overlay">Overlay</h3>
-      <h4 id="section:method-ui-panel">Panel</h3>
-      <h4 id="section:method-ui-modal">Modal</h3>
-      <h4 id="section:method-ui-drop">Drop</h3>
-      <h4 id="section:method-ui-bubble">Bubble</h3>
-      <h4 id="section:method-ui-key">Keyboard Shortcut</h3>
-      <h4 id="section:method-ui-tool"><a href="#section:method-ui-tool">Tool</a> &rsaquo; Separator</h3>
+      <p>Set callback function on the optional <var>fn</var> parameter.</p>
+      <h4 id="section:method-ui-tool">Tool <sup><a href="javascript:void(window.scroll(0,0),editor.ui.tool('emoticon',{i:'smile-o',title:'Emoticons',click:function(e,$){return $.insertBefore(' :) '),false}}));">test</a></sup></h4>
+      <pre><code>editor.ui.tool('emoticon', {
+    i: 'smile-o',
+    title: 'Emoticon',
+    click: function(e, $, id) {
+        // `e` refers to the `HTMLEvents` instance
+        // `$` refers to the `TE` instance
+        // `id` refers to `emoticon` where possible
+        return $.insertBefore(' :) '), false;
+    }
+});</code></pre>
+      <ul>
+        <li><code>title</code> &rarr; The tool title.</li>
+        <li><code>i</code> &rarr; Icon identifier or key alias.</li>
+        <li><code>click</code> &rarr; Function that will be executed on click event.</li>
+        <li><code>text</code> &rarr; Use text instead of icon?</li>
+        <li><code>active</code> &rarr; <code>true</code> by default, it means that the tool is active and can be used.</li>
+        <li><code>attributes</code> &rarr; Extra <abbr title="Hyper Text Markup Language">HTML</abbr> attributes for the tool markup.</li>
+        <li><code>target</code> &rarr; <abbr title="Hyper Text Markup Language">HTML</abbr> element used to trigger the tool item.</li>
+      </ul>
+      <h4 id="section:method-ui-tools">Tools</h4>
+      <p>Return the added tools:</p>
+      <pre><code>console.log(editor.ui.tools);</code></pre>
+      <h4 id="section:method-ui-overlay">Overlay <sup><a href="javascript:void(window.scroll(0,0),editor.ui.overlay(1));">test</a></sup></h4>
+      <pre><code>editor.ui.overlay(true, <var>fn</var>); // `true` to remove overlay by click on it</code></pre>
+      <h4 id="section:method-ui-panel">Panel <sup><a href="javascript:void(window.scroll(0,0),editor.ui.panel('Panel content.'));">test</a></sup></h4>
+      <pre><code>editor.ui.panel('Panel content.', <var>fn</var>);</code></pre>
+      <pre><code>editor.ui.panel(function(panel) {
+    panel.innerHTML = 'Panel content.';
+}, <var>fn</var>);</code></pre>
+      <h4 id="section:method-ui-modal">Modal <sup><a href="javascript:void(window.scroll(0,0),editor.ui.modal('my-modal',{header:'Modal Title',body:'Modal body.',footer:{'exit':function(){return editor.ui.exit(),window.location.hash='#section-method-ui-modal',false}}}));">test</a></sup></h4>
+      <pre><code>editor.ui.modal('my-modal', {
+    header: 'Modal Header',
+    body: 'Modal body.',
+    footer: 'Modal footer.'
+}, <var>fn</var>);</code></pre>
+      <pre><code>var button_1 = TE._.el('button', 'OK'),
+    button_2 = TE._.el('button', 'Cancel');
+
+editor.ui.modal('my-modal', {
+    header: 'Modal Header',
+    body: 'Modal body.',
+    footer: [button_1, button_2]
+}, <var>fn</var>);</code></pre>
+      <pre><code>editor.ui.modal('my-modal', {
+    header: 'Modal Header',
+    body: 'Modal body.',
+    footer: {
+        'OK': function(e, $) {
+            alert('ok');
+        },
+        'Cancel': function(e, $) {
+            alert('cancel');
+        }
+    }
+}, <var>fn</var>);</code></pre>
+      <blockquote>
+        <p>The example below will replace <code>okay</code> and <code>cancel</code> key with <code>editor.config.languages.buttons.okay</code> and <code>editor.config.languages.buttons.cancel</code> value if available, otherwise, it will return the key anyway:</p>
+        <pre><code>editor.ui.modal('my-modal', {
+    header: 'Modal Header',
+    body: 'Modal body.',
+    footer: {
+        'okay': function(e, $) { &hellip; },
+        'cancel': function(e, $) { &hellip; }
+    }
+}, <var>fn</var>);</code></pre>
+      </blockquote>
+      <h4 id="section:method-ui-drop">Drop <sup><a href="javascript:void(window.scroll(0,0),editor.ui.drop.target=editor.ui.el.header.firstChild,editor.ui.drop('my-drop', 'Drop content.'));">test</a></sup></h4>
+      <pre><code>editor.ui.drop('my-drop', 'Drop content.', <var>fn</var>);</code></pre>
+      <pre><code>editor.ui.drop('my-drop', function(drop) {
+    drop.innerHTML = 'Drop content.';
+}, <var>fn</var>);</code></pre>
+      <h4 id="section:method-ui-bubble">Bubble <sup><a href="javascript:void(window.scroll(0,0),editor.ui.bubble('my-bubble', 'Bubble content.'));">test</a></sup></h3>
+      <pre><code>editor.ui.bubble('my-bubble', 'Bubble content.', <var>fn</var>);</code></pre>
+      <pre><code>editor.ui.bubble('my-bubble', function(bubble) {
+    bubble.innerHTML = 'Bubble content.';
+}, <var>fn</var>);</code></pre>
+      <h4 id="section:method-ui-key">Key</h4>
+      <p>Keyboard shortcuts.</p>
+      <pre><code>editor.ui.key('control+b', function(e, $) {
+    return $.wrap('&lt;b&gt;', '&lt;/b&gt;'), false;
+});</code></pre>
+      <h4 id="section:method-ui-keys">Keys</h4>
+      <p>Return the added keys:</p>
+      <pre><code>console.log(editor.ui.keys);</code></pre>
+      <h4 id="section:method-ui-separator"><a href="#section:method-ui-tool">Tool</a> &rsaquo; Separator</h4>
+      <pre><code>editor.ui.separator(4);</code></pre>
       <h4 id="section:method-ui-alert"><a href="#section:method-ui-modal">Modal</a> &rsaquo; Alert</h3>
-      <h4 id="section:method-ui-confirm"><a href="#section:method-ui-modal">Modal</a> &rsaquo; Confirm</h3>
-      <h4 id="section:method-ui-prompt"><a href="#section:method-ui-modal">Modal</a> &rsaquo; Prompt</h3>
-      <h4 id="section:method-ui-menu"><a href="#section:method-ui-drop">Drop</a> &rsaquo; Menu</h3>
+      <pre><code>editor.ui.alert('Alert Title', 'Alert body.', function() {
+    console.log('ok');
+});</code></pre>
+      <h4 id="section:method-ui-confirm"><a href="#section:method-ui-modal">Modal</a> &rsaquo; Confirm</h4>
+      <pre><code>editor.ui.confirm('Confirm Title', 'Confirm body.', function() {
+    console.log('ok');
+}, function() {
+    console.log('cancel');
+});</code></pre>
+      <h4 id="section:method-ui-prompt"><a href="#section:method-ui-modal">Modal</a> &rsaquo; Prompt</h4>
+      <ul>
+        <li><var>title</var> &rarr; Prompt title.</li>
+        <li><var>placeholder</var> &rarr; Prompt input placeholder (or default value if <var>required</var> is <code>false</code>).</li>
+        <li><var>required</var> &rarr; Set to <code>true</code> to force user to change the input value other than <var>placeholder</var> and empty value to make it possible to submit the prompt.</li>
+        <li><var>type</var> &rarr; Prompt input type (optional, default is <code>0</code>):
+          <ul>
+            <li><code>0</code> &rarr; <code>&lt;input name="data" type="text"&gt;</code> <sup><a href="javascript:void(window.scroll(0, 0),editor.ui.prompt('Prompt Title','Prompt value&hellip;',1,function(){return window.location.hash='#section:method-ui-prompt',false},0));">test</a></sup></li>
+            <li><code>1</code> &rarr; <code>&lt;textarea name="data"&gt;&lt;/textarea&gt;</code> <sup><a href="javascript:void(window.scroll(0, 0),editor.ui.prompt('Prompt Title','Prompt value&hellip;',1,function(){return window.location.hash='#section:method-ui-prompt',false},1));">test</a></sup></li>
+            <li><code>2</code> &rarr; <code>&lt;select name="data"&gt; &hellip; &lt;/select&gt;</code> <sup><a href="javascript:void(window.scroll(0, 0),editor.ui.prompt('Prompt Title',['Red','Green','Blue'],0,function(){return window.location.hash='#section:method-ui-prompt',false},2));">test</a></sup></li>
+          </ul>
+        </li>
+      </ul>
+      <pre><code>editor.ui.prompt(<var>title</var>, <var>placeholder</var>, <var>required</var>, <var>accept</var>, <var>type</var>);</code></pre>
+      <pre><code>editor.ui.prompt('Prompt Title', 'Prompt value&hellip;', true, function(e, $, value, <var>placeholder</var>) {
+    console.log(arguments);
+}, 0);</code></pre>
+      <h4 id="section:method-ui-menu"><a href="#section:method-ui-drop">Drop</a> &rsaquo; Menu</h4>
+      <pre><code>editor.ui.menu(<var>id</var>, <var>selected</var>, <var>data</var>, <var>index</var>);</code></pre>
+      <pre><code>editor.ui.menu('my-menu', 'p', {
+    h1: function(e, $) { &hellip; },
+    h2: function(e, $) { &hellip; },
+    h3: function(e, $) { &hellip; },
+    h4: function(e, $) { &hellip; },
+    h5: function(e, $) { &hellip; },
+    h6: function(e, $) { &hellip; },
+     p: function(e, $) { &hellip; }
+}, <var>index</var>);</code></pre>
+      <h3 id="section:method-ui-el">Components Cache</h3>
+      <p>Accessing the already&ndash;created <abbr title="Hyper Text Markup Language">HTML</abbr> elements of editor interface through <code>editor.ui.el</code>:</p>
+      <pre><code>console.log(editor.ui.el);</code></pre>
+      <h2 id="section:utility">Utilities</h2>
+      <p>Added more helper functions to the <code>TE._</code> object:</p>
+      <h3 id="section:utility-_-time">Time</h3>
+      <p>Get time data as year, month, date, hour, minute, second and millisecond:</p>
+      <pre><code>console.log(TE._.time()); // return `["2016", "11", "26", "17", "25", "23", "258"]`</code></pre>
+      <h3 id="section:utility-_-replace">Replace</h3>
+      <p>Multiple replace function using array:</p>
+      <pre><code>var from = ['&amp;', '&lt;', '&gt;'];
+var to = ['&amp;amp;', '&amp;lt;', '&amp;gt;'];
+var encoded = TE._.replace(<var>input</var>, from, to);</code></pre>
+      <blockquote>
+        <p>The string array data is always global. Therefore, you can also use regular expression as the <var>from</var> array data:</p>
+        <pre><code>TE._.replace(<var>input</var>, [/\s+/g, '&amp;'], ["", '&amp;amp;']);</code></pre>
+      </blockquote>
+      <h3 id="section:utility-_-format">Format</h3>
+      <p>Replace pattern in a string with custom text. A pattern is numbers prefixed by a <code>%</code>. Each number will be replaced by data item from an array based on its matching index (1&ndash;based index):</p>
+      <pre><code>var s = TE._.format('Lorem %1 ipsum dolor %2 sit amet.', ['apple', 'orange']);</code></pre>
+      <h3 id="section:utility-_-el"><abbr title="Document Object Model">DOM</abbr></h3>
+      <p>Create a new element (the <var>node</var>):</p>
+      <pre><code>var node = TE._.el('div'); // return `&lt;div&gt;&lt;/div&gt;`</code></pre>
+      <pre><code>var node = TE._.el('div', 'test'); // return `&lt;div&gt;test&lt;/div&gt;`</code></pre>
+      <pre><code>var node = TE._.el('div', 'test', {
+    'id': 'foo',
+    'class': 'bar'
+}); // return `&lt;div id="foo" class="bar"&gt;test&lt;/div&gt;`</code></pre>
+      <blockquote>
+        <p>Special attributes are <code>classes</code>, <code>data</code> and <code>css</code>:</p>
+        <pre><code>TE._.el('div', "", {
+    'classes': ['foo', 'bar', 'baz']
+}); // return `&lt;div class="foo bar baz"&gt;&lt;/div&gt;`</code></pre>
+        <pre><code>TE._.el('div', "", {
+    'data': {
+        'foo': 0,
+        'bar': 1,
+        'baz': 2
+    }
+}); // return `&lt;div data-foo="0" data-bar="1" data-baz="2"&gt;&lt;/div&gt;`</code></pre>
+        <pre><code>TE._.el('div', "", {
+    'css': {
+        'background': '#fff',
+        'color': '#000'
+    }
+}); // return `&lt;div style="background: #fff; color: #000;"&gt;&lt;/div&gt;`</code></pre>
+      </blockquote>
+      <h3 id="section:utility-_-dom"><abbr title="Document Object Model">DOM</abbr> Helpers</h3>
+      <p>Helper functions for <abbr title="Document Object Model">DOM</abbr> manipulation. Asumming <var>node</var> and <var>container</var> is a return value of <a href="#section:utility-_-el"><code>TE._.el</code></a>.</p>
+      <h4 id="section:utility-_-dom-set">Set</h4>
+      <p>Append <var>node</var> to <var>container</var>:</p>
+      <pre><code>TE._.dom.set(<var>container</var>, <var>node</var>);</code></pre>
+      <h4 id="section:utility-_-dom-reset">Reset</h4>
+      <p>Remove <var>node</var> from <var>container</var>:</p>
+      <pre><code>TE._.dom.reset(<var>container</var>, <var>node</var>);</code></pre>
+      <h4 id="section:utility-_-dom-get">Get</h4>
+      <p>Get <var>node</var> from <var>container</var> context:</p>
+      <pre><code>TE._.dom.get(<var>node</var>, <var>container</var>); // check if `node` is a child of `container`</code></pre>
+      <pre><code>TE._.dom.get('#foo', <var>container</var>); // is equal to `[container.getElementById('foo')]`</code></pre>
+      <pre><code>TE._.dom.get('.foo', <var>container</var>); // is equal to `container.getElementsByClassName('foo')`</code></pre>
+      <pre><code>TE._.dom.get('#foo .bar', <var>container</var>); // is equal to `container.querySelectorAll('#foo .bar')`</code></pre>
+      <blockquote><p>If context is not defined, it will be referenced to the <code>document</code>.</p></blockquote>
+      <h4 id="section:utility-_-dom-is">Is</h4>
+      <p>Check if <var>node</var> is an <code>&lt;i&gt;</code> tag:</p>
+      <pre><code>if (TE._.dom.is(<var>node</var>, 'i')) { &hellip; }</code></pre>
+      <h4 id="section:utility-_-dom-id">ID</h4>
+      <p>Setting a unique ID to <var>node</var> if it does not have an <code>id</code> attribute:</p>
+      <pre><code>TE._.dom.id(<var>node</var>);</code></pre>
+      <h4 id="section:utility-_-dom-copy">Copy</h4>
+      <p>Clone <var>node</var>:</p>
+      <pre><code>var clone = TE._.dom.copy(<var>node</var>);</code></pre>
+      <h4 id="section:utility-_-dom-classes">Class</h4>
+      <p>Add/remove/toggle and check <abbr title="Hyper Text Markup Language">HTML</abbr> classes:</p>
+      <pre><code>TE._.dom.classes.set(<var>node</var>, 'active');</code></pre>
+      <pre><code>TE._.dom.classes.reset(<var>node</var>, 'active');</code></pre>
+      <pre><code>TE._.dom.classes.toggle(<var>node</var>, 'active');</code></pre>
+      <pre><code>TE._.dom.classes.get(<var>node</var>, 'active'); // check if `node` contains `active` class</code></pre>
+      <h4 id="section:utility-_-dom-attributes">Attribute</h4>
+      <p>Add/remove and check <abbr title="Hyper Text Markup Language">HTML</abbr> attributes:</p>
+      <pre><code>TE._.dom.attributes.set(<var>node</var>, 'title', 'Test title.'); // set `title` attribute with value of `Test title.`</code></pre>
+      <pre><code>TE._.dom.attributes.set(<var>node</var>, {
+    'title': 'Test title.',
+    'rel': 'nofollow',
+    'target': '_blank'
+});</code></pre>
+      <blockquote>
+        <p>Set an attribute with value of <code>null</code> will removes that attribute.</p>
+      </blockquote>
+      <pre><code>TE._.dom.attributes.reset(<var>node</var>, 'title'); // remove `title` attribute from `node`</code></pre>
+      <pre><code>TE._.dom.attributes.reset(<var>node</var>, ['title', 'rel', 'target']); // remove `title`, `rel` and `target` attributes from `node`</code></pre>
+      <pre><code>TE._.dom.attributes.get(<var>node</var>, 'title'); // get `title` attribute value from `node`</code></pre>
+      <pre><code>TE._.dom.attributes.get(<var>node</var>, ['title', 'rel', 'target']); // get `title`, `rel` and `target` attributes value from `node`</code></pre>
+      <h4 id="section:utility-_-dom-data">Data</h4>
+      <p>Add/remove and check <abbr title="Hyper Text Markup Language">HTML</abbr> <code>data-*</code> attributes:</p>
+      <pre><code>TE._.dom.data.set(<var>node</var>, 'user', 'ta.tau.taufik'); // set `data-user` attribute with value of `ta.tau.taufik`</code></pre>
+      <pre><code>TE._.dom.data.set(<var>node</var>, {
+    'user': 'ta.tau.taufik',
+    'pass': 'foo bar baz'
+});</code></pre>
+      <blockquote>
+        <p>Setting an attribute with value of <code>null</code> will removes that attribute.</p>
+      </blockquote>
+      <pre><code>TE._.dom.data.reset(<var>node</var>, 'user'); // remove `data-user` attribute from `node`</code></pre>
+      <pre><code>TE._.dom.data.reset(<var>node</var>, ['user', 'pass']); // remove `data-user` and `data-pass` attributes from `node`</code></pre>
+      <pre><code>TE._.dom.data.get(<var>node</var>, 'user'); // get `data-user` attribute value from `node`</code></pre>
+      <pre><code>TE._.dom.data.get(<var>node</var>, ['user', 'pass']); // get `data-user` and `data-pass` attributes value from `node`</code></pre>
+      <h4 id="section:utility-_-dom-offset">Offset</h4>
+      <p>Get <var>node</var> offset relative to its parent:</p>
+      <pre><code>console.log(TE._.dom.offset(<var>node</var>)); // return `{"l": 40, "t": 20}`</code></pre>
+      <h4 id="section:utility-_-dom-pointer">Coordinate</h4>
+      <p>Get current mouse pointer offset relative to <var>node</var>:</p>
+      <pre><code><var>node</var>.addEventListener("mousemove", function(e) {
+    console.log(TE._.dom.pointer(this, e)); // return `{"x": 4, "y": 8}`
+}, false);</code></pre>
+      <h4 id="section:utility-_-dom-size">Size</h4>
+      <p>Get outer width and outer height of <var>node</var>:</p>
+      <pre><code>console.log(TE._.dom.size(<var>node</var>)); // return `{"w": 100, "h": 50}`</code></pre>
+      <h4 id="section:utility-_-dom-content">Content</h4>
+      <p>Currently, this is just an alias for <code><var>node</var>.innerHTML = 'foo'</code>:</p>
+      <pre><code>TE._.dom.content.set(<var>node</var>, 'foo');</code></pre>
+      <p>Currently, this is just an alias for <code><var>node</var>.innerHTML = ""</code>:</p>
+      <pre><code>TE._.dom.content.reset(<var>node</var>);</code></pre>
+      <p>Currently, this is just an alias for <code>console.log(<var>node</var>.innerHTML)</code>:</p>
+      <pre><code>console.log(TE._.dom.content.get(<var>node</var>));</code></pre>
+      <h4 id="section:utility-_-dom-parent">Parent</h4>
+      <p>Get parent element of <var>node</var>:</p>
+      <pre><code>var parent = TE._.dom.parent(<var>node</var>);</code></pre>
+      <h4 id="section:utility-_-dom-children">Children</h4>
+      <p>Get children elements of <var>node</var>:</p>
+      <pre><code>var children = TE._.dom.children(<var>node</var>);</code></pre>
+      <h4 id="section:utility-_-dom-next">Next</h4>
+      <p>Get next element from <var>node</var>:</p>
+      <pre><code>var next = TE._.dom.next(<var>node</var>);</code></pre>
+      <h4 id="section:utility-_-dom-previous">Previous</h4>
+      <p>Get previous element from <var>node</var>:</p>
+      <pre><code>var next = TE._.dom.previous(<var>node</var>);</code></pre>
+      <h4 id="section:utility-_-dom-index">Index</h4>
+      <p>Get <var>node</var> position from its parent:</p>
+      <pre><code>var i = TE._.dom.index(<var>node</var>);</code></pre>
+      <h4 id="section:utility-_-dom-before">Before</h4>
+      <p>Put <var>node</var> before <var>container</var>:</p>
+      <pre><code>TE._.dom.before(<var>container</var>, <var>node</var>);</code></pre>
+      <h4 id="section:utility-_-dom-after">After</h4>
+      <p>Put <var>node</var> after <var>container</var>:</p>
+      <pre><code>TE._.dom.after(<var>container</var>, <var>node</var>);</code></pre>
+      <h4 id="section:utility-_-dom-prepend">Prepend</h4>
+      <p>Prepend <var>node</var> to <var>container</var>:</p>
+      <pre><code>TE._.dom.prepend(<var>container</var>, <var>node</var>);</code></pre>
+      <h4 id="section:utility-_-dom-append">Append</h4>
+      <p>Append <var>node</var> to <var>container</var>:</p>
+      <pre><code>TE._.dom.append(<var>container</var>, <var>node</var>);</code></pre>
+      <h3 id="section:utility-_-event">Events</h3>
+      <h4 id="section:utility-_-event-set">Set</h4>
+      <p>Set a <code>click</code> event to <var>node</var>:</p>
+      <pre><code>function do_click(e) {
+    console.log(e.target);
+}
+
+TE._.event.set("click", <var>node</var>, do_click);</code></pre>
+      <blockquote>
+        <p>Each event set will also set a new internal hook data named as <code>on:%s</code> (<code>on:click</code> in this case).</p>
+      </blockquote>
+      <h4 id="section:utility-_-event-reset">Reset</h4>
+      <p>Remove a <code>click</code> event with <var>do_click</var> as the callback function from <var>node</var>:</p>
+      <pre><code>TE._.event.reset("click", <var>node</var>, do_click);</code></pre>
+      <h4 id="section:utility-_-event-fire">Fire</h4>
+      <p>Programmatically trigger <code>click</code> events attached to <var>node</var>:</p>
+      <pre><code>TE._.event.fire("click", <var>node</var>, [ &hellip; ]); // `[ &hellip; ]` is for function parameter data</code></pre>
+      <h3 id="section:utility-_-hook">Hooks</h3>
+      <h4 id="section:utility-_-hook-set">Set</h4>
+      <p>Set a new <code>focus.textarea</code> hook:</p>
+      <pre><code>editor._.hook.set("focus.textarea", function() {
+    console.log('focus');
+});</code></pre>
+      <p>Set a new <code>focus.textarea</code> hook with ID of <code>foo</code>:</p>
+      <pre><code>editor._.hook.set("focus.textarea", function() {
+    console.log('focus');
+}, 'foo');</code></pre>
+      <h4 id="section:utility-_-hook-reset">Reset</h4>
+      <p>Remove all <code>focus.textarea</code> hooks:</p>
+      <pre><code>editor._.hook.reset("focus.textarea");</code></pre>
+      <p>Remove a <code>focus.textarea</code> hook with ID of <code>foo</code>:</p>
+      <pre><code>editor._.hook.reset("focus.textarea", 'foo');</code></pre>
+      <h4 id="section:utility-_-hook-fire">Fire</h4>
+      <p>Trigger all <code>focus.textarea</code> hooks:</p>
+      <pre><code>editor._.hook.fire("focus.textarea", [ &hellip; ]); // `[ &hellip; ]` is for function parameter data</code></pre>
+      <p>Trigger a <code>focus.textarea</code> hook with ID of <code>foo</code>:</p>
+      <pre><code>editor._.hook.fire("focus.textarea", [ &hellip; ], 'foo');</code></pre>
+      <blockquote>
+        <p>These methods are not static because every <abbr title="Graphic User Interface">GUI</abbr> instances will have their own hooks storage.</p>
+      </blockquote>
+      <p>Built&ndash;in hooks:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Hook</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>destroy</code></td>
+            <td>Will be triggered on editor destruct.</td>
+          </tr>
+          <tr>
+            <td><code>create</code></td>
+            <td>Will be triggered on editor construct.</td>
+          </tr>
+          <tr>
+            <td><code>update</code></td>
+            <td>Will be triggered on editor update.</td>
+          </tr>
+          <tr>
+            <td><code>disable</code></td>
+            <td>Will be triggered on editor disable.</td>
+          </tr>
+          <tr>
+            <td><code>enable</code></td>
+            <td>Will be triggered on editor enable.</td>
+          </tr>
+          <tr>
+            <td><code>freeze</code></td>
+            <td>Will be triggered on editor freeze.</td>
+          </tr>
+          <tr>
+            <td><code>update.tools</code></td>
+            <td>Will be triggered on editor tools update.</td>
+          </tr>
+          <tr>
+            <td><code>update.keys</code></td>
+            <td>Will be triggered on editor keys update.</td>
+          </tr>
+          <tr>
+            <td><code>enter</code></td>
+            <td>Will be triggered on editor components enter.</td>
+          </tr>
+          <tr>
+            <td><code>enter.panel</code></td>
+            <td>Will be triggered on editor panel enter.</td>
+          </tr>
+          <tr>
+            <td><code>enter.overlay</code></td>
+            <td>Will be triggered on editor overlay enter.</td>
+          </tr>
+          <tr>
+            <td><code>enter.modal</code></td>
+            <td>Will be triggered on editor modal enter.</td>
+          </tr>
+          <tr>
+            <td><code>enter.drop</code></td>
+            <td>Will be triggered on editor drop enter.</td>
+          </tr>
+          <tr>
+            <td><code>enter.bubble</code></td>
+            <td>Will be triggered on editor bubble enter.</td>
+          </tr>
+          <tr>
+            <td><code>exit</code></td>
+            <td>Will be triggered on editor components exit.</td>
+          </tr>
+          <tr>
+            <td><code>exit.panel</code></td>
+            <td>Will be triggered on editor panel exit.</td>
+          </tr>
+          <tr>
+            <td><code>exit.overlay</code></td>
+            <td>Will be triggered on editor overlay exit.</td>
+          </tr>
+          <tr>
+            <td><code>exit.modal</code></td>
+            <td>Will be triggered on editor modal exit.</td>
+          </tr>
+          <tr>
+            <td><code>exit.drop</code></td>
+            <td>Will be triggered on editor drop exit.</td>
+          </tr>
+          <tr>
+            <td><code>exit.bubble</code></td>
+            <td>Will be triggered on editor bubble exit.</td>
+          </tr>
+          <tr>
+            <td><code>fit</code></td>
+            <td>Will be triggered on editor components fit.</td>
+          </tr>
+          <tr>
+            <td><code>fit.panel</code></td>
+            <td>Will be triggered on editor panel fit.</td>
+          </tr>
+          <tr>
+            <td><code>fit.overlay</code></td>
+            <td>Will be triggered on editor overlay fit.</td>
+          </tr>
+          <tr>
+            <td><code>fit.modal</code></td>
+            <td>Will be triggered on editor modal fit.</td>
+          </tr>
+          <tr>
+            <td><code>fit.drop</code></td>
+            <td>Will be triggered on editor drop fit.</td>
+          </tr>
+          <tr>
+            <td><code>fit.bubble</code></td>
+            <td>Will be triggered on editor bubble fit.</td>
+          </tr>
+          <tr>
+            <td><code>on:change</code></td>
+            <td>Will be triggered every time editor content is updated.</td>
+          </tr>
+        </tbody>
+      </table>
     </section>
 
     <footer>
