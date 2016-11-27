@@ -32,13 +32,7 @@ abbr {
   color:#090;
   cursor:help;
 }
-kbd {
-  background:#090;
-  color:#fff;
-  font-size:76%;
-  font-weight:bold;
-  padding:.25em .5em;
-}
+kbd {color:#900}
 a abbr,strong abbr {color:inherit}
 button::-moz-focus-inner,
 input::-moz-focus-inner {
@@ -80,21 +74,18 @@ ol {list-style-type:decimal}
 ul,ol {margin:1.5em 0 1.5em 3em}
 ul li,ol li {margin:0}
 ul ul,ol ul,ul ol,ol ol {margin:0 0 0 1.5em}
-blockquote {font-style:italic}
 h1,h2,h3,h4,h5,h6 {
-  padding-top:1.5rem;
+  margin-top:1.5rem;
   line-height:1.5rem;
   font-weight:bold;
 }
 h1 {
   font-size:4.242rem;
   line-height:4.5rem;
-  padding-top:3rem;
 }
 h2 {
   font-size:2.828rem;
   line-height:3rem;
-  padding-top:3rem;
 }
 h3 {font-size:1.414rem}
 h5 {font-size:.707rem}

@@ -2,7 +2,7 @@ var ack;
 
 (function() {
     var edit = document.querySelector('#editor');
-    if (!edit) return;
+    if (!edit || !edit.value) return;
     var i = -1,
         text = edit.value,
         text_count = text.length, t;

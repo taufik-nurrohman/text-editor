@@ -24,12 +24,6 @@
 
     <section>
       <h2 id="section:start">Start</h2>
-      <p>Include the base <abbr title="Cascading Style Sheet">CSS</abbr> file called <a href="text-editor/ui/ui.min.css" target="_blank"><code>ui.min.css</code></a>, a <a href="http://fontawesome.io" rel="nofollow" target="_blank">Font Awesome</a> library and these JavaScript files:</p>
-      <ul>
-        <li><a href="text-editor.min.js" target="_blank"><code>text-editor.min.js</code></a> &rarr; This is the core <abbr title="Application Programming Interface">API</abbr> for doing text area&ndash;based text selection manipulation.</li>
-        <li><a href="text-editor/ui/ui.min.js" target="_blank"><code>ui.min.js</code></a> &rarr; This is a module to create the <abbr title="Graphic User Interface">GUI</abbr> appearance as you can see in the text editor above.</li>
-        <li><a href="text-editor/ui/html/html.min.js" target="_blank"><code>html.min.js</code></a> &rarr; This is a plugin for user interface module, contains tools for editing <abbr title="Hyper Text Markup Language">HTML</abbr> source.</li>
-      </ul>
       <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html dir="ltr"&gt;
   &lt;head&gt;
@@ -48,34 +42,15 @@
     &lt;/script&gt;
   &lt;/body&gt;
 &lt;/html&gt;</code></pre>
-      <h2 id="section:configure">Configure</h2>
-      <p><code>TE.ui.HTML()</code> contains some default options which you can override it through the second parameter:</p>
-      <pre><code>var editor = TE.ui.HTML(document.querySelector('#editor'), {
-    // options goes here&hellip;
-});</code></pre>
-      <h3>Configuration</h3>
-      <p>The available configuration data are:</p>
+      <h2 id="section:feature">Features</h2>
       <ul>
-        <li>Inherits <code>TE.ui()</code> &rarr; <a href="text-editor/ui#section:configure">read more</a></li>
-        <li>Inherits <code>TE.ui.HTML()</code>
-          <ul>
-            <li><code>auto_encode_html</code> &rarr; <var>boolean</var> &middot; Automatically encode <abbr title="Hyper Text Markup Language">HTML</abbr> special characters inside code tags?</li>
-            <li><code>auto_p</code> &rarr; <var>boolean</var> &middot; Automatically insert paragraph tags?</li>
-            <li><code>states</code> &rarr; <var>object</var>
-              <ul>
-                <li><code>tr</code> &rarr; <var>array</var> &middot; Minimum and maximum table rows for table tool.</li>
-                <li><code>td</code> &rarr; <var>array</var> &middot; Minimum and maximum table columns for table tool.</li>
-                <li><code>abbr</code> &rarr; <var>object</var> &middot; List of default abbreviations for abbreviation tool.</li>
-              </ul>
-            </li>
-            <li><code>advance_a</code> &rarr; <var>boolean</var> &middot; Detect external <abbr title="Uniform Resource Locator">URL</abbr> and automatically add <code>rel="nofollow"</code> and <code>target="_blank"</code> attribute to the link markup?</li>
-            <li><code>advance_img</code> &rarr; <var>boolean</var> &middot; Insert image with <code>&lt;figure&gt;</code> element as image container and <code>&lt;figcaption&gt;</code> as image caption when title field is defined?</li>
-            <li><code>advance_table</code> &rarr; <var>boolean</var> &middot; Include <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code> and <code>&lt;tfoot&gt;</code> markup?</li>
-            <li><code>formats</code> &rarr; <var>object</var> &middot; List of default <abbr title="Hyper Text Markup Language">HTML</abbr> formats to be outputted.</li>
-          </ul>
-        </li>
+        <li>No dependencies. <strong>Text Editor</strong> uses plain JavaScript language.</li>
+        <li>Powerful <abbr title="Application Programming Interface">API</abbr>, easy to learn.</li>
+        <li>Extensible &rarr; <a href="#section:extend">check it out</a></li>
+        <li>Light&ndash;weight.</li>
+        <li>No hack. No feature detection. Optimized for modern browsers with their built&ndash;in JavaScript features.</li>
+        <li>Make your own. The <a href="text-editor">core</a> functionality is enough to help you making your own text editor.</li>
       </ul>
-      <p>Custom themes can be included just after the <code>ui.min.css</code> &rarr; <a href="text-editor/ui#section:configure">read more</a></p>
       <h2 id="section:extend">Extend</h2>
       <p>Modules:</p>
       <ul>

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.5.3
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.5.4
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -749,16 +749,17 @@ TE.ui = function(target, o) {
 
     function do_update_tools() {
         content_reset(_tool, false);
-        var tools = str_split(config.tools),
+        var tools = ui.tools,
+            tools_array = str_split(config.tools),
             button = _prefix + '-button',
             separator = _prefix + '-separator',
             id, tool, icon, is_button, s, i, v;
-        config.tools = tools;
-        for (i in tools) {
-            v = tools[i];
-            tool = ui.tools[v];
+        config.tools = tools_array;
+        for (i in tools_array) {
+            v = tools_array[i];
+            tool = tools[v];
             if (!(tool || tool === {})) continue;
-            tool = do_attributes(tool, v, ui.tools);
+            tool = do_attributes(tool, v, tools);
             icon = tool.i || v;
             if (icon !== '|' && icon[0] !== '<') {
                 icon = slug(icon);
@@ -1403,7 +1404,9 @@ TE.ui = function(target, o) {
         }
         function yep(e) {
             s = input.value;
-            if (required && (!_trim(s) || s === value)) {
+            if (is_function(required) && !required(s)) {
+                prepare();
+            } else if (required && (!_trim(s) || s === value)) {
                 prepare();
             } else {
                 do_modal_exit(e, id + '.y'), y(e, $, s !== value ? s : "", value);
@@ -1504,11 +1507,12 @@ TE.ui = function(target, o) {
         return $;
     };
 
+    // TODO: make it possible to programatically set menu selection value
     ui.menu = function(id, str, data, i) {
         str = (!is_object(str) && data[str] && data[str].text) || str;
-        var tools = ui.tools,
-            current = '<span class="' + _prefix + '-current menu">%1</span>',
+        var current = '<span class="' + _prefix + '-current menu">%1</span>',
             icon = "",
+            tools = ui.tools,
             index = 0, v;
         if (str === false) {
             return ui.tool(id, str);
@@ -1518,6 +1522,15 @@ TE.ui = function(target, o) {
             str = is_set(str[1]) ? str[1] : 0;
             str = (str && data[str] && data[str].text) || str;
             current = icon + (str !== 0 ? ' ' + current : "");
+        }
+        // process data ...
+        for (i in data) {
+            w = i[0] === '%';
+            v = data[i];
+            v = is_string(v) && !w ? tools[v] : v;
+            if (!v) continue;
+            v = do_attributes(v, i, tools);
+            data[i] = v;
         }
         ui.tool(id, {
             i: icon,
@@ -1544,7 +1557,7 @@ TE.ui = function(target, o) {
                                     }
                                 }
                             }
-                            if (i === false) return event_exit(e);
+                            if (i === false) return $.select(), event_exit(e);
                         }
                         return $.select(), event_exit(e);
                     }
@@ -1583,9 +1596,7 @@ TE.ui = function(target, o) {
                     for (i in data) {
                         v = data[i];
                         w = i[0] === '%';
-                        v = is_string(v) && !w ? tools[v] : v;
                         if (!v) continue;
-                        v = do_attributes(v, i, tools);
                         var attributes = {
                             'href': w ? null : js,
                             'class': _prefix + '-' + (w ? 'label' : 'button')
@@ -1618,7 +1629,6 @@ TE.ui = function(target, o) {
                             event_set(_CLICK, s, _do_click);
                             event_set(_KEYDOWN, s, _do_key);
                         }
-                        data[i] = v;
                         dom_set(drop, s);
                         ++index;
                     }
@@ -1630,8 +1640,6 @@ TE.ui = function(target, o) {
         }, i);
         return data_set(tools[id].target, 'ui-drop', id), (tools[id].data = data), $;
     };
-
-    ui.menu.select = function() {}; // TODO: make a method to set menu selection value
 
     ui.bubble = function() {
         ui.exit(0, 0, 0);
@@ -1752,8 +1760,10 @@ TE.ui = function(target, o) {
         return do_update_tools(), $;
     };
 
-    ui.separator = function(data, i) {
-        return ui.tool('|', data, i);
+    ui.separator = function(attributes, i) {
+        return ui.tool('|', attributes !== false ? {
+            attributes: attributes || {}
+        } : false, i);
     };
 
     ui.key = function(keys, data) {
