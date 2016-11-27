@@ -534,7 +534,7 @@ var encoded = TE._.replace(<var>input</var>, from, to);</code></pre>
     'target': '_blank'
 });</code></pre>
       <blockquote>
-        <p>Set an attribute with value of <code>null</code> will removes that attribute.</p>
+        <p>Setting an attribute with value of <code>null</code> will removes that attribute.</p>
       </blockquote>
       <pre><code>TE._.dom.attributes.reset(<var>node</var>, 'title'); // remove `title` attribute from `node`</code></pre>
       <pre><code>TE._.dom.attributes.reset(<var>node</var>, ['title', 'rel', 'target']); // remove `title`, `rel` and `target` attributes from `node`</code></pre>
@@ -547,9 +547,6 @@ var encoded = TE._.replace(<var>input</var>, from, to);</code></pre>
     'user': 'ta.tau.taufik',
     'pass': 'foo bar baz'
 });</code></pre>
-      <blockquote>
-        <p>Setting an attribute with value of <code>null</code> will removes that attribute.</p>
-      </blockquote>
       <pre><code>TE._.dom.data.reset(<var>node</var>, 'user'); // remove `data-user` attribute from `node`</code></pre>
       <pre><code>TE._.dom.data.reset(<var>node</var>, ['user', 'pass']); // remove `data-user` and `data-pass` attributes from `node`</code></pre>
       <pre><code>TE._.dom.data.get(<var>node</var>, 'user'); // get `data-user` attribute value from `node`</code></pre>
