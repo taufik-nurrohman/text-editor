@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  MARKDOWN TEXT EDITOR PLUGIN 1.3.0
+ *  MARKDOWN TEXT EDITOR PLUGIN 1.3.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -12,9 +12,12 @@ TE.ui.Markdown = function(target, o) {
     var editor = TE.ui.HTML || TE.ui,
         $ = editor(target, {
             extra: 0, // enable **Markdown Extra** feature
-            auto_p: 0, // disable automatic paragraph feature from `TE.HTML` by default
+            auto_p: 0, // disable automatic paragraph feature from `TE.ui.HTML` by default
             auto_close: {
-                '`': '`'
+                '`': '`',
+                '*': '*',
+                '_': '_',
+                '~': '~'
             },
             tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
             states: {
@@ -212,7 +215,7 @@ TE.ui.Markdown = function(target, o) {
                             start = s.start;
                             end = s.end;
                             $.set(b + x + _trim(s.after, 1) + n + ' [' + (v || _trim(x) || placeholders[""]) + ']: ' + (!implicit ? state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "") : "")).select(start, end);
-                            if (implicit) $.focus(true).insert(http);
+                            if (implicit) $.focus(1).insert(http);
                         }
                     } else {
                         href = v;
@@ -301,7 +304,7 @@ TE.ui.Markdown = function(target, o) {
                         $.select(i, i + v.length);
                         target.scrollTop = $.$(1).caret[0].y;
                     } else {
-                        $.trim(_trim(b) ? ' ' : "", !_trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[^' + v + ']').set(_trim($.get(), 1) + n + ' [^' + v + ']: ').focus(true).insert(placeholders[""]);
+                        $.trim(_trim(b) ? ' ' : "", !_trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[^' + v + ']').set(_trim($.get(), 1) + n + ' [^' + v + ']: ').focus(1).insert(placeholders[""]);
                     }
                 }), false;
             }
@@ -328,7 +331,7 @@ TE.ui.Markdown = function(target, o) {
                 }
                 return ui.prompt(['abbr[title]', i18n.title], state[abbr] || i18n.placeholder, !state[x], function(e, $, v, w) {
                     v = attr_title(v);
-                    $[0]().set(_trim($.get(), 1) + (s.before || x ? n : "") + ' *[' + abbr + ']: ').focus(true).insert(v || w);
+                    $[0]().set(_trim($.get(), 1) + (s.before || x ? n : "") + ' *[' + abbr + ']: ').focus(1).insert(v || w);
                     if (abbr === placeholders[""]) {
                         var a = $.$().start;
                         $.select(a - 3 - abbr.length, a - 3);
@@ -342,7 +345,7 @@ TE.ui.Markdown = function(target, o) {
                 if ($.$().length) {
                     return $.tidy('\n\n').replace(/([\t ]*\n[\t ]*){2,}/g, '\n\n'), false;
                 }
-                return $.tidy('\n\n').insert(placeholders[""]), false;
+                return $.tidy('\n\n').insert(placeholders[""]).scroll(2), false;
             }
         },
         br: {
@@ -351,7 +354,7 @@ TE.ui.Markdown = function(target, o) {
                 if (!is_string(br) && br) {
                     br = '  \n';
                 }
-                return $.trim().insert(br || '\n', 0), false;
+                return $.trim().insert(br || '\n', 0).scroll(1), false;
             }
         },
         'p,h1,h2,h3,h4,h5,h6': {

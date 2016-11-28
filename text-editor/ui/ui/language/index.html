@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Language &ndash; UI &ndash; Core &ndash; Text Editor</title>
+    <link href="../../../../favicon.ico" rel="shortcut icon">
+
+    <link href="../../../../index.min.css" rel="stylesheet">
+    <link href="../../ui.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+
+    <header>
+        <h1><a href="../../../.." rel="prev">Text Editor</a> &rsaquo; <a href="../../..">Core</a> &rsaquo; <a href="../..">UI</a> &rsaquo; Language</h1>
+      <p>Internationalization.</p>
+      <section>
+        <p><textarea class="textarea" id="editor" spellcheck="false"></textarea></p>
+        <p id="text-editor-shell-selector" data-shell-path="../../ui"></p>
+      </section>
+    </header>
+
+    <section>
+      <h2 id="section:start">Start</h2>
+      <p>Include the script just after the plugin instances:</p>
+      <pre><code>&lt;script src="../text-editor.min.js"&gt;&lt;/script&gt;
+&lt;script src="../text-editor/ui/ui.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+var editor = TE.ui(document.querySelector('textarea'));
+&lt;/script&gt;
+&lt;script src="../text-editor/ui/ui/language/id-id.min.js"&gt;&lt;/script&gt;</code></pre>
+    </section>
+
+    <footer>
+      <span class="left">&copy; 2016 &middot; Made with <i class="fa fa-fw fa-ambulance" onmouseover="this.className='fa fa-fw fa-heart';" ontouchstart="this.className='fa fa-fw fa-heart';"></i> by <a href="">Taufik Nurrohman</a></span>
+      <span class="right"><a href="https://github.com/tovic/text-editor"><i class="fa fa-github"></i> GitHub</a></span>
+    </footer>
+
+    <script src="../../../../text-editor.min.js"></script>
+    <script src="../../ui.min.js"></script>
+    <script src="../../html/html.min.js"></script>
+    <script>
+
+    var editor = TE.ui.HTML(document.querySelector('#editor'));
+
+    </script>
+    <script src="id-id.min.js"></script>
+
+    <script src="../../../../index.min.js"></script>
+
+  </body>
+</html>

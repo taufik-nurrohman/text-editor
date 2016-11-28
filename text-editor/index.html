@@ -91,9 +91,9 @@ console.log(editor.get('default value if empty'));</code></pre>
       <p>Just focus to the editor area:</p>
       <pre><code>editor.focus();</code></pre>
       <p>Focus to the end of the editor area:</p>
-      <pre><code>editor.focus(true);</code></pre>
+      <pre><code>editor.focus(0);</code></pre>
       <p>Focus to the start of the editor area:</p>
-      <pre><code>editor.focus(false);</code></pre>
+      <pre><code>editor.focus(1);</code></pre>
       <h3 id="section:method-blur">Blur the Editor Area</h3>
       <pre><code>editor.blur();</code></pre>
       <h3 id="section:method-$">Get Selection</h3>
@@ -251,32 +251,46 @@ editor[1](); // re&ndash;enable</code></pre>
       <p>Get the current scroll step (text area scroll height divided by text height) and text height:</p>
       <pre><code>console.log(editor.scroll()); // `[4, 16]`</code></pre>
       <p>Scroll one step down from the current scroll step:</p>
-      <pre><code>editor.scroll(true);</code></pre>
+      <pre><code>editor.scroll(1);</code></pre>
       <p>Scroll one step up from the current scroll step:</p>
-      <pre><code>editor.scroll(false);</code></pre>
+      <pre><code>editor.scroll(-1);</code></pre>
       <p>Scroll 3 rows from top:</p>
-      <pre><code>editor.scroll(3);</code></pre>
+      <pre><code>editor.scroll(0, 3);</code></pre>
+      <p>Scroll to the end of the text area:</p>
+      <pre><code>editor.scroll(true);</code></pre>
       <h2 id="section:key">Keyboard Key Events</h2>
       <p>Normalized <code>KeyboardEvent.key</code> value in their lower&ndash;cased mode. It does support key aliases and regular expression matching too:</p>
       <pre><code>editor.target.addEventListener("keydown", function(e) {
 
-    console.log(e.key); // return the native `KeyboardEvent.key` value if supported
+    console.log(e.key); // [^1]
 
-    console.log(e.TE.key()); // return the current key character (lower&ndash;cased)
-    console.log(e.TE.control()); // return `true` if &ldquo;control&rdquo; key is pressed
-    console.log(e.TE.shift()); // return `true` if &ldquo;shift&rdquo; key is pressed
-    console.log(e.TE.option()); // return `true` if &ldquo;option&rdquo; key is pressed
-    console.log(e.TE.meta()); // return `true` if &ldquo;meta&rdquo; key is pressed
+    console.log(e.TE.key()); // [^2]
+    console.log(e.TE.control()); // [^3]
+    console.log(e.TE.shift()); // [^4]
+    console.log(e.TE.option()); // [^5]
+    console.log(e.TE.meta()); // [^6]
 
-    console.log(e.TE.control('b')); // return `true` if &ldquo;control&rdquo; and `b` keys are pressed
+    console.log(e.TE.control('b')); // [^7]
 
     // check for current key character (try pressing the &ldquo;control&rdquo; key)
-    if (e.TE.key('ctrl')) { &hellip; } // `ctrl` is an alias for `control`, this will return `true`
-    if (e.TE.key() === 'ctrl') { &hellip; } // comparing `ctrl` outside the function, this will return `false`
-    if (e.TE.key() === 'control') { &hellip; } // is equal to the original key value, this will return `true`
-    if (e.TE.key(/^[abc]$/)) { &hellip; } // return `true` if key character is either `a`, `b` or `c`
+    if (e.TE.key('ctrl')) { &hellip; } // [^8]
+    if (e.TE.key() === 'ctrl') { &hellip; } // [^9]
+    if (e.TE.key() === 'control') { &hellip; } // [^10]
+    if (e.TE.key(/^[abc]$/)) { &hellip; } // [^11]
 
-}, false);</code></pre>
+}, false);
+
+// [^1]: return the native `KeyboardEvent.key` value if supported
+// [^2]: return the current key character (lower&ndash;cased)
+// [^3]: return `true` if &ldquo;control&rdquo; key is pressed
+// [^4]: return `true` if &ldquo;shift&rdquo; key is pressed
+// [^5]: return `true` if &ldquo;option&rdquo; key is pressed
+// [^6]: return `true` if &ldquo;meta&rdquo; key is pressed
+// [^7]: return `true` if &ldquo;control&rdquo; and `b` keys are pressed
+// [^8]: `ctrl` is an alias for `control`, this will return `true`
+// [^9]: comparing `ctrl` outside the function, this will return `false`
+// [^10]: is equal to the original key value, this will return `true`
+// [^11]: return `true` if key character is either `a`, `b` or `c`</code></pre>
       <h2 id="section:utility">Utilities</h2>
       <p>Helper functions. Most of them can be accessed staticly:</p>
       <h3 id="section:utility-_-x">Escape</h3>

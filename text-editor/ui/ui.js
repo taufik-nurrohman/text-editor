@@ -349,7 +349,10 @@ TE.ui = function(target, o) {
     }
 
     function size(node) {
-        return {
+        return node === win ? {
+            w: node.innerWidth,
+            h: node.innerHeight
+        } : {
             w: node.offsetWidth,
             h: node.offsetHeight
         };
@@ -688,6 +691,10 @@ TE.ui = function(target, o) {
         return !x || (is_set(x.active) && !x.active);
     }
 
+    function is_disabled_or_freezed() {
+        return _content.disabled || _content.readOnly;
+    }
+
     function do_attributes(tool, k, tools) {
         if (is_function(tool)) {
             tool = {
@@ -697,9 +704,7 @@ TE.ui = function(target, o) {
         if (is_string(tool.click)) {
             tool.click = (tools[tool.click] || {}).click;
         }
-        if (!is_set(tool.title)) {
-            tool.title = _i18n_tools[k] || "";
-        }
+        tool.title = _i18n_tools[k] || "";
         if (!is_set(tool.attributes)) {
             tool.attributes = {};
         }
@@ -707,7 +712,7 @@ TE.ui = function(target, o) {
     }
 
     function do_click_tool(e) {
-        if (_content.disabled || _content.readOnly) {
+        if (is_disabled_or_freezed()) {
             return _content.focus(), event_exit(e);
         }
         ui.exit(0, 0, 0);
@@ -782,6 +787,11 @@ TE.ui = function(target, o) {
                 } else {
                     class_reset(_button, 'x');
                 }
+                if (tool.on) {
+                    class_set(_button, 'on');
+                } else {
+                    class_reset(_button, 'on');
+                }
                 if (tool.text) {
                     icon = format('<span class="' + _prefix + '-text">' + tool.text + '</span>', [icon]);
                     class_set(_button, 'text');
@@ -821,6 +831,9 @@ TE.ui = function(target, o) {
         bounce = null;
 
     function do_keys(e) {
+        if (is_disabled_or_freezed()) {
+            return _content.focus(), event_exit(e);
+        }
         var s = $.$(),
             before = s.before,
             after = s.after,
@@ -875,7 +888,7 @@ TE.ui = function(target, o) {
                     if (n === 'backspace' && before.slice(-2) !== '\\' + i) {
                         return $.unwrap(i, m), event_exit(e);
                     } else if (auto_tab && n === 'enter' && i !== m) {
-                        return $.tidy('\n' + dent + tab, '\n' + dent), event_exit(e);
+                        return $.tidy('\n' + dent + tab, '\n' + dent).scroll(1), event_exit(e);
                     }
                 }
             }
@@ -884,7 +897,7 @@ TE.ui = function(target, o) {
             if (n === 'backspace' && _pattern(_esc(tab) + '$').test(before)) {
                 return $.outdent(tab), event_exit(e);
             } else if (n === 'enter' && _pattern('(^|\\n)(' + _esc(tab) + ')+.*$').test(before)) {
-                return $.insert('\n' + dent, 0, 1), event_exit(e);
+                return $.insert('\n' + dent, 0, 1).scroll(1), event_exit(e);
             }
         }
     }
@@ -1152,6 +1165,7 @@ TE.ui = function(target, o) {
             ui.panel.exit(1);
         }
         event_set(_CLICK, x, do_panel_exit);
+        content_reset(_panel);
         dom_set(_body, el(_panel, [el_set(_prefix + '-panel-content', 'div', s), x]));
         if (is_function(fn)) {
             fn(_panel);
@@ -1495,7 +1509,7 @@ TE.ui = function(target, o) {
             is_set(center[1]) && (t = center[1]);
         } else {
             l = _edge(l, 0, /* Math.max(a.w, win.innerWidth) */ a.w - b.w);
-            t = _edge(t, 0, Math.max(a.h, win.innerHeight) - b.h);
+            t = _edge(t, 0, Math.max(a.h, size(win).h) - b.h);
         }
         _css(_drop, {
             'left': l + px,
@@ -1518,7 +1532,7 @@ TE.ui = function(target, o) {
             return ui.tool(id, str);
         } else if (is_object(str)) {
             icon = str[0];
-            icon = icon[0] === '<' ? icon : '<i class="' + format(_i, [icon]) + '"></i>';
+            icon = icon[0] === '<' ? icon : '<i class="' + format(_i, [slug(id).replace(/[\/\s]/g, '-'), icon]) + '"></i>';
             str = is_set(str[1]) ? str[1] : 0;
             str = (str && data[str] && data[str].text) || str;
             current = icon + (str !== 0 ? ' ' + current : "");
@@ -1625,6 +1639,11 @@ TE.ui = function(target, o) {
                                 class_set(s, 'x');
                             } else {
                                 class_reset(s, 'x');
+                            }
+                            if (v.on) {
+                                class_set(s, 'on');
+                            } else {
+                                class_reset(s, 'on');
                             }
                             event_set(_CLICK, s, _do_click);
                             event_set(_KEYDOWN, s, _do_key);
@@ -1825,6 +1844,7 @@ TE.ui = function(target, o) {
         header: _header,
         body: _body,
         footer: _footer,
+        panel: _panel,
         overlay: _overlay,
         modal: _modal,
         drop: _drop,

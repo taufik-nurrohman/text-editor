@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  EXPAND PLUGIN FOR USER INTERFACE MODULE 1.0.10
+ *  EXPAND PLUGIN FOR USER INTERFACE MODULE 1.0.11
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -53,7 +53,7 @@ TE.each(function($) {
         'id': s + '-style:' + expand + uniq
     }));
 
-    function do_max() {
+    function do_max(e) {
         is_max = 1;
         i18n[expand] = i18n[min];
         _dom_class_set(html, s + suffix + ' ' + s + uniq + suffix);
@@ -81,7 +81,7 @@ TE.each(function($) {
 
     // press `f11` to maximize/minimize
     ui.key('f11', function(e, $) {
-        return is_max ? do_min(e, $) : do_max(e, $), false;
+        return is_max ? do_min(e) : do_max(e), false;
     });
 
 });

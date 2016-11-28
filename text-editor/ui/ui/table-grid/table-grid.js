@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.0.7
+ *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.0.8
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -102,7 +102,7 @@ TE.each(function($) {
                 color = '#39f'; // ... force hover color to `#39f`
             }
             m = prefix + uniq;
-            _el(style, m + ' div{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;background:' + border + ';border:1px solid ' + background + ';overflow:hidden}' + m + ' div div{border-width:0}' + m + ' div+div{border-top-width:1px}' + m + ' a{width:1em;height:1em;float:left;border:0 solid;border-color:inherit;cursor:pointer}' + m + ' a+a{border-left-width:1px}' + m + ' a:focus,' + m + ' .active{background:' + color + '}', {
+            _el(style, m + ' div,' + m + ' a{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;background:' + border + ';border:1px solid ' + background + ';overflow:hidden}' + m + ' div div{border-width:0}' + m + ' div+div{border-top-width:1px}' + m + ' a{width:1em;height:1em;float:left;border:0 solid;border-color:inherit;cursor:pointer}' + m + ' a+a{border-left-width:1px}' + m + ' a:focus,' + m + ' .active{background:' + color + '}', {
                 'id': s + '-style:grid' + uniq
             });
             function do_over() {

@@ -38,7 +38,8 @@
 .text-editor-tool .text-editor-button {color:inherit}
 .text-editor-tool .text-editor-button:hover {background:0 0}
 .text-editor-tool .text-editor-button:focus,
-.text-editor-tool .text-editor-button:active {
+.text-editor-tool .text-editor-button:active,
+.text-editor-tool .text-editor-button.on {
   background:#f5f5f5;
   color:inherit;
 }
@@ -59,6 +60,7 @@
 }
 .text-editor-drop.menu .text-editor-button:focus,
 .text-editor-drop.menu .text-editor-button:active,
+.text-editor-drop.menu .text-editor-button.on,
 .text-editor-drop.menu:hover .text-editor-button:hover {
   background:#f5f5f5;
   color:inherit;

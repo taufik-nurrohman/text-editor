@@ -53,7 +53,7 @@
 
     <section>
       <h2 id="section:start">Start</h2>
-      <p>Include <a href="ui.min.css" target="_blank"><code>ui.min.css</code></a> in the <code>&lt;head&gt;</code> section, include <a href="../../text-editor.min.js" target="_blank"><code>text-editor.min.js</code></a> and <a href="ui.min.js" target="_blank"><code>ui.min.js</code></a> next to the text area:</p>
+      <p>Include <a href="ui.min.css" target="_blank"><code>ui.min.css</code></a> in the head section, include <a href="../../text-editor.min.js" target="_blank"><code>text-editor.min.js</code></a> and <a href="ui.min.js" target="_blank"><code>ui.min.js</code></a> next to the text area:</p>
       <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html dir="ltr"&gt;
   &lt;head&gt;
@@ -87,7 +87,7 @@
         <li><code>keys</code> &rarr; <var>boolean</var> &middot; Enable/disable keyboard shortcut feature.</li>
         <li><code>tools</code> &rarr; <var>string</var> &middot; List of tools to be included to the tools bar, each of them separated by a space.</li>
         <li><code>attributes</code> &rarr; <var>object</var> &middot; Extra <abbr title="Hyper Text Markup Language">HTML</abbr> attributes to be added to the text area element.</li>
-        <li><code>auto_tab</code> &rarr; <var>boolean</var> &middot; Press <kbd>Tab</kbd> key to indent?</li>
+        <li><code>auto_tab</code> &rarr; <var>boolean</var> &middot; Press <kbd>&#8677;</kbd> key to indent?</li>
         <li><code>auto_close</code> &rarr; <var>object</var> &middot; List of character as the object key that will be auto&ndash;closed by its value right after the text area caret.</li>
         <li><code>languages</code> &rarr; <var>object</var> &middot; List of words/phrases used by the text editor <abbr title="Graphic User Interface">GUI</abbr>.</li>
         <li><code>classes</code> &rarr; <var>object</var> &middot; List of <abbr title="Hyper Text Markup Language">HTML</abbr> classes used by the text editor <abbr title="Graphic User Interface">GUI</abbr>.</li>
@@ -97,6 +97,8 @@
 &lt;link href="text-editor/ui/ui/ui.white.min.css" rel="stylesheet"&gt;</code></pre>
       <h2 id="section:key">Keyboard Shortcuts</h2>
       <ul>
+        <li><kbd>&#8984;+y</kbd> &rarr; Redo</li>
+        <li><kbd>&#8984;+z</kbd> &rarr; Undo</li>
         <li><kbd>F10</kbd> &rarr; Focus Tools. Focus to the first tool item in the tools bar. Use arrow keys to navigate between tools.</li>
         <li><kbd>&#9099;</kbd> &rarr; Release Focus. Release editor focus by focusing on the next focusable element.</li>
         <li><kbd>&#8677;</kbd> &rarr; Indent</li>
@@ -148,8 +150,9 @@
             <li><code>click</code> <var>(e, editor, id)</var> &rarr; Function that will be executed on click event.</li>
             <li><code>text</code> &rarr; Use text instead of icon?</li>
             <li><code>active</code> &rarr; <code>true</code> by default, it means that the tool is active and can be used.</li>
+            <li><code>on</code> &rarr; Add an <code>on</code> class to the tool markup.</li>
             <li><code>attributes</code> &rarr; Extra <abbr title="Hyper Text Markup Language">HTML</abbr> attributes for the tool markup.</li>
-            <li><code>target</code> &rarr; <abbr title="Hyper Text Markup Language">HTML</abbr> element used to trigger the tool item.</li>
+            <li><code>target</code> &rarr; <abbr title="Hyper Text Markup Language">HTML</abbr> element used to trigger the tool item (generated automatically).</li>
           </ul>
         </li>
         <li><var>index</var> &rarr; Tool index placement in the tools bar (optional).</li>
@@ -206,7 +209,7 @@ editor.ui.tool('bold', {
       <pre><code>editor.ui.panel(function(panel) {
     panel.innerHTML = 'Panel content.';
 }, <var>fn</var>);</code></pre>
-      <h4 id="section:method-ui-modal">Modal <sup><a href="javascript:void(window.scroll(0,0),editor.ui.modal('my-modal',{header:'Modal Title',body:'Modal body.',footer:{'exit':function(){return editor.ui.exit(),window.location.hash='#section-method-ui-modal',false}}}));">test</a></sup></h4>
+      <h4 id="section:method-ui-modal">Modal <sup><a href="javascript:void(window.scroll(0,0),editor.ui.modal('my-modal',{header:'Modal Title',body:'Modal body.',footer:{'exit':function(){return editor.ui.exit(),window.location.hash='#section:method-ui-modal',false}}}));">test</a></sup></h4>
       <pre><code>editor.ui.modal(<var>id</var>, <var>pane</var>, <var>fn</var>);</code></pre>
       <ul>
         <li><var>id</var> &rarr; Modal ID.</li>
@@ -289,7 +292,7 @@ editor.ui.modal('my-modal', {
       <pre><code>editor.ui.bubble('my-bubble', function(bubble) {
     bubble.innerHTML = 'Bubble content.';
 }, <var>fn</var>);</code></pre>
-      <h4 id="section-method-ui-exit">Exit</h4>
+      <h4 id="section:method-ui-exit">Exit</h4>
       <p>Hide panel, overlay, modal, drop and bubble.</p>
       <pre><code>editor.ui.exit(<var>restore_selection</var>, <var>key</var>);</code></pre>
       <ul>
@@ -303,7 +306,7 @@ editor.ui.exit.overlay(<var>restore_selection</var>); // hide overlay only
 editor.ui.exit.modal(<var>restore_selection</var>); // hide modal only
 editor.ui.exit.drop(<var>restore_selection</var>); // hide drop only
 editor.ui.exit.bubble(<var>restore_selection</var>); // hide bubble only</code></pre>
-      <h4 id="section-method-ui-fit">Fit</h4>
+      <h4 id="section:method-ui-fit">Fit</h4>
       <p>Re&ndash;position the components.</p>
       <pre><code>editor.ui.modal.fit(); // re&ndash;center the modal
 editor.ui.modal.fit([2, 4]); // set `x` offset to `2` and `y` offset to `4`</code></pre>
@@ -580,7 +583,7 @@ var encoded = TE._.replace(<var>input</var>, from, to);</code></pre>
       <pre><code>var next = TE._.dom.next(<var>node</var>);</code></pre>
       <h4 id="section:utility-_-dom-previous">Previous</h4>
       <p>Get previous element from <var>node</var>:</p>
-      <pre><code>var next = TE._.dom.previous(<var>node</var>);</code></pre>
+      <pre><code>var previous = TE._.dom.previous(<var>node</var>);</code></pre>
       <h4 id="section:utility-_-dom-index">Index</h4>
       <p>Get <var>node</var> position from its parent:</p>
       <pre><code>var i = TE._.dom.index(<var>node</var>);</code></pre>

@@ -31,7 +31,8 @@
   color:inherit;
 }
 .text-editor-tool .text-editor-button:focus,
-.text-editor-tool .text-editor-button:active {
+.text-editor-tool .text-editor-button:active,
+.text-editor-tool .text-editor-button.on {
   background:#def;
   color:inherit;
   box-shadow:inset 0 0 0 2px #fff;
@@ -51,4 +52,5 @@
 }
 .text-editor-drop.menu .text-editor-button:focus,
 .text-editor-drop.menu .text-editor-button:active,
+.text-editor-drop.menu .text-editor-button.on,
 .text-editor-drop.menu:hover .text-editor-button:hover {color:#00a}

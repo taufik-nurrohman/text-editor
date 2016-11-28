@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR 2.7.0
+ *  TEXT EDITOR 2.8.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -27,6 +27,7 @@
         top_o = 'offsetTop',
         rec = 'record',
         rec_x = 'loss',
+        focus = 'focus',
         select = 'select',
         create = 'createElement',
         instance = '__instance__';
@@ -361,7 +362,7 @@
         });
 
         // plugin version
-        $.version = '2.7.0';
+        $.version = '2.8.0';
 
         // collect all instance(s)
         $[instance] = {};
@@ -440,7 +441,7 @@
         }
 
         function get_caret_px(s) {
-            var span = '<span></span>',
+            var span = '<span>&zwnj;</span>',
                 font = 'font-',
                 text = 'text-',
                 padding = 'padding-',
@@ -527,15 +528,18 @@
         TE[instance][target.id || target.name || count(Object.keys(TE[instance]))] = $;
 
         // scroll the editor
-        $[scroll] = function(i) {
+        $[scroll] = function(i, j) {
             c = target[top];
-            h = css(target, ['line-height', 'font-size']);
+            h = css(target, 'line-height');
             if (!is_set(i)) {
-                return [Math.floor(c / h[0]), h[0]];
-            } else if (is_boolean(i)) {
-                return $[scroll]($[scroll]()[0] + (i === false ? -1 : 1));
+                return [Math.floor(c / h), h];
+            } else if (!is_set(j)) {
+                if (i === true) {
+                    return target[top] = target[scroll + 'Height'], $;
+                }
+                return $[scroll](0, $[scroll]()[0] + i);
             }
-            return target[top] = (h[0] * i) + h[1] + (h[0] - h[1]), $;
+            return target[top] = h * j, $;
         };
 
         // set value
@@ -563,18 +567,18 @@
         };
 
         // focus the editor
-        $.focus = function(x, y) {
-            if (x === true) {
-                x = count(val()); // put caret at the end of the editor
-                y = target.scrollHeight; // scroll to the end of the editor
-            } else if (x === false) {
+        $[focus] = function(x, y) {
+            if (x === 0) {
                 x = y = 0; // put caret at the start of the editor, scroll to the start of the editor
+            } else if (x === 1) {
+                x = count(val()); // put caret at the end of the editor
+                y = target[scroll + 'Height']; // scroll to the end of the editor
             }
             if (is_set(x)) {
                 target[start] = target[end] = x;
                 target[top] = y;
             }
-            return target.focus(), $;
+            return target[focus](), $;
         };
 
         // blur the editor
@@ -618,7 +622,7 @@
                 }
                 arg[1] = arg[0];
             }
-            target.focus();
+            target[focus]();
             target.setSelectionRange(arg[0], arg[1]); // default `$.select(7, 100)`
             target[top] = z, win.scroll(x, y);
             return $; // `select` method does not populate history data
@@ -809,14 +813,14 @@
         $.undo = function() {
             history--;
             a = H[history = edge(history, 0, history_count - 1)];
-            return $.set(a[0])[select](a[1], a[2])[scroll](a[3]);
+            return $.set(a[0])[select](a[1], a[2])[scroll](0, a[3]);
         };
 
         // redo
         $.redo = function() {
             history++;
             a = H[history = edge(history, 0, history_count - 1)];
-            return $.set(a[0])[select](a[1], a[2])[scroll](a[3]);
+            return $.set(a[0])[select](a[1], a[2])[scroll](0, a[3]);
         };
 
         // disable the history feature

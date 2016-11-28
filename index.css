@@ -13,6 +13,14 @@ b,strong,th {font-weight:bold}
 i,em,var {font-style:italic}
 ins,u {text-decoration:underline}
 s,del {text-decoration:line-through}
+sup,sub {
+  font-size:80%;
+  font-weight:normal;
+  vertical-align:baseline;
+  position:relative;
+  top:-.5em;
+}
+sub {top:.5em}
 .fa {
   font-family:FontAwesome;
   font-style:normal;
@@ -29,9 +37,9 @@ a {
 a:focus,a:active {color:#f00}
 abbr {
   border:0;
-  color:#090;
   cursor:help;
 }
+abbr:hover {color:#090}
 kbd {color:#900}
 a abbr,strong abbr {color:inherit}
 button::-moz-focus-inner,
@@ -90,13 +98,6 @@ h2 {
 h3 {font-size:1.414rem}
 h5 {font-size:.707rem}
 h6 {font-size:.4713333333333333rem}
-sup,sub {
-  font-size:80%;
-  vertical-align:baseline;
-  position:relative;
-  top:-.5em;
-}
-sub {top:.5em}
 table {
   margin-top:1.5rem;
   border-spacing:0;

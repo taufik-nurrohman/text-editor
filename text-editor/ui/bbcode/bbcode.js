@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BBCODE TEXT EDITOR PLUGIN 1.1.1
+ *  BBCODE TEXT EDITOR PLUGIN 1.1.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -11,8 +11,8 @@ TE.ui.BBCode = function(target, o) {
 
     var editor = TE.ui.HTML || TE.ui,
         $ = editor(target, {
-            auto_p: 0, // disable automatic paragraph feature from `TE.HTML` by default
-            advance_table: 0, // disable advance table feature from `TE.HTML` by default
+            auto_p: 0, // disable automatic paragraph feature from `TE.ui.HTML` by default
+            advance_table: 0, // disable advance table feature from `TE.ui.HTML` by default
             tools: 'clear | b i u s | sub sup | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
             unit: [
                 [

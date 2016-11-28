@@ -39,7 +39,8 @@
   box-shadow:none;
 }
 .text-editor-tool .text-editor-button:focus,
-.text-editor-tool .text-editor-button:hover {color:#789}
+.text-editor-tool .text-editor-button:hover,
+.text-editor-tool .text-editor-button.on {color:#789}
 .text-editor-tool .text-editor-button:active {color:#89a}
 .text-editor-overlay {background:rgba(0,0,0,.4)}
 .text-editor-modal,
@@ -53,4 +54,5 @@
 }
 .text-editor-drop.menu .text-editor-button:focus,
 .text-editor-drop.menu .text-editor-button:active,
+.text-editor-drop.menu .text-editor-button.on,
 .text-editor-drop.menu:hover .text-editor-button:hover {color:#789}

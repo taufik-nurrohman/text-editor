@@ -1,6 +1,6 @@
 /*!
  * ===========================================================
- *  HTML AUTO-COMPLETE PLUGIN FOR USER INTERFACE MODULE 1.0.1
+ *  HTML AUTO-COMPLETE PLUGIN FOR USER INTERFACE MODULE 1.0.2
  * ===========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -55,21 +55,25 @@ TE.each(function($) {
                 if (_pattern(tag_open + '\\n[\\t ]*$').test(l_before) && is_tag_close.test(l_after)) {
                     $[insert_before](config.tab)[insert_after]('\n' + get_indent(l_before));
                 }
-            } else if (k('>') && !is_tag_close.test(l_after) && l_before.slice(-2) !== '>>') {
+            } else if (k('!')) {
+                $[insert_before]('-- ')[insert_after](' --');
+            } else if (k(unit[1]) && !is_tag_close.test(l_after) && l_before.slice(-2) !== unit[1] + unit[1]) {
                 m = l_before.match(is_tag_open) || ["", ""];
                 if (is_void.test(m[1])) {
                     $[replace_before](_pattern(esc_unit[1] + '$'), suffix);
                 } else {
                     $[replace_after](/^/, unit[0] + unit[2] + m[1] + unit[1]);
                 }
-            } else if (k(' ')) {
+            } else if (k(data[3])) {
                 m = l_before.match(_pattern(tag_open.slice(0, tag_open.length - esc_unit[1].length) + '$')) || ["", ""];
                 if (m[1] === 'a') {
-                    $[insert_before]('href' + data[0] + data[1])[insert_after](data[1]);
+                    $[insert_before]('href' + data[0] + data[1])[insert_after](data[1] + unit[1] + unit[0] + unit[2] + m[1]);
                 } else if (m[1] === 'img') {
                     $[insert_before]('alt' + data[0] + data[1] + data[2] + data[3] + 'src' + data[0] + data[1])[insert_after](data[2])[replace_after](_pattern('^' + esc_data[2] + esc_unit[1]), data[2] + suffix);
                 } else if (m[1] === 'input') {
                     $[insert_before]('type' + data[0] + data[1])[insert_after](data[2])[replace_after](_pattern('^' + esc_data[2] + esc_unit[1]), data[2] + suffix);
+                } else if (!is_void.test(m[1])) {
+                    $[replace_after](_pattern('^' + esc_unit[1]), unit[1] + unit[0] + unit[2] + m[1] + unit[1]);
                 }
             }
             $[1]();

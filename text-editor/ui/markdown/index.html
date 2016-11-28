@@ -50,27 +50,27 @@
         <li><var>node</var> &rarr; The text area element.</li>
         <li><var>config</var> &rarr; Custom configuration data to override the default configuration data.</li>
       </ul>
-<!-- 
-      <pre><code>var editor = TE.ui.HTML(document.querySelector('#editor'), { &hellip; });</code></pre>
+      <pre><code>var editor = TE.ui.Markdown(document.querySelector('#editor'), { &hellip; });</code></pre>
       <h3>Configuration</h3>
       <p>The available configuration data are:</p>
       <ul>
         <li>Inherits <code>TE.ui()</code> &rarr; <a href="../../ui#section:configure">read more</a></li>
-        <li>Inherits <code>TE.ui.HTML()</code>
+        <li>Inherits <code>TE.ui.HTML()</code> &rarr; <a href="../html#section:configure">read more</a></li>
+        <li>Inherits <code>TE.ui.Markdown()</code>
           <ul>
-            <li><code>auto_encode_html</code> &rarr; <var>boolean</var> &middot; Automatically encode <abbr title="Hyper Text Markup Language">HTML</abbr> special characters inside code tags?</li>
-            <li><code>auto_p</code> &rarr; <var>boolean</var> &middot; Automatically insert paragraph tags?</li>
+            <li><code>extra</code> &rarr; <var>boolean</var> &middot; Enable <strong>Markdown Extra</strong> features?</li>
             <li><code>states</code> &rarr; <var>object</var>
               <ul>
-                <li><code>tr</code> &rarr; <var>array</var> &middot; Minimum and maximum table rows for table tool.</li>
-                <li><code>td</code> &rarr; <var>array</var> &middot; Minimum and maximum table columns for table tool.</li>
+                <li><code>a</code> &rarr; <var>object</var> &middot; List of default links <abbr title="Uniform Resource Locator">URL</abbr> and title for referenced&ndash;link style.</li>
+                <li><code>img</code> &rarr; <var>object</var> &middot; List of default images <abbr title="Uniform Resource Locator">URL</abbr> and title for referenced&ndash;image style.</li>
                 <li><code>abbr</code> &rarr; <var>object</var> &middot; List of default abbreviations for abbreviation tool.</li>
               </ul>
             </li>
-            <li><code>advance_a</code> &rarr; <var>boolean</var> &middot; Detect external <abbr title="Uniform Resource Locator">URL</abbr> and automatically add <code>rel="nofollow"</code> and <code>target="_blank"</code> attribute to the link markup?</li>
-            <li><code>advance_img</code> &rarr; <var>boolean</var> &middot; Insert image with <code>&lt;figure&gt;</code> element as image container and <code>&lt;figcaption&gt;</code> as image caption when title field is defined?</li>
-            <li><code>advance_table</code> &rarr; <var>boolean</var> &middot; Include <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code> and <code>&lt;tfoot&gt;</code> markup?</li>
-            <li><code>formats</code> &rarr; <var>object</var> &middot; List of default <abbr title="Hyper Text Markup Language">HTML</abbr> formats to be outputted.</li>
+            <li><code>advance_br</code> &rarr; <var>boolean</var> &middot; Press <kbd>&#8679;+&#8629;</kbd> to do a hard break?</li>
+            <li><code>advance_h1,h2</code> &rarr; <var>boolean</var> &middot; Enable <em>SEText</em> header style?</li>
+            <li><code>advance_pre,code</code> &rarr; <var>boolean|string</var> &middot; Replace with <code>true</code> or <code>%1 .foo</code> to enable fenced code block syntax in <strong>Markdown Extra</strong>.</li>
+            <li><code>close_h1,h2,h3,h4,h5,h6</code> &rarr; <var>boolean</var> &middot; Replace with <code>true</code> for <code>### heading 3 ###</code>.</li>
+            <li><code>close_tr</code> &rarr; <var>boolean</var> &middot; Enable closed table pipe?</li>
           </ul>
         </li>
       </ul>
@@ -85,18 +85,14 @@
         <li><kbd>&#8984;+q</kbd> &rarr; Quote</li>
         <li><kbd>&#8984;+r</kbd> &rarr; Horizontal Rule</li>
         <li><kbd>&#8984;+t</kbd> &rarr; Table</li>
-        <li><kbd>&#8984;+u</kbd> &rarr; Underline</li>
-        <li><kbd>&#8984;+y</kbd> &rarr; Redo</li>
-        <li><kbd>&#8984;+z</kbd> &rarr; Undo</li>
         <li><kbd>&#8984;++</kbd> &rarr; List</li>
         <li><kbd>&#8984;+-</kbd> &rarr; Bullet</li>
         <li><kbd>&#8984;+&#10008;</kbd> &rarr; Strike</li>
-        <li><kbd>&#8984;+&darr;</kbd> &rarr; Subscript</li>
-        <li><kbd>&#8984;+&uarr;</kbd> &rarr; Superscript</li>
+        <li><kbd>&#8984;+&darr;</kbd> &rarr; Footnote</li>
+        <li><kbd>&#8984;+&uarr;</kbd> &rarr; Footnote</li>
         <li><kbd>&#8984;+&#8629;</kbd> &rarr; Paragraph</li>
         <li><kbd>&#8984;+&#8679;+?</kbd> &rarr; Abbreviation</li>
-        <li><kbd>&#8679;+&#8629;</kbd> &rarr; Line Break</li>
-        <li><kbd>&#10008;</kbd> &rarr; Clear Format &rarr; Delete</li>
+        <li><kbd>&#8679;+&#8629;</kbd> &rarr; Hard Break</li>
         <li><kbd>&#8677;</kbd> &rarr; Indent &amp; <em>Depends</em></li>
         <li><kbd>&#8679;+&#8677;</kbd> &rarr; Outdent</li>
         <li><kbd>&#8629;</kbd> &rarr; <em>Depends</em></li>
@@ -104,40 +100,21 @@
       </ul>
       <h3>Depends &rarr; Special Cases</h3>
       <p>Try pressing the <kbd>&#8629;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
-      <pre><code>lorem ipsum dolor sit amet<mark>|</mark></code></pre>
-      <pre><code>&lt;p&gt;<mark>|</mark>&lt;/p&gt;</code></pre>
-      <pre><code>&lt;p class="foo"&gt;<mark>|</mark>&lt;/p&gt;</code></pre>
-      <pre><code>&lt;p&gt;foo<mark>|</mark>&lt;/p&gt;</code></pre>
-      <pre><code>&lt;p class="foo"&gt;foo<mark>|</mark>&lt;/p&gt;</code></pre>
-      <pre><code>&lt;ul&gt;
-  &lt;li&gt;<mark>|</mark>&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-      <pre><code>&lt;ul&gt;
-  &lt;li class="foo"&gt;<mark>|</mark>&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-      <pre><code>&lt;ul&gt;
-  &lt;li&gt;foo<mark>|</mark>&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-      <pre><code>&lt;ul&gt;
-  &lt;li&gt;&lt;a href="#"&gt;foo&lt;/a&gt;<mark>|</mark>&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-      <pre><code>&lt;ul&gt;
-  &lt;li class="foo"&gt;&lt;a href="#"&gt;foo&lt;/a&gt;<mark>|</mark>&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-      <pre><code>    <mark>|</mark></code></pre>
-      <pre><code>"<mark>|</mark>"</code></pre>
-      <pre><code>'<mark>|</mark>'</code></pre>
-      <pre><code>(<mark>|</mark>)</code></pre>
-      <pre><code>{<mark>|</mark>}</code></pre>
-      <pre><code>[<mark>|</mark>]</code></pre>
-      <pre><code>&lt;<mark>|</mark>&gt;</code></pre>
+      <pre><code> 1. foo<mark>|</mark></code></pre>
+      <pre><code> * foo<mark>|</mark></code></pre>
+      <pre><code> - foo<mark>|</mark></code></pre>
+      <pre><code> + foo<mark>|</mark></code></pre>
+      <pre><code>&gt; foo<mark>|</mark></code></pre>
+      <pre><code>&gt; &gt; foo<mark>|</mark></code></pre>
       <p>Try pressing the <kbd>&#8677;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
-      <pre><code>&lt;li&gt;abc<mark>|</mark>&lt;/li&gt;</code></pre>
-      <p>Try pressing the <kbd>&#9003;</kbd> key in these position, where <code><mark>|</mark></code> represent the text editor caret.</p>
-      <pre><code>&lt;p class="foo"&gt;&lt;/p&gt;<mark>|</mark></code></pre>
-      <pre><code>&lt;p class="foo"&gt;<mark>|</mark>&lt;/p&gt;</code></pre>
-      <pre><code>    <mark>|</mark></code></pre>
--->
+      <pre><code> 5. <mark>|</mark></code></pre>
+      <pre><code> * <mark>|</mark></code></pre>
+      <pre><code> - <mark>|</mark></code></pre>
+      <pre><code> + <mark>|</mark></code></pre>
+      <pre><code>&gt; <mark>|</mark></code></pre>
+      <pre><code><mark>&gt; foo
+&gt; bar
+&gt; baz</mark></code></pre>
     </section>
 
     <footer>

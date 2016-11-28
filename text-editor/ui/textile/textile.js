@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXTILE TEXT EDITOR PLUGIN 1.3.0
+ *  TEXTILE TEXT EDITOR PLUGIN 1.3.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -11,6 +11,12 @@ TE.ui.Textile = function(target, o) {
 
     var editor = TE.ui.HTML || TE.ui,
         $ = editor(target, {
+            auto_close: {
+                '@': '@',
+                '*': '*',
+                '_': '_',
+                '-': '-'
+            },
             tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
             languages: {
                 modals: {
@@ -223,7 +229,7 @@ TE.ui.Textile = function(target, o) {
                                 if (!x) {
                                     $.insert(placeholders[""]);
                                 }
-                                $.i().trim(_trim(b) ? ' ' : "", !_trim(a) ? "" : (/^\n+(fn\d+\^?\. |\[)/.test(a) ? '\n\n ' : ' ')).wrap('"', (title ? '(' + title + ')' : "") + '":' + href);
+                                $.i().trim(_trim(b) ? ' ' : "", !_trim(a) ? "" : (/^\n+(fn\d+\^?\. |\[)/.test(a) ? '\n\n' : ' ')).wrap('"', (title ? '(' + title + ')' : "") + '":' + href);
                             }
                         });
                     }
@@ -265,7 +271,7 @@ TE.ui.Textile = function(target, o) {
                         $.select(i, i + v.length);
                         target.scrollTop = $.$(1).caret[0].y;
                     } else {
-                        $.trim("", !_trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[' + v + ']').set(_trim($.get(), 1) + n + 'fn' + v + '. ').focus(true).insert(placeholders[""]);
+                        $.trim("", !_trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[' + v + ']').set(_trim($.get(), 1) + n + 'fn' + v + '. ').focus(1).insert(placeholders[""]);
                     }
                 }), false;
             }
@@ -500,7 +506,7 @@ TE.ui.Textile = function(target, o) {
                 if (match[0] === match[1]) {
                     return $.outdent(_pattern(regex)), false;
                 }
-                return $.insert('\n' + match[1], 0).scroll(true), false;
+                return $.insert('\n' + match[1], 0).scroll(1), false;
             }
         },
         'shift+tab': function(e, $) {

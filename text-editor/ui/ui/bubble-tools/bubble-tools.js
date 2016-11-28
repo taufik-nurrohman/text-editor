@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.6
+ *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.7
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -66,9 +66,10 @@ TE.each(function($) {
 
     function do_tools(f, id, bubble) {
         e = config.languages.tools[id];
-        f = (tools[id] && tools[id].i) || id;
+        i = tools[id];
+        f = (i && i.i) || id;
         g = id === '|';
-        h = _el(g ? 'span' : 'a', g ? false : (f[0] === '<' ? f : '<i class="' + _format(icon, [f]) + '"></i>'), g ? {
+        h = _el(g ? 'span' : 'a', g ? false : (f[0] === '<' ? f : '<i class="' + _format(icon, [i.target ? _dom_data_get(i.target, 'tool-id') : id, f]) + '"></i>'), g ? {
             'class': c + '-separator'
         } : {
             'class': c + '-button',
@@ -113,7 +114,8 @@ TE.each(function($) {
                         'type': 'text',
                         'value': l,
                         'placeholder': l,
-                        'class': c + '-input'
+                        'class': c + '-input',
+                        'spellcheck': 'false'
                     });
                     _event.set("keydown", m, function(e) {
                         k = e.TE.key;

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.3.0
+ *  HTML TEXT EDITOR PLUGIN 1.3.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -25,6 +25,8 @@ TE.ui.HTML = function(target, o) {
             states: {
                 tr: [1, 10], // minimum and maximum table row(s)
                 td: [1, 10], // minimum and maximum table column(s)
+                a: {},
+                img: {},
                 abbr: {}
             },
             languages: {
@@ -411,10 +413,10 @@ TE.ui.HTML = function(target, o) {
                         if (_pattern(esc_unit[0] + _esc(p_o) + attrs + esc_unit[1] + '\\s*$').test(before)) {
                             $.unwrap(_pattern('\\s*' + esc_unit[0] + _esc(p_o) + attrs + esc_unit[1] + '\\s*'), _pattern('\\s*' + esc_unit[0] + esc_unit[2] + _esc(p_o) + esc_unit[1])).replace(placeholder, "").tidy('\n', '\n' + dent);
                         } else if (match = before.match(_pattern(esc_unit[0] + _esc(p_o) + attrs_capture + esc_unit[1] + '.*?$'))) {
-                            $.wrap(unit[0] + unit[2] + p_o + unit[1] + '\n' + dent + unit[0] + p_o + match[1] + unit[1], "").insert(placeholder);
+                            $.wrap(unit[0] + unit[2] + p_o + unit[1] + '\n' + dent + unit[0] + p_o + match[1] + unit[1], "").insert(placeholder).scroll(1);
                         }
                     } else {
-                        $.tidy('\n\n').format(p, 0, '\n\n');
+                        $.tidy('\n\n').format(p, 0, '\n\n').scroll(1);
                     }
                 } else {
                     var para = _pattern('^(?:\\s*' + esc_unit[0] + _esc(p_o) + attrs + esc_unit[1] + '\\s*)+' + content + '(?:\\s*' + esc_unit[0] + esc_unit[2] + _esc(p_o) + esc_unit[1] + '\\s*)+$');
@@ -438,7 +440,7 @@ TE.ui.HTML = function(target, o) {
             i: 'level-down',
             click: function(e, $) {
                 dent = get_indent($.$().before);
-                return $.tidy('\n', "").insert(dent + unit[0] + formats.br + suffix + '\n', 0), false;
+                return $.tidy('\n', "").insert(dent + unit[0] + formats.br + suffix + '\n', 0).scroll(1), false;
             }
         },
         'p,h1,h2,h3,h4,h5,h6': {
