@@ -29,6 +29,8 @@ html {
   font-family:Helmet,FreeSans,Sans-Serif;
   font-size:14px;
   line-height:1.5em;
+  background:#fff;
+  color:#000;
 }
 a {
   color:#00f;
