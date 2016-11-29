@@ -459,7 +459,7 @@ TE.ui = function(target, o) {
     function dom_id(node) {
         var id = node.id;
         if (!id) {
-            id = _prefix + '-dom:' + Date.now();
+            id = _prefix + '-dom:' + Math.floor(Date.now() * Math.random());
             node.id = id;
         }
         return id;
