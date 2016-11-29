@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.5.4
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.5.5
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -1523,17 +1523,18 @@ TE.ui = function(target, o) {
 
     // TODO: make it possible to programatically set menu selection value
     ui.menu = function(id, str, data, i) {
-        str = (!is_object(str) && data[str] && data[str].text) || str;
         var current = '<span class="' + _prefix + '-current menu">%1</span>',
             icon = "",
+            str_o = str,
             tools = ui.tools,
             index = 0, v;
+        str = (!is_object(str) && data[str] && data[str].text) || str;
         if (str === false) {
             return ui.tool(id, str);
         } else if (is_object(str)) {
             icon = str[0];
             icon = icon[0] === '<' ? icon : '<i class="' + format(_i, [slug(id).replace(/[\/\s]/g, '-'), icon]) + '"></i>';
-            str = is_set(str[1]) ? str[1] : 0;
+            str = str_o = is_set(str[1]) ? str[1] : 0;
             str = (str && data[str] && data[str].text) || str;
             current = icon + (str !== 0 ? ' ' + current : "");
         }
@@ -1554,7 +1555,8 @@ TE.ui = function(target, o) {
                 return ui.drop('menu menu-' + slug(id), function(drop) {
                     function _do_click(e) {
                         t = this;
-                        m = data[data_get(t, 'tool-id')];
+                        o = data_get(t, 'tool-id');
+                        m = data[o];
                         m = is_string(m) ? tools[m] : (m || {});
                         n = content_get(t);
                         if (!is_disabled_tool(m) && is_function(i = m.click)) {
@@ -1564,13 +1566,14 @@ TE.ui = function(target, o) {
                                 if (!dom_is(c, 'i')) {
                                     content_set(c, format(current, [n, icon]));
                                 }
-                                if(is_object(m.text) && (c = dom_children(c)[0])) {
+                                if (is_object(m.text) && (c = dom_children(c)[0])) {
                                     if (dom_is(c, 'i')) {
                                         class_reset(c);
                                         class_set(c, format(_i, [m.text[0]]));
                                     }
                                 }
                             }
+                            data_set(a, 'ui-drop-menu', o);
                             if (i === false) return $.select(), event_exit(e);
                         }
                         return $.select(), event_exit(e);
@@ -1652,12 +1655,15 @@ TE.ui = function(target, o) {
                         ++index;
                     }
                     _timer_set(function() {
-                        dom_get('a', drop)[0].focus();
+                        (dom_get('[data-tool-id="' + data_get(a, 'ui-drop-menu') + '"]', drop)[0] || dom_get('a', drop)[0]).focus();
                     }, 1);
                 }), false;
             }
         }, i);
-        return data_set(tools[id].target, 'ui-drop', id), (tools[id].data = data), $;
+        return data_set(tools[id].target, {
+            'ui-drop': id,
+            'ui-drop-menu': str_o
+        }), (tools[id].data = data), $;
     };
 
     ui.bubble = function() {

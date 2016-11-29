@@ -1,6 +1,6 @@
 /*!
  * ===========================================================
- *  HTML AUTO-COMPLETE PLUGIN FOR USER INTERFACE MODULE 1.0.2
+ *  HTML AUTO-COMPLETE PLUGIN FOR USER INTERFACE MODULE 1.0.3
  * ===========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -54,9 +54,15 @@ TE.each(function($) {
             if (k('enter')) {
                 if (_pattern(tag_open + '\\n[\\t ]*$').test(l_before) && is_tag_close.test(l_after)) {
                     $[insert_before](config.tab)[insert_after]('\n' + get_indent(l_before));
+                } else if (_pattern(esc_unit[0] + '!\\-\\-\\s+$').test(l_before) && _pattern('^\\s+\\-\\-' + esc_unit[1]).test(l_after)) {
+                    $[replace_before](/\s+$/g, '\n\n')[replace_after](/^\s+/g, '\n\n');
                 }
-            } else if (k('!')) {
-                $[insert_before]('-- ')[insert_after](' --');
+            } else if (_pattern(esc_unit[0] + '![-d]$', 'i').test(l_before)) {
+                if (k('-')) {
+                    $[insert_before]('- ')[insert_after](' --');
+                } else if (k('d')) {
+                    $[replace_before](/d$/i, 'DOCTYPE html');
+                }
             } else if (k(unit[1]) && !is_tag_close.test(l_after) && l_before.slice(-2) !== unit[1] + unit[1]) {
                 m = l_before.match(is_tag_open) || ["", ""];
                 if (is_void.test(m[1])) {
