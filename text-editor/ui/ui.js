@@ -106,6 +106,8 @@ TE.ui = function(target, o) {
             }
         }, o),
 
+        maps = {}, // capture keyboard key(s) here ...
+
         a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z,
 
         _BLUR = 'blur',
@@ -148,11 +150,19 @@ TE.ui = function(target, o) {
         return s.length;
     }
 
+    function object_keys(x) {
+        return Object.keys(x);
+    }
+
+    function object_keys_length(x) {
+        return count(object_keys(x));
+    }
+
     function hook_set(ev, fn, id) {
         if (!is_set(ev)) return hooks;
         if (!is_set(fn)) return hooks[ev];
         if (!is_set(hooks[ev])) hooks[ev] = {};
-        if (!is_set(id)) id = count(Object.keys(hooks[ev]));
+        if (!is_set(id)) id = object_keys_length(hooks[ev]);
         return hooks[ev][id] = fn, $;
     }
 
@@ -815,7 +825,7 @@ TE.ui = function(target, o) {
     function do_update_keys() {
         // sort keyboard shortcut(s) ...
         ui.keys = (function() {
-            var input = Object.keys(ui.keys).sort().reverse(),
+            var input = object_keys(ui.keys).sort().reverse(),
                 output = {}, v;
             for (i = 0, j = count(input); i < j; ++i) {
                 v = input[i];
@@ -826,9 +836,6 @@ TE.ui = function(target, o) {
         do_keys_reset();
         hook_fire('update.keys', [$]);
     }
-
-    var maps = {},
-        bounce = null;
 
     function do_keys(e) {
         if (is_disabled_or_freezed()) {
@@ -845,7 +852,7 @@ TE.ui = function(target, o) {
             dent = (before.match(/(?:^|\n)([\t ]*).*$/) || [""]).pop();
         n = e.TE.key();
         maps[n] = 1;
-        o = count(Object.keys(maps));
+        o = object_keys_length(maps);
         function explode(s) {
             return s.replace(/\+/g, '\n').replace(/\n\n/g, '\n+').split('\n');
         }
