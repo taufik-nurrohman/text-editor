@@ -60,6 +60,11 @@
   font:inherit;
   padding:.25em .5em;
 }
+.text-editor-a,
+.text-editor-label {
+  display:inline-block;
+  vertical-align:middle;
+}
 .text-editor-select {height:2.142857142857143em} /* hacky! :( */
 .text-editor-select,
 .text-editor-toggle {cursor:pointer}
@@ -95,7 +100,7 @@
   outline:0;
 }
 .text-editor .icon {
-  display:block;
+  display:inline-block;
   margin:0;
   padding:0;
   border:0;
@@ -278,7 +283,7 @@
 .text-editor-modal-footer .text-editor-button + .text-editor-button {margin-left:.25em}
 .text-editor-modal .block + .block {margin-top:.5em}
 .text-editor-drop,
-.text-editor-bubble {padding:2px}
+.text-editor-bubble {padding:.2em}
 .text-editor-drop.menu {
   min-width:12em;
   padding:0;

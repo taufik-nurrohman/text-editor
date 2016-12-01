@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR 2.8.0
+ *  TEXT EDITOR 2.8.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -362,7 +362,7 @@
         });
 
         // plugin version
-        $.version = '2.8.0';
+        $.version = '2.8.1';
 
         // collect all instance(s)
         $[instance] = {};
@@ -850,6 +850,9 @@
 
         // the target element
         $.target = target;
+
+        // the invisible target copy element
+        $.mirror = div;
 
         // return the global object
         return get_caret_px(), $;

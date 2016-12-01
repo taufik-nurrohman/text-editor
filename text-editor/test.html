@@ -22,6 +22,7 @@
     }
     pre:empty {display:none}
     </style>
+    <script src="../text-editor.min.js"></script>
   </head>
   <body>
     <h1>Selection Test</h1>
@@ -56,8 +57,8 @@ d</textarea>
       <button onclick="return dump_1.innerHTML = JSON.stringify(editor_1.$(true), null, 2), false;">inspect selection</button>
       <br>
       <button onclick="return editor_1.focus(), false;">focus</button>
-      <button onclick="return editor_1.focus(false), false;">focus start</button>
-      <button onclick="return editor_1.focus(true), false;">focus end</button>
+      <button onclick="return editor_1.focus(0), false;">focus start</button>
+      <button onclick="return editor_1.focus(1), false;">focus end</button>
       <button onmouseover="return editor_1.blur(), false;">blur on hover</button>
       <br>
       <button onclick="return editor_1.select(50, 100), false;">select 50 &ndash; 100</button>
@@ -104,7 +105,6 @@ d</textarea>
       <button onclick="return editor_2.loss(), false;">remove the last history</button>
       <button onclick="return editor_2.loss(1), false;">remove the 2<sup>nd</sup> history</button>
     </p>
-    <script src="text-editor.min.js"></script>
     <script>
     var editor_1 = new TE(document.getElementById('area-1')),
         editor_2 = new TE(document.getElementById('area-2')),

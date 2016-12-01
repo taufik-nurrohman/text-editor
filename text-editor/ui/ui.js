@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.5.5
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.5.6
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -1477,10 +1477,12 @@ TE.ui = function(target, o) {
         ui.exit(0, 0, 0);
         var arg = arguments,
             k = arg[0],
-            fn = arg[1];
+            fn = arg[1],
+            exit = arg[2];
         if (count(arg) === 1) {
             k = 'default';
             fn = arg[0];
+            exit = arg[1];
         }
         l = slug(k);
         content_reset(_drop);
@@ -1493,7 +1495,9 @@ TE.ui = function(target, o) {
             el(_drop, fn);
         }
         ui.drop.fit();
-        event_set(_CLICK, doc, do_drop_exit);
+        if (exit !== false) {
+            event_set(_CLICK, doc, do_drop_exit);
+        }
         event_set(_RESIZE, win, do_drop_exit);
         hook_fire('enter.drop.' + k, [$]);
         hook_fire('enter.drop', [$]);

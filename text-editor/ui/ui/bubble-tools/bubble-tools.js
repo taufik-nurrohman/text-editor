@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.7
+ *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.8
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -107,7 +107,8 @@ TE.each(function($) {
             if (k = _dom_get('[name=data]', $modal)[0]) {
                 ui.bubble(tools_class, function(bubble) {
                     _css(bubble, {
-                        'font-size': '80%'
+                        'font-size': '80%',
+                        'line-height': '1.25em'
                     });
                     l = k.value;
                     m = _el('input', false, {
