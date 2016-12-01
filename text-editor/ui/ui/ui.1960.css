@@ -11,10 +11,10 @@
   border-color:#000;
   color:#000;
 }
-.text-editor a,
-.text-editor a:focus,
-.text-editor a:hover,
-.text-editor a:active {color:inherit}
+.text-editor-a,
+.text-editor-a:focus,
+.text-editor-a:hover,
+.text-editor-a:active {color:inherit}
 .text-editor-input {background:#ffa}
 .text-editor-select {background:#dfa}
 .text-editor-textarea {background:#def}

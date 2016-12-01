@@ -11,13 +11,10 @@
   border-color:#ddd;
   color:#999;
 }
-.text-editor a,
-.text-editor a:focus,
-.text-editor a:hover,
-.text-editor a:active {
-  color:inherit;
-  text-decoration:none;
-}
+.text-editor-a,
+.text-editor-a:focus,
+.text-editor-a:hover,
+.text-editor-a:active {color:inherit}
 .text-editor-button,
 .text-editor-input,
 .text-editor-select,

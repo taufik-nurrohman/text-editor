@@ -34,6 +34,7 @@ TE.ui = function(target, o) {
 
         is = TE.is,
         is_dom = is.e,
+        is_array = is.a,
         is_function = is.f,
         is_number = is.i,
         is_object = is.o,
@@ -443,7 +444,7 @@ TE.ui = function(target, o) {
                         if (v === null) {
                             attr_reset(em, i);
                         } else {
-                            attr_set(em, i, is_object(v) ? v.join(' ') : "" + v);
+                            attr_set(em, i, is_array(v) ? v.join(' ') : "" + v);
                         }
                     }
                 }
@@ -894,7 +895,7 @@ TE.ui = function(target, o) {
                 if (b === i && a === m) {
                     if (n === 'backspace' && before.slice(-2) !== '\\' + i) {
                         return $.unwrap(i, m), event_exit(e);
-                    } else if (auto_tab && n === 'enter' && i !== m) {
+                    } else if (auto_tab && n === 'enter' && i !== m && !length) {
                         return $.tidy('\n' + dent + tab, '\n' + dent).scroll(1), event_exit(e);
                     }
                 }
@@ -1011,7 +1012,6 @@ TE.ui = function(target, o) {
         c = (e && e.target) || 0;
         if (!c || (c !== a && closest(c, a) !== a)) {
             ui.drop.target = 0;
-            dom_content_reset(_drop);
             event_reset(_CLICK, doc, do_drop_exit);
             event_reset(_RESIZE, win, do_drop_exit);
             ui.exit(e.target === _content);
@@ -1172,7 +1172,7 @@ TE.ui = function(target, o) {
             ui.panel.exit(1);
         }
         event_set(_CLICK, x, do_panel_exit);
-        content_reset(_panel);
+        content_reset(_panel, false);
         dom_set(_body, el(_panel, [el_set(_prefix + '-panel-content', 'div', s), x]));
         if (is_function(fn)) {
             fn(_panel);
@@ -1257,7 +1257,7 @@ TE.ui = function(target, o) {
         }
         O.x = el_set(_prefix + '-x ' + l); // add `close` button
         O.resize = el_set(_prefix + '-resize se ' + l); // add `resize` button
-        content_reset(_modal);
+        content_reset(_modal, false);
         O.x.title = _i18n_buttons.close;
         dom_set(_body, el(_modal, O, {
             'style': ""
@@ -1399,6 +1399,7 @@ TE.ui = function(target, o) {
             fn = type;
             type = 0;
         }
+        type = type || 0;
         if (type === 1) {
             input = el('textarea', value, {
                 'placeholder': value.split('\n')[0],
@@ -1439,9 +1440,9 @@ TE.ui = function(target, o) {
         event_set(_KEYDOWN, input, function(e) {
             key = e.TE.key;
             control = e.TE.control;
-            if (key('enter') && type !== 1 || control('enter')) return yep(e), event_exit(e);
+            if (key('enter') && type === 0 || control('enter')) return yep(e), event_exit(e);
             if (key('escape') || (key('backspace') && !this.value)) return nope(e), event_exit(e);
-            if (key('arrowdown') && type !== 1 && type !== 2 || control('arrowdown')) return okay.focus(), event_exit(e);
+            if (key('arrowdown') && type === 0 || key('enter') && type === 2 || control('arrowdown')) return okay.focus(), event_exit(e);
         });
         event_set(_KEYDOWN, okay, function(e) {
             key = e.TE.key;
@@ -1485,7 +1486,7 @@ TE.ui = function(target, o) {
             exit = arg[1];
         }
         l = slug(k);
-        content_reset(_drop);
+        content_reset(_drop, false);
         dom_set(body, el(_drop, false, {
             'class': _prefix + '-drop ' + l
         }));
@@ -1495,7 +1496,9 @@ TE.ui = function(target, o) {
             el(_drop, fn);
         }
         ui.drop.fit();
-        if (exit !== false) {
+        if (exit === false) {
+            // TODO
+        } else {
             event_set(_CLICK, doc, do_drop_exit);
         }
         event_set(_RESIZE, win, do_drop_exit);
@@ -1687,7 +1690,7 @@ TE.ui = function(target, o) {
             fn = arg[0];
         }
         l = slug(k);
-        content_reset(_bubble);
+        content_reset(_bubble, false);
         dom_set(body, el(_bubble, false, {
             'class': _prefix + '-bubble ' + l
         }));
@@ -1812,6 +1815,18 @@ TE.ui = function(target, o) {
         return do_update_keys(), $;
     };
 
+    ui.key.set = function(k) {
+        maps[k] = 1;
+    };
+
+    ui.key.reset = function(k) {
+        if (k) {
+            delete maps[k];
+        } else {
+            maps = {};
+        }
+    };
+
     // default tool(s)
     ui.tools = {
         '|': {}, // separator
@@ -1831,6 +1846,7 @@ TE.ui = function(target, o) {
             return $.indent(tab), false;
         },
         outdent: function(e, $) {
+            ui.key.set('shift');
             return $.outdent(tab), false;
         }
     };

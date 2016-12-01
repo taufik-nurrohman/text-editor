@@ -2,36 +2,39 @@
     var edit = doc.querySelector('#editor'),
         css = doc.querySelector('#text-editor-shell-selector'),
         i = -1,
-        t, ack;
+        t, u, ack;
     if (edit && edit.value) {
-        var text = edit.value,
-            text_count = text.length;
-        win.addEventListener("scroll", function() {
-            ack = true;
-        }, false);
-        edit.value = "";
-        edit.focus();
-        function blur() {
-            ack = true;
-            clearTimeout(t);
-            edit.value = text;
-            edit.removeEventListener("blur", blur);
-        }
-        edit.addEventListener("blur", blur, false);
-        function type() {
-            ++i;
-            edit.value += text.charAt(i);
-            if (!ack) {
-                edit.selectionStart = edit.selectionEnd = edit.value.length;
-                edit.focus();
-                win.scroll(0, 0);
-            }
-            t = setTimeout(type, 50);
-            if (i === text_count - 1) {
+        if (!edit.classList.contains('no-animation')) {
+            var text = edit.value,
+                text_count = text.length;
+            win.addEventListener("scroll", function() {
+                ack = true;
+            }, false);
+            edit.value = "";
+            edit.focus();
+            function blur() {
+                ack = true;
                 clearTimeout(t);
+                clearTimeout(u);
+                edit.value = text;
+                edit.removeEventListener("blur", blur);
             }
+            edit.addEventListener("blur", blur, false);
+            function type() {
+                ++i;
+                edit.value += text.charAt(i);
+                if (!ack) {
+                    edit.selectionStart = edit.selectionEnd = edit.value.length;
+                    edit.focus();
+                    win.scroll(0, 0);
+                }
+                t = setTimeout(type, 50);
+                if (i === text_count - 1) {
+                    clearTimeout(t);
+                }
+            }
+            u = setTimeout(type, 1000);
         }
-        setTimeout(type, 1000);
     } else {
         edit.focus();
     }

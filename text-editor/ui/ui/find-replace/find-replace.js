@@ -1,105 +1,214 @@
+/*!
+ * ===========================================================
+ *  FIND AND REPLACE PLUGIN FOR USER INTERFACE MODULE 0.0.9
+ * ===========================================================
+ * Author: Taufik Nurrohman <https://github.com/tovic>
+ * License: MIT
+ * -----------------------------------------------------------
+ */
+
 TE.each(function($) {
 
     var uniq = Date.now(),
         ui = $.ui,
         config = $.config,
+        config_f_r = 0,
+        languages = config.languages,
         s = config.classes[""],
+        target = $.target,
         _ = $._,
+        _dom = _.dom,
+        _dom_content_set = _dom.content.set,
+        _dom_get = _dom.get,
+        _dom_reset = _dom.reset,
+        _dom_set = _dom.set,
         _el = _.el,
-        _format = _.format,
+        _esc = _.x,
+        _event_reset = _.event.reset,
         _event_set = _.event.set,
         _event_x = _.event.x,
-        _dom_set = _.dom.set,
-        _dom_reset = _.dom.reset,
-        _dom_parent = _.dom.parent,
-        s_html_class = s + '-find-replace--' + uniq,
+        _extend = _.extend,
+        _format = _.format,
+        _pattern = _.pattern,
+        _timer_set = _.timer.set,
+        s_f_r = '-find-replace',
+        s_html_class = s + s_f_r + '--' + uniq,
         s_css_class = '.' + s_html_class,
-        style = $._.el('style', false, {
-            'id': s + ':style-find-replace-' + uniq
-        }), k;
+        k, s, v, w, x;
 
-    function do_find() {}
-    function do_replace() {}
+    _extend(languages, {
+        tools: {
+            find: ['Find and Replace', '\u2318+F']
+        },
+        modals: {
+            find: ['No Matches', 'We couldn\u2019t find what you were looking for. Find again from top?'],
+            find_config: ['Mode', ['Ignore Case', 'Match Case', 'Match Pattern', 'Match Case and Pattern']]
+        },
+        placeholders: {
+            find: ['find\u2026', 'replace with\u2026']
+        },
+        labels: {
+            find: ['Find', 'Replace']
+        }
+    });
+
+    w = languages.placeholders.find;
 
     var find = _el('input', false, {
             'type': 'text',
-            'class': s + '-input',
-            'id': s + '-find:' + uniq
+            'class': s + '-input ' + s + '-input-find',
+            'id': s + '-find:' + uniq,
+            'title': w[0]
         }),
         replace = _el('input', false, {
             'type': 'text',
-            'class': s + '-input',
-            'id': s + '-replace:' + uniq
+            'class': s + '-input ' + s + '-input-replace',
+            'id': s + '-replace:' + uniq,
+            'title': w[1]
         }),
-        setting = _el('a', '<i class="' + _format(config.classes.i, ['setting', 'cogs']) + '"></i>', {
+        cog = _el('a', '<i class="' + _format(config.classes.i, ['config', 'cogs']) + '"></i>', {
             'href': 'javascript:;',
-            'class': s + '-a'
+            'class': s + '-a',
+            'title': languages.modals.find_config[0],
+            'style': 'padding:0 .5em;'
+        }),
+        status = _el('label', languages.modals.find_config[1][0], {
+            'class': s + '-label'
         });
+
+    w = languages.labels.find;
+
+    var pane = _el('div', [
+         _el('label', w[0], {
+            'class': s + '-label ' + s + '-label-find',
+            'for': s + '-find:' + uniq,
+            'style': 'padding:0 .5em;'
+        }), find,
+        _el('label', w[1], {
+            'class': s + '-label ' + s + '-label-replace',
+            'for': s + '-replace:' + uniq,
+            'style': 'padding:0 .5em;'
+        }),
+        replace, cog, status,
+    ], {
+        'class': s + s_f_r + ' ' + s_html_class,
+        'id': s + s_f_r + ':' + uniq,
+        'style': 'font-size:80%;line-height:1.25em;padding:.25em;border-top:1px solid;border-top-color:inherit;'
+    });
+
+    var found = 0;
+
+    function regex_index_of(a, b, start) {
+        start = start || 0;
+        var i = a.slice(start).search(b);
+        return i >= 0 ? i + start : i;
+    }
+
+    function do_find() {
+        v = find.value;
+        w = languages.modals.find;
+        x = $.get();
+        if (config_f_r === 1) {
+            s = x.indexOf(v, found); // match case
+        } else if (config_f_r === 2) {
+            s = regex_index_of(x, _pattern(v), found); // match pattern
+        } else if (config_f_r === 3) {
+            s = regex_index_of(x, _pattern(v, 'i'), found); // match case and pattern
+        } else {
+            s = x.toLowerCase().indexOf(v.toLowerCase(), found); // ignore case
+        }
+        if (s === -1) {
+            ui.alert(w[0], w[1], do_find_enter);
+        } else {
+            if (config_f_r !== 2 && config_f_r !== 3) {
+                v = _esc(v);
+            }
+            x = (x.slice(s).match(_pattern('^' + v, config_f_r === 0 || config_f_r === 2 ? 'i' : "")) || [""])[0].length;
+            found = s + x;
+            $.select(s, s + x);
+            target.scrollTop = $.$(1).caret[0].y;
+        }
+    }
+
+    function do_replace() {
+        s = $.$().length;
+        if (!s) {
+            $.select(true);
+        }
+        s = find.value;
+        $.replace(_pattern(config_f_r !== 0 && config_f_r !== 1 ? s : _esc(s), 'g' + (config_f_r !== 1 && config_f_r !== 3 ? 'i' : "")), replace.value);
+    }
+
+    function do_find_advance(e) {
+        w = languages.modals.find_config;
+        ui.prompt(w[0], w[1], "" + config_f_r, function(e, $, v) {
+            do_find_enter();
+            _dom_content_set(status, w[1][config_f_r = +v]);
+        }, 2);
+    }
+
+    function do_find_more(e) {
+        k = e.TE.key;
+        if (k('alt')) return do_find_advance(), _event_x(e);
+        if (k(/^(arrowdown|enter)$/)) return do_find(), _event_x(e);
+    }
+
+    function do_find_enter() {
+        found = 0;
+        s = $.blur().$();
+        if (!_dom_get(pane)[0] && (s = s.value)) {
+            find.value = s;
+        }
+        _dom_set(ui.el.header, pane);
+        _timer_set(function() {
+            find.focus();
+            find.select();
+        });
+        _event_set("keydown", target, do_find_more);
+    }
+
+    function do_find_exit() {
+        ui.key.set('control'); // hold the `control` key
+        _dom_reset(pane, false), $.select();
+        _event_reset("keydown", target, do_find_more);
+    }
+
+    _event_set("click", target, do_find_exit);
 
     _event_set("keydown", find, function(e) {
         k = e.TE.key;
-        if (k('tab')) return replace.focus(), _event_x(e);
-        if (k('enter')) return do_find(), _event_x(e);
+        v = this.value;
+        if (e.TE.control('f') || k('backspace') && !v) return do_find_exit(), _event_x(e);
+        if (k('alt')) return do_find_advance(), _event_x(e);
+        if (k('tab')) return replace.value = find.value, replace.focus(), replace.select(), _event_x(e);
+        if (k('enter') && v) return do_find(), _event_x(e);
     });
 
     _event_set("keydown", replace, function(e) {
         k = e.TE.key;
-        if (k('backspace') && !this.value) return find.focus(), _event_x(e);
+        v = this.value;
+        if (e.TE.control('f')) return do_find_exit(), _event_x(e);
+        if (k('backspace') && !v) return find.focus(), _event_x(e);
+        if (k('alt')) return do_find_advance(), _event_x(e);
+        if (k('tab')) return cog.focus(), _event_x(e);
         if (k('enter')) return do_replace(), _event_x(e);
     });
 
-    _event_set("click", setting, function(e) {
-        ui.drop.target = this;
-        ui.drop('find-replace-setting', function(drop) {
-            var c_1 = _el('label', [
-                _el('input', false, {
-                    'type': 'checkbox'
-                }),
-                _el('span', 'Match Case')
-            ]),
-            c_2 = _el('label', [
-                _el('input', false, {
-                    'type': 'checkbox'
-                }),
-                _el('span', 'Match Pattern')
-            ]);
-            _dom_set(drop, c_1);
-            _dom_set(drop, c_2);
-        }, false);
-        return _event_x(e);
-    });
-
-    _dom_set(document.head, _el(style, s_css_class + '{line-height:1.25em;border-top:1px solid;border-top-color:inherit;padding:.25em;font-size:80%}' + s_css_class + ' label{padding:0 .5em}' + s_css_class + ' a{padding:0 .5em}'));
-
-    var pane = _el('div', [
-         _el('label', 'Find', {
-            'class': s + '-label',
-            'for': s + '-find:' + uniq
-        }),
-        find,
-        _el('label', 'Replace', {
-            'class': s + '-label',
-            'for': s + '-replace:' + uniq
-        }),
-        replace,
-        setting
-    ], {
-        'class': s + '-find-replace ' + s_html_class,
-        'id': s + '-find-replace:' + uniq
-    });
+    _event_set("click", cog, do_find_advance);
 
     ui.tool('find', {
         i: 'binoculars',
         click: function(e, $) {
-            if (_dom_parent(pane)) {
-                _dom_reset(pane, false), $.select();
+            if (_dom_get(pane)[0]) {
+                do_find_exit();
             } else {
-                _dom_set(ui.el.header, pane), find.focus(), find.select();
+                do_find_enter();
             }
             return false;
         }
     })
 
+    // press `control+f` for "find"
     ui.key('control+f', 'find');
 
 });
