@@ -18,6 +18,7 @@
 .text-editor-input {background:#ffa}
 .text-editor-select {background:#dfa}
 .text-editor-textarea {background:#def}
+.text-editor-button {border-color:transparent}
 .text-editor-button,
 .text-editor-separator {
   background:#000;

@@ -51,6 +51,16 @@
       </section>
     </header>
 
+    <!-- section>
+      <p>Text <input class="text-editor-input" type="text"> <button class="text-editor-button">Button</button> Text <input class="text-editor-toggle" type="checkbox"> Text <input class="text-editor-toggle" type="radio"></p>
+      <p><select class="text-editor-select">
+        <option>Option 1</option>
+        <option>Option 2</option>
+        <option>Option 3</option>
+      </select> <input class="text-editor-input" type="text"></p>
+      <p><textarea class="text-editor-textarea"></textarea></p>
+    </section -->
+
     <section>
       <h2 id="section:start">Start</h2>
       <p>Include <a href="ui.min.css" target="_blank"><code>ui.min.css</code></a> in the head section, include <a href="../../text-editor.min.js" target="_blank"><code>text-editor.min.js</code></a> and <a href="ui.min.js" target="_blank"><code>ui.min.js</code></a> next to the text area:</p>
@@ -139,6 +149,14 @@
       <pre><code>editor.format('h1', '\n\n', '\n'); // force block</code></pre>
       <h3 id="section:method-ui">Components</h3>
       <p>Set callback function on the optional <var>fn</var> parameter.</p>
+      <h4 id="section:method-ui-i">Icons</h4>
+      <p>Create an icon:</p>
+      <pre><code>editor.ui.i(<var>id</var>, <var>alias</var>);</code></pre>
+      <ul>
+        <li><var>id</var> &rarr; Semantic icon name.</li>
+        <li><var>alias</var> &rarr; Presentational icon name.</li>
+      </ul>
+      <pre><code>editor.ui.i('edit', 'pencil'); // return `&lt;i class="text-editor-i text-editor-i-edit text-editor-i-edit--pencil fa fa-pencil"&gt;&lt;/i&gt;</code></pre>
       <h4 id="section:method-ui-tool">Tool <sup><a href="javascript:void(window.scroll(0,0),editor.ui.tool('emoticon',{i:'smile-o',title:'Emoticons',click:function(e,$){return $.insertBefore(' :) '),false}}));">test</a></sup></h4>
       <pre><code>editor.ui.tool(<var>id</var>, <var>data</var>, <var>index</var>);</code></pre>
       <ul>
@@ -402,7 +420,7 @@ editor.ui.prompt('Prompt Title', 'Prompt value&hellip;', is_valid_url, function(
       <ul>
         <li><var>id</var> &rarr; Tool ID.</li>
         <li><var>selected</var> &rarr; A key from <var>data</var> to select, or use any string as placeholder.</li>
-        <li><var>data</var> &rarr; Object of key and value, where value is an object of <code>editor.ui.tool</code>&rsquo;s <var>data</var> or a string or a function.</li>
+        <li><var>data</var> &rarr; Object of keys and values, where value is an object of <code>editor.ui.tool</code>&rsquo;s <var>data</var> or a string or a function.</li>
         <li><var>index</var> &rarr; Tool index placement in the tools bar (optional)</li>
       </ul>
       <pre><code>editor.ui.menu('my-menu', 'p', {
@@ -451,6 +469,9 @@ editor.ui.menu('my-menu', 'b', {
         click: function(e, $) { &hellip; }
     }
 }, <var>index</var>);</code></pre>
+      <p>Programmatically set the selected menu item:</p>
+      <pre><code>editor.ui.menu.set(<var>id</var>, <var>selected</var>);</code></pre>
+      <pre><code>editor.ui.menu.set('my-menu', 'h2'); // select `h2`</code></pre>
       <h3 id="section:method-ui-el">Components Cache</h3>
       <p>Accessing the already&ndash;created <abbr title="Hyper Text Markup Language">HTML</abbr> elements of editor interface through <code>editor.ui.el</code>:</p>
       <pre><code>console.log(editor.ui.el);</code></pre>

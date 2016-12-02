@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  MARKDOWN TEXT EDITOR PLUGIN 1.3.1
+ *  MARKDOWN TEXT EDITOR PLUGIN 1.3.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -19,7 +19,7 @@ TE.ui.Markdown = function(target, o) {
                 '_': '_',
                 '~': '~'
             },
-            tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
+            tools: 'b i s | a img | note abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
             states: {
                 a: {
                     "": [""] // implicit link name shortcut (do not remove!)
@@ -27,6 +27,9 @@ TE.ui.Markdown = function(target, o) {
                 img: {}
             },
             languages: {
+                tools: {
+                    note: ['Footnote', '\u2318+\u2193']
+                },
                 modals: {
                     a: {
                         title: ['Link URL/Reference ID']
@@ -34,7 +37,7 @@ TE.ui.Markdown = function(target, o) {
                     img: {
                         title: ['Image URL/Reference ID']
                     },
-                    sup: {
+                    note: {
                         title: 'Footnote ID'
                     }
                 }
@@ -85,13 +88,7 @@ TE.ui.Markdown = function(target, o) {
         _replace = _.replace,
         _trim = _.trim;
 
-    $.update(_extend({
-        languages: {
-            tools: {
-                sup: ['Footnote', $.config.languages.tools.sub[1]]
-            }
-        }
-    }, o), 0);
+    $.update(o, 0);
 
     // define editor type
     $.type = 'Markdown';
@@ -281,34 +278,8 @@ TE.ui.Markdown = function(target, o) {
                 }), false;
             }
         },
-        sup: extra ? {
-            i: 'thumb-tack',
-            click: function(e, $) {
-                var s = $.$(),
-                    b = s.before,
-                    a = s.after,
-                    i18n = languages.modals.sup,
-                    g = $.get(),
-                    n = /^ {0,3}\[\^.+?\]:/.test(_trim(g).split('\n').pop()) ? '\n' : '\n\n',
-                    notes = g.match(/^ {0,3}\[\^.+?\]:/gm) || [],
-                    i = 0, index;
-                for (i in notes) {
-                    notes[i] = ' ' + _trim(notes[i]);
-                }
-                i = notes.length + 1;
-                return ui.prompt(['sup[id]', i18n.title], s.value || i18n.placeholder || i, 0, function(e, $, v, w) {
-                    v = _trim(v || w) || i;
-                    index = notes.indexOf(' [^' + v + ']:');
-                    if (index !== -1) {
-                        i = g.indexOf(notes[index]) + 3;
-                        $.select(i, i + v.length);
-                        target.scrollTop = $.$(1).caret[0].y;
-                    } else {
-                        $.trim(_trim(b) ? ' ' : "", !_trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[^' + v + ']').set(_trim($.get(), 1) + n + ' [^' + v + ']: ').focus(1).insert(placeholders[""]);
-                    }
-                }), false;
-            }
-        } : 0,
+        sub: 0,
+        sup: 0,
         abbr: extra ? {
             click: function(e, $) {
                 var s = $.$(),
@@ -586,13 +557,38 @@ TE.ui.Markdown = function(target, o) {
         } : 0,
         hr: {
             click: function(e, $) {
-                return $.tidy('\n\n', "").insert(formats.hr[0] + '\n\n', 0), false;
+                return $.tidy('\n\n', "").insert(formats.hr[0] + '\n\n', 0).scroll(2), false;
             }
-        }
+        },
+        note: extra ? {
+            i: 'thumb-tack',
+            click: function(e, $) {
+                var s = $.$(),
+                    b = s.before,
+                    a = s.after,
+                    i18n = languages.modals.note,
+                    g = $.get(),
+                    n = /^ {0,3}\[\^.+?\]:/.test(_trim(g).split('\n').pop()) ? '\n' : '\n\n',
+                    notes = g.match(/^ {0,3}\[\^.+?\]:/gm) || [],
+                    i = 0, index;
+                for (i in notes) {
+                    notes[i] = ' ' + _trim(notes[i]);
+                }
+                i = notes.length + 1;
+                return ui.prompt(['sup[id]', i18n.title], s.value || i, 0, function(e, $, v, w) {
+                    v = _trim(v || w) || i;
+                    index = notes.indexOf(' [^' + v + ']:');
+                    if (index !== -1) {
+                        i = g.indexOf(notes[index]) + 3;
+                        $.select(i, i + v.length);
+                        target.scrollTop = $.$(1).caret[0].y;
+                    } else {
+                        $.trim(_trim(b) ? ' ' : "", !_trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[^' + v + ']').set(_trim($.get(), 1) + n + ' [^' + v + ']: ').focus(1).insert(placeholders[""]);
+                    }
+                }), false;
+            }
+        } : 0
     });
-
-    // alias
-    ui.tools.sub = ui.tools.sup;
 
     _extend(ui.keys, {
         'control+u': 0,
@@ -670,7 +666,9 @@ TE.ui.Markdown = function(target, o) {
                 }
             }
             return ui.tools.indent.click(e, $);
-        }
+        },
+        'control+arrowdown': 'note',
+        'control+arrowup': 'note'
     });
 
     return $.update({}, 0);

@@ -1,14 +1,14 @@
 TE.each(function($) {
 
-    var syntax = $.is(/^html$/i) === false,
+    var _u2026 = '\u2026',
+        _u2013 = '\u2013',
 
-        _u2026 = '\u2026',
-        _u2013 = '\u2013';
+        has_note_tool = !!$.ui.tools.note;
 
     $.update({
         languages: {
             tools: {
-                tools: ['Fokus ke Alat', 'F10'],
+                tools: ['Fokus ke Alat'],
                 clear: ['Hapus Format'],
                 b: ['Tebal'],
                 i: ['Miring'],
@@ -17,7 +17,8 @@ TE.each(function($) {
                 a: ['Tautan'],
                 img: ['Gambar'],
                 sub: ['Subskrip'],
-                sup: [syntax ? 'Catatan Kaki' : 'Superskrip'],
+                sup: ['Superskrip'],
+                note: ['Catatan Kaki'],
                 abbr: ['Singkatan'],
                 p: ['Paragraf'],
                 br: ['Ganti Baris'],
@@ -35,14 +36,14 @@ TE.each(function($) {
             },
             modals: {
                 a: {
-                    title: [syntax ? 'URL/Referensi Tautan' : 'URL Tautan', 'Judul Tautan'],
+                    title: [has_note_tool ? 'URL/Referensi Tautan' : 'URL Tautan', 'Judul Tautan'],
                     placeholder: ['http://', 'judul tautan di sini' + _u2026]
                 },
                 img: {
-                    title: [syntax ? 'URL/Referensi Gambar' : 'URL Gambar', 'Judul Gambar', 'Keterangan Gambar'],
+                    title: [has_note_tool ? 'URL/Referensi Gambar' : 'URL Gambar', 'Judul Gambar', 'Keterangan Gambar'],
                     placeholder: ['http://', 'judul gambar di sini' + _u2026, 'keterangan gambar di sini' + _u2026]
                 },
-                sup: {
+                note: {
                     title: 'ID Catatan Kaki'
                 },
                 abbr: {

@@ -127,9 +127,9 @@ TE.ui.BBCode = function(target, o) {
         p: {
             click: function(e, $) {
                 if ($.$().length) {
-                    return $.tidy('\n\n').replace(/([\t ]*\n[\t ]*){2,}/g, '\n\n'), false;
+                    return $.tidy('\n\n').replace(/([\t ]*\n[\t ]*){2,}/g, '\n\n').scroll(2), false;
                 }
-                return $.tidy('\n\n').insert(placeholders[""]), false;
+                return $.tidy('\n\n').insert(placeholders[""]).scroll(2), false;
             }
         },
         'blockquote,q': {

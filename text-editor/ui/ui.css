@@ -21,24 +21,27 @@
 .text-editor-button,
 .text-editor-input,
 .text-editor-select,
-.text-editor-textarea {
+.text-editor-textarea,
+.text-editor-toggle {
   background:#fff;
   border:1px solid #000;
   color:#000;
   text-align:left;
   position:relative;
 }
-.text-editor-a {
-  color:#00f;
-  text-decoration:none;
-}
-.text-editor-a:focus,
-.text-editor-a:active {color:#f00}
 .text-editor-a,
 .text-editor-label {
   display:inline-block;
   vertical-align:middle;
+  cursor:inherit;
 }
+.text-editor-a {
+  color:#00f;
+  text-decoration:none;
+  cursor:pointer;
+}
+.text-editor-a:focus,
+.text-editor-a:active {color:#f00}
 .text-editor ::-webkit-input-placeholder {
   opacity:.4;
   color:inherit;
@@ -58,32 +61,35 @@
 .text-editor-button,
 .text-editor-input,
 .text-editor-select,
-.text-editor-textarea {
+.text-editor-textarea,
+.text-editor-toggle {
   display:inline-block;
   vertical-align:middle;
   font:inherit;
   padding:.25em .5em;
+  min-width:12em;
 }
 .text-editor-select {height:2.142857142857143em} /* hacky! :( */
 .text-editor-select,
 .text-editor-toggle {cursor:pointer}
 .text-editor-button,
-.text-editor-toggle {width:auto}
 .text-editor-toggle {
-  border:0;
-  padding:0;
+  width:auto;
+  min-width:0;
+  border-color:transparent;
 }
+.text-editor-toggle {border-width:0}
 .text-editor-textarea {
   width:100%;
   overflow:auto;
   resize:vertical;
 }
+.text-editor-separator {border:0}
 .text-editor-button,
 .text-editor-separator {
   display:inline-block;
   vertical-align:middle;
   background:#000;
-  border:0;
   font:inherit;
   text-align:center;
   text-decoration:none;
@@ -98,7 +104,7 @@
   border:0;
   outline:0;
 }
-.text-editor .icon {
+.text-editor-i {
   display:inline-block;
   margin:0;
   padding:0;
@@ -113,6 +119,8 @@
 .text-editor-button:hover {background:#00f}
 .text-editor-tool .text-editor-button {
   background:0 0;
+  border-width:0;
+  border-color:inherit;
   color:#00f;
   padding:0;
   float:left;
@@ -143,7 +151,10 @@
 .text-editor.text-editor-is-can-copy:hover:before {display:none}
 .text-editor-button.text {width:auto}
 .text-editor-button.text .text-editor-text {padding:0 .5em}
-.text-editor-button.text .text-editor-text .icon {display:inline-block}
+.text-editor-button.text .text-editor-text .text-editor-i {
+  display:inline-block;
+  width:1em;
+}
 .text-editor-tool .text-editor-separator {
   width:0;
   height:1.5em;
@@ -264,13 +275,13 @@
 .text-editor-modal-body {
   height:100%;
   border-top:2.5em solid transparent;
-  border-bottom:3.5em solid transparent;
+  border-bottom:3.6em solid transparent;
   overflow:auto;
 }
 .text-editor-modal-content {padding:1em}
 .text-editor-modal-footer {
   bottom:0;
-  height:3.5em;
+  height:3.6em;
   line-height:inherit;
   text-align:right;
 }
@@ -292,6 +303,7 @@
   display:block;
   text-align:left;
   background:0 0;
+  border-width:0;
   color:#00f;
 }
 .text-editor-drop.menu:hover .text-editor-button:focus {color:#00f}

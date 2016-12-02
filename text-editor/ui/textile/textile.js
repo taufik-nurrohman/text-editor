@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXTILE TEXT EDITOR PLUGIN 1.3.1
+ *  TEXTILE TEXT EDITOR PLUGIN 1.3.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -17,13 +17,16 @@ TE.ui.Textile = function(target, o) {
                 '_': '_',
                 '-': '-'
             },
-            tools: 'b i s | a img | sup abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
+            tools: 'b i s | a img | note abbr | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
             languages: {
+                tools: {
+                    note: ['Footnote', '\u2318+\u2193']
+                },
                 modals: {
                     a: {
                         title: ['Link URL/Reference ID']
                     },
-                    sup: {
+                    note: {
                         title: 'Footnote ID'
                     }
                 }
@@ -58,13 +61,7 @@ TE.ui.Textile = function(target, o) {
         esc_ul = _esc(ul),
         esc_ol = _esc(ol);
 
-    $.update(_extend({
-        languages: {
-            tools: {
-                sup: ['Footnote', $.config.languages.tools.sub[1]]
-            }
-        }
-    }, o), 0);
+    $.update(o, 0);
 
     // define editor type
     $.type = 'Textile';
@@ -248,31 +245,6 @@ TE.ui.Textile = function(target, o) {
                         title = attr_title(v);
                         $.tidy('\n\n', "").insert('!' + src + (title ? '(' + title + ')' : "") + '!\n\n', 0);
                     });
-                }), false;
-            }
-        },
-        sup: {
-            i: 'thumb-tack',
-            click: function(e, $) {
-                var s = $.$(),
-                    b = s.before,
-                    a = s.after,
-                    i18n = languages.modals.sup,
-                    g = $.get(),
-                    n = /^fn\d+\^?\. /.test(_trim(g).split('\n').pop()) ? '\n' : '\n\n',
-                    notes = g.match(/^fn\d+\^?\. /gm) || [],
-                    i = 0, index;
-                i = notes.length + 1;
-                return ui.prompt(['sup[id]', i18n.title], s.value || i18n.placeholder || i, 0, function(e, $, v, w) {
-                    v = _trim(v) || _trim(w) || i;
-                    index = notes.indexOf('fn' + _int(v) + '. ');
-                    if (index !== -1) {
-                        i = g.indexOf(notes[index]) + 2;
-                        $.select(i, i + v.length);
-                        target.scrollTop = $.$(1).caret[0].y;
-                    } else {
-                        $.trim("", !_trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[' + v + ']').set(_trim($.get(), 1) + n + 'fn' + v + '. ').focus(1).insert(placeholders[""]);
-                    }
                 }), false;
             }
         },
@@ -487,13 +459,35 @@ TE.ui.Textile = function(target, o) {
         },
         hr: {
             click: function(e, $) {
-                return $.tidy('\n\n', "").insert(formats.hr[0] + '\n\n', 0), false;
+                return $.tidy('\n\n', "").insert(formats.hr[0] + '\n\n', 0).scroll(2), false;
+            }
+        },
+        note: {
+            i: 'thumb-tack',
+            click: function(e, $) {
+                var s = $.$(),
+                    b = s.before,
+                    a = s.after,
+                    i18n = languages.modals.note,
+                    g = $.get(),
+                    n = /^fn\d+\^?\. /.test(_trim(g).split('\n').pop()) ? '\n' : '\n\n',
+                    notes = g.match(/^fn\d+\^?\. /gm) || [],
+                    i = 0, index;
+                i = notes.length + 1;
+                return ui.prompt(['note[id]', i18n.title], /* s.value || */ i, 0, function(e, $, v, w) {
+                    v = _trim(v) || _trim(w) || i;
+                    index = notes.indexOf('fn' + _int(v) + '. ');
+                    if (index !== -1) {
+                        i = g.indexOf(notes[index]) + 2;
+                        $.select(i, i + v.length);
+                        target.scrollTop = $.$(1).caret[0].y;
+                    } else {
+                        $.trim("", !_trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[' + v + ']').set(_trim($.get(), 1) + n + 'fn' + v + '. ').focus(1).insert(placeholders[""]);
+                    }
+                }), false;
             }
         }
     });
-
-    // alias
-    ui.tools.sub = ui.tools.sup;
 
     _extend(ui.keys, {
         'control+u': 0,
@@ -546,7 +540,9 @@ TE.ui.Textile = function(target, o) {
                 return $.replace(/^(?!$)/gm, ol), false;
             }
             return ui.tools.indent.click(e, $);
-        }
+        },
+        'control+arrowdown': 'note',
+        'control+arrowup': 'note'
     });
 
     return $.update({}, 0);

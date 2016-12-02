@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.5.6
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.6.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -103,7 +103,7 @@ TE.ui = function(target, o) {
             },
             classes: {
                 "": 'text-editor',
-                i: 'icon icon-%1 icon-%1--%2 fa fa-%2'
+                i: 'text-editor-i text-editor-i-%1 text-editor-i-%1--%2 fa fa-%2'
             }
         }, o),
 
@@ -145,6 +145,10 @@ TE.ui = function(target, o) {
 
     function str_join(s) {
         return is_object(s) ? s.join(' ') : s;
+    }
+
+    function str_has(str, s) {
+        return str.indexOf(s) !== -1;
     }
 
     function count(s) {
@@ -670,7 +674,6 @@ TE.ui = function(target, o) {
     };
 
     var _c = config.classes,
-        _i = _c.i,
         _prefix = _c[""],
         _i18n_tools = i18n.tools,
         _i18n_buttons = i18n.buttons,
@@ -693,6 +696,18 @@ TE.ui = function(target, o) {
         _description_right = el_set('right', 'span'),
         _p = 0,
         _button, _icon;
+
+    // create an icon
+    ui.i = function(id, alt, el) {
+        id = slug(id).replace(/[\/\s]/g, '-');
+        s = format(_c.i, [id, alt || id]);
+        if (el) {
+            class_reset(el);
+            class_set(el, s);
+            return el;
+        }
+        return '<i class="' + s + '"></i>';
+    };
 
     if (!is_set(config.suffix)) {
         config.suffix = unit[1];
@@ -777,7 +792,7 @@ TE.ui = function(target, o) {
             if (!(tool || tool === {})) continue;
             tool = do_attributes(tool, v, tools);
             icon = tool.i || v;
-            if (icon !== '|' && icon[0] !== '<') {
+            if (icon !== '|' && !str_has(icon, '<')) {
                 icon = slug(icon);
             }
             is_button = icon !== '|';
@@ -792,7 +807,7 @@ TE.ui = function(target, o) {
                     'tabindex': -1
                 });
                 data_set(_button, 'tool-id', v);
-                icon = icon[0] === '<' ? icon : '<i class="' + format(_i, [s, icon]) + '"></i>';
+                icon = str_has(icon, '<') ? icon : ui.i(s, icon);
                 if (is_disabled_tool(tool)) {
                     class_set(_button, 'x');
                 } else {
@@ -1535,22 +1550,11 @@ TE.ui = function(target, o) {
         return $;
     };
 
-    // TODO: make it possible to programatically set menu selection value
     ui.menu = function(id, str, data, i) {
-        var current = '<span class="' + _prefix + '-current menu">%1</span>',
-            icon = "",
-            str_o = str,
-            tools = ui.tools,
+        var tools = ui.tools,
             index = 0, v;
-        str = (!is_object(str) && data[str] && data[str].text) || str;
         if (str === false) {
             return ui.tool(id, str);
-        } else if (is_object(str)) {
-            icon = str[0];
-            icon = icon[0] === '<' ? icon : '<i class="' + format(_i, [slug(id).replace(/[\/\s]/g, '-'), icon]) + '"></i>';
-            str = str_o = is_set(str[1]) ? str[1] : 0;
-            str = (str && data[str] && data[str].text) || str;
-            current = icon + (str !== 0 ? ' ' + current : "");
         }
         // process data ...
         for (i in data) {
@@ -1562,8 +1566,8 @@ TE.ui = function(target, o) {
             data[i] = v;
         }
         ui.tool(id, {
-            i: icon,
-            text: str ? format(current, [str, icon]) : 0,
+            i: is_object(str) ? str[0] : 0,
+            text: !is_object(str),
             click: function(e) {
                 var a = ui.drop.target = tools[id].target;
                 return ui.drop('menu menu-' + slug(id), function(drop) {
@@ -1575,19 +1579,7 @@ TE.ui = function(target, o) {
                         n = content_get(t);
                         if (!is_disabled_tool(m) && is_function(i = m.click)) {
                             i = i(e, $);
-                            if (str !== false && a) {
-                                c = dom_children(a)[0] || a;
-                                if (!dom_is(c, 'i')) {
-                                    content_set(c, format(current, [n, icon]));
-                                }
-                                if (is_object(m.text) && (c = dom_children(c)[0])) {
-                                    if (dom_is(c, 'i')) {
-                                        class_reset(c);
-                                        class_set(c, format(_i, [m.text[0]]));
-                                    }
-                                }
-                            }
-                            data_set(a, 'ui-drop-menu', o);
+                            ui.menu.set(id, o);
                             if (i === false) return $.select(), event_exit(e);
                         }
                         return $.select(), event_exit(e);
@@ -1669,15 +1661,43 @@ TE.ui = function(target, o) {
                         ++index;
                     }
                     _timer_set(function() {
-                        (dom_get('[data-tool-id="' + data_get(a, 'ui-drop-menu') + '"]', drop)[0] || dom_get('a', drop)[0]).focus();
+                        (dom_get('[data-tool-id="' + data_get(a, 'ui-drop-data') + '"]', drop)[0] || dom_get('a', drop)[0]).focus();
                     }, 1);
                 }), false;
             }
         }, i);
         return data_set(tools[id].target, {
-            'ui-drop': id,
-            'ui-drop-menu': str_o
-        }), (tools[id].data = data), $;
+            'ui-drop': id
+        }), (tools[id].data = data), ui.menu.set(id, str), $;
+    };
+
+    ui.menu.set = function(id, str) {
+        var current = '<span class="' + _prefix + '-current menu">%1</span>',
+            tool = ui.tools[id] || {},
+            target = tool.target,
+            data = tool.data, node, icon;
+        if (!target) return $;
+        if (!is_object(str) && data[str]) {
+            data_set(target, 'ui-drop-data', str);
+            str = data[str].text || str;
+        }
+        if (is_object(str)) {
+            icon = str[0];
+            icon = str_has(icon, '<') ? icon : ui.i(id, icon);
+            str = is_set(str[1]) ? str[1] : 0;
+            str = (str && data[str] && data[str].text) || str;
+            current = icon + (str !== 0 ? ' ' + current : "");
+        } else {
+            icon = ui.i(tool.i || id);
+        }
+        if (node = dom_get('.' + _prefix + '-text', target)[0]) {
+            class_set(target, 'text');
+            content_set(node, format(current, [str, icon]));
+        } else {
+            class_reset(target, 'text');
+            content_set(target, icon);
+        }
+        return $;
     };
 
     ui.bubble = function() {

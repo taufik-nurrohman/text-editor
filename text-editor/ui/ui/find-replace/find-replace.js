@@ -1,6 +1,6 @@
 /*!
  * ===========================================================
- *  FIND AND REPLACE PLUGIN FOR USER INTERFACE MODULE 0.0.9
+ *  FIND AND REPLACE PLUGIN FOR USER INTERFACE MODULE 1.0.0
  * ===========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -12,7 +12,8 @@ TE.each(function($) {
     var uniq = Date.now(),
         ui = $.ui,
         config = $.config,
-        config_f_r = 0,
+        mode = 0,
+        found = 0,
         languages = config.languages,
         s = config.classes[""],
         target = $.target,
@@ -41,8 +42,8 @@ TE.each(function($) {
             find: ['Find and Replace', '\u2318+F']
         },
         modals: {
-            find: ['No Matches', 'We couldn\u2019t find what you were looking for. Find again from top?'],
-            find_config: ['Mode', ['Ignore Case', 'Match Case', 'Match Pattern', 'Match Case and Pattern']]
+            find: ['Mode', ['Ignore Case', 'Match Case', 'Match Pattern', 'Match Case and Pattern']],
+            find_alert: ['Not Found', 'Can\u2019t find \u201C%1\u201D. Find again from top?']
         },
         placeholders: {
             find: ['find\u2026', 'replace with\u2026']
@@ -66,15 +67,18 @@ TE.each(function($) {
             'id': s + '-replace:' + uniq,
             'title': w[1]
         }),
-        cog = _el('a', '<i class="' + _format(config.classes.i, ['config', 'cogs']) + '"></i>', {
+        cog = _el('a', ui.i('config', 'cogs'), {
             'href': 'javascript:;',
             'class': s + '-a',
-            'title': languages.modals.find_config[0],
-            'style': 'padding:0 .5em;'
+            'title': languages.modals.find[0],
+            'style': 'padding:0 .25em 0 .5em;'
         }),
-        status = _el('label', languages.modals.find_config[1][0], {
+        status = _el('span', languages.modals.find[1][0], {
             'class': s + '-label'
         });
+
+    // for `fam-fam-fam` theme
+    cog.firstChild.style.backgroundSize = '100% auto';
 
     w = languages.labels.find;
 
@@ -96,8 +100,6 @@ TE.each(function($) {
         'style': 'font-size:80%;line-height:1.25em;padding:.25em;border-top:1px solid;border-top-color:inherit;'
     });
 
-    var found = 0;
-
     function regex_index_of(a, b, start) {
         start = start || 0;
         var i = a.slice(start).search(b);
@@ -106,24 +108,24 @@ TE.each(function($) {
 
     function do_find() {
         v = find.value;
-        w = languages.modals.find;
+        w = languages.modals.find_alert;
         x = $.get();
-        if (config_f_r === 1) {
+        if (mode === 1) {
             s = x.indexOf(v, found); // match case
-        } else if (config_f_r === 2) {
+        } else if (mode === 2) {
             s = regex_index_of(x, _pattern(v), found); // match pattern
-        } else if (config_f_r === 3) {
+        } else if (mode === 3) {
             s = regex_index_of(x, _pattern(v, 'i'), found); // match case and pattern
         } else {
             s = x.toLowerCase().indexOf(v.toLowerCase(), found); // ignore case
         }
         if (s === -1) {
-            ui.alert(w[0], w[1], do_find_enter);
+            ui.alert(w[0], _format(w[1], [v]), do_find_enter);
         } else {
-            if (config_f_r !== 2 && config_f_r !== 3) {
+            if (mode !== 2 && mode !== 3) {
                 v = _esc(v);
             }
-            x = (x.slice(s).match(_pattern('^' + v, config_f_r === 0 || config_f_r === 2 ? 'i' : "")) || [""])[0].length;
+            x = (x.slice(s).match(_pattern('^' + v, mode === 0 || mode === 2 ? 'i' : "")) || [""])[0].length;
             found = s + x;
             $.select(s, s + x);
             target.scrollTop = $.$(1).caret[0].y;
@@ -136,14 +138,14 @@ TE.each(function($) {
             $.select(true);
         }
         s = find.value;
-        $.replace(_pattern(config_f_r !== 0 && config_f_r !== 1 ? s : _esc(s), 'g' + (config_f_r !== 1 && config_f_r !== 3 ? 'i' : "")), replace.value);
+        $.replace(_pattern(mode !== 0 && mode !== 1 ? s : _esc(s), 'g' + (mode !== 1 && mode !== 3 ? 'i' : "")), replace.value);
     }
 
     function do_find_advance(e) {
-        w = languages.modals.find_config;
-        ui.prompt(w[0], w[1], "" + config_f_r, function(e, $, v) {
+        w = languages.modals.find;
+        ui.prompt(w[0], w[1], "" + mode, function(e, $, v) {
             do_find_enter();
-            _dom_content_set(status, w[1][config_f_r = +v]);
+            _dom_content_set(status, w[1][mode = +v]);
         }, 2);
     }
 
@@ -195,6 +197,7 @@ TE.each(function($) {
     });
 
     _event_set("click", cog, do_find_advance);
+    _event_set("click", status, do_find_advance);
 
     ui.tool('find', {
         i: 'binoculars',
