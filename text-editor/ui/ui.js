@@ -1863,10 +1863,12 @@ TE.ui = function(target, o) {
             }
         },
         indent: function(e, $) {
+            if (e && e.TE && e.TE.shift()) {
+                return $.outdent(tab), false;
+            }
             return $.indent(tab), false;
         },
         outdent: function(e, $) {
-            ui.key.set('shift');
             return $.outdent(tab), false;
         }
     };
@@ -1888,8 +1890,8 @@ TE.ui = function(target, o) {
         'f10': function(e, $) {
             return dom_get('a', _tool)[0].focus(), false;
         },
-        'shift+tab': auto_tab ? 'outdent' : 0,
-        'tab': auto_tab ? 'indent' : 0
+        'tab': auto_tab ? 'indent' : 0,
+        'shift+tab': auto_tab ? 'outdent' : 0
     };
 
     ui.el = {

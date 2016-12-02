@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.8
+ *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.9
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -11,13 +11,12 @@ TE.each(function($) {
 
     var config = $.config,
         c = config.classes[""],
-        icon = config.classes.i,
         ui = $.ui,
         tools = ui.tools,
         tools_alt,
         tools_alt_default = [
             'b i a img pre,code',
-            'p blockquote,q p,h1,h2,h3,h4,h5,h6 ol ul hr'
+            'p blockquote,q p,h1,h2,h3,h4,h5,h6 ul ol hr'
         ],
         tools_class = 'tool ' + c + '-tool',
 
@@ -69,7 +68,7 @@ TE.each(function($) {
         i = tools[id];
         f = (i && i.i) || id;
         g = id === '|';
-        h = _el(g ? 'span' : 'a', g ? false : (f[0] === '<' ? f : '<i class="' + _format(icon, [i.target ? _dom_data_get(i.target, 'tool-id') : id, f]) + '"></i>'), g ? {
+        h = _el(g ? 'span' : 'a', g ? false : (f.indexOf('<') !== -1 ? f : ui.i(id, i.i)), g ? {
             'class': c + '-separator'
         } : {
             'class': c + '-button',

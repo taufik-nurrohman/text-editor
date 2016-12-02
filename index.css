@@ -167,7 +167,7 @@ footer {
   background:#900;
   color:#fff;
 }
-.text-editor-content {
+.text-editor-textarea.text-editor-content {
   height:15em;
   min-height:15em;
 }

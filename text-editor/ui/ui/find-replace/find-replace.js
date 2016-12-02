@@ -133,12 +133,8 @@ TE.each(function($) {
     }
 
     function do_replace() {
-        s = $.$().length;
-        if (!s) {
-            $.select(true);
-        }
         s = find.value;
-        $.replace(_pattern(mode !== 0 && mode !== 1 ? s : _esc(s), 'g' + (mode !== 1 && mode !== 3 ? 'i' : "")), replace.value);
+        $.select(true).replace(_pattern(mode !== 0 && mode !== 1 ? s : _esc(s), 'g' + (mode !== 1 && mode !== 3 ? 'i' : "")), replace.value);
     }
 
     function do_find_advance(e) {
@@ -180,7 +176,7 @@ TE.each(function($) {
     _event_set("keydown", find, function(e) {
         k = e.TE.key;
         v = this.value;
-        if (e.TE.control('f') || k('backspace') && !v) return do_find_exit(), _event_x(e);
+        if (e.TE.control('f') || k('backspace') && !v) return (v ? do_find_enter() : do_find_exit()), _event_x(e);
         if (k('alt')) return do_find_advance(), _event_x(e);
         if (k('tab')) return replace.value = find.value, replace.focus(), replace.select(), _event_x(e);
         if (k('enter') && v) return do_find(), _event_x(e);
@@ -189,7 +185,7 @@ TE.each(function($) {
     _event_set("keydown", replace, function(e) {
         k = e.TE.key;
         v = this.value;
-        if (e.TE.control('f')) return do_find_exit(), _event_x(e);
+        if (e.TE.control('f')) return (v ? do_find_enter() : do_find_exit()), _event_x(e);
         if (k('backspace') && !v) return find.focus(), _event_x(e);
         if (k('alt')) return do_find_advance(), _event_x(e);
         if (k('tab')) return cog.focus(), _event_x(e);
