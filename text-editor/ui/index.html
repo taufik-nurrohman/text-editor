@@ -36,7 +36,7 @@
         <p id="text-editor-shell-selector" data-shell-path="ui"></p>
         <p>
           <a href="" onclick="return editor.destroy(), false;">Destroy</a> &middot;
-          <a href="" onclick="return editor.destroy(), editor.create(), false;">Create</a> &middot;
+          <a href="" onclick="return editor.create(), false;">Create</a> &middot;
           <a href="" onclick="return editor.disable(), false;">Disable</a> &middot;
           <a href="" onclick="return editor.enable(), false;">Enable</a> &middot;
           <a href="" onclick="return editor.freeze(), false;">Freeze</a> &middot;
@@ -212,23 +212,32 @@ editor.ui.tool('bold', {
       <pre><code>editor.ui.tools.indent.click(null, editor);</code></pre>
       <p>Trigger a <a href="#section:method-ui-menu">menu</a> item. This is the same as clicking the <code>justify</code> menu item from <code>align</code> tool:</p>
       <pre><code>editor.ui.tools.align.data.justify.click(null, editor);</code></pre>
-      <h4 id="section:method-ui-overlay">Overlay <sup><a href="javascript:void(window.scroll(0,0),editor.ui.overlay(1));">test</a></sup></h4>
-      <pre><code>editor.ui.overlay(<var>click_to_exit</var>, <var>fn</var>);</code></pre>
+      <h4 id="section:method-ui-overlay">Overlay <sup><a href="javascript:void(window.scroll(0,0),editor.ui.overlay('my-overlay', 1));">test</a></sup></h4>
+      <pre><code>editor.ui.overlay(<var>id</var>, <var>click_to_exit</var>, <var>fn</var>, <var>hook</var>);</code></pre>
       <ul>
+        <li><var>id</var> &rarr; Overlay ID.</li>
         <li><var>click_to_exit</var> &rarr; <code>true</code> to remove the overlay by clicking on it.</li>
+        <li><var>hook</var> &rarr; Hook namespace.</li>
       </ul>
       <pre><code>editor.ui.overlay(true, <var>fn</var>);</code></pre>
-      <h4 id="section:method-ui-panel">Panel <sup><a href="javascript:void(window.scroll(0,0),editor.ui.panel('Panel content.'));">test</a></sup></h4>
-      <pre><code>editor.ui.panel(<var>node</var>, <var>fn</var>);</code></pre>
+      <h4 id="section:method-ui-panel">Panel <sup><a href="javascript:void(window.scroll(0,0),editor.ui.panel('my-panel', {header:'Panel Title',body:'Panel content.'}));">test</a></sup></h4>
+      <pre><code>editor.ui.panel(<var>id</var>, <var>node</var>, <var>fn</var>, <var>hook</var>);</code></pre>
       <ul>
-        <li><var>node</var> &rarr; Return value of <code>TE._.el</code> or a <abbr title="Hyper Text Markup Language">HTML</abbr> string or a function.</li>
+        <li><var>id</var> &rarr; Panel ID.</li>
+        <li><var>node</var> &rarr; Return value of <code>TE._.el</code> or a <abbr title="Hyper Text Markup Language">HTML</abbr> string or a function or an object contains <code>header</code> (as panel title) and <code>body</code> (as panel content) property.</li>
+        <li><var>fn</var> &rarr; Callback function.</li>
+        <li><var>hook</var> &rarr; Hook namespace.</li>
       </ul>
-      <pre><code>editor.ui.panel('Panel content.', <var>fn</var>);</code></pre>
-      <pre><code>editor.ui.panel(function(panel) {
+      <pre><code>editor.ui.panel('my-panel', 'Panel content.', <var>fn</var>);</code></pre>
+      <pre><code>editor.ui.panel('my-panel', function(panel) {
     panel.innerHTML = 'Panel content.';
 }, <var>fn</var>);</code></pre>
+      <pre><code>editor.ui.panel('my-panel', {
+    header: 'Panel Title',
+    body: 'Panel content.'
+}, <var>fn</var>);</code></pre>
       <h4 id="section:method-ui-modal">Modal <sup><a href="javascript:void(window.scroll(0,0),editor.ui.modal('my-modal',{header:'Modal Title',body:'Modal body.',footer:{'exit':function(){return editor.ui.exit(),window.location.hash='#section:method-ui-modal',false}}}));">test</a></sup></h4>
-      <pre><code>editor.ui.modal(<var>id</var>, <var>pane</var>, <var>fn</var>);</code></pre>
+      <pre><code>editor.ui.modal(<var>id</var>, <var>pane</var>, <var>fn</var>, <var>hook</var>);</code></pre>
       <ul>
         <li><var>id</var> &rarr; Modal ID.</li>
         <li><var>pane</var> &rarr; Modal content:
@@ -238,6 +247,8 @@ editor.ui.tool('bold', {
             <li><var>footer</var> &rarr; Modal footer.</li>
           </ul>
         </li>
+        <li><var>fn</var> &rarr; Callback function.</li>
+        <li><var>hook</var> &rarr; Hook namespace.</li>
       </ul>
       <pre><code>editor.ui.modal('my-modal', {
     header: 'Modal Header',
@@ -295,6 +306,7 @@ editor.ui.modal('my-modal', {
       <ul>
         <li><var>id</var> &rarr; Drop ID.</li>
         <li><var>node</var> &rarr; Return value of <code>TE._.el</code> or a <abbr title="Hyper Text Markup Language">HTML</abbr> string or a function.</li>
+        <li><var>fn</var> &rarr; Callback function.</li>
       </ul>
       <pre><code>editor.ui.drop('my-drop', 'Drop content.', <var>fn</var>);</code></pre>
       <pre><code>editor.ui.drop('my-drop', function(drop) {
@@ -305,6 +317,7 @@ editor.ui.modal('my-modal', {
       <ul>
         <li><var>id</var> &rarr; Bubble ID.</li>
         <li><var>node</var> &rarr; Return value of <code>TE._.el</code> or a <abbr title="Hyper Text Markup Language">HTML</abbr> string or a function.</li>
+        <li><var>fn</var> &rarr; Callback function.</li>
       </ul>
       <pre><code>editor.ui.bubble('my-bubble', 'Bubble content.', <var>fn</var>);</code></pre>
       <pre><code>editor.ui.bubble('my-bubble', function(bubble) {

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  MARKDOWN TEXT EDITOR PLUGIN 1.3.2
+ *  MARKDOWN TEXT EDITOR PLUGIN 1.4.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -199,7 +199,7 @@ TE.ui.Markdown = function(target, o) {
                     states.a[i] = 1;
                 }
                 state = states.a;
-                return ui.prompt(['a[href]', i18n.title[0]], http, 0, function(e, $, v) {
+                return ui.prompt(i18n.title[0], http, 0, function(e, $, v) {
                     var implicit = v === "";
                     v = attr_url(v);
                     $[0]();
@@ -216,16 +216,16 @@ TE.ui.Markdown = function(target, o) {
                         }
                     } else {
                         href = v;
-                        ui.prompt(['a[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
+                        ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v) {
                             title = attr_title(v);
                             if (!x) {
                                 $.insert(placeholders[""]);
                             }
                             $.i().trim(_trim(b) ? ' ' : "", !_trim(a) ? "" : (/^\n+ {0,3}\*?\[/.test(a) ? '\n\n ' : ' ')).wrap('[', '](' + href + (title ? ' "' + title + '"' : "") + ')');
-                        });
+                        }, 0, 0, 'a[title]');
                     }
                     $[1]();
-                }).record(), false;
+                }, 0, 0, 'a[href]').record(), false;
             }
         },
         img: {
@@ -248,7 +248,7 @@ TE.ui.Markdown = function(target, o) {
                     !states.img[i] && (states.img[i] = 1);
                 }
                 state = states.img;
-                return ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
+                return ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
                     v = attr_url(v);
                     src = v;
                     if (!alt) {
@@ -268,14 +268,14 @@ TE.ui.Markdown = function(target, o) {
                             $.set(b + x + s.after + (A ? n : "") + ' [' + v + ']: ' + state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "")).select(start, end);
                         }
                     } else {
-                        ui.prompt(['img[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
+                        ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v) {
                             title = attr_title(v);
                             $.insert('![' + alt + '](' + src + (title ? ' "' + title + '"' : "") + ')\n\n', 0, 1);
                             if (keep) $.select($.$().start);
-                        });
+                        }, 0, 0, 'img[title]');
                     }
                     $[1]();
-                }), false;
+                }, 0, 0, 'img[src]'), false;
             }
         },
         sub: 0,
@@ -300,7 +300,7 @@ TE.ui.Markdown = function(target, o) {
                     $.select(i, i + abbr.length);
                     return target.scrollTop = $.$(1).caret[0].y, false;
                 }
-                return ui.prompt(['abbr[title]', i18n.title], state[abbr] || i18n.placeholder, !state[x], function(e, $, v, w) {
+                return ui.prompt(i18n.title, state[abbr] || i18n.placeholder, !state[x], function(e, $, v, w) {
                     v = attr_title(v);
                     $[0]().set(_trim($.get(), 1) + (s.before || x ? n : "") + ' *[' + abbr + ']: ').focus(1).insert(v || w);
                     if (abbr === placeholders[""]) {
@@ -308,7 +308,7 @@ TE.ui.Markdown = function(target, o) {
                         $.select(a - 3 - abbr.length, a - 3);
                     }
                     $[1]();
-                }).record(), false;
+                }, 0, 0, 'abbr[title]').record(), false;
             }
         } : 0,
         p: {
@@ -522,9 +522,9 @@ TE.ui.Markdown = function(target, o) {
                 q = _format(p[0], [1, 1]),
                 o = [], s, c, r;
             if ($[0]().$().value === q) return $.select(), false;
-            return ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
+            return ui.prompt(i18n.title[0], i18n.placeholder[0], 0, function(e, $, v, w) {
                 c = _edge(_int(v) || w, std[0], std[1]);
-                ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
+                ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v, w) {
                     r = _edge(_int(v) || w, str[0], str[1]);
                     var i, j, k, l, m, n;
                     for (i = 0; i < r; ++i) {
@@ -552,8 +552,8 @@ TE.ui.Markdown = function(target, o) {
                     m = $.$();
                     n = m.start + m.value.indexOf(q);
                     $.select(n, n + q.length)[1]();
-                });
-            }), false;
+                }, 0, 0, 'table>tr');
+            }, 0, 0, 'table>td'), false;
         } : 0,
         hr: {
             click: function(e, $) {
@@ -575,7 +575,7 @@ TE.ui.Markdown = function(target, o) {
                     notes[i] = ' ' + _trim(notes[i]);
                 }
                 i = notes.length + 1;
-                return ui.prompt(['sup[id]', i18n.title], s.value || i, 0, function(e, $, v, w) {
+                return ui.prompt(i18n.title, s.value || i, 0, function(e, $, v, w) {
                     v = _trim(v || w) || i;
                     index = notes.indexOf(' [^' + v + ']:');
                     if (index !== -1) {
@@ -585,15 +585,15 @@ TE.ui.Markdown = function(target, o) {
                     } else {
                         $.trim(_trim(b) ? ' ' : "", !_trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[^' + v + ']').set(_trim($.get(), 1) + n + ' [^' + v + ']: ').focus(1).insert(placeholders[""]);
                     }
-                }), false;
+                }, 0, 0, 'note[id]'), false;
             }
         } : 0
     });
 
     _extend(ui.keys, {
-        'control+u': 0,
         'enter': function(e, $) {
             var s = $.$(),
+                placeholder = placeholders[""],
                 blockquote = formats.blockquote[0],
                 ul = formats.ul[0],
                 ol = formats.ol[0],
@@ -602,12 +602,12 @@ TE.ui.Markdown = function(target, o) {
                 match = _pattern('^' + regex + '.*$', 'gm').exec(s.before.split('\n').pop());
             if (match) {
                 if (match[0] === match[1]) {
-                    return $.outdent(_pattern(regex)), false;
+                    return $[0]().insert("").outdent(_pattern(regex))[1](), false;
                 } else if (_pattern('\\s*' + esc_ol + '\\s*').test(match[1])) {
                     var i = _int(_trim(match[1]));
-                    return $.insert('\n' + match[1].replace(/\d+/, i + 1), 0), false;
+                    return $[0]().insert('\n' + match[1].replace(/\d+/, i + 1), 0).insert(placeholder).scroll(1)[1](), false;
                 }
-                return $.insert('\n' + match[1], 0), false;
+                return $[0]().insert('\n' + match[1], 0).insert(placeholder).scroll(1)[1](), false;
             }
         },
         'shift+tab': function(e, $) {
@@ -615,6 +615,7 @@ TE.ui.Markdown = function(target, o) {
                 b = s.before,
                 v = s.value,
                 a = s.after,
+                placeholder = placeholders[""],
                 ol = formats.ol[0],
                 esc_ol = _esc(ol),
                 esc_ol_any = _format(esc_ol, ['\\d+']),
@@ -623,15 +624,15 @@ TE.ui.Markdown = function(target, o) {
                 lists = _pattern('   ( ?' + esc_ol_any + ' )$'),
                 dents = '(' + esc_blockquote + ' |' + bullet_any + '| +' + esc_ol_any + ' )',
                 match;
-            if (!v) {
+            if (!v || v === placeholder) {
                 if (match = b.match(_pattern(esc_blockquote + ' $'))) {
-                    return $.outdent(match[0]), false;
+                    return $[0]().insert("").outdent(match[0]).insert(v)[1](), false;
                 } else if (match = b.match(bullets)) {
                     b = b.replace(bullets, '$1');
-                    return $.set(b + a).select(b.length), false;
+                    return $.set(b + v + a).select(b.length, (b + v).length), false;
                 } else if (match = b.match(lists)) {
                     b = b.replace(lists, '$1');
-                    return $.set(b + a).select(b.length), false;
+                    return $.set(b + v + a).select(b.length, (b + v).length), false;
                 }
             } else if (v && (match = v.match(_pattern('(^|\\n)' + dents, 'g')))) {
                 return $.outdent(_pattern(dents)), false;
@@ -643,6 +644,7 @@ TE.ui.Markdown = function(target, o) {
                 b = s.before,
                 v = s.value,
                 a = s.after,
+                placeholder = placeholders[""],
                 ol = formats.ol[0],
                 blockquote = formats.blockquote[0],
                 esc_ol = _esc(ol),
@@ -650,15 +652,15 @@ TE.ui.Markdown = function(target, o) {
                 bullets = _pattern(bullet_any + '$'),
                 lists = _pattern(' ?' + _format(esc_ol, ['\\d+']) + ' $'),
                 match;
-            if (!v) {
+            if (!v || v === placeholder) {
                 if (match = b.match(_pattern(esc_blockquote + ' $'))) {
                     return $.insert(match[0], 0), false;
                 } else if (match = b.match(bullets)) {
                     b = b.replace(bullets, '  $1');
-                    return $.set(b + a).select(b.length), false;
+                    return $.set(b + v + a).select(b.length, (b + v).length), false;
                 } else if (match = b.match(lists)) {
                     b = b.replace(lists, '    ' + _format(ol, [1]) + ' ');
-                    return $.set(b + a).select(b.length), false;
+                    return $.set(b + v + a).select(b.length, (b + v).length), false;
                 }
             } else {
                 if (_pattern('^' + esc_blockquote + ' ').test(v)) {

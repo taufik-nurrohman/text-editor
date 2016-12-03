@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HELP PANEL PLUGIN FOR USER INTERFACE MODULE 0.0.9
+ *  HELP PANEL PLUGIN FOR USER INTERFACE MODULE 0.0.10
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -22,16 +22,19 @@ TE.each(function($) {
             if (TE._.dom.parent(ui.el.panel)) {
                 ui.panel.exit(1);
             } else {
-                if (config.help && config.help.body) {
-                    ui.panel(config.help.body);
+                if (config.help) {
+                    ui.panel('help', config.help, 0, 'help');
                 } else {
                     var tr = [];
                     for (i in keys) {
                         j = keys[i];
                         if (!j[1]) continue;
-                        tr.push('<tr><td style="width:20%;"><kbd>' + j[1] + '</kbd></td><td>' + j[0] + '</td></tr>');
+                        tr.push('<tr style="border:inherit;"><td style="text-align:right;vertical-align:top;width:10%;border:inherit;padding:.25em .5em;"><kbd>' + j[1] + '</kbd></td><td style="text-align:left;vertical-align:top;border:inherit;padding:.25em .5em;">' + j[0] + '</td></tr>');
                     }
-                    ui.panel('<table class="' + $.config.classes[""] + '-table"><tbody>' + tr.sort().join("") + '</tbody></table>');
+                    ui.panel('help', {
+                        header: 'Help',
+                        body: '<table style="table-layout:fixed;border-collapse:collapse;border:1px solid;border-color:inherit;" class="' + $.config.classes[""] + '-table"><tbody style="border:inherit;">' + tr.sort().join("") + '</tbody></table>'
+                    }, 0, 'help');
                 }
             }
             return $.select(), false;

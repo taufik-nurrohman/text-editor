@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BBCODE TEXT EDITOR PLUGIN 1.1.2
+ *  BBCODE TEXT EDITOR PLUGIN 1.2.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -106,9 +106,9 @@ TE.ui.BBCode = function(target, o) {
                 } else if (/^[\w.-]+@[\w.-]+(?:\.[\w.-]+)?$/i.test(v)) {
                     return $.format(formats.email), false;
                 }
-                return ui.prompt(['a[href]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
+                return ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
                     $.format(a + '=' + attr_url(v));
-                }).record(), false;
+                }, 0, 0, 'a[href]').record(), false;
             }
         },
         img: {
@@ -116,9 +116,9 @@ TE.ui.BBCode = function(target, o) {
                 var img = formats.img,
                     i18n = languages.modals.img;
                 if (!$.$().length) {
-                    return ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
+                    return ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
                         $[0]().format(img).insert(attr_url(v))[1]();
-                    }).record(), false;
+                    }, 0, 0, 'img[src]').record(), false;
                 }
                 return $.format(img), false;
             }

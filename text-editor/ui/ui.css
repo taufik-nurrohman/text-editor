@@ -194,7 +194,7 @@
 .text-editor-is-can-resize .text-editor-description .right {padding-right:4px}
 .text-editor .left {float:left}
 .text-editor .right {float:right}
-.text-editor-resize,
+.text-editor-sizer,
 .text-editor-x {
   position:absolute;
   right:0;
@@ -202,19 +202,19 @@
   width:1em;
   height:1em;
 }
-.text-editor-resize.se {cursor:se-resize}
-.text-editor-resize.s {cursor:s-resize}
+.text-editor-sizer.se {cursor:se-resize}
+.text-editor-sizer.s {cursor:s-resize}
 .text-editor-x {
   top:0;
   bottom:auto;
-  width:2.5em;
-  height:2.5em;
-  line-height:2.5em;
+  width:2.6em;
+  height:2.6em;
+  line-height:2.6em;
   text-align:center;
   cursor:pointer;
 }
 .text-editor-x:before {content:'\2715'}
-.text-editor-resize:before {
+.text-editor-sizer:before {
   content:"";
   position:absolute;
   right:2px;
@@ -235,7 +235,15 @@
   overflow:auto;
 }
 .text-editor-panel {border-width:0}
-.text-editor-panel-content {padding:2em}
+.text-editor-panel-header + .text-editor-panel-body {
+  position:absolute;
+  top:2.6em;
+  right:0;
+  bottom:0;
+  left:0;
+  overflow:auto;
+}
+.text-editor-panel-content {padding:1em}
 .text-editor-portal {
   position:absolute;
   top:0;
@@ -258,24 +266,29 @@
 }
 .text-editor-modal {
   min-width:20em;
-  min-height:6em;
+  min-height:6.2em;
 }
+.text-editor-panel-header,
 .text-editor-modal-header,
 .text-editor-modal-footer {
   position:absolute;
   right:0;
   left:0;
-  height:2.5em;
-  line-height:2.5em;
+  height:2.6em;
+  line-height:2.6em;
   padding:0 1em;
 }
+.text-editor-panel-header,
 .text-editor-modal-header {
   top:0;
-  cursor:move;
+  padding-right:2.6em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
+.text-editor-modal-header {cursor:move}
 .text-editor-modal-body {
-  height:100%;
-  border-top:2.5em solid transparent;
+  border-top:2.6em solid transparent;
   border-bottom:3.6em solid transparent;
   overflow:auto;
 }
@@ -342,7 +355,7 @@
   padding:0 .5em 0 0;
   background:inherit;
 }
-.text-editor-current.menu:after {
+.text-editor-text.menu:after {
   content:"";
   display:inline-block;
   vertical-align:middle;
@@ -352,16 +365,3 @@
   border-top-color:inherit;
   margin:.125em 0 0 .25em;
 }
-.text-editor-table {
-  border-collapse:collapse;
-  table-layout:fixed;
-}
-.text-editor-table th,
-.text-editor-table td {
-  border:1px solid;
-  border-color:inherit;
-  padding:.2em .5em;
-  text-align:left;
-  vertical-align:top;
-}
-.text-editor-table th {font-weight:bold}

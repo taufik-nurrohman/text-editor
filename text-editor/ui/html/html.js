@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.3.1
+ *  HTML TEXT EDITOR PLUGIN 1.4.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -181,9 +181,9 @@ TE.ui.HTML = function(target, o) {
                     $.tidy('\n' + dent, false).insert(placeholder).wrap(unit[0] + li_o + match[1] + unit[1], unit[0] + unit[2] + li_o + unit[1]);
                 } else {
                     if (!_pattern(esc_unit[1] + '\\s*$').test(before)) {
-                        $.insert(unit[0] + unit[2] + li_o + unit[1] + '\n' + dent + unit[0] + li_o + match[1] + unit[1], 0).insert(placeholder);
+                        $.insert(unit[0] + unit[2] + li_o + unit[1] + '\n' + dent + unit[0] + li_o + match[1] + unit[1], 0).insert(placeholder).scroll(1);
                     } else {
-                        $.insert(placeholder).wrap('\n' + dent + tab + unit[0] + ul + unit[1] + '\n' + dent + tab + tab + unit[0] + li_o + match[1] + unit[1], unit[0] + unit[2] + li_o + unit[1] + '\n' + dent + tab + unit[0] + unit[2] + ul_o + unit[1] + '\n' + dent);
+                        $.insert(placeholder).wrap('\n' + dent + tab + unit[0] + ul + unit[1] + '\n' + dent + tab + tab + unit[0] + li_o + match[1] + unit[1], unit[0] + unit[2] + li_o + unit[1] + '\n' + dent + tab + unit[0] + unit[2] + ul_o + unit[1] + '\n' + dent).scroll(2);
                     }
                 }
             } else {
@@ -276,7 +276,7 @@ TE.ui.HTML = function(target, o) {
                 var a = formats.a,
                     i18n = languages.modals.a,
                     href, title;
-                return ui.prompt(['a[href]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
+                return ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
                     v = attr_url(v);
                     href = v;
                     // automatic `rel="nofollow"` attribute
@@ -285,15 +285,15 @@ TE.ui.HTML = function(target, o) {
                     if (href.indexOf('://') !== -1) x = 1;
                     if (host !== "" && href.indexOf('://' + host) !== -1) x = 0;
                     if (/^([.\/?&#]|javascript:)/.test(href)) x = 0;
-                    ui.prompt(['a[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
+                    ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v) {
                         title = attr_title(v);
                         if (!auto_p_(e, $).$().length) {
                             $.insert(placeholders[""]);
                         }
                         extra = config.advance_a && x ? data[3] + 'rel' + data[0] + data[1] + 'nofollow' + data[2] + data[3] + 'target' + data[0] + data[1] + '_blank' + data[2] : "";
                         $.i().format(a + data[3] + 'href' + data[0] + data[1] + href + data[2] + (title ? data[3] + 'title' + data[0] + data[1] + title + data[2] : "") + extra);
-                    });
-                }).record(), false;
+                    }, 0, 0, 'a[title]');
+                }, 0, 0, 'a[href]').record(), false;
             }
         },
         img: {
@@ -307,10 +307,10 @@ TE.ui.HTML = function(target, o) {
                     i18n = languages.modals.img,
                     advance = config.advance_img,
                     src, title;
-                return ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
+                return ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
                     v = attr_url(v);
                     src = v;
-                    ui.prompt(['img[title]', i18n.title[advance ? 2 : 1]], i18n.placeholder[advance ? 2 : 1], 0, function(e, $, v) {
+                    ui.prompt(i18n.title[advance ? 2 : 1], i18n.placeholder[advance ? 2 : 1], 0, function(e, $, v) {
                         title = attr_title(v);
                         if (!alt) {
                             alt = src.split(/[\/\\\\]/).pop();
@@ -326,8 +326,8 @@ TE.ui.HTML = function(target, o) {
                             auto_p_(e, $).tidy(_pattern(esc_unit[0] + '[^' + esc_unit[0] + esc_unit[1] + esc_unit[2] + ']+?' + esc_unit[1] + '\\s*$').test($.$().before) ? "" : ' ', "").insert(unit[0] + img + data[3] + 'alt' + data[0] + data[1] + alt + data[2] + data[3] + 'src' + data[0] + data[1] + src + data[2] + (title ? data[3] + 'title' + data[0] + data[1] + title + data[2] : "") + suffix + ' ', 0, 1);
                         }
                         $[1]();
-                    });
-                }), false;
+                    }, 0, 0, 'img[title]');
+                }, 0, 0, 'img[src]'), false;
             }
         },
         sub: {
@@ -377,7 +377,7 @@ TE.ui.HTML = function(target, o) {
                 if (x && state[x]) {
                     return $.i().format(abbr + data[3] + 'title' + data[0] + data[1] + state[x] + data[2]), false;
                 }
-                return ui.prompt(['abbr[title]', i18n.title], state[abbr_content] || i18n.placeholder, !state[x], function(e, $, v, w) {
+                return ui.prompt(i18n.title, state[abbr_content] || i18n.placeholder, !state[x], function(e, $, v, w) {
                     v = attr_title(v || w);
                     $[0]();
                     if (!x) {
@@ -391,7 +391,7 @@ TE.ui.HTML = function(target, o) {
                         }
                     }
                     auto_p_(e, $).unwrap(_pattern(abbr_begin_alt), _pattern(abbr_end)).unwrap(_pattern(abbr_begin_alt), _pattern(abbr_end), 1).i().format(abbr + data[3] + 'title' + data[0] + data[1] + v + data[2])[1]();
-                }).record(), false;
+                }, 0, 0, 'abbr[title]').record(), false;
             }
         },
         p: {
@@ -623,11 +623,11 @@ TE.ui.HTML = function(target, o) {
                 td_o = get_o(td),
                 o = [], s, c, r, title;
             if ($[0]().$().value === q) return $.select(), false;
-            return ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
+            return ui.prompt(i18n.title[0], i18n.placeholder[0], 0, function(e, $, v, w) {
                 c = _edge(_int(v) || w, std[0], std[1]);
-                ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
+                ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v, w) {
                     r = _edge(_int(v) || w, str[0], str[1]);
-                    ui.prompt(['table>caption', i18n.title[2]], i18n.placeholder[2], 0, function(e, $, v) {
+                    ui.prompt(i18n.title[2], i18n.placeholder[2], 0, function(e, $, v) {
                         var tfoot_html = "",
                             i, j, k, l, m, n;
                         title = force_i(v);
@@ -659,9 +659,9 @@ TE.ui.HTML = function(target, o) {
                         m = $.$();
                         n = m.start + m.value.indexOf(q);
                         $.select(n, n + q.length)[1]();
-                    });
-                });
-            }), false;
+                    }, 0, 0, 'table>caption');
+                }, 0, 0, 'table>tr');
+            }, 0, 0, 'table>td'), false;
         },
         hr: {
             i: 'ellipsis-h',

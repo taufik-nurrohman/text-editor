@@ -75,7 +75,7 @@
 .text-editor-i,
 .text-editor-x {
   background:transparent none no-repeat 50% 50%;
-  color:transparent;
+  color:transparent !important;
   text-shadow:none;
 }
 .text-editor-x {background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAaVBMVEUAAADwRkj3Wl3xREfuPkDxR0riHB79b3LmJyr/dHfqMzXmKizkIiTzUVT3W13wR0r1VlnrOTzuQkX/e376YWT/cnX4XF72Vln+bnD/d3n7am3/Vln0TU/qLjD/hYj/ZGX1SUvwPkD/W15j+EG6AAAAE3RSTlMAByr+/UFBKysf/vz8qG9vPisCRkfciwAAAIlJREFUGNNlztcOwjAMQNFmQErZ2M7u4v8/ksRNBRJ+sc6VYqX7HdH2yWxb3h6bQzBsjFfJBiBT7QHvr/KQYIIopY1gleBTkSbC3VzQA0Bgt2LhnaiZ79uQklfPr5HIe7f2zQ7JaZ3nPPTN3mkhBjUvYy0Hh8Xl8nldxmNXS64u5VLNZf9P8f98AJnYCGTwFEaGAAAAAElFTkSuQmCC')}

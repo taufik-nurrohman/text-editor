@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR 2.8.1
+ *  TEXT EDITOR 2.8.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -362,7 +362,7 @@
         });
 
         // plugin version
-        $.version = '2.8.1';
+        $.version = '2.8.2';
 
         // collect all instance(s)
         $[instance] = {};
@@ -544,15 +544,16 @@
 
         // set value
         $.set = function(v) {
+            if (target.disabled || target.readOnly) return $;
             return target.value = v, $;
         };
 
         // get value
         $.get = function(f) {
-            if (is_set(f)) {
-                return count(val()) ? val() : f;
-            }
-            return val();
+            f = is_set(f) ? f : "";
+            g = val();
+            if (target.disabled) return f;
+            return count(g) ? g : f;
         };
 
         // save state
@@ -623,6 +624,7 @@
                 arg[1] = arg[0];
             }
             target[focus]();
+            if (target.disabled || target.readOnly) return $;
             target.setSelectionRange(arg[0], arg[1]); // default `$.select(7, 100)`
             target[top] = z, win.scroll(x, y);
             return $; // `select` method does not populate history data

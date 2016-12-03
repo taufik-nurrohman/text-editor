@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXTILE TEXT EDITOR PLUGIN 1.3.2
+ *  TEXTILE TEXT EDITOR PLUGIN 1.4.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -198,7 +198,7 @@ TE.ui.Textile = function(target, o) {
                     states.a[i] = 1;
                 }
                 state = states.a;
-                return ui.prompt(['a[href]', i18n.title[0]], http, 1, function(e, $, v) {
+                return ui.prompt(i18n.title[0], http, 1, function(e, $, v) {
                     v = attr_url(v);
                     $[0]();
                     if (state[v]) {
@@ -213,7 +213,7 @@ TE.ui.Textile = function(target, o) {
                         }
                     } else {
                         href = v;
-                        ui.prompt(['a[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
+                        ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v) {
                             title = attr_title(v);
                             // image link
                             if (/^\![^\s]+?\!$/.test(x)) {
@@ -228,10 +228,10 @@ TE.ui.Textile = function(target, o) {
                                 }
                                 $.i().trim(_trim(b) ? ' ' : "", !_trim(a) ? "" : (/^\n+(fn\d+\^?\. |\[)/.test(a) ? '\n\n' : ' ')).wrap('"', (title ? '(' + title + ')' : "") + '":' + href);
                             }
-                        });
+                        }, 0, 0, 'a[title]');
                     }
                     $[1]();
-                }).record(), false;
+                }, 0, 0, 'a[href]').record(), false;
             }
         },
         img: {
@@ -239,13 +239,13 @@ TE.ui.Textile = function(target, o) {
                 var s = $.$(),
                     i18n = languages.modals.img,
                     src, title;
-                return ui.prompt(['img[src]', i18n.title[0]], i18n.placeholder[0], 1, function(e, $, v) {
+                return ui.prompt(i18n.title[0], i18n.placeholder[0], 1, function(e, $, v) {
                     src = attr_url(v);
-                    ui.prompt(['img[title]', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v) {
+                    ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v) {
                         title = attr_title(v);
                         $.tidy('\n\n', "").insert('!' + src + (title ? '(' + title + ')' : "") + '!\n\n', 0);
-                    });
-                }), false;
+                    }, 0, 0, 'img[title]');
+                }, 0, 0, 'img[src]'), false;
             }
         },
         abbr: {
@@ -267,7 +267,7 @@ TE.ui.Textile = function(target, o) {
                 if (x && state[x] && s.after[0] !== '(') {
                     return $.i().tidy(' ').insert('(' + state[x] + ')', 1), false;
                 }
-                return ui.prompt(['abbr[title]', i18n.title], state[abbr] || i18n.placeholder, !state[x], function(e, $, v, w) {
+                return ui.prompt(i18n.title, state[abbr] || i18n.placeholder, !state[x], function(e, $, v, w) {
                     v = attr_title(v || w);
                     $[0]();
                     if (!x) {
@@ -281,7 +281,7 @@ TE.ui.Textile = function(target, o) {
                         }
                     }
                     $.unwrap("", abbr_end).unwrap("", abbr_end, 1).i().tidy(' ').insert('(' + v + ')', 1)[1]();
-                }).record(), false;
+                }, 0, 0, 'abbr[title]').record(), false;
             }
         },
         p: {
@@ -422,9 +422,9 @@ TE.ui.Textile = function(target, o) {
                 advance = config.advance_table,
                 o = [], s, c, r;
             if ($[0]().$().value === q) return $.select(), false;
-            return ui.prompt(['table>td', i18n.title[0]], i18n.placeholder[0], 0, function(e, $, v, w) {
+            return ui.prompt(i18n.title[0], i18n.placeholder[0], 0, function(e, $, v, w) {
                 c = _edge(_int(v) || w, std[0], std[1]);
-                ui.prompt(['table>tr', i18n.title[1]], i18n.placeholder[1], 0, function(e, $, v, w) {
+                ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v, w) {
                     r = _edge(_int(v) || w, str[0], str[1]);
                     var i, j, k, l, m, n;
                     for (i = 0; i < r; ++i) {
@@ -454,8 +454,8 @@ TE.ui.Textile = function(target, o) {
                     m = $.$();
                     n = m.start + m.value.indexOf(q);
                     $.select(n, n + q.length)[1]();
-                });
-            }), false;
+                }, 0, 0, 'table>tr');
+            }, 0, 0, 'table>td'), false;
         },
         hr: {
             click: function(e, $) {
@@ -474,7 +474,7 @@ TE.ui.Textile = function(target, o) {
                     notes = g.match(/^fn\d+\^?\. /gm) || [],
                     i = 0, index;
                 i = notes.length + 1;
-                return ui.prompt(['note[id]', i18n.title], /* s.value || */ i, 0, function(e, $, v, w) {
+                return ui.prompt(i18n.title, /* s.value || */ i, 0, function(e, $, v, w) {
                     v = _trim(v) || _trim(w) || i;
                     index = notes.indexOf('fn' + _int(v) + '. ');
                     if (index !== -1) {
@@ -484,7 +484,7 @@ TE.ui.Textile = function(target, o) {
                     } else {
                         $.trim("", !_trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[' + v + ']').set(_trim($.get(), 1) + n + 'fn' + v + '. ').focus(1).insert(placeholders[""]);
                     }
-                }), false;
+                }, 0, 0, 'note[id]'), false;
             }
         }
     });

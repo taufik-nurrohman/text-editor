@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.6.0
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.7.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -387,7 +387,7 @@ TE.ui = function(target, o) {
 
     function class_get(node, s, b) {
         if (is_string(s)) {
-            return class_get(node, [s], is_set(b) ? b : "")[0];
+            return class_get(node, [s], is_set(b) ? [b] : [""])[0];
         }
         o = [];
         for (i in s) {
@@ -489,7 +489,7 @@ TE.ui = function(target, o) {
     }
 
     function content_reset(node, deep) {
-        if (deep !== false && (c = dom_children(node))) {
+        if (deep !== 0 && (c = dom_children(node))) {
             for (i = 0, j = count(c); i < j; ++i) {
                 content_reset(c[i]);
             }
@@ -598,7 +598,7 @@ TE.ui = function(target, o) {
     function dom_reset(node, deep) {
         var parent = dom_exist(node);
         if (parent) {
-            if (deep !== false) {
+            if (deep !== 0) {
                 c = dom_children(node)[0];
                 while (c) dom_reset(c);
             }
@@ -642,9 +642,10 @@ TE.ui = function(target, o) {
         if (!is_set(gap_2)) gap_2 = "";
         var current = $.h,
             s = $[0]().$(),
+            node_o = node[0].split(_pattern('(' + esc_data[3] + ')+'))[0],
             a = (node[0] ? unit[0] + node[0] + unit[1] : "") + gap_2,
-            b = gap_2 + (node[0] ? unit[0] + unit[2] + (node[1] || node[0].split(_pattern('(' + esc_data[3] + ')+'))[0]) + unit[1] : ""),
-            A = _esc(a),
+            b = gap_2 + (node[0] ? unit[0] + unit[2] + (node[1] || node_o) + unit[1] : ""),
+            A = _esc(node[0] ? unit[0] + node_o + unit[1] : ""),
             B = _esc(b),
             m = _pattern('^' + A + '([\\s\\S]*?)' + B + '$'),
             m_A = _pattern(A + '$'),
@@ -679,16 +680,17 @@ TE.ui = function(target, o) {
         _i18n_buttons = i18n.buttons,
         _i18n_labels = i18n.labels,
         _class = _prefix + '-textarea ' + _prefix + '-content block',
+        _sizer_s = el_set(_prefix + '-sizer s'),
+        _sizer_se = el_set(_prefix + '-sizer se'),
         _container = el_set(_prefix),
         _header = el_set(_prefix + '-header'),
         _body = el_set(_prefix + '-body'),
         _footer = el_set(_prefix + '-footer'),
         _tool = el_set(_prefix + '-tool'),
         _content = el(target, false, config.attributes),
-        _resize = el_set(_prefix + '-resize s'),
         _description = el_set(_prefix + '-description'),
-        _panel = el_set(_prefix + '-panel'),
-        _overlay = el_set(_prefix + '-overlay'),
+        _panel = el('div'),
+        _overlay = el('div'),
         _modal = el('div'),
         _drop = el('div'),
         _bubble = el('div'),
@@ -717,10 +719,6 @@ TE.ui = function(target, o) {
         return !x || (is_set(x.active) && !x.active);
     }
 
-    function is_disabled_or_freezed() {
-        return _content.disabled || _content.readOnly;
-    }
-
     function do_attributes(tool, k, tools) {
         if (is_function(tool)) {
             tool = {
@@ -738,9 +736,6 @@ TE.ui = function(target, o) {
     }
 
     function do_click_tool(e) {
-        if (is_disabled_or_freezed()) {
-            return _content.focus(), event_exit(e);
-        }
         ui.exit(0, 0, 0);
         var id = data_get(this, 'tool-id'),
             tools = ui.tools,
@@ -779,7 +774,7 @@ TE.ui = function(target, o) {
     }
 
     function do_update_tools() {
-        content_reset(_tool, false);
+        content_reset(_tool, 0);
         var tools = ui.tools,
             tools_array = str_split(config.tools),
             button = _prefix + '-button',
@@ -854,9 +849,6 @@ TE.ui = function(target, o) {
     }
 
     function do_keys(e) {
-        if (is_disabled_or_freezed()) {
-            return _content.focus(), event_exit(e);
-        }
         var s = $.$(),
             before = s.before,
             after = s.after,
@@ -889,7 +881,7 @@ TE.ui = function(target, o) {
                 if (is_string(keys[i])) {
                     keys[i] = ui.tools[keys[i]].click;
                 }
-                l = keys[i] && keys[i](e, $);
+                l = is_function(keys[i]) && keys[i](e, $);
                 if (l === false) return event_exit(e);
             }
         }
@@ -943,13 +935,13 @@ TE.ui = function(target, o) {
         O = {};
 
     function do_resize_down(e) {
-        drag = _resize;
+        drag = _sizer_s;
         s = size(_footer);
         return event_exit(e);
     }
 
     function do_resize_move(e) {
-        if (drag === _resize) {
+        if (drag === _sizer_s) {
             _css(_content, {
                 'height': pointer(_body, e).y - s.h + px
             });
@@ -977,7 +969,7 @@ TE.ui = function(target, o) {
         if (id) {
             hook_fire('exit.modal.' + id, [$]);
         }
-        event_fire(_CLICK, _overlay, [e]);
+        return event_fire(_CLICK, _overlay, [e]), event_exit(e);
     }
 
     function do_modal_down(e) {
@@ -990,7 +982,7 @@ TE.ui = function(target, o) {
 
     function do_modal_move(e) {
         var header = O.header,
-            resize = O.resize;
+            sizer = O.sizer;
         if (drag === header || closest(drag, header) === header) {
             o = pointer(_body, e);
             l = o.x - x;
@@ -999,9 +991,9 @@ TE.ui = function(target, o) {
                 'left': (w > W ? l : _edge(l, 0, W - w)) + px,
                 'top': (h > H ? t : _edge(t, 0, H - h)) + px
             });
-        } else if (drag === resize) {
+        } else if (drag === sizer) {
             o = pointer(_modal, e);
-            s = size(resize);
+            s = size(sizer);
             _css(_modal, {
                 'width': (o.x + (s.w / 4)) + px,
                 'height': (o.y + (s.h / 4)) + px
@@ -1035,6 +1027,8 @@ TE.ui = function(target, o) {
 
     // create
     $.create = function(o, hook) {
+        if ($.is.create) return $; // reject if already created
+        $.is.create = true;
         if (is_object(o)) {
             config = _extend(config, o);
         }
@@ -1063,9 +1057,9 @@ TE.ui = function(target, o) {
         event_set(_KEYDOWN, _content, do_keys);
         event_set(_KEYUP + ' ' + _BLUR, _content, do_keys_reset);
         if (config.resize) {
-            dom_set(_container, _resize);
+            dom_set(_container, _sizer_s);
             class_set(_container, _prefix + '-is-can-resize');
-            event_set(_MOUSEDOWN, _resize, do_resize_down);
+            event_set(_MOUSEDOWN, _sizer_s, do_resize_down);
             event_set(_MOUSEMOVE, doc, do_resize_move);
             event_set(_MOUSEUP, body, do_resize_up);
         }
@@ -1076,7 +1070,7 @@ TE.ui = function(target, o) {
 
     // update
     $.update = function(o, hook) {
-        if (class_get(_content, str_split(_class), 0)) {
+        if ($.is.create) {
             $.destroy(0); // destroy if already created
         }
         return (hook !== 0 ? hook_fire('update', [$]) : $).create(o, 0);
@@ -1084,7 +1078,8 @@ TE.ui = function(target, o) {
 
     // destroy
     $.destroy = function(hook) {
-        if (!class_get(_content, str_split(_class), 0)) return $;
+        if (!$.is.create) return $; // reject if already destroyed
+        $.is.create = false;
         ui.exit(0, 0, 0);
         class_reset(_content, _class);
         config.tools = str_join(config.tools);
@@ -1093,7 +1088,7 @@ TE.ui = function(target, o) {
             event_reset(_KEYUP, _content, do_keys_reset);
         }
         if (config.resize) {
-            event_reset(_MOUSEDOWN, _resize, do_resize_down);
+            event_reset(_MOUSEDOWN, _sizer_s, do_resize_down);
             event_reset(_MOUSEMOVE, doc, do_resize_move);
             event_reset(_MOUSEUP, doc, do_resize_up);
         }
@@ -1143,10 +1138,10 @@ TE.ui = function(target, o) {
                 dom_content_reset(_overlay);
             },
             modal: function() {
+                event_reset(_CLICK + ' ' + _KEYDOWN, O.x, do_modal_exit);
                 event_reset(_MOUSEDOWN, _body, do_modal_down);
                 event_reset(_MOUSEMOVE, _body, do_modal_move);
                 event_reset(_MOUSEUP, doc, do_modal_up);
-                event_reset(_CLICK, O.x, do_modal_exit);
                 dom_content_reset(_modal);
             },
             drop: function() {
@@ -1178,60 +1173,98 @@ TE.ui = function(target, o) {
         return $;
     };
 
-    ui.panel = function(s, fn) {
+    ui.panel = function(id, s, fn, hook) {
         ui.exit(0, 0, 0);
-        x = el_set(_prefix + '-x');
-        x.title = _i18n_buttons.close;
-        function do_panel_exit() {
-            event_reset(_CLICK, x, do_panel_exit);
-            ui.panel.exit(1);
+        l = slug(id);
+        t = 0;
+        if (hook) {
+            l += ' ' + l + '--' + slug(hook);
         }
-        event_set(_CLICK, x, do_panel_exit);
-        content_reset(_panel, false);
-        dom_set(_body, el(_panel, [el_set(_prefix + '-panel-content', 'div', s), x]));
+        if (is_object(s) && !is_dom(s)) {
+            t = el_set(_prefix + '-panel-header ' + l, 0, s.header);
+            s = s.body;
+        }
+        s = el_set(_prefix + '-panel-body ' + l, 0, el_set(_prefix + '-panel-content ' + l, 0, s));
+        x = el('a', false, {
+            'href': js,
+            'class': _prefix + '-a ' + _prefix + '-x ' + l
+        });
+        x.title = _i18n_buttons.close;
+        el(_panel, false, {
+            'class': _prefix + '-panel ' + l
+        });
+        function do_panel_exit(e) {
+            event_reset(_CLICK + ' ' + _KEYDOWN, x, do_panel_exit);
+            return ui.panel.exit(1), event_exit(e);
+        }
+        event_set(_CLICK + ' ' + _KEYDOWN, x, do_panel_exit);
+        content_reset(_panel, 0);
+        if (t) dom_set(_panel, t);
+        dom_set(_body, el(_panel, [s, x]));
         if (is_function(fn)) {
             fn(_panel);
-        } else {
+        } else if (is_string(fn)) {
             el(_panel, fn);
         }
-        hook_fire('enter.panel', [$]);
-        hook_fire('enter', [$]);
-        return $;
+        a = [$, _panel];
+        if (hook) {
+            hook_fire('enter.panel.' + id + ':' + hook, a);
+        }
+        hook_fire('enter.panel.' + id, a);
+        hook_fire('enter.panel', a);
+        hook_fire('enter', a);
+        return x.focus(), $;
     };
 
     ui.panel.fit = function() {}; // TODO
 
-    ui.overlay = function(x, fn) {
+    ui.overlay = function(id, x, fn, hook) {
         ui.exit(0, 0, 0);
-        dom_set(_body, _overlay);
+        l = slug(id);
+        if (hook) {
+            l += ' ' + l + '--' + slug(hook);
+        }
+        dom_set(_body, el(_overlay, false, {
+            'class': _prefix + '-overlay ' + l
+        }));
         if (x) event_set(_CLICK, _overlay, do_overlay_exit);
         if (is_function(fn)) {
             fn(_overlay);
-        } else {
+        } else if (is_string(fn)) {
             el(_overlay, fn);
         }
-        hook_fire('enter.overlay', [$]);
-        hook_fire('enter', [$]);
+        a = [$, _overlay];
+        if (hook) {
+            hook_fire('enter.overlay.' + id + ':' + hook, a);
+        }
+        hook_fire('enter.overlay.' + id, a);
+        hook_fire('enter.overlay', a);
+        hook_fire('enter', a);
         return $;
     };
 
     ui.overlay.fit = function() {}; // TODO
 
     ui.modal = function() {
-        ui.overlay(1).blur();
         var arg = arguments,
-            k = arg[0],
+            id = arg[0],
             o = arg[1],
             fn = arg[2],
+            hook = arg[3],
             F = _prefix + '-modal',
             footer = o.footer,
             button, buttons;
-        if (is_object(k)) {
-            k = 'default';
+        if (is_object(id)) {
+            id = 'default';
             o = arg[0];
             fn = arg[1];
+            hook = arg[2];
         }
-        l = slug(k);
+        ui.overlay(id, 1, 0, hook).blur();
+        l = slug(id);
+        if (hook) {
+            l += ' ' + l + '--' + slug(hook);
+        }
         el(_modal, false, {
             'class': F + ' ' + l
         });
@@ -1270,9 +1303,12 @@ TE.ui = function(target, o) {
             F[1] = i;
             O[i] = el_set(F + '-' + format(i, F) + ' ' + l, 0, o[i]);
         }
-        O.x = el_set(_prefix + '-x ' + l); // add `close` button
-        O.resize = el_set(_prefix + '-resize se ' + l); // add `resize` button
-        content_reset(_modal, false);
+        O.x = el('a', false, {
+            'href': js,
+            'class': _prefix + '-a ' + _prefix + '-x ' + l
+        }); // add `close` button
+        O.sizer = _sizer_se; // add `resize` button
+        content_reset(_modal, 0);
         O.x.title = _i18n_buttons.close;
         dom_set(_body, el(_modal, O, {
             'style': ""
@@ -1282,21 +1318,21 @@ TE.ui = function(target, o) {
         // to style or hide the overlay based on the modal ID easily
         // like `.text-editor-modal.alert + .text-editor-overlay {display:none}`
         dom_after(_modal, _overlay);
-        event_set(_CLICK, O.x, do_modal_exit);
+        event_set(_CLICK + ' ' + _KEYDOWN, O.x, do_modal_exit);
         event_set(_MOUSEDOWN, O.header, event_exit);
-        event_set(_MOUSEDOWN, O.resize, event_exit);
+        event_set(_MOUSEDOWN, O.sizer, event_exit);
         event_set(_MOUSEDOWN, _body, do_modal_down);
         event_set(_MOUSEMOVE, _body, do_modal_move);
         event_set(_MOUSEUP, doc, do_modal_up);
-        if (is_function(fn)) {
-            O.overlay = _overlay;
-            O.modal = _modal;
-            fn(O);
+        if (is_function(fn)) fn(O);
+        a = [$, _modal, O];
+        if (hook) {
+            hook_fire('enter.modal.' + id + ':' + hook, a);
         }
-        hook_fire('enter.modal.' + k, [$]);
-        hook_fire('enter.modal', [$]);
-        hook_fire('enter', [$]);
-        return $;
+        hook_fire('enter.modal.' + id, a);
+        hook_fire('enter.modal', a);
+        hook_fire('enter', a);
+        return O.x.focus(), $;
     };
 
     ui.modal.fit = function(center) {
@@ -1317,8 +1353,9 @@ TE.ui = function(target, o) {
             'min-height': h + px,
             'visibility': 'visible'
         });
-        hook_fire('fit.modal', [$]);
-        hook_fire('fit', [$]);
+        a = [$, _modal, O];
+        hook_fire('fit.modal', a);
+        hook_fire('fit', a);
         return $;
     };
 
@@ -1327,7 +1364,7 @@ TE.ui = function(target, o) {
         'name': 'y'
     };
 
-    ui.alert = function(title, content, y, fn) {
+    ui.alert = function(title, content, y, fn, hook) {
         var okay = el('button', _i18n_buttons.okay, button_attributes),
             id = 'alert';
         y = y || noop;
@@ -1336,7 +1373,7 @@ TE.ui = function(target, o) {
             title = title[1] || title[0];
         }
         event_set(_CLICK, okay, function(e) {
-            return y(e, $), do_modal_exit(e, id + '.y'), event_exit(e);
+            return y(e, $), do_modal_exit(e, id + '.y');
         });
         event_set(_KEYDOWN, okay, function(e) {
             var key = e.TE.key;
@@ -1345,26 +1382,22 @@ TE.ui = function(target, o) {
             }
             return event_exit(e);
         });
-        ui.modal(id, do_modal_dom_set(title, content, okay), fn);
+        ui.modal(id, do_modal_dom_set(title, content, okay), fn, hook);
         return okay.focus(), $;
     };
 
-    ui.confirm = function(title, content, y, n, fn) {
+    ui.confirm = function(title, content, y, n, fn, hook) {
         var okay = el('button', _i18n_buttons.okay, button_attributes),
             cancel = el('button', _i18n_buttons.cancel, button_attributes),
             id = 'confirm', key;
         cancel.name = 'n';
-        if (is_object(title)) {
-            id += ':' + title[0];
-            title = title[1] || title[0];
-        }
         function yep(e) {
             if (is_function(y)) y(e, $);
-            return do_modal_exit(e, id + '.y'), event_exit(e);
+            return do_modal_exit(e, id + '.y');
         }
         function nope(e) {
             if (is_function(n)) n(e, $);
-            return do_modal_exit(e, id + '.n'), event_exit(e);
+            return do_modal_exit(e, id + '.n');
         }
         event_set(_CLICK, okay, yep);
         event_set(_CLICK, cancel, nope);
@@ -1390,11 +1423,11 @@ TE.ui = function(target, o) {
             }
             return event_exit(e);
         });
-        ui.modal(id, do_modal_dom_set(title, content, [okay, cancel]), fn);
+        ui.modal(id, do_modal_dom_set(title, content, [okay, cancel]), fn, hook);
         return cancel.focus(), $;
     };
 
-    ui.prompt = function(title, value, required, y, type, fn) {
+    ui.prompt = function(title, value, required, y, type, fn, hook) {
         var okay = el('button', _i18n_buttons.okay, button_attributes),
             cancel = el('button', _i18n_buttons.cancel, button_attributes),
             input = el('input', false, {
@@ -1406,14 +1439,6 @@ TE.ui = function(target, o) {
             }),
             id = 'prompt',
             options = [], s, key, control;
-        if (is_object(title)) {
-            id += ':' + title[0];
-            title = title[1] || title[0];
-        }
-        if (is_function(type)) {
-            fn = type;
-            type = 0;
-        }
         type = type || 0;
         if (type === 1) {
             input = el('textarea', value, {
@@ -1448,15 +1473,16 @@ TE.ui = function(target, o) {
             } else {
                 do_modal_exit(e, id + '.y'), y(e, $, s !== value ? s : "", value);
             }
+            return event_exit(e);
         }
         function nope(e) {
-            do_modal_exit(e, id + '.n');
+            return do_modal_exit(e, id + '.n');
         }
         event_set(_KEYDOWN, input, function(e) {
             key = e.TE.key;
             control = e.TE.control;
-            if (key('enter') && type === 0 || control('enter')) return yep(e), event_exit(e);
-            if (key('escape') || (key('backspace') && !this.value)) return nope(e), event_exit(e);
+            if (key('enter') && type === 0 || control('enter')) return yep(e);
+            if (key('escape') || (key('backspace') && !this.value)) return nope(e);
             if (key('arrowdown') && type === 0 || key('enter') && type === 2 || control('arrowdown')) return okay.focus(), event_exit(e);
         });
         event_set(_KEYDOWN, okay, function(e) {
@@ -1485,23 +1511,23 @@ TE.ui = function(target, o) {
         });
         event_set(_CLICK, okay, yep);
         event_set(_CLICK, cancel, nope);
-        ui.modal(id, do_modal_dom_set(title, input, [okay, cancel]), fn);
+        ui.modal(id, do_modal_dom_set(title, input, [okay, cancel]), fn, hook);
         return prepare(), $;
     };
 
     ui.drop = function() {
         ui.exit(0, 0, 0);
         var arg = arguments,
-            k = arg[0],
+            id = arg[0],
             fn = arg[1],
             exit = arg[2];
         if (count(arg) === 1) {
-            k = 'default';
+            id = 'default';
             fn = arg[0];
             exit = arg[1];
         }
-        l = slug(k);
-        content_reset(_drop, false);
+        l = slug(id);
+        content_reset(_drop, 0);
         dom_set(body, el(_drop, false, {
             'class': _prefix + '-drop ' + l
         }));
@@ -1517,8 +1543,9 @@ TE.ui = function(target, o) {
             event_set(_CLICK, doc, do_drop_exit);
         }
         event_set(_RESIZE, win, do_drop_exit);
-        hook_fire('enter.drop.' + k, [$]);
-        hook_fire('enter.drop', [$]);
+        a = [$, _drop];
+        hook_fire('enter.drop.' + id, a);
+        hook_fire('enter.drop', a);
         return $;
     };
 
@@ -1545,8 +1572,9 @@ TE.ui = function(target, o) {
             'top': t + px,
             'visibility': 'visible'
         });
-        hook_fire('fit.drop', [$]);
-        hook_fire('fit', [$]);
+        a = [$, _drop];
+        hook_fire('fit.drop', a);
+        hook_fire('fit', a);
         return $;
     };
 
@@ -1567,7 +1595,7 @@ TE.ui = function(target, o) {
         }
         ui.tool(id, {
             i: is_object(str) ? str[0] : 0,
-            text: !is_object(str),
+            text: is_object(str) ? str[1] || 0 : (str && data[str] && data[str].text) || str,
             click: function(e) {
                 var a = ui.drop.target = tools[id].target;
                 return ui.drop('menu menu-' + slug(id), function(drop) {
@@ -1672,8 +1700,7 @@ TE.ui = function(target, o) {
     };
 
     ui.menu.set = function(id, str) {
-        var current = '<span class="' + _prefix + '-current menu">%1</span>',
-            tool = ui.tools[id] || {},
+        var tool = ui.tools[id] || {},
             target = tool.target,
             data = tool.data, node, icon;
         if (!target) return $;
@@ -1686,13 +1713,14 @@ TE.ui = function(target, o) {
             icon = str_has(icon, '<') ? icon : ui.i(id, icon);
             str = is_set(str[1]) ? str[1] : 0;
             str = (str && data[str] && data[str].text) || str;
-            current = icon + (str !== 0 ? ' ' + current : "");
+            str = icon + (str !== 0 ? ' ' + str : "");
         } else {
             icon = ui.i(tool.i || id);
         }
         if (node = dom_get('.' + _prefix + '-text', target)[0]) {
+            class_set(node, 'menu');
             class_set(target, 'text');
-            content_set(node, format(current, [str, icon]));
+            content_set(node, format(str, [icon]));
         } else {
             class_reset(target, 'text');
             content_set(target, icon);
@@ -1703,14 +1731,14 @@ TE.ui = function(target, o) {
     ui.bubble = function() {
         ui.exit(0, 0, 0);
         var arg = arguments,
-            k = arg[0],
+            id = arg[0],
             fn = arg[1];
         if (count(arg) === 1) {
-            k = 'default';
+            id = 'default';
             fn = arg[0];
         }
-        l = slug(k);
-        content_reset(_bubble, false);
+        l = slug(id);
+        content_reset(_bubble, 0);
         dom_set(body, el(_bubble, false, {
             'class': _prefix + '-bubble ' + l
         }));
@@ -1720,8 +1748,9 @@ TE.ui = function(target, o) {
             el(_bubble, fn);
         }
         ui.bubble.fit();
-        hook_fire('enter.bubble.' + k, [$]);
-        hook_fire('enter.bubble', [$]);
+        a = [$, _bubble];
+        hook_fire('enter.bubble.' + id, a);
+        hook_fire('enter.bubble', a);
         return $;
     };
 
@@ -1755,8 +1784,9 @@ TE.ui = function(target, o) {
             'top': t + px,
             'visibility': 'visible'
         });
-        hook_fire('fit.bubble', [$]);
-        hook_fire('fit', [$]);
+        a = [$, _bubble];
+        hook_fire('fit.bubble', a);
+        hook_fire('fit', a);
         return $;
     };
 
@@ -1910,8 +1940,8 @@ TE.ui = function(target, o) {
 
     // utility ...
     _extend(TE._, {
-        time: function() {
-            var time = new Date(),
+        time: function(i) {
+            var time = new Date(is_set(i) ? i : Date.now()),
                 year = time.getFullYear(),
                 month = time.getMonth() + 1,
                 date = time.getDate(),
