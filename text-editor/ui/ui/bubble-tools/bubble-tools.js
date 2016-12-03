@@ -106,8 +106,7 @@ TE.each(function($) {
             if (k = _dom_get('[name=data]', $modal)[0]) {
                 ui.bubble(tools_class, function(bubble) {
                     _css(bubble, {
-                        'font-size': '80%',
-                        'line-height': '1.25em'
+                        'font-size': '80%'
                     });
                     l = k.value;
                     m = _el('input', false, {

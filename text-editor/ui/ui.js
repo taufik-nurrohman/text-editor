@@ -732,7 +732,7 @@ TE.ui = function(target, o) {
         if (!is_set(tool.attributes)) {
             tool.attributes = {};
         }
-        return (tools[k] = tool), tool;
+        return tools[k] && (tools[k] = tool), tool;
     }
 
     function do_click_tool(e) {
@@ -772,6 +772,8 @@ TE.ui = function(target, o) {
         }
         return event_exit(e);
     }
+
+    var drop_data = 'ui-drop-data';
 
     function do_update_tools() {
         content_reset(_tool, 0);
@@ -828,6 +830,9 @@ TE.ui = function(target, o) {
                 _button.id = separator + ':' + i;
             }
             tool.target = _button;
+            if (s = data_get(_button, drop_data)) {
+                ui.menu.set(v, s); // refresh `$.ui.menu` state
+            }
             dom_set(_tool, _button);
         }
         hook_fire('update.tools', [$]);
@@ -857,8 +862,18 @@ TE.ui = function(target, o) {
             length = s.length,
             keys = ui.keys,
             keys_a = TE.keys_alias,
-            dent = (before.match(/(?:^|\n)([\t ]*).*$/) || [""]).pop();
-        n = e.TE.key();
+            dent = (before.match(/(?:^|\n)([\t ]*).*$/) || [""]).pop(),
+            e_TE = e.TE;
+        if (e_TE.control()) {
+            maps['control'] = 1;
+        } else if (e_TE.shift()) {
+            maps['shift'] = 1;
+        } else if (e_TE.option()) {
+            maps['alt'] = 1;
+        } else if (e_TE.meta()) {
+            maps['meta'] = 1;
+        }
+        n = e_TE.key();
         maps[n] = 1;
         o = object_keys_length(maps);
         function explode(s) {
@@ -1607,7 +1622,8 @@ TE.ui = function(target, o) {
                         n = content_get(t);
                         if (!is_disabled_tool(m) && is_function(i = m.click)) {
                             i = i(e, $);
-                            ui.menu.set(id, is_object(m.text) ? m.text : (is_object(str) ? str : o));
+                            m.i && (tools[id].i = m.i);
+                            ui.menu.set(id, is_object(m.text) ? [m.text[0], o] : (is_object(str) ? [str[0], o] : o));
                             if (i === false) return $.select(), event_exit(e);
                         }
                         return $.select(), event_exit(e);
@@ -1689,14 +1705,14 @@ TE.ui = function(target, o) {
                         ++index;
                     }
                     _timer_set(function() {
-                        (dom_get('[data-tool-id="' + data_get(a, 'ui-drop-data') + '"]', drop)[0] || dom_get('a', drop)[0]).focus();
+                        (dom_get('[data-tool-id="' + data_get(a, drop_data) + '"]', drop)[0] || dom_get('a', drop)[0]).focus();
                     }, 1);
                 }), false;
             }
         }, i);
         return data_set(tools[id].target, {
             'ui-drop': id
-        }), (tools[id].data = data), ui.menu.set(id, str), $;
+        }), (tools[id].data = data), ui.menu.set(id, str);
     };
 
     ui.menu.set = function(id, str) {
@@ -1704,25 +1720,24 @@ TE.ui = function(target, o) {
             target = tool.target,
             data = tool.data, node, icon;
         if (!target) return $;
-        if (!is_object(str)) {
-            data_set(target, 'ui-drop-data', str);
-            str = (data[str] && data[str].text) || str;
+        if (is_object(str)) {
+            data_set(target, drop_data, str[1] || "");
         } else {
-            data_set(target, 'ui-drop-data', str[0]);
+            data_set(target, drop_data, str);
+            str = (data[str] && data[str].text) || str;
         }
         if (is_object(str)) {
             icon = str[0];
-            icon = str_has(icon, '<') ? icon : ui.i(id, icon);
+            icon = str_has(icon, '<') ? icon : ui.i(icon, tool.i);
             str = is_set(str[1]) ? str[1] : 0;
             str = (str && data[str] && data[str].text) || str;
-            str = icon + (str !== 0 ? ' ' + str : "");
+            str = icon + (str !== 0 ? ' ' + (is_object(str) ? (str[1] || str) : str) : "");
         } else {
-            icon = ui.i(tool.i || id);
+            icon = ui.i(id, tool.i);
         }
         if (node = dom_get('.' + _prefix + '-text', target)[0]) {
-            class_set(node, 'menu');
             class_set(target, 'text');
-            content_set(node, format(str, [icon]));
+            content_set(node, str);
         } else {
             class_reset(target, 'text');
             content_set(target, icon);
@@ -1813,7 +1828,9 @@ TE.ui = function(target, o) {
     };
 
     ui.tool = function(id, data, i) {
+        var tools = ui.tools;
         j = "";
+        k = is_set(tools[id]) ? 'update' : 'create';
         if (id !== '|') {
             config.tools = str_split(config.tools).filter(function(v, i) {
                 if (v === id) {
@@ -1825,7 +1842,8 @@ TE.ui = function(target, o) {
             });
         }
         if (data === false) {
-            delete ui.tools[id];
+            delete tools[id];
+            k = 'destroy';
         } else {
             // separator detected
             if (id === '|') {
@@ -1837,7 +1855,7 @@ TE.ui = function(target, o) {
                         click: data
                     };
                 }
-                ui.tools[id] = _extend((ui.tools[id] || {}), data);
+                tools[id] = _extend((tools[id] || {}), data);
                 if (!is_set(i) && j !== "") {
                     i = j;
                 }
@@ -1848,7 +1866,7 @@ TE.ui = function(target, o) {
                 config.tools.push(id);
             }
         }
-        return do_update_tools(), $;
+        return hook_fire(k + '.tool.' + id, [$, tools[id]]), do_update_tools(), $;
     };
 
     ui.separator = function(attributes, i) {
@@ -1857,14 +1875,16 @@ TE.ui = function(target, o) {
         } : false, i);
     };
 
-    ui.key = function(keys, data) {
-        if (!config.keys) return $;
+    ui.key = function(id, data) {
+        var keys = ui.keys;
+        k = is_set(keys[id]) ? 'update' : 'create';
         if (data === false) {
-            delete ui.keys[keys];
+            delete keys[id];
+            k = 'destroy';
         } else {
-            ui.keys[keys] = data;
+            keys[id] = data;
         }
-        return do_update_keys(), $;
+        return hook_fire(k + '.key.' + id, [$, keys[id]]), do_update_keys(), $;
     };
 
     ui.key.set = function(k) {
@@ -1895,9 +1915,6 @@ TE.ui = function(target, o) {
             }
         },
         indent: function(e, $) {
-            if (e && e.TE && e.TE.shift()) {
-                return $.outdent(tab), false;
-            }
             return $.indent(tab), false;
         },
         outdent: function(e, $) {

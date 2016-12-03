@@ -6,7 +6,7 @@
 .text-editor *:after {
   margin:0;
   padding:0;
-  line-height:1.5;
+  line-height:inherit;
   border-color:inherit;
   -webkit-box-sizing:border-box;
   -moz-box-sizing:border-box;
@@ -23,6 +23,7 @@
 .text-editor-select,
 .text-editor-textarea,
 .text-editor-toggle {
+  line-height:1.5;
   background:#fff;
   border:1px solid #000;
   color:#000;
@@ -154,7 +155,10 @@
 .text-editor-button.text .text-editor-text {padding:0 .5em}
 .text-editor-button.text .text-editor-text .text-editor-i {
   display:inline-block;
+  vertical-align:middle;
   width:1em;
+  height:1em;
+  line-height:inherit;
 }
 .text-editor-tool .text-editor-separator {
   width:0;
@@ -355,7 +359,7 @@
   padding:0 .5em 0 0;
   background:inherit;
 }
-.text-editor-text.menu:after {
+.text-editor-button.text[data-ui-drop-data] .text-editor-text:after {
   content:"";
   display:inline-block;
   vertical-align:middle;

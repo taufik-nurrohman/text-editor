@@ -30,6 +30,19 @@
 var editor = TE.ui(document.querySelector('textarea'));
 &lt;/script&gt;
 &lt;script src="../text-editor/ui/ui/help/help.min.js"&gt;&lt;/script&gt;</code></pre>
+      <h2 id="section:configure">Configure</h2>
+      <h3>Custom Help Content</h3>
+      <p>Set custom help content by configuring the <code>help</code> item:</p>
+      <pre><code>editor.update({
+    help: 'Help content.'
+});</code></pre>
+      <p>Set custom help content using the <code>help</code> item:</p>
+      <pre><code>editor.update({
+    help: {
+        header: 'Help Title',
+        body: 'Help content.'
+    }
+});</code></pre>
     </section>
 
     <footer>

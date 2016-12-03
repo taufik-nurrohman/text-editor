@@ -683,16 +683,16 @@ TE._.event.set("click", <var>node</var>, do_click);</code></pre>
         </thead>
         <tbody>
           <tr>
-            <td><code>destroy</code></td>
-            <td>Will be triggered on editor destruct.</td>
-          </tr>
-          <tr>
             <td><code>create</code></td>
-            <td>Will be triggered on editor construct.</td>
+            <td>Will be triggered on editor create.</td>
           </tr>
           <tr>
             <td><code>update</code></td>
             <td>Will be triggered on editor update.</td>
+          </tr>
+          <tr>
+            <td><code>destroy</code></td>
+            <td>Will be triggered on editor destroy.</td>
           </tr>
           <tr>
             <td><code>disable</code></td>
@@ -711,8 +711,32 @@ TE._.event.set("click", <var>node</var>, do_click);</code></pre>
             <td>Will be triggered on editor tools update.</td>
           </tr>
           <tr>
+            <td><code>create.tool.b</code></td>
+            <td>Will be triggered on editor tool <code>b</code> create.</td>
+          </tr>
+          <tr>
+            <td><code>update.tool.b</code></td>
+            <td>Will be triggered on editor tool <code>b</code> update.</td>
+          </tr>
+          <tr>
+            <td><code>destroy.tool.b</code></td>
+            <td>Will be triggered on editor tool <code>b</code> destroy.</td>
+          </tr>
+          <tr>
             <td><code>update.keys</code></td>
             <td>Will be triggered on editor keys update.</td>
+          </tr>
+          <tr>
+            <td><code>create.key.f10</code></td>
+            <td>Will be triggered on editor key <code>f10</code> create.</td>
+          </tr>
+          <tr>
+            <td><code>update.key.f10</code></td>
+            <td>Will be triggered on editor key <code>f10</code> update.</td>
+          </tr>
+          <tr>
+            <td><code>destroy.key.f10</code></td>
+            <td>Will be triggered on editor key <code>f10</code> destroy.</td>
           </tr>
           <tr>
             <td><code>enter</code></td>
@@ -729,6 +753,18 @@ TE._.event.set("click", <var>node</var>, do_click);</code></pre>
           <tr>
             <td><code>enter.modal</code></td>
             <td>Will be triggered on editor modal enter.</td>
+          </tr>
+          <tr>
+            <td><code>enter.modal.alert</code></td>
+            <td>Will be triggered on editor alert modal enter.</td>
+          </tr>
+          <tr>
+            <td><code>enter.modal.confirm</code></td>
+            <td>Will be triggered on editor confirm modal enter.</td>
+          </tr>
+          <tr>
+            <td><code>enter.modal.prompt</code></td>
+            <td>Will be triggered on editor prompt modal enter.</td>
           </tr>
           <tr>
             <td><code>enter.drop</code></td>
@@ -928,8 +964,9 @@ TE._.event.set("click", <var>node</var>, do_click);</code></pre>
             }
         },
         'bar': {
+            i: 'bold',
             title: 'Test Title',
-            text: ['bold', 'Bold'],
+            text: ['b', 'Bold'],
             click: 'b'
         },
         'Italic': 'i'

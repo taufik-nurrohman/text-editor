@@ -1,6 +1,6 @@
 /*!
  * ===========================================================
- *  FIND AND REPLACE PLUGIN FOR USER INTERFACE MODULE 1.0.1
+ *  FIND AND REPLACE PLUGIN FOR USER INTERFACE MODULE 1.0.2
  * ===========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -18,6 +18,7 @@ TE.each(function($) {
         s = config.classes[""],
         target = $.target,
         _ = $._,
+        _css = _.css,
         _dom = _.dom,
         _dom_content_set = _dom.content.set,
         _dom_get = _dom.get,
@@ -71,7 +72,7 @@ TE.each(function($) {
             'href': 'javascript:;',
             'class': s + '-a',
             'title': languages.modals.find[0],
-            'style': 'padding:0 .25em 0 .5em;'
+            'style': 'width:1.125em;height:1.125em;line-height:1.125em;margin:0 .25em 0 .5em;vertical-align:middle;'
         }),
         status = _el('span', languages.modals.find[1][0], {
             'class': s + '-label'
@@ -97,7 +98,7 @@ TE.each(function($) {
     ], {
         'class': s + s_f_r + ' ' + s_html_class,
         'id': s + s_f_r + ':' + uniq,
-        'style': 'font-size:80%;line-height:1.25em;padding:.25em;border-top:1px solid;border-top-color:inherit;'
+        'style': 'font-size:80%;padding:.25em;border-top:1px solid;border-top-color:inherit;'
     });
 
     function regex_index_of(a, b, start) {
@@ -132,9 +133,10 @@ TE.each(function($) {
         }
     }
 
-    function do_replace() {
+    function do_replace(step) {
         s = find.value;
-        $.select(true).replace(_pattern(mode !== 0 && mode !== 1 ? s : _esc(s), 'g' + (mode !== 1 && mode !== 3 ? 'i' : "")), replace.value);
+        $.select(true).replace(_pattern(mode !== 0 && mode !== 1 ? s : _esc(s), (step ? "" : 'g') + (mode !== 1 && mode !== 3 ? 'i' : "")), replace.value);
+        if (step) replace.focus(), replace.select();
     }
 
     function do_find_advance(e) {
@@ -166,7 +168,6 @@ TE.each(function($) {
     }
 
     function do_find_exit() {
-        ui.key.set('control'); // hold the `control` key
         _dom_reset(pane, 0), $.select();
         _event_reset("keydown", target, do_find_more);
     }
@@ -189,7 +190,7 @@ TE.each(function($) {
         if (k('backspace') && !v) return find.focus(), _event_x(e);
         if (k('alt')) return do_find_advance(), _event_x(e);
         if (k('tab')) return cog.focus(), _event_x(e);
-        if (k('enter')) return do_replace(), _event_x(e);
+        if (k('enter')) return do_replace(e.TE.control()), _event_x(e);
     });
 
     _event_set("click", cog, do_find_advance);

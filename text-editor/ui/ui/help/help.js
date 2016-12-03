@@ -11,10 +11,10 @@ TE.each(function($) {
 
     var ui = $.ui,
         config = $.config,
-        keys = config.languages.tools,
+        tools = config.languages.tools,
         i, j, k;
 
-    keys.help = ['Help', 'F1'];
+    tools.help = ['Help', 'F1'];
 
     ui.tool('help', {
         i: 'question-circle',
@@ -26,13 +26,13 @@ TE.each(function($) {
                     ui.panel('help', config.help, 0, 'help');
                 } else {
                     var tr = [];
-                    for (i in keys) {
-                        j = keys[i];
+                    for (i in tools) {
+                        j = tools[i];
                         if (!j[1]) continue;
                         tr.push('<tr style="border:inherit;"><td style="text-align:right;vertical-align:top;width:10%;border:inherit;padding:.25em .5em;"><kbd>' + j[1] + '</kbd></td><td style="text-align:left;vertical-align:top;border:inherit;padding:.25em .5em;">' + j[0] + '</td></tr>');
                     }
                     ui.panel('help', {
-                        header: 'Help',
+                        header: tools.help[0],
                         body: '<table style="table-layout:fixed;border-collapse:collapse;border:1px solid;border-color:inherit;" class="' + $.config.classes[""] + '-table"><tbody style="border:inherit;">' + tr.sort().join("") + '</tbody></table>'
                     }, 0, 'help');
                 }
