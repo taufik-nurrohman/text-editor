@@ -45,7 +45,9 @@ var editor = TE.ui(document.querySelector('textarea'), {
     <script src="../../html/html.min.js"></script>
     <script>
 
-    var editor = TE.ui.HTML(document.querySelector('#editor'));
+    var editor = TE.ui.HTML(document.querySelector('#editor'), {
+        auto_grow: true
+    });
 
     </script>
     <script src="grow.min.js"></script>

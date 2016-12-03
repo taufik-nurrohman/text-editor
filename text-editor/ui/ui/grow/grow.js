@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  EDITOR GROW PLUGIN FOR USER INTERFACE MODULE 0.0.4
+ *  EDITOR GROW PLUGIN FOR USER INTERFACE MODULE 1.0.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -23,6 +23,8 @@ TE.each(function($) {
         _timer_set = _.timer.set,
 
         a, b;
+
+    if (!$.config.auto_grow) return;
 
     function grow(a) {
         a.style.height = 0;
