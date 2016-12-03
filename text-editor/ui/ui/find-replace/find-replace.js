@@ -72,7 +72,7 @@ TE.each(function($) {
             'href': 'javascript:;',
             'class': s + '-a',
             'title': languages.modals.find[0],
-            'style': 'width:1.125em;height:1.125em;line-height:1.125em;margin:0 .25em 0 .5em;vertical-align:middle;'
+            'style': 'width:1.125em;height:1.125em;line-height:1.125em;margin:0 .25em 0 .5em;'
         }),
         status = _el('span', languages.modals.find[1][0], {
             'class': s + '-label'
