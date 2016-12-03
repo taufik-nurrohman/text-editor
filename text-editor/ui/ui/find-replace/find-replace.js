@@ -1,6 +1,6 @@
 /*!
  * ===========================================================
- *  FIND AND REPLACE PLUGIN FOR USER INTERFACE MODULE 1.0.0
+ *  FIND AND REPLACE PLUGIN FOR USER INTERFACE MODULE 1.0.1
  * ===========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -167,7 +167,7 @@ TE.each(function($) {
 
     function do_find_exit() {
         ui.key.set('control'); // hold the `control` key
-        _dom_reset(pane, false), $.select();
+        _dom_reset(pane, 0), $.select();
         _event_reset("keydown", target, do_find_more);
     }
 

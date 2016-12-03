@@ -1607,7 +1607,7 @@ TE.ui = function(target, o) {
                         n = content_get(t);
                         if (!is_disabled_tool(m) && is_function(i = m.click)) {
                             i = i(e, $);
-                            ui.menu.set(id, o);
+                            ui.menu.set(id, is_object(m.text) ? m.text : (is_object(str) ? str : o));
                             if (i === false) return $.select(), event_exit(e);
                         }
                         return $.select(), event_exit(e);
@@ -1704,9 +1704,11 @@ TE.ui = function(target, o) {
             target = tool.target,
             data = tool.data, node, icon;
         if (!target) return $;
-        if (!is_object(str) && data[str]) {
+        if (!is_object(str)) {
             data_set(target, 'ui-drop-data', str);
-            str = data[str].text || str;
+            str = (data[str] && data[str].text) || str;
+        } else {
+            data_set(target, 'ui-drop-data', str[0]);
         }
         if (is_object(str)) {
             icon = str[0];
