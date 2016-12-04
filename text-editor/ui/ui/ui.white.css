@@ -1,5 +1,6 @@
 .text-editor,
 .text-editor-panel,
+.text-editor-message,
 .text-editor-modal,
 .text-editor-bubble,
 .text-editor-drop,
@@ -42,11 +43,8 @@
   color:inherit;
 }
 .text-editor-body {border-top-color:#ccc}
-.text-editor-resize:before {
-  border-right-color:#ddd;
-  border-bottom-color:#ddd;
-}
 .text-editor-overlay {background:rgba(255,255,255,.5)}
+.text-editor-message,
 .text-editor-modal,
 .text-editor-drop,
 .text-editor-bubble {box-shadow:0 0 2px rgba(0,0,0,.2)}

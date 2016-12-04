@@ -15,6 +15,7 @@
 .text-editor *:focus {outline:0}
 .text-editor,
 .text-editor-panel,
+.text-editor-message,
 .text-editor-modal,
 .text-editor-bubble,
 .text-editor-drop,
@@ -108,17 +109,19 @@
 }
 .text-editor-i {
   display:inline-block;
+  vertical-align:middle;
   margin:0;
   padding:0;
   border:0;
   outline:0;
-  width:100%;
-  height:100%;
-  line-height:inherit;
+  width:1em;
+  height:1em;
+  line-height:1em;
   text-align:center;
 }
 .text-editor-button:focus,
 .text-editor-button:hover {background:#00f}
+.text-editor-button:active {background:#f00}
 .text-editor-tool .text-editor-button {
   background:0 0;
   border-width:0;
@@ -133,6 +136,12 @@
 .text-editor-tool .text-editor-button:focus,
 .text-editor-tool .text-editor-button:active,
 .text-editor-tool .text-editor-button.on {color:#f00}
+.text-editor-tool .text-editor-button .text-editor-i {
+  display:block;
+  width:100%;
+  height:100%;
+  line-height:inherit;
+}
 .text-editor-button.x *,
 .text-editor-button[disabled] { /* disabled */
   cursor:default;
@@ -155,10 +164,10 @@
 .text-editor-button.text .text-editor-text {padding:0 .5em}
 .text-editor-button.text .text-editor-text .text-editor-i {
   display:inline-block;
-  vertical-align:middle;
   width:1em;
   height:1em;
-  line-height:inherit;
+  line-height:1em;
+  margin-top:-.25em;
 }
 .text-editor-tool .text-editor-separator {
   width:0;
@@ -238,6 +247,14 @@
   z-index:9998;
   overflow:auto;
 }
+.text-editor-overlay.message {
+  background:0 0;
+  top:.5em;
+  right:.5em;
+  bottom:auto;
+  left:.5em;
+  overflow:visible;
+}
 .text-editor-panel {border-width:0}
 .text-editor-panel-header + .text-editor-panel-body {
   position:absolute;
@@ -248,6 +265,16 @@
   overflow:auto;
 }
 .text-editor-panel-content {padding:1em}
+.text-editor-message {padding:.25em .5em}
+.text-editor-message .text-editor-x {
+  position:relative;
+  float:right;
+  margin-right:-.25em;
+  width:1em;
+  height:1em;
+  line-height:1em;
+}
+.text-editor-message .text-editor-x:before {content:'\00d7'}
 .text-editor-portal {
   position:absolute;
   top:0;

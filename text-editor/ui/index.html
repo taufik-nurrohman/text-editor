@@ -217,6 +217,7 @@ editor.ui.tool('bold', {
       <ul>
         <li><var>id</var> &rarr; Overlay ID.</li>
         <li><var>click_to_exit</var> &rarr; <code>true</code> to remove the overlay by clicking on it.</li>
+        <li><var>fn</var> &rarr; Callback function.</li>
         <li><var>hook</var> &rarr; Hook namespace.</li>
       </ul>
       <pre><code>editor.ui.overlay(true, <var>fn</var>);</code></pre>
@@ -371,6 +372,19 @@ editor.ui.key('control+b', editor.ui.tools.b.click);</code></pre>
         <li><var>index</var> &rarr; Separator index placement in the tools bar.</li>
       </ul>
       <pre><code>editor.ui.separator({ &hellip; }, 4);</code></pre>
+      <h4 id="section:method-ui-message"><a href="#section:method-ui-overlay">Overlay</a> &rsaquo; Message <sup><a href="javascript:void(window.scroll(0,0),editor.ui.message('my-message', 'Message content.'));">test</a></sup></h4>
+      <pre><code>editor.ui.message(<var>id</var>, <var>node</var>, <var>auto_exit</var>, <var>fn</var>, <var>hook</var>);</code></pre>
+      <ul>
+        <li><var>id</var> &rarr; Message ID.</li>
+        <li><var>node</var> &rarr; Return value of <code>TE._.el</code> or a <abbr title="Hyper Text Markup Language">HTML</abbr> string or a function.</li>
+        <li><var>auto_exit</var> &rarr; Delay in milliseconds to automatically remove the message bar. Set to <code>0</code> or <code>false</code> to disable.</li>
+        <li><var>fn</var> &rarr; Callback function.</li>
+        <li><var>hook</var> &rarr; Hook namespace.</li>
+      </ul>
+      <pre><code>editor.ui.message('my-message', 'Message content.', 3000);</code></pre>
+      <pre><code>editor.ui.message('my-message', function(message) {
+    message.innerHTML = 'Message content.';
+}, 3000);</code></pre>
       <h4 id="section:method-ui-alert"><a href="#section:method-ui-modal">Modal</a> &rsaquo; Alert</h3>
       <pre><code>editor.ui.alert(<var>header</var>, <var>body</var>, <var>fn</var>);</code></pre>
       <ul>

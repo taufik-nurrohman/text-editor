@@ -1,6 +1,7 @@
 /* FYI: Fam Fam Fam theme does not require Font Awesome */
 .text-editor,
 .text-editor-panel,
+.text-editor-message,
 .text-editor-modal,
 .text-editor-bubble,
 .text-editor-drop,
@@ -47,11 +48,8 @@
 }
 .text-editor-tool .text-editor-separator {border-radius:0}
 .text-editor-body {border-top-color:#aaa}
-.text-editor-resize:before {
-  border-right-color:#ccc;
-  border-bottom-color:#ccc;
-}
 .text-editor-overlay {cursor:text}
+.text-editor-message,
 .text-editor-modal,
 .text-editor-drop,
 .text-editor-bubble {box-shadow:0 0 2px rgba(0,0,0,.2)}
@@ -71,7 +69,7 @@
   color:inherit;
 }
 
-/* Icons by Mark James <http://www.famfamfam.com/lab/icons/silk> */
+/*! Icons by Mark James <http://www.famfamfam.com/lab/icons/silk> */
 .text-editor-i,
 .text-editor-x {
   background:transparent none no-repeat 50% 50%;
@@ -79,6 +77,10 @@
   text-shadow:none;
 }
 .text-editor-x {background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAaVBMVEUAAADwRkj3Wl3xREfuPkDxR0riHB79b3LmJyr/dHfqMzXmKizkIiTzUVT3W13wR0r1VlnrOTzuQkX/e376YWT/cnX4XF72Vln+bnD/d3n7am3/Vln0TU/qLjD/hYj/ZGX1SUvwPkD/W15j+EG6AAAAE3RSTlMAByr+/UFBKysf/vz8qG9vPisCRkfciwAAAIlJREFUGNNlztcOwjAMQNFmQErZ2M7u4v8/ksRNBRJ+sc6VYqX7HdH2yWxb3h6bQzBsjFfJBiBT7QHvr/KQYIIopY1gleBTkSbC3VzQA0Bgt2LhnaiZ79uQklfPr5HIe7f2zQ7JaZ3nPPTN3mkhBjUvYy0Hh8Xl8nldxmNXS64u5VLNZf9P8f98AJnYCGTwFEaGAAAAAElFTkSuQmCC')}
+.text-editor-message .text-editor-x {
+  background:0 0;
+  color:inherit !important;
+}
 .text-editor-i-clear {background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABSlBMVEUAAAC5RAMZY9AWU8dHh91hmt00htwWV80XXs8WUMWWxOvNbzRIkN5+u+iUwOqQwOo8g9tOldwthNgne9fEVxu4RQMZY84bYcofeNIWV8gZYc5QnuKz1/K9TQTJZCWx2fOQwuqIueeDteakzO5MnuOi1PCeye6YweuZy+5GkN5omt5Cjd16uOd+x+x6UF50uehrrONtteZio+BTjNiBWGUyZtE3jd5mquJjmNtGkNkrY9AvgNosddgpa9JBmd0pddYlYdA7lNs5idcvkNkcWs+dRCUXXdAVVcwXTsEZYM0ggNQjjdkeb88VSb0WSsAmmt28QgT///9ipORdoeTG5PZqr+hYm+JZlN9Njd33tY2uTBrsdwLfZgLA2fKmwuxMiNz+1rj+za6NfIX1qHL0nWP/kk3rikCyVSb/hiHmdyH/fxjvfxj/dxH4dgDAs4Y4AAAAUHRSTlMA4jhU89G9gUcy/v3z7+zo07+bkXx6XC0iEwX+/Pz7+vn39PPz8fDt7Ong3dvZ19XS0cvJyMbBuba0tK+urKqmpqKikY2EdnNuaGFIKSceDNa099IAAADOSURBVBjTTc3DlgNRFIXhc285Rgedtm3Etgux7bz/NLWyom+2/8kGWd6uVlyqv62wk34rFHwZ2AvfBb9Cx/udujDiVyc2/NM07Ze39eMRWzR61nhbLHpicjCc3msfmlTOffIiMjawmW/0BJHQUElJx5YiAJZPLQeQpZ5VT5goBQCuFNcO4H5aZZEBtuyCLbMk9sZ87X17jnWqX2W101dGN8ErMag6XExGaD25OEkSfFcQhDm/DmSl0v5Dg9my3qjBztH5tN44M8FBQTwywQo4sx71HEUKWQAAAABJRU5ErkJggg==')}
 .text-editor-i-b {background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAADCSURBVCjPY/jPgB8yUEtBeUL5+ZL/Be+z61PXJ7yPnB8sgGFCcX3m/6z9IFbE/JD/XucxFOTWp/5PBivwr/f77/gfQ0F6ffz/aKACXwG3+27/LeZjKEioj/wffN+n3vW8y3+z/Vh8EVEf/N8LLGEy3+K/2nl5ATQF/vW+/x3BCrQF1P7r/hcvQFPgVg+0GWq0zH/N/wL1aAps6x3+64M9J12g8p//PZcCigKbBJP1uvvV9sv3S/YL7+ft51SgelzghgBKWvx6E5D1XwAAAABJRU5ErkJggg==')}
 .text-editor-i-i {background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAABxSURBVCjPY/jPgB8yUFtBdkPqh4T/kR+CD+A0Ie5B5P/ABJwmxBiE//f/gMeKkAlB/90W4FHg88Dzv20ATgVeBq7/bT7g8YXjBJf/RgvwKLB4YPFfKwCnAjMH0/8a/3EGlEmD7gG1A/IHJDfQOC4wIQALYP87Y6unEgAAAABJRU5ErkJggg==')}

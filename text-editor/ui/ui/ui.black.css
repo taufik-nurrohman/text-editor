@@ -1,5 +1,6 @@
 .text-editor,
 .text-editor-panel,
+.text-editor-message,
 .text-editor-modal,
 .text-editor-bubble,
 .text-editor-drop,
@@ -44,6 +45,7 @@
 .text-editor-tool .text-editor-button.on {color:#789}
 .text-editor-tool .text-editor-button:active {color:#89a}
 .text-editor-overlay {background:rgba(0,0,0,.4)}
+.text-editor-message,
 .text-editor-modal,
 .text-editor-drop,
 .text-editor-bubble {box-shadow:0 2px 4px rgba(0,0,0,.6)}

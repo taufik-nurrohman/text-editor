@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.7.0
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.8.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -418,6 +418,7 @@ TE.ui = function(target, o) {
     }
 
     function el(em, node, attr) {
+        em = em || 'div';
         em = is_string(em) ? doc.createElement(em) : em;
         if (is_object(attr)) {
             for (i in attr) {
@@ -489,7 +490,7 @@ TE.ui = function(target, o) {
     }
 
     function content_reset(node, deep) {
-        if (deep !== 0 && (c = dom_children(node))) {
+        if ((!is_set(deep) || deep) && (c = dom_children(node))) {
             for (i = 0, j = count(c); i < j; ++i) {
                 content_reset(c[i]);
             }
@@ -598,7 +599,7 @@ TE.ui = function(target, o) {
     function dom_reset(node, deep) {
         var parent = dom_exist(node);
         if (parent) {
-            if (deep !== 0) {
+            if (!is_set(deep) || deep) {
                 c = dom_children(node)[0];
                 while (c) dom_reset(c);
             }
@@ -614,7 +615,7 @@ TE.ui = function(target, o) {
     }
 
     function el_set(a, b, c) {
-        return el(b || 'div', c, {
+        return el(b, c, {
             'class': a
         });
     }
@@ -689,11 +690,12 @@ TE.ui = function(target, o) {
         _tool = el_set(_prefix + '-tool'),
         _content = el(target, false, config.attributes),
         _description = el_set(_prefix + '-description'),
-        _panel = el('div'),
-        _overlay = el('div'),
-        _modal = el('div'),
-        _drop = el('div'),
-        _bubble = el('div'),
+        _panel = el(),
+        _overlay = el(),
+        _modal = el(),
+        _drop = el(),
+        _bubble = el(),
+        _message = el(),
         _description_left = el_set('left', 'span'),
         _description_right = el_set('right', 'span'),
         _p = 0,
@@ -862,18 +864,19 @@ TE.ui = function(target, o) {
             length = s.length,
             keys = ui.keys,
             keys_a = TE.keys_alias,
-            dent = (before.match(/(?:^|\n)([\t ]*).*$/) || [""]).pop(),
-            e_TE = e.TE;
-        if (e_TE.control()) {
-            maps['control'] = 1;
-        } else if (e_TE.shift()) {
-            maps['shift'] = 1;
-        } else if (e_TE.option()) {
-            maps['alt'] = 1;
-        } else if (e_TE.meta()) {
-            maps['meta'] = 1;
+            keys_controls = {
+                'control': 0,
+                'shift': 0,
+                'option': 'alt',
+                'meta': 0
+            },
+            dent = (before.match(/(?:^|\n)([\t ]*).*$/) || [""]).pop();
+        for (i in keys_controls) {
+            if (e.TE[i]()) {
+                maps[keys_controls[i] || i] = 1;
+            }
         }
-        n = e_TE.key();
+        n = e.TE.key();
         maps[n] = 1;
         o = object_keys_length(maps);
         function explode(s) {
@@ -1199,7 +1202,8 @@ TE.ui = function(target, o) {
             t = el_set(_prefix + '-panel-header ' + l, 0, s.header);
             s = s.body;
         }
-        s = el_set(_prefix + '-panel-body ' + l, 0, el_set(_prefix + '-panel-content ' + l, 0, s));
+        u = el_set(_prefix + '-panel-body ' + l, 0, el_set(_prefix + '-panel-content ' + l, 0, !is_function(s) ? s : ""));
+        is_function(s) && s(u);
         x = el('a', false, {
             'href': js,
             'class': _prefix + '-a ' + _prefix + '-x ' + l
@@ -1215,7 +1219,7 @@ TE.ui = function(target, o) {
         event_set(_CLICK + ' ' + _KEYDOWN, x, do_panel_exit);
         content_reset(_panel, 0);
         if (t) dom_set(_panel, t);
-        dom_set(_body, el(_panel, [s, x]));
+        dom_set(_body, el(_panel, [u, x]));
         if (is_function(fn)) {
             fn(_panel);
         } else if (is_string(fn)) {
@@ -1259,6 +1263,42 @@ TE.ui = function(target, o) {
     };
 
     ui.overlay.fit = function() {}; // TODO
+
+    ui.message = function(id, s, t, fn, hook) {
+        var k;
+        l = slug(id);
+        if (hook) {
+            l += ' ' + l + '--' + slug(hook);
+        }
+        x = el('a', false, {
+            'href': js,
+            'class': _prefix + '-a ' + _prefix + '-x ' + l
+        });
+        x.title = _i18n_buttons.close;
+        el(_message, is_function(s) ? s(_message) : s, {
+            'class': _prefix + '-message ' + l
+        });
+        function do_message_exit(e) {
+            event_reset(_CLICK + ' ' + _KEYDOWN, x, do_message_exit);
+            return _timer_reset(k), ui.overlay.exit(1), event_exit(e);
+        }
+        event_set(_CLICK + ' ' + _KEYDOWN, x, do_message_exit);
+        ui.overlay('message message-' + l, 0, function(overlay) {
+            dom_set(_message, x);
+            if (t) {
+                k = _timer_set(function() {
+                    do_message_exit();
+                }, t);
+            }
+            dom_set(overlay, _message);
+        }, hook);
+        if (is_function(fn)) {
+            fn(_message);
+        } else if (is_string(fn)) {
+            el(_message, fn);
+        }
+        return $;
+    };
 
     ui.modal = function() {
         var arg = arguments,

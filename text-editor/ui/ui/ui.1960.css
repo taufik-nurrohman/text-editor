@@ -1,4 +1,6 @@
 .text-editor,
+.text-editor-panel,
+.text-editor-message,
 .text-editor-modal,
 .text-editor-bubble,
 .text-editor-drop,
@@ -43,6 +45,7 @@
   background:repeating-linear-gradient(-45deg,rgba(0,0,0,.1),rgba(0,0,0,.1) 5px,rgba(0,0,0,.2) 5px,rgba(0,0,0,.2) 10px);
   background-position:50% 50%;
 }
+.text-editor-message,
 .text-editor-modal,
 .text-editor-drop,
 .text-editor-bubble {box-shadow:0 1px 2px rgba(0,0,0,.4)}

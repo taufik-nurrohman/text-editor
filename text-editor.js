@@ -283,10 +283,11 @@
             'alternate': 'alt',
             'option': 'alt',
             'ctrl': 'control',
-            'cmd': 'meta',
-            'command': 'meta',
+            'cmd': 'control',
+            'command': 'control',
             'os': 'meta', // <https://bugzilla.mozilla.org/show_bug.cgi?id=1232918>
             'context': 'contextmenu',
+            'menu': 'contextmenu',
             'return': 'enter',
             'ins': 'insert',
             'del': 'delete',
