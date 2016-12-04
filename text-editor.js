@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR 2.8.2
+ *  TEXT EDITOR 2.8.3
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -363,7 +363,7 @@
         });
 
         // plugin version
-        $.version = '2.8.2';
+        $.version = '2.8.3';
 
         // collect all instance(s)
         $[instance] = {};
@@ -424,6 +424,10 @@
                 return !is_set(x);
             }
         };
+    
+        // current script path
+        s = doc.currentScript;
+        $.path = ((s && s.src) || win.location.href).split('/').slice(0, -1).join('/');
 
     })(win.TE = function(target) {
 

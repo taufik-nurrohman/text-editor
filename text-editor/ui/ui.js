@@ -52,7 +52,7 @@ TE.ui = function(target, o) {
         config = _extend({
             tab: '  ',
             direction: 'ltr',
-            path: ((script && script.src) || win.location.href).split('/').slice(0, -1).join('/'),
+            path: TE.path,
             resize: 1,
             keys: 1,
             tools: 'indent outdent | undo redo',
