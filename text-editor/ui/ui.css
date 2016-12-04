@@ -163,12 +163,13 @@
 .text-editor-button.text {width:auto}
 .text-editor-button.text .text-editor-text {padding:0 .5em}
 .text-editor-button.text .text-editor-text .text-editor-i {
-  display:inline-block;
-  width:1em;
-  height:1em;
-  line-height:1em;
-  margin-top:-.25em;
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:.25em;
+  width:1.5em;
 }
+.text-editor-button.text .text-editor-text .text-editor-i + span {margin-left:1.25em}
 .text-editor-tool .text-editor-separator {
   width:0;
   height:1.5em;

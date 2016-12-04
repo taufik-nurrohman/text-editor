@@ -47,10 +47,12 @@ TE.ui = function(target, o) {
         html = doc.documentElement,
         head = doc.head,
         body = doc.body,
+        script = doc.currentScript,
 
         config = _extend({
             tab: '  ',
-            dir: 'ltr',
+            direction: 'ltr',
+            path: ((script && script.src) || win.location.href).split('/').slice(0, -1).join('/'),
             resize: 1,
             keys: 1,
             tools: 'indent outdent | undo redo',
@@ -1061,7 +1063,7 @@ TE.ui = function(target, o) {
         } else {
             dom_before(_content, _container);
         }
-        _container.dir = config.dir;
+        _container.dir = config.direction;
         dom_set(_container, _header);
         dom_set(_container, _body);
         dom_set(_container, _footer);
@@ -1771,7 +1773,7 @@ TE.ui = function(target, o) {
             icon = str_has(icon, '<') ? icon : ui.i(icon, tool.i);
             str = is_set(str[1]) ? str[1] : 0;
             str = (str && data[str] && data[str].text) || str;
-            str = icon + (str !== 0 ? ' ' + (is_object(str) ? (str[1] || str) : str) : "");
+            str = icon + (str !== 0 ? '<span>' + (is_object(str) ? (str[1] || str) : str) + '</span>' : "");
         } else {
             icon = ui.i(id, tool.i);
         }

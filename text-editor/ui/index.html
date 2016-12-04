@@ -92,7 +92,8 @@
       <p>The available configuration data are:</p>
       <ul>
         <li><code>tab</code> &rarr; <var>string</var> &middot; Set custom indent character.</li>
-        <li><code>dir</code> &rarr; <var>string</var> &middot; Editor language direction (currently this option only set a <abbr title="Hyper Text Markup Language">HTML</abbr> <code>dir</code> attribute to the text editor container).</li>
+        <li><code>direction</code> &rarr; <var>string</var> &middot; Editor language direction (currently this option only set a <abbr title="Hyper Text Markup Language">HTML</abbr> <code>dir</code> attribute to the text editor container).</li>
+        <li><code>path</code> &rarr; <var>string</var> &middot; Directory path of <code>ui.min.js</code> file.</li>
         <li><code>resize</code> &rarr; <var>boolean</var> &middot; Enable/disable text area resize handler.</li>
         <li><code>keys</code> &rarr; <var>boolean</var> &middot; Enable/disable keyboard shortcut feature.</li>
         <li><code>tools</code> &rarr; <var>string</var> &middot; List of tools to be included to the tools bar, each of them separated by a space.</li>
@@ -987,7 +988,12 @@ TE._.event.set("click", <var>node</var>, do_click);</code></pre>
             text: ['b', 'Bold'],
             click: 'b'
         },
-        'Italic': 'i'
+        'Italic': 'i',
+        'baz': {
+            i: 'cogs',
+            text: ['config', 'Test Icon'],
+            click: function() {}
+        }
     });
 
     // test bubble

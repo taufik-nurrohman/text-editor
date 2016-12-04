@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  WORD COUNTER PLUGIN FOR USER INTERFACE MODULE 1.0.2
+ *  WORD COUNTER PLUGIN FOR USER INTERFACE MODULE 1.0.3
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -29,26 +29,25 @@ TE.each(function($) {
         config = $.config,
         debounce = config.debounce,
         i18n = config.languages.others,
-        right = _dom_get('.' + (config.dir === 'ltr' ? 'right' : 'left'), ui.el.footer)[0],
+        right = _dom_get('.' + (config.direction === 'ltr' ? 'right' : 'left'), ui.el.footer)[0],
         container = _.el('span', "", {
             'class': config.classes[""] + '-word-counter'
         });
 
     i18n = _extend({
-        '%1 word': '%1 Word',
-        '%1 words': '%1 Words'
+        '%1 word': ['%1 Word', '%1 Words']
     }, i18n);
 
     _dom_append(right, container);
 
     function count_words(e) {
-        if ((!is_unset(config.word_counter) && !config.word_counter) || !i18n['%1 word'] || !i18n['%1 words']) {
+        if ((!is_unset(config.word_counter) && !config.word_counter) || !i18n['%1 word']) {
             _dom_content_set(container, "");
             return;
         }
         var words = $.get().replace(_pattern(esc_unit[0] + '.*?' + esc_unit[1], 'g'), "").match(/\w+/g) || [],
             i = words.length;
-        _dom_content_set(container, _format(i18n['%1 word' + (i === 1 ? "" : 's')], [i]));
+        _dom_content_set(container, _format(i18n['%1 word'][i === 1 ? 1 : 0], [i]));
     } count_words();
 
     function count_words_debounce() {
