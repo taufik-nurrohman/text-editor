@@ -1039,9 +1039,7 @@ TE.ui = function(target, o) {
         c = (e && e.target) || 0;
         if (!c || (c !== a && closest(c, a) !== a)) {
             ui.drop.target = 0;
-            event_reset(_CLICK, doc, do_drop_exit);
-            event_reset(_RESIZE, win, do_drop_exit);
-            ui.exit(e.target === _content);
+            ui.exit(c === _content);
         }
     }
 
@@ -1165,6 +1163,8 @@ TE.ui = function(target, o) {
                 dom_content_reset(_modal);
             },
             drop: function() {
+                event_reset(_CLICK, doc, do_drop_exit);
+                event_reset(_RESIZE, win, do_drop_exit);
                 dom_content_reset(_drop);
             },
             bubble: function() {
@@ -1598,8 +1598,8 @@ TE.ui = function(target, o) {
             // TODO
         } else {
             event_set(_CLICK, doc, do_drop_exit);
+            event_set(_RESIZE, win, do_drop_exit);
         }
-        event_set(_RESIZE, win, do_drop_exit);
         a = [$, _drop];
         hook_fire('enter.drop.' + id, a);
         hook_fire('enter.drop', a);

@@ -20,10 +20,10 @@ TE.each(function($) {
         _format = _.format,
         _pattern = _.pattern,
         _timer,
-        _timer_set = _.timer.set,
         _timer_reset = _.timer.reset,
+        _timer_set = _.timer.set,
 
-        is_unset = TE.is.x,
+        is_unset = _.is.x,
 
         esc_unit = $.config.unit[1][0],
         config = $.config,
