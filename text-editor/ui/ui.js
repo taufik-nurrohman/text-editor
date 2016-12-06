@@ -59,14 +59,14 @@ TE.ui = function(target, o) {
             attributes: {
                 'spellcheck': 'false'
             },
-            unit: [
-                [
-                    ['\u003C', '\u003E', '\u002F'],
-                    ['\u003D', '\u0022', '\u0022', '\u0020']
-                ],
+            union: [
                 [
                     ['\\u003C', '\\u003E', '\\u002F'],
                     ['\\u003D', '\\u0022', '\\u0022', '\\u0020']
+                ],
+                [
+                    ['\u003C', '\u003E', '\u002F'],
+                    ['\u003D', '\u0022', '\u0022', '\u0020']
                 ]
             ],
             auto_tab: 1,
@@ -132,11 +132,11 @@ TE.ui = function(target, o) {
         i18n = config.languages,
         tab = config.tab,
 
-        data = config.unit[0][1],
-        unit = config.unit[0][0],
+        data = config.union[1][1],
+        unit = config.union[1][0],
 
-        esc_data = config.unit[1][1],
-        esc_unit = config.unit[1][0],
+        esc_data = config.union[0][1],
+        esc_unit = config.union[0][0],
 
         js = 'javascript:;',
         px = 'px';

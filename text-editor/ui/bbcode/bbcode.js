@@ -14,13 +14,13 @@ TE.ui.BBCode = function(target, o) {
             auto_p: 0, // disable automatic paragraph feature from `TE.ui.HTML` by default
             advance_table: 0, // disable advance table feature from `TE.ui.HTML` by default
             tools: 'clear | b i u s | sub sup | a img | p,h1,h2,h3,h4,h5,h6 | blockquote,q pre,code | ul ol | indent outdent | table | hr | undo redo',
-            unit: [
-                [
-                    ['\u005B', '\u005D']
-                ],
+            union: [
                 [
                     ['\\u005B', '\\u005D'],
                     ['\\u003D', '\\u0022', '\\u0022', '\\u0020|\\u003D']
+                ],
+                [
+                    ['\u005B', '\u005D']
                 ]
             ],
             formats: {
@@ -60,8 +60,8 @@ TE.ui.BBCode = function(target, o) {
         _replace = _.replace,
         _trim = _.trim,
 
-        esc_unit = $.config.unit[1][0],
-        esc_data = $.config.unit[1][1];
+        esc_unit = $.config.union[0][0],
+        esc_data = $.config.union[0][1];
 
     $.update(o, 0);
 

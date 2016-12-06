@@ -136,11 +136,11 @@ TE.ui.HTML = function(target, o) {
         suffix = config.suffix,
         tab = config.tab,
 
-        unit = config.unit[0][0],
-        data = config.unit[0][1],
+        unit = config.union[1][0],
+        data = config.union[1][1],
 
-        esc_unit = config.unit[1][0],
-        esc_data = config.unit[1][1],
+        esc_unit = config.union[0][0],
+        esc_data = config.union[0][1],
 
         attrs = '(?:' + esc_data[3] + '[^' + esc_unit[0] + esc_unit[1] + ']*?)?',
         attrs_capture = '(|' + esc_data[3] + '[^' + esc_unit[0] + esc_unit[1] + ']*?)',

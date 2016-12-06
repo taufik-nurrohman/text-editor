@@ -23,10 +23,10 @@ TE.each(function($) {
         _timer_reset = _.timer.reset,
         _timer_set = _.timer.set,
 
-        is_unset = _.is.x,
+        is_unset = $.is.x,
 
-        esc_unit = $.config.unit[1][0],
         config = $.config,
+        esc_unit = config.union[0][0],
         debounce = config.debounce,
         i18n = config.languages.others,
         right = _dom_get('.' + (config.direction === 'ltr' ? 'right' : 'left'), ui.el.footer)[0],
@@ -47,7 +47,7 @@ TE.each(function($) {
         }
         var words = $.get().replace(_pattern(esc_unit[0] + '.*?' + esc_unit[1], 'g'), "").match(/\w+/g) || [],
             i = words.length;
-        _dom_content_set(container, _format(i18n['%1 word'][i === 1 ? 1 : 0], [i]));
+        _dom_content_set(container, _format(i18n['%1 word'][i === 1 ? 0 : 1], [i]));
     } count_words();
 
     function count_words_debounce() {

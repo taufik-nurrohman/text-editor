@@ -1,6 +1,6 @@
 /*!
  * ===========================================================
- *  HTML AUTO-COMPLETE PLUGIN FOR USER INTERFACE MODULE 1.0.3
+ *  HTML AUTO-COMPLETE PLUGIN FOR USER INTERFACE MODULE 1.1.0
  * ===========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -10,10 +10,10 @@
 TE.each(function($) {
 
     var config = $.config,
-        unit = config.unit[0][0],
-        data = config.unit[0][1],
-        esc_unit = config.unit[1][0],
-        esc_data = config.unit[1][1],
+        unit = config.union[1][0],
+        data = config.union[1][1],
+        esc_unit = config.union[0][0],
+        esc_data = config.union[0][1],
 
         _ = $._,
         _event = _.event,
