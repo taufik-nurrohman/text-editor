@@ -571,6 +571,10 @@ var encoded = TE._.replace(<var>input</var>, from, to);</code></pre>
       <h4 id="section:utility-_-dom-copy">Copy</h4>
       <p>Clone <var>node</var>:</p>
       <pre><code>var clone = TE._.dom.copy(<var>node</var>);</code></pre>
+      <h4 id="section:utility-_-dom-replace">Replace</h4>
+      <p>Replace <var>node</var> with <var>foo</var>:</p>
+      <pre><code>var foo = TE._.el('strong');
+TE._.dom.replace(<var>node</var>, foo);</code></pre>
       <h4 id="section:utility-_-dom-classes">Class</h4>
       <p>Add/remove/toggle and check <abbr title="Hyper Text Markup Language">HTML</abbr> classes:</p>
       <pre><code>TE._.dom.classes.set(<var>node</var>, 'active');</code></pre>
@@ -627,6 +631,9 @@ var encoded = TE._.replace(<var>input</var>, from, to);</code></pre>
       <h4 id="section:utility-_-dom-children">Children</h4>
       <p>Get children elements of <var>node</var>:</p>
       <pre><code>var children = TE._.dom.children(<var>node</var>);</code></pre>
+      <h4 id="section:utility-_-dom-closest">Closest</h4>
+      <p>Get closest parent <code>div</code> element of <var>node</var>:</p>
+      <pre><code>var closest = TE._.dom.closest(<var>node</var>, 'div');</code></pre>
       <h4 id="section:utility-_-dom-next">Next</h4>
       <p>Get next element from <var>node</var>:</p>
       <pre><code>var next = TE._.dom.next(<var>node</var>);</code></pre>

@@ -96,11 +96,11 @@
 
     function trim(s, x) {
         if (x === 0) {
-            return s[replace](/^\s*/, ""); // trim left
+            return s[replace](/^[\s\uFEFF\xA0]+/, ""); // trim left
         } else if (x === 1) {
-            return s[replace](/\s*$/, ""); // trim right
+            return s[replace](/[\s\uFEFF\xA0]+$/, ""); // trim right
         }
-        return s[replace](/^\s*|\s*$/g, "") // trim left and right
+        return s[replace](/^[\s\uFEFF\xA0]*|[\s\uFEFF\xA0]*$/g, "") // trim left and right
     }
 
     function num(x, i) {

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.8.0
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.8.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -207,7 +207,7 @@ TE.ui = function(target, o) {
 
     function attr_get(node, a, b) {
         if (is_string(a)) {
-            return attr_get(node, [a], is_set(b) ? b : "")[0];
+            return attr_get(node, [a], [is_set(b) ? b : ""])[0];
         }
         o = [];
         for (i in a) {
@@ -248,7 +248,7 @@ TE.ui = function(target, o) {
 
     function data_get(node, a, b) {
         if (is_string(a)) {
-            return data_get(node, [a], is_set(b) ? b : "")[0];
+            return data_get(node, [a], [is_set(b) ? b : ""])[0];
         }
         o = [];
         for (i in a) {
@@ -297,8 +297,12 @@ TE.ui = function(target, o) {
         if (!node) return;
         id = str_split(id);
         for (i = 0, j = count(id); i < j; ++i) {
-            node.removeEventListener(id[i], fn, false);
-            hook_reset('on:' + id[i], dom_id(node));
+            if (!fn) {
+                el_refresh(node);
+            } else {
+                node.removeEventListener(id[i], fn, false);
+                hook_reset('on:' + id[i], dom_id(node));
+            }
         }
         if (is_dom(node) && node.id.split(':')[0] === _prefix + '-dom') {
             attr_reset(node, 'id');
@@ -389,7 +393,7 @@ TE.ui = function(target, o) {
 
     function class_get(node, s, b) {
         if (is_string(s)) {
-            return class_get(node, [s], is_set(b) ? [b] : [""])[0];
+            return class_get(node, [s], [is_set(b) ? b : ""])[0];
         }
         o = [];
         for (i in s) {
@@ -474,6 +478,10 @@ TE.ui = function(target, o) {
         return em;
     }
 
+    function el_refresh(node) {
+        return dom_replace(node, dom_copy(node, true));
+    }
+
     function dom_id(node) {
         var id = node.id;
         if (!id) {
@@ -508,6 +516,13 @@ TE.ui = function(target, o) {
         return node && node.children || [];
     }
 
+    function dom_closest(node, s) {
+        if (!is_set(s)) {
+            return dom_parent(node);
+        }
+        return is_string(s) ? node.closest(s) : closest(node, s);
+    }
+
     function dom_next(node) {
         return node && node.nextSibling;
     }
@@ -537,7 +552,7 @@ TE.ui = function(target, o) {
         }
         o = [];
         if (is_string(s)) {
-            if (/^([#.]?[\w-]+|\*)$/.test(s)) {
+            if (/^[#.]?(?:\\.|[\w-]|[^\x00-\xa0])+$/.test(s)) {
                 // `#foo`
                 if (s[0] === '#' && (s = parent.getElementById(s.slice(1)))) {
                     return [s];
@@ -607,6 +622,15 @@ TE.ui = function(target, o) {
             }
             parent.removeChild(node);
         }
+    }
+
+    function dom_copy(node, deep) {
+        return node.cloneNode(!is_set(deep) ? true : !!deep);
+    }
+
+    function dom_replace(node, s) {
+        dom_parent(node).replaceChild(s, node);
+        return s;
     }
 
     function dom_content_reset(node) {
@@ -2033,9 +2057,8 @@ TE.ui = function(target, o) {
             reset: dom_reset,
             get: dom_get,
             id: dom_id,
-            copy: function(a, b) {
-                return a.cloneNode(is_set(b) ? b : true);
-            },
+            copy: dom_copy,
+            replace: dom_replace,
             classes: {
                 set: class_set,
                 reset: class_reset,
@@ -2064,6 +2087,7 @@ TE.ui = function(target, o) {
             closest: closest,
             parent: dom_parent,
             children: dom_children,
+            closest: dom_closest,
             next: dom_next,
             previous: dom_previous,
             index: dom_index,
