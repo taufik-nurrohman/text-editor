@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.8.1
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.8.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -153,15 +153,15 @@ TE.ui = function(target, o) {
         return str.indexOf(s) !== -1;
     }
 
-    function count(s) {
-        return s.length;
-    }
-
     function object_keys(x) {
         return Object.keys(x);
     }
 
-    function object_keys_length(x) {
+    function count(s) {
+        return s.length;
+    }
+
+    function count_object(x) {
         return count(object_keys(x));
     }
 
@@ -169,7 +169,7 @@ TE.ui = function(target, o) {
         if (!is_set(ev)) return hooks;
         if (!is_set(fn)) return hooks[ev];
         if (!is_set(hooks[ev])) hooks[ev] = {};
-        if (!is_set(id)) id = object_keys_length(hooks[ev]);
+        if (!is_set(id)) id = count_object(hooks[ev]);
         return hooks[ev][id] = fn, $;
     }
 
@@ -206,6 +206,14 @@ TE.ui = function(target, o) {
     }
 
     function attr_get(node, a, b) {
+        if (!a) {
+            o = {};
+            for (i = 0, j = node.attributes, k = count(j); i < k; ++i) {
+                l = j[i];
+                o[l.name] = l.value;
+            }
+            return count_object(o) ? o : (is_set(b) ? b : {});
+        }
         if (is_string(a)) {
             return attr_get(node, [a], [is_set(b) ? b : ""])[0];
         }
@@ -247,6 +255,16 @@ TE.ui = function(target, o) {
     }
 
     function data_get(node, a, b) {
+        if (!a) {
+            o = {};
+            for (i = 0, j = node.attributes, k = count(j); i < k; ++i) {
+                l = j[i];
+                if (l.name.slice(0, 5) === 'data-') {
+                    o[l.name] = l.value;
+                }
+            }
+            return count_object(o) ? o : (is_set(b) ? b : {});
+        }
         if (is_string(a)) {
             return data_get(node, [a], [is_set(b) ? b : ""])[0];
         }
@@ -297,12 +315,8 @@ TE.ui = function(target, o) {
         if (!node) return;
         id = str_split(id);
         for (i = 0, j = count(id); i < j; ++i) {
-            if (!fn) {
-                el_refresh(node);
-            } else {
-                node.removeEventListener(id[i], fn, false);
-                hook_reset('on:' + id[i], dom_id(node));
-            }
+            node.removeEventListener(id[i], fn, false);
+            hook_reset('on:' + id[i], dom_id(node));
         }
         if (is_dom(node) && node.id.split(':')[0] === _prefix + '-dom') {
             attr_reset(node, 'id');
@@ -392,6 +406,10 @@ TE.ui = function(target, o) {
     }
 
     function class_get(node, s, b) {
+        if (!s) {
+            o = str_split(node.className);
+            return count(o) ? o : (is_set(b) ? b : []);
+        }
         if (is_string(s)) {
             return class_get(node, [s], [is_set(b) ? b : ""])[0];
         }
@@ -402,7 +420,7 @@ TE.ui = function(target, o) {
                 o.push(i);
             }
         }
-        return count(o) ? o : (is_set(b) ? b : false);
+        return count(o) ? o : (is_set(b) ? b : []);
     }
 
     function class_reset(node, s) {
@@ -476,10 +494,6 @@ TE.ui = function(target, o) {
             if (is_set(node) && node !== false) content_set(em, node);
         }
         return em;
-    }
-
-    function el_refresh(node) {
-        return dom_replace(node, dom_copy(node, true));
     }
 
     function dom_id(node) {
@@ -904,7 +918,7 @@ TE.ui = function(target, o) {
         }
         n = e.TE.key();
         maps[n] = 1;
-        o = object_keys_length(maps);
+        o = count_object(maps);
         function explode(s) {
             return s.replace(/\+/g, '\n').replace(/\n\n/g, '\n+').split('\n');
         }
