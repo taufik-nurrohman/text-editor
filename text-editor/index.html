@@ -358,9 +358,8 @@ o = TE._.extend(o, {
       <p>Currently, this is just an alias for <code>new RegExp()</code>:</p>
       <pre><code>TE._.pattern('&lt;\\/?[^&lt;&gt;\\s]+.*?&gt;', 'g'); // match HTML tags</code></pre>
       <h3 id="section:utility-_-i">Parse Integer</h3>
-      <p>Get integer from a string input. Currently, this is just an alias for <code>parseInt(<var>input</var>, 10)</code>:</p>
-      <pre><code>TE._.i('1px'); // is equal to `parseInt('1px', 10)`</code></pre>
-      <pre><code>TE._.i('1px', 0); // is equal to `parseInt('1px', 0)`</code></pre>
+      <p>Get integer/float number from a string input. Currently, this is just an alias for <code>parseFloat(<var>input</var>)</code>:</p>
+      <pre><code>TE._.i('1px'); // is equal to `parseFloat('1px')`</code></pre>
       <h3 id="section:utility-_-timer">Timer</h3>
       <h4 id="section:utiliy-timer-set">Set</h4>
       <p>Currently, this is just an alias for <code>setTimeout()</code>:</p>

@@ -611,7 +611,7 @@ TE.ui = function(target, o) {
     }
 
     function dom_begin(node, dom) {
-        c = dom_children(node)[0];
+        c = node.firstChild;
         if (c) {
             dom_before(c, dom);
         } else {
@@ -628,10 +628,10 @@ TE.ui = function(target, o) {
     }
 
     function dom_reset(node, deep) {
-        var parent = dom_exist(node);
+        var parent = dom_parent(node);
         if (parent) {
             if (!is_set(deep) || deep) {
-                c = dom_children(node)[0];
+                c = node.firstChild;
                 while (c) dom_reset(c);
             }
             parent.removeChild(node);

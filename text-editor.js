@@ -103,8 +103,8 @@
         return s[replace](/^[\s\uFEFF\xA0]*|[\s\uFEFF\xA0]*$/g, "") // trim left and right
     }
 
-    function num(x, i) {
-        return parseInt(x, is_set(i) ? i : 10);
+    function num(x) {
+        return parseFloat(x);
     }
 
     function camelize(s) {
