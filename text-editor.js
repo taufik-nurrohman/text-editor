@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR 2.8.3
+ *  TEXT EDITOR 2.8.4
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -66,6 +66,10 @@
 
     function is_object(x) {
         return typeof x === "object";
+    }
+
+    function is_plain_object(x) {
+        return is_object(x) && !is_dom(x) && x.toString() === '[object Object]';
     }
 
     function is_array(x) {
@@ -161,7 +165,7 @@
     function extend(a, b) {
         b = b || {};
         for (i in b) {
-            if (is_object(a[i]) && is_object(b[i]) && !is_dom(a[i]) && !is_dom(b[i])) {
+            if (is_plain_object(a[i]) && is_plain_object(b[i])) {
                 a[i] = extend(a[i], b[i]);
             } else {
                 a[i] = b[i];
@@ -363,7 +367,7 @@
         });
 
         // plugin version
-        $.version = '2.8.3';
+        $.version = '2.8.4';
 
         // collect all instance(s)
         $[instance] = {};
@@ -424,7 +428,9 @@
                 return !is_set(x);
             }
         };
-    
+  
+        $.is.o.o = is_plain_object;
+  
         // current script path
         s = doc.currentScript;
         $.path = ((s && s.src) || win.location.href).split('/').slice(0, -1).join('/');

@@ -538,11 +538,11 @@ TE.ui = function(target, o) {
     }
 
     function dom_next(node) {
-        return node && node.nextSibling;
+        return node && node.nextElementSibling;
     }
 
     function dom_previous(node) {
-        return node && node.previousSibling;
+        return node && node.previousElementSibling;
     }
 
     function dom_index(node) {
