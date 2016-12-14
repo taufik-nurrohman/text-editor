@@ -47,7 +47,6 @@ TE.ui = function(target, o) {
         html = doc.documentElement,
         head = doc.head,
         body = doc.body,
-        script = doc.currentScript,
 
         config = _extend({
             tab: '  ',
@@ -140,6 +139,10 @@ TE.ui = function(target, o) {
 
         js = 'javascript:;',
         px = 'px';
+
+    function str_lower(s) {
+        return s.toLowerCase();
+    }
 
     function str_split(s) {
         return is_string(s) ? _trim(s).split(/\s+/) : s;
@@ -355,7 +358,7 @@ TE.ui = function(target, o) {
 
     function slug(s) {
         // exclude ` ` and `/`
-        return _trim(sanitize(s.toLowerCase(), [/[^ \/a-z\d-]/g, /([ -])+/g, /^-|-$/g], ['-', '$1', ""]));
+        return _trim(sanitize(str_lower(s), [/[^ \/a-z\d-]/g, /([ -])+/g, /^-|-$/g], ['-', '$1', ""]));
     }
 
     function pointer(node, e) {
@@ -520,12 +523,16 @@ TE.ui = function(target, o) {
         content_set(node, "");
     }
 
+    function dom_array(a) {
+        return Array.prototype.slice.call(a);
+    }
+
     function dom_parent(node) {
         return node && node.parentNode;
     }
 
     function dom_children(node) {
-        return node && node.children || [];
+        return node && dom_array(node.children || []);
     }
 
     function dom_closest(node, s) {
@@ -551,7 +558,7 @@ TE.ui = function(target, o) {
 
     function dom_is(node, s) {
         if (node && is_string(s)) {
-            return node.nodeName.toLowerCase() === s.toLowerCase();
+            return str_lower(node.nodeName) === str_lower(s);
         } else if (node && is_function(s)) {
             return node === s(node);
         }
@@ -562,27 +569,19 @@ TE.ui = function(target, o) {
         if (!(parent = is_set(parent) ? parent : doc)) {
             return [];
         }
-        o = [];
         if (is_string(s)) {
             if (/^[#.]?(?:\\.|[\w-]|[^\x00-\xa0])+$/.test(s)) {
                 // `#foo`
                 if (s[0] === '#' && (s = parent.getElementById(s.slice(1)))) {
                     return [s];
-                // `.foo`
+                // `.foo` or `foo`
                 } else if ((s[0] === '.' && (s = parent.getElementsByClassName(s.slice(1)))) || (s = parent.getElementsByTagName(s))) {
-                    for (i = 0, j = count(s); i < j; ++i) {
-                        o.push(s[i]);
-                    }
-                    return o;
+                    return dom_array(s);
                 }
                 return [];
             } else {
                 // `#foo .bar [baz=qux]`
-                s = parent.querySelectorAll(s);
-                for (i = 0, j = count(s); i < j; ++i) {
-                    o.push(s[i]);
-                }
-                return o;
+                return dom_array(parent.querySelectorAll(s));
             }
         }
         return dom_exist(s) ? [s] : [];
