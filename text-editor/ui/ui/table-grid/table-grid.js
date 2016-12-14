@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.0.8
+ *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.1.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -35,8 +35,8 @@ TE.each(function($) {
         _dom_prepend = _dom.prepend,
         _dom_previous = _dom.previous,
         _el = _.el,
-        _event = _.event,
-        _hook_set = _.hook.set,
+        _events = _.events,
+        _hooks_set = _.hooks.set,
         _timer_set = _.timer.set,
 
         $el = $.ui.el,
@@ -61,7 +61,7 @@ TE.each(function($) {
                 j.value = data[i];
                 // [4]. trigger click event to the submit button
                 if (k = _dom_get('[name=y]', $modal)[0]) {
-                    _event.fire("click", k);
+                    _events.fire("click", k);
                 }
             }
         }
@@ -71,14 +71,14 @@ TE.each(function($) {
     _dom_prepend(document.head, style);
 
     _dom_data.set($container, grid_id, uniq);
-    _event.set("keydown", ui.tools[table].target, function(e) {
+    _events.set("keydown", ui.tools[table].target, function(e) {
         if (e.TE.key('arrowdown')) {
             return _timer_set(function() {
                 _dom_get('a', $el.drop)[0].focus();
-            }), _event.fire("click", this, [e]), _event.x(e);
+            }), _events.fire("click", this, [e]), _events.x(e);
         }
     });
-    _hook_set('enter.modal.prompt:table>td', function($) {
+    _hooks_set('enter.modal.prompt:table>td', function($) {
         if (busy) return;
         l = prefix.slice(1);
         uniq = '-' + _dom_data.get($container, grid_id);
@@ -119,7 +119,7 @@ TE.each(function($) {
                 j.focus();
             }
             function do_click(e) {
-                return do_modals(table, results, $), _event.x(e);
+                return do_modals(table, results, $), _events.x(e);
             }
             function do_key(e) {
                 j = this;
@@ -127,23 +127,23 @@ TE.each(function($) {
                 if (k('escape')) {
                     ui.exit(1);
                 } else if (k('enter')) {
-                    _event.fire("click", j, [e]);
+                    _events.fire("click", j, [e]);
                 } else if (
                     (k('arrowright') && (l = _dom_next(j))) ||
                     (k('arrowleft') && (l = _dom_previous(j)))
                 ) {
-                    _event.fire("mouseover", l, [e]) && l.focus();
+                    _events.fire("mouseover", l, [e]) && l.focus();
                 } else if (
                     (k('arrowdown') && (l = _dom_next(_dom_parent(j)))) ||
                     (k('arrowup') && (l = _dom_previous(_dom_parent(j))))
                 ) {
                     l = _dom_children(l)[_dom_index(j)];
-                    l && _event.fire("mouseover", l, [e]) && l.focus();
+                    l && _events.fire("mouseover", l, [e]) && l.focus();
                 } else if (k('arrowup')) {
                     ui.exit();
                     ui.tools[table].target.focus();
                 }
-                return _event.x(e);
+                return _events.x(e);
             }
             i = rows[1]; // number of rows
             while (i--) {
@@ -154,9 +154,9 @@ TE.each(function($) {
                         'href': 'javascript:;',
                         'title': (j + 1) + x + (i + 1)
                     });
-                    _event.set("mouseover", td, do_over);
-                    _event.set("keydown", td, do_key);
-                    _event.set("click", td, do_click);
+                    _events.set("mouseover", td, do_over);
+                    _events.set("keydown", td, do_key);
+                    _events.set("click", td, do_click);
                     _dom_prepend(tr, td);
                 }
                 _dom_prepend(container, tr);

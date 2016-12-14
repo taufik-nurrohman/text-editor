@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.8.2
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.9.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -220,9 +220,8 @@ TE.ui = function(target, o) {
         o = [];
         for (i in a) {
             i = a[i];
-            if (i = node.getAttribute(i)) {
-                o.push(i);
-            }
+            i = node.getAttribute(i) || "";
+            o.push(i);
         }
         return count(o) ? o : (is_set(b) ? b : []);
     }
@@ -271,9 +270,8 @@ TE.ui = function(target, o) {
         o = [];
         for (i in a) {
             i = a[i];
-            if (i = attr_get(node, 'data-' + i)) {
-                o.push(i);
-            }
+            i = attr_get(node, 'data-' + i);
+            o.push(i);
         }
         return count(o) ? o : (is_set(b) ? b : []);
     }
@@ -2111,7 +2109,7 @@ TE.ui = function(target, o) {
             append: dom_end
         },
         el: el,
-        event: {
+        events: {
             set: event_set,
             reset: event_reset,
             fire: event_fire,
@@ -2121,8 +2119,7 @@ TE.ui = function(target, o) {
 
     _extend($._, TE._);
     _extend($._, {
-        hooks: hooks,
-        hook: {
+        hooks: {
             set: hook_set,
             reset: hook_reset,
             fire: hook_fire

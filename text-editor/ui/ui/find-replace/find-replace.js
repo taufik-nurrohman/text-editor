@@ -1,6 +1,6 @@
 /*!
  * ===========================================================
- *  FIND AND REPLACE PLUGIN FOR USER INTERFACE MODULE 1.0.3
+ *  FIND AND REPLACE PLUGIN FOR USER INTERFACE MODULE 1.1.0
  * ===========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -25,9 +25,9 @@ TE.each(function($) {
         _dom_set = _dom.set,
         _el = _.el,
         _esc = _.x,
-        _event_reset = _.event.reset,
-        _event_set = _.event.set,
-        _event_x = _.event.x,
+        _events_reset = _.events.reset,
+        _events_set = _.events.set,
+        _events_x = _.events.x,
         _extend = _.extend,
         _format = _.format,
         _pattern = _.pattern,
@@ -112,8 +112,8 @@ TE.each(function($) {
 
     function do_find_more(e) {
         k = e.TE.key;
-        if (k('alt')) return do_find_advance(), _event_x(e);
-        if (k(/^(arrowdown|enter)$/)) return do_find(), _event_x(e);
+        if (k('alt')) return do_find_advance(), _events_x(e);
+        if (k(/^(arrowdown|enter)$/)) return do_find(), _events_x(e);
     }
 
     function do_find_enter() {
@@ -166,37 +166,37 @@ TE.each(function($) {
             find.focus();
             find.select();
         });
-        _event_set("keydown", target, do_find_more);
+        _events_set("keydown", target, do_find_more);
     }
 
     function do_find_exit() {
         _dom_reset(pane), $.select();
-        _event_reset("keydown", target, do_find_more);
+        _events_reset("keydown", target, do_find_more);
     }
 
-    _event_set("click", target, do_find_exit);
+    _events_set("click", target, do_find_exit);
 
-    _event_set("keydown", find, function(e) {
+    _events_set("keydown", find, function(e) {
         k = e.TE.key;
         v = this.value;
-        if (e.TE.control('f') || k('backspace') && !v) return (v ? do_find_enter() : do_find_exit()), _event_x(e);
-        if (k('alt')) return do_find_advance(), _event_x(e);
-        if (k('tab')) return !replace.value && (replace.value = find.value), replace.focus(), replace.select(), _event_x(e);
-        if (k('enter') && v) return do_find(), _event_x(e);
+        if (e.TE.control('f') || k('backspace') && !v) return (v ? do_find_enter() : do_find_exit()), _events_x(e);
+        if (k('alt')) return do_find_advance(), _events_x(e);
+        if (k('tab')) return !replace.value && (replace.value = find.value), replace.focus(), replace.select(), _events_x(e);
+        if (k('enter') && v) return do_find(), _events_x(e);
     });
 
-    _event_set("keydown", replace, function(e) {
+    _events_set("keydown", replace, function(e) {
         k = e.TE.key;
         v = this.value;
-        if (e.TE.control('f')) return (v ? do_find_enter() : do_find_exit()), _event_x(e);
-        if (k('backspace') && !v) return find.focus(), _event_x(e);
-        if (k('alt')) return do_find_advance(), _event_x(e);
-        if (k('tab')) return status.focus(), _event_x(e);
-        if (k('enter')) return do_replace(e.TE.control()), _event_x(e);
+        if (e.TE.control('f')) return (v ? do_find_enter() : do_find_exit()), _events_x(e);
+        if (k('backspace') && !v) return find.focus(), _events_x(e);
+        if (k('alt')) return do_find_advance(), _events_x(e);
+        if (k('tab')) return status.focus(), _events_x(e);
+        if (k('enter')) return do_replace(e.TE.control()), _events_x(e);
     });
 
-    _event_set("click", status, do_find_advance);
-    _event_set("click", status_label, do_find_advance);
+    _events_set("click", status, do_find_advance);
+    _events_set("click", status_label, do_find_advance);
 
     ui.tool('find', {
         i: 'binoculars',

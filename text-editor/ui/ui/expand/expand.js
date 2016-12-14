@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  EXPAND PLUGIN FOR USER INTERFACE MODULE 1.0.11
+ *  EXPAND PLUGIN FOR USER INTERFACE MODULE 1.1.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  EDITOR GROW PLUGIN FOR USER INTERFACE MODULE 1.0.0
+ *  EDITOR GROW PLUGIN FOR USER INTERFACE MODULE 1.0.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -19,7 +19,7 @@ TE.each(function($) {
 
         _ = $._,
         _css = _.css,
-        _event_set = _.event.set,
+        _events_set = _.events.set,
         _timer_set = _.timer.set,
 
         a, b;
@@ -32,7 +32,7 @@ TE.each(function($) {
         b && win.scroll(b[0], b[1]);
     }
 
-    _event_set("copy cut input keydown paste", target, function() {
+    _events_set("copy cut input keydown paste", target, function() {
         a = this;
         b = [
             win.pageXOffset || html[left] || body[left],

@@ -4,8 +4,8 @@ TE.each(function($) {
         _ = $._,
         _dom = _.dom,
         _dom_get = _dom.get,
-        _event_set = _.event.set,
-        _event_fire = _.event.fire,
+        _events_set = _.events.set,
+        _events_fire = _.events.fire,
         o = $._.el('input', false, {
             'type': 'file',
             'style': 'margin:0;padding:0;border:0;width:1px;height:1px;font:0/0 a;overflow:hidden;position:absolute;top:-1px;left:-1px;opacity:0;'
@@ -29,7 +29,7 @@ TE.each(function($) {
             if (j = _dom_get('[name=data]', modal)[0]) {
                 j.value = data[i];
                 if (k = _dom_get('[name=y]', modal)[0]) {
-                    _event_fire("click", k);
+                    _events_fire("click", k);
                 }
             }
         }
@@ -42,7 +42,7 @@ TE.each(function($) {
         }
     });
 
-    _event_set("change", o, function() {
+    _events_set("change", o, function() {
         t = this;
         u = t.files;
         if (!u || !u.length) return;
@@ -54,7 +54,7 @@ TE.each(function($) {
             f.readAsBinaryString(u);
             v = 1;
         }
-        _event_set("loadend", f, function(e) {
+        _events_set("loadend", f, function(e) {
             w = f.result;
             if (v === 1) {
                 $.tidy('\n\n').insert(w);

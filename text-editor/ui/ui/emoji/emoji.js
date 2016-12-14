@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.0.7
+ *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.1.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -1350,7 +1350,7 @@
             _dom_content_get = _dom.content.get,
             _dom_data_get = _dom.data.get,
             _el = _.el,
-            _event = _.event,
+            _events = _.events,
             _extend = _.extend,
             _timer_set = _.timer.set,
             _trim = _.trim,
@@ -1389,7 +1389,7 @@
                 l[1].unshift([j, i.title, k]);
                 l[1] = l[1].slice(0, 20); // maximum of recent emoji are 20
             }
-            return $.trim(o ? false : ' ', p ? false : "").insert((k || j) + (p ? "" : ' '), 0, 1), _event.x(e);
+            return $.trim(o ? false : ' ', p ? false : "").insert((k || j) + (p ? "" : ' '), 0, 1), _events.x(e);
         }
 
         function do_key(e) {
@@ -1401,8 +1401,8 @@
             j = this;
             k = e.TE.key;
             l = get('div > a:first-child', ui.el.drop);
-            if (k('escape')) return ui.exit(1), _event.x(e);
-            if (k('f10')) return ui.exit(), ui.drop.target.focus(), _event.x(e);
+            if (k('escape')) return ui.exit(1), _events.x(e);
+            if (k('f10')) return ui.exit(), ui.drop.target.focus(), _events.x(e);
             if (
                 k('arrowright') && (m = (next(j) || get('a:first-child', next(parent(j)))[0] || l[0])) ||
                 k('arrowleft') && (m = (previous(j) || get('a:last-child', previous(parent(j)))[0] || l[0])) ||
@@ -1411,7 +1411,7 @@
                 k('pagedown') && (m = (get('a', next(parent(j)))[0] || l[0])) ||
                 k('pageup') && (m = (get('a', previous(parent(j)))[0] || l.pop()))
             ) {
-                return m.focus(), _event.x(e);
+                return m.focus(), _events.x(e);
             }
         }
 
@@ -1445,8 +1445,8 @@
                                 }
                                 */
                             });
-                            _event.set("click", m, do_click);
-                            _event.set("keydown", m, do_key);
+                            _events.set("click", m, do_click);
+                            _events.set("keydown", m, do_key);
                             _dom_append(l, m);
                         }
                         _dom_append(drop, l);
@@ -1458,11 +1458,11 @@
             }
         });
 
-        _event.set("keydown", ui.tools[emoji].target, function(e) {
+        _events.set("keydown", ui.tools[emoji].target, function(e) {
             if (e.TE.key('arrowdown')) {
                 return _timer_set(function() {
                     _dom.get('a', ui.el.drop)[0].focus();
-                }), _event.fire("click", this, [e]), _event.x(e);
+                }), _events.fire("click", this, [e]), _events.x(e);
             }
         });
 

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  WORD COUNTER PLUGIN FOR USER INTERFACE MODULE 1.0.3
+ *  WORD COUNTER PLUGIN FOR USER INTERFACE MODULE 1.1.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -15,7 +15,7 @@ TE.each(function($) {
         _dom_append = _dom.append,
         _dom_content_set = _dom.content.set,
         _dom_get = _dom.get,
-        _event_set = _.event.set,
+        _events_set = _.events.set,
         _extend = _.extend,
         _format = _.format,
         _pattern = _.pattern,
@@ -55,6 +55,6 @@ TE.each(function($) {
         _timer = _timer_set(count_words, !is_unset(debounce) ? debounce : 250);
     }
 
-    _event_set("copy cut focus input keydown paste select", $.target, count_words_debounce);
+    _events_set("copy cut focus input keydown paste select", $.target, count_words_debounce);
 
 });

@@ -54,8 +54,8 @@ TE.ui.BBCode = function(target, o) {
         _dom_get = _.dom.get,
         _esc = _.x,
         _extend = _.extend,
-        _event_fire = _.event.fire,
-        _hook_set = _.hook.set,
+        _events_fire = _.events.fire,
+        _hooks_set = _.hooks.set,
         _pattern = _.pattern,
         _replace = _.replace,
         _trim = _.trim,
@@ -160,9 +160,9 @@ TE.ui.BBCode = function(target, o) {
     });
 
     // table caption is not supported in **BBCode** so we have to remove that "add caption" modal prompt here
-    _hook_set('enter.modal.prompt:table>caption', function($) {
+    _hooks_set('enter.modal.prompt:table>caption', function($) {
         if (!formats.caption && (k = _dom_get('[name=y]', ui.el.modal)[0])) {
-            _event_fire("click", k); // force to click the submit button
+            _events_fire("click", k); // force to click the submit button
         }
     });
 

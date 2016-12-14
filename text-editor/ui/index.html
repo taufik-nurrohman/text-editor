@@ -662,36 +662,36 @@ TE._.dom.replace(<var>node</var>, foo);</code></pre>
     console.log(e.target);
 }
 
-TE._.event.set("click", <var>node</var>, do_click);</code></pre>
+TE._.events.set("click", <var>node</var>, do_click);</code></pre>
       <blockquote>
         <p>Each event set will also set a new internal hook data named as <code>on:%s</code> (<code>on:click</code> in this case).</p>
       </blockquote>
       <h4 id="section:utility-_-event-reset">Reset</h4>
       <p>Remove a <code>click</code> event with <var>do_click</var> as the callback function from <var>node</var>:</p>
-      <pre><code>TE._.event.reset("click", <var>node</var>, do_click);</code></pre>
+      <pre><code>TE._.events.reset("click", <var>node</var>, do_click);</code></pre>
       <h4 id="section:utility-_-event-fire">Fire</h4>
       <p>Programmatically trigger <code>click</code> events attached to <var>node</var>:</p>
-      <pre><code>TE._.event.fire("click", <var>node</var>, [ &hellip; ]); // `[ &hellip; ]` is for function parameter data</code></pre>
+      <pre><code>TE._.events.fire("click", <var>node</var>, [ &hellip; ]); // `[ &hellip; ]` is for function parameter data</code></pre>
       <h3 id="section:utility-_-hook">Hooks</h3>
       <h4 id="section:utility-_-hook-set">Set</h4>
       <p>Set a new <code>focus.textarea</code> hook:</p>
-      <pre><code>editor._.hook.set("focus.textarea", function() {
+      <pre><code>editor._.hooks.set("focus.textarea", function() {
     console.log('focus');
 });</code></pre>
       <p>Set a new <code>focus.textarea</code> hook with ID of <code>foo</code>:</p>
-      <pre><code>editor._.hook.set("focus.textarea", function() {
+      <pre><code>editor._.hooks.set("focus.textarea", function() {
     console.log('focus');
 }, 'foo');</code></pre>
       <h4 id="section:utility-_-hook-reset">Reset</h4>
       <p>Remove all <code>focus.textarea</code> hooks:</p>
-      <pre><code>editor._.hook.reset("focus.textarea");</code></pre>
+      <pre><code>editor._.hooks.reset("focus.textarea");</code></pre>
       <p>Remove a <code>focus.textarea</code> hook with ID of <code>foo</code>:</p>
-      <pre><code>editor._.hook.reset("focus.textarea", 'foo');</code></pre>
+      <pre><code>editor._.hooks.reset("focus.textarea", 'foo');</code></pre>
       <h4 id="section:utility-_-hook-fire">Fire</h4>
       <p>Trigger all <code>focus.textarea</code> hooks:</p>
-      <pre><code>editor._.hook.fire("focus.textarea", [ &hellip; ]); // `[ &hellip; ]` is for function parameter data</code></pre>
+      <pre><code>editor._.hooks.fire("focus.textarea", [ &hellip; ]); // `[ &hellip; ]` is for function parameter data</code></pre>
       <p>Trigger a <code>focus.textarea</code> hook with ID of <code>foo</code>:</p>
-      <pre><code>editor._.hook.fire("focus.textarea", [ &hellip; ], 'foo');</code></pre>
+      <pre><code>editor._.hooks.fire("focus.textarea", [ &hellip; ], 'foo');</code></pre>
       <blockquote>
         <p>These methods are not static because every <abbr title="Graphic User Interface">GUI</abbr> instances will have their own hooks storage.</p>
       </blockquote>
@@ -954,7 +954,7 @@ TE._.event.set("click", <var>node</var>, do_click);</code></pre>
                                 'background': j
                             }
                         });
-                        TE._.event.set("click", k, function() {
+                        TE._.events.set("click", k, function() {
                             $[0]()
                                 .unwrap(/<span style="color:\s*.*?">/, '</span>')
                                 .format('span style="color: ' + this.title + ';"')
@@ -1015,18 +1015,18 @@ TE._.event.set("click", <var>node</var>, do_click);</code></pre>
         }
     }
 
-    editor._.hook.set('create', function() {
+    editor._.hooks.set('create', function() {
         // set all "bubble" events on editor create
         apply_bubble_on_create();
     });
 
-    editor._.hook.set('destroy', function() {
+    editor._.hooks.set('destroy', function() {
         // reset all "bubble" events on editor destroy
-        TE._.event.reset(events, editor.target, test_bubble);
+        TE._.events.reset(events, editor.target, test_bubble);
     });
 
     function apply_bubble_on_create() {
-        TE._.event.set(events, editor.target, test_bubble);
+        TE._.events.set(events, editor.target, test_bubble);
     }
 
     // start "bubble" events
