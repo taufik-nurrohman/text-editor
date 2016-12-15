@@ -32,11 +32,11 @@
         create = 'createElement',
         instance = '__instance__';
 
-    function cl(s) {
+    function to_lower_case(s) {
         return s.toLowerCase();
     }
 
-    function cu(s) {
+    function to_upper_case(s) {
         return s.toUpperCase();
     }
 
@@ -113,13 +113,13 @@
 
     function camelize(s) {
         return s[replace](/\-([a-z])/g, function(a, b) {
-            return cu(b);
+            return to_upper_case(b);
         });
     }
 
     function dasherize(s) {
         return s[replace](/([A-Z])/g, function(a, b) {
-            return '-' + cl(b);
+            return '-' + to_lower_case(b);
         });
     }
 
@@ -284,26 +284,47 @@
 
         // key alias(es)
         keys_alias = {
-            'alternate': 'alt',
-            'option': 'alt',
-            'ctrl': 'control',
-            'cmd': 'control',
-            'command': 'control',
-            'os': 'meta', // <https://bugzilla.mozilla.org/show_bug.cgi?id=1232918>
-            'context': 'contextmenu',
-            'menu': 'contextmenu',
-            'return': 'enter',
-            'ins': 'insert',
-            'del': 'delete',
-            'esc': 'escape',
-            'left': 'arrowleft',
-            'right': 'arrowright',
-            'up': 'arrowup',
-            'down': 'arrowdown',
-            'back': 'backspace',
-            'space': ' ',
-            'plus': '+',
-            'minus': '-'
+            'alternate': keys[18],
+            'option': keys[18],
+            'ctrl': keys[17],
+            'cmd': keys[17],
+            'command': keys[17],
+            'os': keys[224], // <https://bugzilla.mozilla.org/show_bug.cgi?id=1232918>
+            'context': keys[93],
+            'menu': keys[93],
+            'context-menu': keys[93],
+            'return': keys[13],
+            'ins': keys[45],
+            'del': keys[46],
+            'esc': keys[27],
+            'left': keys[37],
+            'right': keys[39],
+            'up': keys[38],
+            'down': keys[40],
+            'arrow-left': keys[37],
+            'arrow-right': keys[39],
+            'arrow-up': keys[38],
+            'arrow-down': keys[40],
+            'back': keys[8],
+            'back-space': keys[8],
+            'space': keys[32],
+            'plus': keys[61][1],
+            'minus': keys[173][0],
+            'caps-lock': keys[20],
+            'non-convert': keys[29],
+            'mode-change': keys[31],
+            'page-up': keys[33],
+            'page-down': keys[34],
+            'print-screen': keys[44],
+            'num-lock': keys[144],
+            'numeric-lock': keys[144],
+            'scroll-lock': keys[145],
+            'volume-mute': keys[181],
+            'volume-down': keys[182],
+            'volume-up': keys[183],
+            'altgr': keys[225],
+            'alt-gr': keys[225],
+            'alt-graph': keys[225]
         }, i, j;
 
         // function
@@ -313,7 +334,7 @@
 
         // alphabet
         for (i = 65; i < 91; ++i) {
-            keys[i] = cl(String.fromCharCode(i));
+            keys[i] = to_lower_case(String.fromCharCode(i));
         }
 
         // register key(s)
@@ -328,11 +349,11 @@
                 var t = this,
                     keys = $.keys, // refresh ...
                     keys_alias = $.keys_alias, // refresh ...
-                    k = t.key ? cl(t.key) : keys[t.which || t.keyCode];
+                    k = t.key ? to_lower_case(t.key) : keys[t.which || t.keyCode];
                 if (is_object(k)) {
                     k = t.shiftKey ? (k[1] || k[0]) : k[0];
                 }
-                k = cl(k);
+                k = to_lower_case(k);
                 function ret(x, y) {
                     if (is_string(y)) {
                         y = t[y + 'Key'];
@@ -343,8 +364,19 @@
                         }
                         return k;
                     }
-                    if (is_pattern(x)) return y && x.test(k);
-                    return x = cl(x), y && (keys_alias[x] || x) === k;
+                    if (is_pattern(x)) {
+                        return y && x.test(k);
+                    }
+                    if (is_object(x)) {
+                        if (y) {
+                            for (i = 0, j = count(x); i < j; ++i) {
+                                l = to_lower_case(x[i]);
+                                if ((keys_alias[l] || l) === k) return true;
+                            }
+                        }
+                        return false;
+                    }
+                    return x = to_lower_case(x), y && (keys_alias[x] || x) === k;
                 }
                 return {
                     key: function(x) {

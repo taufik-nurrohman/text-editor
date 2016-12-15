@@ -277,6 +277,7 @@ editor[1](); // re&ndash;enable</code></pre>
     if (e.TE.key() === 'ctrl') { &hellip; } // [^9]
     if (e.TE.key() === 'control') { &hellip; } // [^10]
     if (e.TE.key(/^[abc]$/)) { &hellip; } // [^11]
+    if (e.TE.key(['ctrl', 'alt', 'shift'])) { &hellip; } // [^12]
 
 }, false);
 
@@ -290,7 +291,8 @@ editor[1](); // re&ndash;enable</code></pre>
 // [^8]: `ctrl` is an alias for `control`, this will return `true`
 // [^9]: comparing `ctrl` outside the function, this will return `false`
 // [^10]: is equal to the original key value, this will return `true`
-// [^11]: return `true` if key character is either `a`, `b` or `c`</code></pre>
+// [^11]: return `true` if key character is either `a`, `b` or `c`
+// [^12]: return `true` if key character is either `control`, `alt` or `shift`</code></pre>
       <h2 id="section:utility">Utilities</h2>
       <p>Helper functions. Most of them can be accessed staticly:</p>
       <h3 id="section:utility-_-x">Escape</h3>
@@ -346,7 +348,7 @@ o = TE._.extend(o, {
     'border': '1px solid #000'
 }); // return `document.querySelector('#foo')`</code></pre>
       <blockquote>
-        <p>All <abbr title="Cascading Style Sheet">CSS</abbr> value that can be parsed by JavaScript <code>parseInt</code> will be returned as number:</p>
+        <p>All <abbr title="Cascading Style Sheet">CSS</abbr> value that can be parsed by JavaScript <code>parseFloat</code> will be returned as number:</p>
         <pre><code>TE._.css(document.querySelector('#foo'), 'border-top-width'); // return `1`</code></pre>
         <p>To disable that behaviour, prepend a <code>\0</code> to the <abbr title="Cascading Style Sheet">CSS</abbr> property:</p>
         <pre><code>TE._.css(document.querySelector('#foo'), '\0border-top-width'); // return `1px`</code></pre>

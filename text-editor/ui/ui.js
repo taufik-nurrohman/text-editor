@@ -446,6 +446,15 @@ TE.ui = function(target, o) {
         em = em || 'div';
         em = is_string(em) ? doc.createElement(em) : em;
         if (is_object(attr)) {
+            if (!node) {
+                if (is_set(attr.html)) {
+                    node = attr.html;
+                    delete attr.html;
+                } else if (is_set(attr.text)) {
+                    node = attr.text;
+                    delete attr.text;
+                }
+            }
             for (i in attr) {
                 v = attr[i];
                 if (i === 'classes') {
