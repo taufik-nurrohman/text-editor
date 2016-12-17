@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.1.0
+ *  TABLE GRID PLUGIN FOR USER INTERFACE MODULE 1.1.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -72,7 +72,7 @@ TE.each(function($) {
 
     _dom_data.set($container, grid_id, uniq);
     _events.set("keydown", ui.tools[table].target, function(e) {
-        if (e.TE.key('arrowdown')) {
+        if (e.TE.key('down')) {
             return _timer_set(function() {
                 _dom_get('a', $el.drop)[0].focus();
             }), _events.fire("click", this, [e]), _events.x(e);
@@ -129,17 +129,17 @@ TE.each(function($) {
                 } else if (k('enter')) {
                     _events.fire("click", j, [e]);
                 } else if (
-                    (k('arrowright') && (l = _dom_next(j))) ||
-                    (k('arrowleft') && (l = _dom_previous(j)))
+                    (k('right') && (l = _dom_next(j))) ||
+                    (k('left') && (l = _dom_previous(j)))
                 ) {
                     _events.fire("mouseover", l, [e]) && l.focus();
                 } else if (
-                    (k('arrowdown') && (l = _dom_next(_dom_parent(j)))) ||
-                    (k('arrowup') && (l = _dom_previous(_dom_parent(j))))
+                    (k('down') && (l = _dom_next(_dom_parent(j)))) ||
+                    (k('up') && (l = _dom_previous(_dom_parent(j))))
                 ) {
                     l = _dom_children(l)[_dom_index(j)];
                     l && _events.fire("mouseover", l, [e]) && l.focus();
-                } else if (k('arrowup')) {
+                } else if (k('up')) {
                     ui.exit();
                     ui.tools[table].target.focus();
                 }

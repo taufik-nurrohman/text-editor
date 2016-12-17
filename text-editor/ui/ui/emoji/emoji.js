@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.1.0
+ *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.1.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -1404,12 +1404,12 @@
             if (k('escape')) return ui.exit(1), _events.x(e);
             if (k('f10')) return ui.exit(), ui.drop.target.focus(), _events.x(e);
             if (
-                k('arrowright') && (m = (next(j) || get('a:first-child', next(parent(j)))[0] || l[0])) ||
-                k('arrowleft') && (m = (previous(j) || get('a:last-child', previous(parent(j)))[0] || l[0])) ||
-                k('arrowdown') && (m = (get('a', parent(j))[index(j) + 10] || get('a:first-child', next(parent(j)))[0] || l[0])) ||
-                k('arrowup') && (m = (get('a', parent(j))[index(j) - 10] || get('a:last-child', previous(parent(j)))[0] || l[0])) ||
-                k('pagedown') && (m = (get('a', next(parent(j)))[0] || l[0])) ||
-                k('pageup') && (m = (get('a', previous(parent(j)))[0] || l.pop()))
+                k('right') && (m = (next(j) || get('a:first-child', next(parent(j)))[0] || l[0])) ||
+                k('left') && (m = (previous(j) || get('a:last-child', previous(parent(j)))[0] || l[0])) ||
+                k('down') && (m = (get('a', parent(j))[index(j) + 10] || get('a:first-child', next(parent(j)))[0] || l[0])) ||
+                k('up') && (m = (get('a', parent(j))[index(j) - 10] || get('a:last-child', previous(parent(j)))[0] || l[0])) ||
+                k('page-down') && (m = (get('a', next(parent(j)))[0] || l[0])) ||
+                k('page-up') && (m = (get('a', previous(parent(j)))[0] || l.pop()))
             ) {
                 return m.focus(), _events.x(e);
             }
@@ -1438,12 +1438,7 @@
                                 'title': n[1] || null,
                                 'data': {
                                     'text': n[2] || null
-                                },
-                                /*
-                                'css': {
-                                    'width': n[0].split('\u200D').length > 1 ? 'auto' : null
                                 }
-                                */
                             });
                             _events.set("click", m, do_click);
                             _events.set("keydown", m, do_key);

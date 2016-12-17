@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.9.0
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.9.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -800,18 +800,18 @@ TE.ui = function(target, o) {
     function do_key_tool(e) {
         t = this;
         k = e.TE.key;
-        if (k(/^(escape|f10)$/)) {
+        if (k(['escape', 'f10'])) {
             ui.exit(1);
-        } else if (k('enter') || k('arrowdown') && data_get(t, 'ui-drop')) {
+        } else if (k('enter') || k('down') && data_get(t, 'ui-drop')) {
             ui.drop.target = t;
             event_fire(_CLICK, t, [e]);
-        } else if (k('arrowright') && (l = dom_next(t))) {
+        } else if (k('right') && (l = dom_next(t))) {
             while (!dom_is(l, 'a')) {
                 if (!l) break;
                 l = dom_next(l);
             }
             l && l.focus();
-        } else if (k('arrowleft') && (l = dom_previous(t))) {
+        } else if (k('left') && (l = dom_previous(t))) {
             while (!dom_is(l, 'a')) {
                 if (!l) break;
                 l = dom_previous(l);
@@ -1478,7 +1478,7 @@ TE.ui = function(target, o) {
         });
         event_set(_KEYDOWN, okay, function(e) {
             var key = e.TE.key;
-            if (key(/^(escape|enter)$/)) {
+            if (key(['enter', 'escape'])) {
                 event_fire(_CLICK, okay, [e]);
             }
             return event_exit(e);
@@ -1504,7 +1504,7 @@ TE.ui = function(target, o) {
         event_set(_CLICK, cancel, nope);
         event_set(_KEYDOWN, okay, function(e) {
             key = e.TE.key;
-            if (key('arrowright')) {
+            if (key('right')) {
                 cancel.focus();
             } else if (key('enter')) {
                 yep(e);
@@ -1515,7 +1515,7 @@ TE.ui = function(target, o) {
         });
         event_set(_KEYDOWN, cancel, function(e) {
             key = e.TE.key;
-            if (key('arrowleft')) {
+            if (key('left')) {
                 okay.focus();
             } else if (key('enter')){
                 nope(e);
@@ -1583,8 +1583,8 @@ TE.ui = function(target, o) {
             key = e.TE.key;
             control = e.TE.control;
             if (key('enter') && type === 0 || control('enter')) return yep(e);
-            if (key('escape') || (key('backspace') && !this.value)) return nope(e);
-            if (key('arrowdown') && type === 0 || key('enter') && type === 2 || control('arrowdown')) return okay.focus(), event_exit(e);
+            if (key('escape') || (key('back') && !this.value)) return nope(e);
+            if (key('down') && type === 0 || key('enter') && type === 2 || control('down')) return okay.focus(), event_exit(e);
         });
         event_set(_KEYDOWN, okay, function(e) {
             key = e.TE.key;
@@ -1592,20 +1592,20 @@ TE.ui = function(target, o) {
                 yep(e);
             } else if (key('escape')) {
                 nope(e);
-            } else if (key('arrowup')) {
+            } else if (key('up')) {
                 input.focus();
-            } else if (key('arrowright')) {
+            } else if (key('right')) {
                 cancel.focus();
             }
             return event_exit(e);
         });
         event_set(_KEYDOWN, cancel, function(e) {
             key = e.TE.key;
-            if (key(/^(enter|escape)$/)) {
+            if (key(['enter', 'escape'])) {
                 nope(e);
-            } else if (key('arrowup')) {
+            } else if (key('up')) {
                 input.focus();
-            } else if (key('arrowleft')) {
+            } else if (key('left')) {
                 okay.focus();
             }
             return event_exit(e);
@@ -1723,13 +1723,13 @@ TE.ui = function(target, o) {
                             event_fire(_CLICK, t, [e]);
                         } else if (k('f10') && a) {
                             a.focus();
-                        } else if (k('arrowdown') && (l = dom_next(t))) {
+                        } else if (k('down') && (l = dom_next(t))) {
                             while (!dom_is(l, 'a')) {
                                 if (!l) break;
                                 l = dom_next(l);
                             }
                             l && l.focus();
-                        } else if (k('arrowup') && (l = dom_previous(t))) {
+                        } else if (k('up') && (l = dom_previous(t))) {
                             while (!dom_is(l, 'a')) {
                                 if (!l) break;
                                 l = dom_previous(l);
@@ -1740,7 +1740,7 @@ TE.ui = function(target, o) {
                             } else {
                                 l && l.focus();
                             }
-                        } else if (k('arrowup') && a) {
+                        } else if (k('up') && a) {
                             ui.exit();
                             a.focus();
                         }

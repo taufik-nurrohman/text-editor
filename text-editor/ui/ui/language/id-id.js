@@ -53,7 +53,9 @@ TE.each(function($) {
                 // `find` plugin
                 find: ['Cari dan Ganti'],
                 // `help` plugin
-                help: ['Bantuan']
+                help: ['Bantuan'],
+                // `symbol` plugin
+                symbol: ['Karakter Spesial']
             },
             modals: {
                 a: {

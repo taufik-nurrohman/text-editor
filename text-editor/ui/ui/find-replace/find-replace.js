@@ -1,6 +1,6 @@
 /*!
  * ===========================================================
- *  FIND AND REPLACE PLUGIN FOR USER INTERFACE MODULE 1.1.0
+ *  FIND AND REPLACE PLUGIN FOR USER INTERFACE MODULE 1.1.1
  * ===========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -113,7 +113,7 @@ TE.each(function($) {
     function do_find_more(e) {
         k = e.TE.key;
         if (k('alt')) return do_find_advance(), _events_x(e);
-        if (k(/^(arrowdown|enter)$/)) return do_find(), _events_x(e);
+        if (k(['down', 'enter'])) return do_find(), _events_x(e);
     }
 
     function do_find_enter() {
@@ -179,7 +179,7 @@ TE.each(function($) {
     _events_set("keydown", find, function(e) {
         k = e.TE.key;
         v = this.value;
-        if (e.TE.control('f') || k('backspace') && !v) return (v ? do_find_enter() : do_find_exit()), _events_x(e);
+        if (e.TE.control('f') || k('back') && !v) return (v ? do_find_enter() : do_find_exit()), _events_x(e);
         if (k('alt')) return do_find_advance(), _events_x(e);
         if (k('tab')) return !replace.value && (replace.value = find.value), replace.focus(), replace.select(), _events_x(e);
         if (k('enter') && v) return do_find(), _events_x(e);
@@ -189,7 +189,7 @@ TE.each(function($) {
         k = e.TE.key;
         v = this.value;
         if (e.TE.control('f')) return (v ? do_find_enter() : do_find_exit()), _events_x(e);
-        if (k('backspace') && !v) return find.focus(), _events_x(e);
+        if (k('back') && !v) return find.focus(), _events_x(e);
         if (k('alt')) return do_find_advance(), _events_x(e);
         if (k('tab')) return status.focus(), _events_x(e);
         if (k('enter')) return do_replace(e.TE.control()), _events_x(e);

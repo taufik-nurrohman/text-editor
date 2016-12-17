@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.9
+ *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.10
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -35,10 +35,10 @@ TE.each(function($) {
         _dom_previous = _dom.previous,
         _edge = _.edge,
         _el = _.el,
-        _event = _.event,
+        _events = _.events,
         _extend = _.extend,
         _format = _.format,
-        _hook = _.hook,
+        _hooks = _.hooks,
         _timer_set = _.timer.set,
         _trim = _.trim,
         _refresh = function() {
@@ -57,7 +57,7 @@ TE.each(function($) {
             if (j = _dom_get('[name=data]', $modal)[0]) {
                 j.value = data[i];
                 if (k = _dom_get('[name=y]', $modal)[0]) {
-                    _event.fire("click", k);
+                    _events.fire("click", k);
                 }
             }
         }
@@ -78,21 +78,21 @@ TE.each(function($) {
                 'tool-id': id
             }
         });
-        _event.set("keydown", h, function(e) {
+        _events.set("keydown", h, function(e) {
             j = this;
             k = e.TE.key;
             l = $.$();
-            if (k('arrowdown')) {
-                return $.select(l.end + (l.after[0] === '\n' ? 1 : 0)), _event.x(e);
+            if (k('down')) {
+                return $.select(l.end + (l.after[0] === '\n' ? 1 : 0)), _events.x(e);
             }
-            if (k(/^(arrowup|escape)$/)) return $.select(), _event.x(e);
-            if (k('arrowright') && (m = _dom_next(j))) {
+            if (k(['up', 'escape'])) return $.select(), _events.x(e);
+            if (k('right') && (m = _dom_next(j))) {
                 while (!_dom_is(m, 'a')) {
                     if (!m) break;
                     m = _dom_next(m);
                 }
                 m.focus();
-            } else if (k('arrowleft') && (m = _dom_previous(j))) {
+            } else if (k('left') && (m = _dom_previous(j))) {
                 while (!_dom_is(m, 'a')) {
                     if (!m) break;
                     m = _dom_previous(m);
@@ -100,7 +100,7 @@ TE.each(function($) {
                 m.focus();
             }
         });
-        _event.set("click", h, function(e) {
+        _events.set("click", h, function(e) {
             i = _dom_data_get(this, 'tool-id');
             tools[i].click(e, $, i);
             if (k = _dom_get('[name=data]', $modal)[0]) {
@@ -116,14 +116,14 @@ TE.each(function($) {
                         'class': c + '-input',
                         'spellcheck': 'false'
                     });
-                    _event.set("keydown", m, function(e) {
+                    _events.set("keydown", m, function(e) {
                         k = e.TE.key;
                         l = this.value;
-                        if (k('escape') || (k(/^(backspace|enter)$/) && !l)) {
-                            return ui.bubble.exit(1), _event.x(e);
+                        if (k('escape') || (k(['back', 'enter']) && !l)) {
+                            return ui.bubble.exit(1), _events.x(e);
                         }
                         if (k('enter')) {
-                            return do_modals(i, [l, "", ""], $), _event.x(e);
+                            return do_modals(i, [l, "", ""], $), _events.x(e);
                         }
                     });
                     _dom_append(bubble, m);
@@ -133,23 +133,23 @@ TE.each(function($) {
                     });
                 });
             }
-            return _refresh(), _event.x(e);
+            return _refresh(), _events.x(e);
         });
         _dom_append(bubble, h);
     }
 
-    _event.set("keydown", $target, function(e) {
+    _events.set("keydown", $target, function(e) {
         k = e.TE.key;
         l = !e.TE.shift() && _dom_get($bubble)[0];
         m = $.$();
-        if (l && k('arrowup')) {
-            return $.select(m.start - (m.before.slice(-1) === '\n' ? 1 : 0)), _event.x(e);
-        } else if (l && k('arrowdown')) {
-            return _dom_get('a', $bubble)[0].focus(), _event.x(e);
+        if (l && k('up')) {
+            return $.select(m.start - (m.before.slice(-1) === '\n' ? 1 : 0)), _events.x(e);
+        } else if (l && k('down')) {
+            return _dom_get('a', $bubble)[0].focus(), _events.x(e);
         }
     });
 
-    _event.set("copy cut keyup mouseup paste scroll", $target, function(e) {
+    _events.set("copy cut keyup mouseup paste scroll", $target, function(e) {
         k = $.$();
         block = $.get(0) && /(^|\n)$/.test(k.before) && /(\n|$)$/.test(k.after);
         if (k.length || block) {
@@ -177,6 +177,6 @@ TE.each(function($) {
         }
     });
 
-    _hook.set('enter.bubble', _refresh);
+    _hooks.set('enter.bubble', _refresh);
 
 });

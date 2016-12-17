@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  STRING CONVERTER PLUGIN FOR USER INTERFACE MODULE 1.1.0
+ *  STRING CONVERTER PLUGIN FOR USER INTERFACE MODULE 1.1.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
