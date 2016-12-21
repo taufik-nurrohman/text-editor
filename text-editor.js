@@ -69,7 +69,7 @@
     }
 
     function is_plain_object(x) {
-        return is_object(x) && !is_dom(x) && x.toString() === '[object Object]';
+        return is_object(x) && !is_dom(x) && x.toString() === '[object Object]' || is_object(x) && 'length' in x;
     }
 
     function is_array(x) {

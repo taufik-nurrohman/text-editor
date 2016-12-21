@@ -108,6 +108,7 @@
   outline:0;
 }
 .text-editor-i {
+  font:inherit;
   display:inline-block;
   vertical-align:middle;
   margin:0;

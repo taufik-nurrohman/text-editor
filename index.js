@@ -40,46 +40,53 @@
     }
     if (css) {
         (function() {
-            var s = doc.createElement('link'),
+            var s_0 = doc.createElement('link'),
+                s_1 = doc.createElement('link'),
                 select = doc.createElement('select'),
                 o = {
                     '..': 'Theme&hellip;',
-                    '.': 'None',
-                    '.white': 'White',
-                    '.black': 'Black',
-                    '.1960': '1960',
-                    '.fam-fam-fam': 'Fam Fam Fam'
+                    '. .i': 'None',
+                    '.white .i': 'White',
+                    '.black .i': 'Black',
+                    '.1960 .i': '1960',
+                    '.fam-fam-fam /ui.i.fam-fam-fam': 'Fam Fam Fam'
                 },
                 option, i, v;
             for (i in o) {
                 option = doc.createElement('option');
                 option.innerHTML = o[i];
-                i = i.slice(1);
                 option.value = i;
                 if (i === '.') {
                     option.disabled = true;
-                } else if (i === '1960') {
+                } else if (i === '.1960 .i') {
                     option.selected = true;
                 }
                 select.appendChild(option);
             }
             select.className = 'select';
             css.appendChild(select);
+            s_0.id = 'text-editor-ui-shell-0';
+            s_0.rel ='stylesheet';
+            s_1.id = 'text-editor-ui-shell-1';
+            s_1.rel ='stylesheet';
+            doc.head.appendChild(s_0);
+            doc.head.appendChild(s_1);
             function add_css(id) {
-                doc.documentElement.className = 'shell-' + id;
-                s.id = 'text-editor-shell';
-                s.rel ='stylesheet';
-                if (id) {
-                    s.href = select.parentNode.getAttribute('data-shell-path') + '/ui.' + id + '.min.css';
-                    doc.head.appendChild(s);
-                } else if (s.parentNode) {
-                    s.parentNode.removeChild(s);
+                id = id.split(' ');
+                doc.documentElement.className = 'shell-' + id[0].slice(1);
+                if (id[0] || id[1]) {
+                    v = select.parentNode.getAttribute('data-shell-path');
+                    s_0.href = v + '/ui' + id[0] + '.min.css';
+                    s_1.href = v + '/../ui' + id[1] + '.min.css';
+                } else {
+                    s_0.href = '#';
+                    s_1.href = '#';
                 }
             }
             function select_css() {
                 v = this.value;
                 add_css(v);
-            } add_css('1960');
+            } add_css('.1960 .i');
             select.onchange = select_css;
             select.onclick = function() {
                 ack = true;

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.9.1
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.10.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -104,7 +104,7 @@ TE.ui = function(target, o) {
             },
             classes: {
                 "": 'text-editor',
-                i: 'text-editor-i text-editor-i-%1 text-editor-i-%1--%2 fa fa-%2'
+                i: 'text-editor-i text-editor-i-%1 text-editor-i-%2'
             }
         }, o),
 
@@ -1118,12 +1118,15 @@ TE.ui = function(target, o) {
         }
         event_set(_KEYDOWN, _content, do_keys);
         event_set(_KEYUP + ' ' + _BLUR, _content, do_keys_reset);
+        n  = _prefix + '-is-can-resize';
         if (config.resize) {
             dom_set(_container, _sizer_s);
-            class_set(_container, _prefix + '-is-can-resize');
+            class_set(_container, n);
             event_set(_MOUSEDOWN, _sizer_s, do_resize_down);
             event_set(_MOUSEMOVE, doc, do_resize_move);
             event_set(_MOUSEUP, body, do_resize_up);
+        } else {
+            class_reset(_container, n);
         }
         do_update_tools();
         do_update_keys();
@@ -1918,7 +1921,7 @@ TE.ui = function(target, o) {
         j = "";
         k = is_set(tools[id]) ? 'update' : 'create';
         if (id !== '|') {
-            config.tools = str_split(config.tools).filter(function(v, i) {
+            config.tools = str_split(config.tools || "").filter(function(v, i) {
                 if (v === id) {
                     j = i;
                     return false;
@@ -1989,13 +1992,11 @@ TE.ui = function(target, o) {
     ui.tools = {
         '|': {}, // separator
         undo: {
-            i: 'undo',
             click: function(e, $) {
                 return $.undo(), false;
             }
         },
         redo: {
-            i: 'repeat',
             click: function(e, $) {
                 return $.redo(), false;
             }

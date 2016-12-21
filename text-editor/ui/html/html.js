@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.4.0
+ *  HTML TEXT EDITOR PLUGIN 1.5.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -227,7 +227,7 @@ TE.ui.HTML = function(target, o) {
 
     _extend(ui.tools, {
         clear: {
-            i: 'eraser',
+            i: 'remove-format',
             click: function(e, $) {
                 var s = $[0]().$(),
                     b = s.before,
@@ -265,7 +265,7 @@ TE.ui.HTML = function(target, o) {
             }
         },
         s: {
-            i: 'strikethrough',
+            i: 'strike',
             click: function(e, $) {
                 return auto_p_(e, $).i().format(_format(formats.s, $._.time())), false;
             }
@@ -357,7 +357,7 @@ TE.ui.HTML = function(target, o) {
             }
         },
         abbr: {
-            i: 'question',
+            i: 'abbreviation',
             click: function(e, $) {
                 var s = $.$(),
                     x = _trim(s.value),
@@ -437,14 +437,14 @@ TE.ui.HTML = function(target, o) {
             }
         },
         br: {
-            i: 'level-down',
+            i: 'break',
             click: function(e, $) {
                 dent = get_indent($.$().before);
                 return $.tidy('\n', "").insert(dent + unit[0] + formats.br + suffix + '\n', 0).scroll(1), false;
             }
         },
         'p,h1,h2,h3,h4,h5,h6': {
-            i: 'header',
+            i: 'headers',
             click: function(e, $) {
                 var s = $.$(),
                     H = [
@@ -481,7 +481,7 @@ TE.ui.HTML = function(target, o) {
             }
         },
         'blockquote,q': {
-            i: 'quote-right',
+            i: 'quote',
             click: function(e, $) {
                 var s = $.$(),
                     v = s.value,
@@ -561,7 +561,7 @@ TE.ui.HTML = function(target, o) {
             }
         },
         ul: {
-            i: 'list-ul',
+            i: 'list-bullet',
             click: function(e, $) {
                 var ol = formats.ol,
                     ul = formats.ul,
@@ -580,7 +580,7 @@ TE.ui.HTML = function(target, o) {
             }
         },
         ol: {
-            i: 'list-ol',
+            i: 'list-number',
             click: function(e, $) {
                 var ol = formats.ol,
                     ul = formats.ul,
@@ -664,7 +664,7 @@ TE.ui.HTML = function(target, o) {
             }, 0, 0, 'table>td'), false;
         },
         hr: {
-            i: 'ellipsis-h',
+            i: 'horizontal-rule',
             click: function(e, $) {
                 dent = get_indent($.$().before);
                 return $.tidy('\n\n', "").insert(dent + unit[0] + formats.hr + suffix + '\n\n', 0), false;

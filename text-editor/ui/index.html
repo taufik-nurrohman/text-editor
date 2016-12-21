@@ -9,6 +9,28 @@
     <link href="../../index.min.css" rel="stylesheet">
     <link href="ui.min.css" rel="stylesheet">
     <style>
+    @font-face {
+      font-family:'demo';
+      src:url('data:application/octet-stream;base64,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')format('woff');
+    }
+    .text-editor-i.text-editor-i-check:before,
+    .text-editor-i.text-editor-i-config:before,
+    .text-editor-i.text-editor-i-exclamation:before,
+    .text-editor-i.text-editor-i-info:before,
+    .text-editor-i.text-editor-i-minus:before,
+    .text-editor-i.text-editor-i-plus:before,
+    .text-editor-i.text-editor-i-question:before,
+    .text-editor-i.text-editor-i-times:before,
+    .text-editor-i.text-editor-i-color:before {font-family:'demo'}
+    .text-editor-i-info:before {content:'\0900'}
+    .text-editor-i-question:before {content:'\0901'}
+    .text-editor-i-minus:before {content:'\0902'}
+    .text-editor-i-times:before {content:'\0903'}
+    .text-editor-i-plus:before {content:'\0904'}
+    .text-editor-i-check:before {content:'\0905'}
+    .text-editor-i-exclamation:before {content:'\0906'}
+    .text-editor-i-color:before {content:'\0907'}
+    .text-editor-i-config:before {content:'\0908'}
     .menu-heading-1 span {
       font-size:170%;
       line-height:normal;
@@ -63,13 +85,14 @@
 
     <section>
       <h2 id="section:start">Start</h2>
-      <p>Include <a href="ui.min.css" target="_blank"><code>ui.min.css</code></a> in the head section, include <a href="../../text-editor.min.js" target="_blank"><code>text-editor.min.js</code></a> and <a href="ui.min.js" target="_blank"><code>ui.min.js</code></a> next to the text area:</p>
+      <p>Include <a href="ui.min.css" target="_blank"><code>ui.min.css</code></a> and <a href="ui.i.min.css" target="_blank"><code>ui.i.min.css</code></a> in the head section, include <a href="../../text-editor.min.js" target="_blank"><code>text-editor.min.js</code></a> and <a href="ui.min.js" target="_blank"><code>ui.min.js</code></a> next to the text area:</p>
       <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html dir="ltr"&gt;
   &lt;head&gt;
     &lt;meta charset="utf-8"&gt;
     &lt;title&gt;Test&lt;/title&gt;
     &lt;link href="text-editor/ui/ui.min.css" rel="stylesheet"&gt;
+    &lt;link href="text-editor/ui/ui.i.min.css" rel="stylesheet"&gt;
   &lt;/head&gt;
   &lt;body&gt;
     &lt;p&gt;&lt;textarea&gt;&lt;/textarea&gt;&lt;/p&gt;
@@ -154,10 +177,10 @@
       <p>Create an icon:</p>
       <pre><code>editor.ui.i(<var>id</var>, <var>alias</var>);</code></pre>
       <ul>
-        <li><var>id</var> &rarr; Semantic icon name.</li>
-        <li><var>alias</var> &rarr; Presentational icon name.</li>
+        <li><var>id</var> &rarr; Icon ID.</li>
+        <li><var>alias</var> &rarr; Semantic icon name.</li>
       </ul>
-      <pre><code>editor.ui.i('edit', 'pencil'); // return `&lt;i class="text-editor-i text-editor-i-edit text-editor-i-edit--pencil fa fa-pencil"&gt;&lt;/i&gt;</code></pre>
+      <pre><code>editor.ui.i('pencil', 'edit'); // return `&lt;i class="text-editor-i text-editor-i-pencil text-editor-i-edit"&gt;&lt;/i&gt;</code></pre>
       <h4 id="section:method-ui-tool">Tool <sup><a href="javascript:void(window.scroll(0,0),editor.ui.tool('emoticon',{i:'smile-o',title:'Emoticons',click:function(e,$){return $.insertBefore(' :) '),false}}));">test</a></sup></h4>
       <pre><code>editor.ui.tool(<var>id</var>, <var>data</var>, <var>index</var>);</code></pre>
       <ul>
@@ -857,8 +880,8 @@ TE._.events.set("click", <var>node</var>, do_click);</code></pre>
     </section>
 
     <footer>
-      <span class="left">&copy; 2016 &middot; Made with <i class="fa fa-fw fa-ambulance" onmouseover="this.className='fa fa-fw fa-heart';" ontouchstart="this.className='fa fa-fw fa-heart';"></i> by <a href="">Taufik Nurrohman</a></span>
-      <span class="right"><a href="https://github.com/tovic/text-editor"><i class="fa fa-github"></i> GitHub</a></span>
+      <span class="left">&copy; 2016 &middot; Made with <i class="icon icon-ambulance" onmouseover="this.className='icon icon-heart';" ontouchstart="this.className='icon icon-heart';"></i> by <a href="">Taufik Nurrohman</a></span>
+      <span class="right"><a href="https://github.com/tovic/text-editor"><i class="icon icon-github"></i> GitHub</a></span>
     </footer>
 
     <script src="../../text-editor.min.js"></script>
@@ -882,7 +905,7 @@ TE._.events.set("click", <var>node</var>, do_click);</code></pre>
             }
         },
         info: {
-            i: 'info-circle',
+            i: 'information',
             title: 'Modal Example',
             click: function(e, $) {
                 return $.ui.modal('foo', {
@@ -898,14 +921,14 @@ TE._.events.set("click", <var>node</var>, do_click);</code></pre>
             }
         },
         exclamation: {
-            i: 'exclamation-circle',
+            i: 'warning',
             title: 'Alert Modal Example',
             click: function(e, $) {
                 return $.ui.alert('Alert', 'Alert content.'), false;
             }
         },
         question: {
-            i: 'question-circle',
+            i: 'help',
             title: 'Confirm Modal Example',
             click: function(e, $) {
                 return $.ui.confirm(
@@ -921,7 +944,7 @@ TE._.events.set("click", <var>node</var>, do_click);</code></pre>
             }
         },
         plus: {
-            i: 'plus-circle',
+            i: 'add',
             title: 'Prompt Modal Example',
             click: function(e, $) {
                 return $.ui.prompt(
@@ -935,7 +958,6 @@ TE._.events.set("click", <var>node</var>, do_click);</code></pre>
             }
         },
         color: {
-            i: 'tint',
             title: 'Drop Example',
             click: function(e, $) {
                 return $.ui.drop('my-drop', function(drop) {
@@ -997,7 +1019,6 @@ TE._.events.set("click", <var>node</var>, do_click);</code></pre>
         },
         'Italic': 'i',
         'baz': {
-            i: 'cogs',
             text: ['config', 'Test Icon'],
             click: function() {}
         }
