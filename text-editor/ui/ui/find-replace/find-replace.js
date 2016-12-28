@@ -210,16 +210,18 @@
         _events_set("click", status, do_find_advance);
         _events_set("click", status_label, do_find_advance);
 
-        ui.tool('find', {
-            click: function(e, $) {
-                if (_dom_get(pane)[0]) {
-                    do_find_exit();
-                } else {
-                    do_find_enter();
+        if (config.tools) {
+            ui.tool('find', {
+                click: function(e, $) {
+                    if (_dom_get(pane)[0]) {
+                        do_find_exit();
+                    } else {
+                        do_find_enter();
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
+        }
 
         // press `control+f` for "find"
         ui.key('control+f', 'find');

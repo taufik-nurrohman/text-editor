@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BBCODE TEXT EDITOR PLUGIN 1.2.0
+ *  BBCODE TEXT EDITOR PLUGIN 1.2.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -153,10 +153,6 @@ TE.ui.BBCode = function(target, o) {
                 })[1](), false;
             }
         }
-    });
-
-    _extend(ui.keys, {
-        'control+shift+?': 0
     });
 
     // table caption is not supported in **BBCode** so we have to remove that "add caption" modal prompt here

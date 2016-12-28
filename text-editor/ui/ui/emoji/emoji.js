@@ -1425,50 +1425,54 @@
             }
         }
 
-        ui.tool(emoji, {
-            click: function(e, $) {
-                ui.drop.target = ui.tools[emoji].target;
-                return ui.drop(emoji + ' ' + emoji + uniq, function(drop) {
-                    o = $.$();
-                    p = config[emoji];
-                    q = _css(drop, ['background-color', 'color', 'padding-top']);
-                    r = _dom.children;
-                    _el(style, h + '{max-height:20em;overflow:auto}' + h + ' div{max-width:20em;margin:0 0 ' + q[2] + 'px;border-color:inherit;font-size:100%;overflow:hidden}' + h + ' div[title]:before{content:attr(title);display:block;padding:.5em;background:' + q[0] + ';border-bottom:1px solid;margin-bottom:' + q[2] + 'px;border-color:inherit}' + h + ' a{float:left;width:10%;height:1.8785714285714286em;line-height:1.8785714285714286em;text-align:center;background:rgba(0,0,0,.025);color:inherit;text-decoration:none;overflow:hidden;white-space:nowrap}' + h + ' a img{display:block;width:60%;height:60%;max-width:none;max-height:none;min-width:0;min-height:0;margin:20%;background:0 0;border:0;outline:0;box-shadow:none;border-radius:0}' + h + ':hover a:focus{background:;background:rgba(0,0,0,.025);color:inherit}' + h + ' a:focus,' + h + ' a:hover,' + h + ':hover a:hover{outline:0;background:' + q[1] + ';color:' + q[0] + '}');
-                    for (i in p) {
-                        if (!p[i] || !p[i][1] || !(k = p[i])[1].length) continue;
-                        l = _el('div', false, {
-                            'title': (k[0] || [])[0] || null
-                        });
-                        for (j in k[1]) {
-                            if (!(n = k[1][j])) continue;
-                            n = is_string(n) ? [n] : n;
-                            m = _el('a', n[0], {
-                                'href': 'javascript:;',
-                                'title': n[1] || null,
-                                'data': {
-                                    'text': n[2] || null
-                                }
-                            });
-                            _events.set("click", m, do_click);
-                            _events.set("keydown", m, do_key);
-                            _dom_append(l, m);
-                        }
-                        _dom_append(drop, l);
-                    }
-                    _timer_set(function() {
-                        r(r(drop)[0])[0].focus();
-                    }, 1);
-                }), false;
-            }
-        });
+        if (config.tools) {
 
-        _events.set("keydown", ui.tools[emoji].target, function(e) {
-            if (e.TE.key('down')) {
-                return _timer_set(function() {
-                    _dom.get('a', ui.el.drop)[0].focus();
-                }), _events.fire("click", this, [e]), _events.x(e);
-            }
-        });
+            ui.tool(emoji, {
+                click: function(e, $) {
+                    ui.drop.target = ui.tools[emoji].target;
+                    return ui.drop(emoji + ' ' + emoji + uniq, function(drop) {
+                        o = $.$();
+                        p = config[emoji];
+                        q = _css(drop, ['background-color', 'color', 'padding-top']);
+                        r = _dom.children;
+                        _el(style, h + '{max-height:20em;overflow:auto}' + h + ' div{max-width:20em;margin:0 0 ' + q[2] + 'px;border-color:inherit;font-size:100%;overflow:hidden}' + h + ' div[title]:before{content:attr(title);display:block;padding:.5em;background:' + q[0] + ';border-bottom:1px solid;margin-bottom:' + q[2] + 'px;border-color:inherit}' + h + ' a{float:left;width:10%;height:1.8785714285714286em;line-height:1.8785714285714286em;text-align:center;background:rgba(0,0,0,.025);color:inherit;text-decoration:none;overflow:hidden;white-space:nowrap}' + h + ' a img{display:block;width:60%;height:60%;max-width:none;max-height:none;min-width:0;min-height:0;margin:20%;background:0 0;border:0;outline:0;box-shadow:none;border-radius:0}' + h + ':hover a:focus{background:;background:rgba(0,0,0,.025);color:inherit}' + h + ' a:focus,' + h + ' a:hover,' + h + ':hover a:hover{outline:0;background:' + q[1] + ';color:' + q[0] + '}');
+                        for (i in p) {
+                            if (!p[i] || !p[i][1] || !(k = p[i])[1].length) continue;
+                            l = _el('div', false, {
+                                'title': (k[0] || [])[0] || null
+                            });
+                            for (j in k[1]) {
+                                if (!(n = k[1][j])) continue;
+                                n = is_string(n) ? [n] : n;
+                                m = _el('a', n[0], {
+                                    'href': 'javascript:;',
+                                    'title': n[1] || null,
+                                    'data': {
+                                        'text': n[2] || null
+                                    }
+                                });
+                                _events.set("click", m, do_click);
+                                _events.set("keydown", m, do_key);
+                                _dom_append(l, m);
+                            }
+                            _dom_append(drop, l);
+                        }
+                        _timer_set(function() {
+                            r(r(drop)[0])[0].focus();
+                        }, 1);
+                    }), false;
+                }
+            });
+
+            _events.set("keydown", ui.tools[emoji].target, function(e) {
+                if (e.TE.key('down')) {
+                    return _timer_set(function() {
+                        _dom.get('a', ui.el.drop)[0].focus();
+                    }), _events.fire("click", this, [e]), _events.x(e);
+                }
+            });
+
+        }
 
         // press `control+shift+e` for "emoji"
         ui.key('control+shift+e', emoji);

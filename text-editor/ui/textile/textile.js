@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXTILE TEXT EDITOR PLUGIN 1.4.0
+ *  TEXTILE TEXT EDITOR PLUGIN 1.4.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -463,7 +463,6 @@ TE.ui.Textile = function(target, o) {
             }
         },
         note: {
-            i: 'thumb-tack',
             click: function(e, $) {
                 var s = $.$(),
                     b = s.before,
@@ -541,8 +540,8 @@ TE.ui.Textile = function(target, o) {
             }
             return ui.tools.indent.click(e, $);
         },
-        'control+arrowdown': 'note',
-        'control+arrowup': 'note'
+        'control+down': 'note',
+        'control+up': 'note'
     });
 
     return $.update({}, 0);

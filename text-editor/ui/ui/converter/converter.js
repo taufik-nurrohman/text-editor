@@ -166,7 +166,7 @@
             _extend(menus, a);
         }
 
-        ui.menu(converter, [converter], menus);
+        config.tools && ui.menu(converter, [converter], menus);
 
         // add `$.ui.tools.converter.check()` method
         ui.tools[converter].check = check;

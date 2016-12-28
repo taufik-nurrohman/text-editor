@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  HTML TEXT EDITOR PLUGIN 1.5.0
+ *  HTML TEXT EDITOR PLUGIN 1.5.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -681,8 +681,8 @@ TE.ui.HTML = function(target, o) {
             'control+u': 'u',
             'control+l': 'a',
             'control+g': 'img',
-            'control+arrowdown': 'sub',
-            'control+arrowup': 'sup',
+            'control+down': 'sub',
+            'control+up': 'sup',
             'control+shift+?': 'abbr',
             'control+enter': 'p',
             'shift+enter': 'br',
@@ -722,7 +722,7 @@ TE.ui.HTML = function(target, o) {
                 }
                 return ui.tools.indent.click(e, $);
             },
-            'backspace': function(e, $) {
+            'back': function(e, $) {
                 var s = $.$(),
                     v = s.value, tag,
                     before = s.before,
