@@ -1,11 +1,14 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR 2.8.4
+ *  TEXT EDITOR 2.8.5
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
  * ----------------------------------------------------------
  */
+
+/*! <https://github.com/tovic/key> */
+!function(e){function t(e){return e.toLowerCase()}function a(e){function a(n,r){if("string"==typeof r&&(r=e[r+"Key"]),!n||n===!0)return"boolean"==typeof r?r:f;if(n instanceof RegExp)return r&&n.test(f);if("object"==typeof n){if(r)for(u=0,i=n.length;i>u;++u)if(c=t(n[u]),(o[c]||c)===f)return!0;return!1}return n=t(n),r&&(o[n]||n)===f}var r=n.keys,o=n.keys_a,f=e.key?t(e.key):r[e.which||e.keyCode];return"object"==typeof f&&(f=e.shiftKey?f[1]||f[0]:f[0]),f=t(f),{key:function(e){return a(e,1)},control:function(e){return a(e,"ctrl")},shift:function(e){return a(e,"shift")},option:function(e){return a(e,"alt")},meta:function(e){return a(e,"meta")}}}var u,i,c,n=function(){},r={3:"cancel",6:"help",8:"backspace",9:"tab",12:"clear",13:"enter",16:"shift",17:"control",18:"alt",19:"pause",20:"capslock",27:"escape",28:"convert",29:"nonconvert",30:"accept",31:"modechange",33:"pageup",34:"pagedown",35:"end",36:"home",37:"arrowleft",38:"arrowup",39:"arrowright",40:"arrowdown",41:"select",42:"print",43:"execute",44:"printscreen",45:"insert",46:"delete",91:"meta",93:"contextmenu",144:"numlock",145:"scrolllock",181:"volumemute",182:"volumedown",183:"volumeup",224:"meta",225:"altgraph",246:"attn",247:"crsel",248:"exsel",249:"eraseeof",250:"play",251:"zoomout",48:["0",")"],49:["1","!"],50:["2","@"],51:["3","#"],52:["4","$"],53:["5","%"],54:["6","^"],55:["7","&"],56:["8","*"],57:["9","("],32:" ",59:[";",":"],61:["=","+"],173:["-","_"],188:[",","<"],190:[".",">"],191:["/","?"],192:["`","~"],219:["[","{"],220:["\\","|"],221:["]","}"],222:["'",'"']},o={alternate:r[18],option:r[18],ctrl:r[17],cmd:r[17],command:r[17],os:r[224],context:r[93],menu:r[93],"context-menu":r[93],"return":r[13],ins:r[45],del:r[46],esc:r[27],left:r[37],right:r[39],up:r[38],down:r[40],"arrow-left":r[37],"arrow-right":r[39],"arrow-up":r[38],"arrow-down":r[40],back:r[8],"back-space":r[8],space:r[32],plus:r[61][1],minus:r[173][0],"caps-lock":r[20],"non-convert":r[29],"mode-change":r[31],"page-up":r[33],"page-down":r[34],"print-screen":r[44],"num-lock":r[144],"numeric-lock":r[144],"scroll-lock":r[145],"volume-mute":r[181],"volume-down":r[182],"volume-up":r[183],altgr:r[225],"alt-gr":r[225],"alt-graph":r[225],"alternate-graph":r[225]};for(u=1;25>u;++u)r[111+u]="f"+u;for(u=65;91>u;++u)r[u]=t(String.fromCharCode(u));n.id="K",n.keys=r,n.keys_a=o,n.set=function(e,t){return e?a(e):(Object.defineProperty(KeyboardEvent.prototype,t||n.id,{configurable:!0,get:function(){return a(this)}}),!0)},n.reset=function(){},n.version="1.0.0",e.K=n}(window);
 
 (function(win, doc) {
 
@@ -208,198 +211,8 @@
 
     (function($) {
 
-        // key maps for the deprecated `KeyboardEvent.keyCode`
-        var keys = {
-            // control
-            3: 'cancel',
-            6: 'help',
-            8: 'backspace',
-            9: 'tab',
-            12: 'clear',
-            13: 'enter',
-            16: 'shift',
-            17: 'control',
-            18: 'alt',
-            19: 'pause',
-            20: 'capslock', // not working on `keypress`
-            27: 'escape',
-            28: 'convert',
-            29: 'nonconvert',
-            30: 'accept',
-            31: 'modechange',
-            33: 'pageup',
-            34: 'pagedown',
-            35: 'end',
-            36: 'home',
-            37: 'arrowleft',
-            38: 'arrowup',
-            39: 'arrowright',
-            40: 'arrowdown',
-            41: 'select',
-            42: 'print',
-            43: 'execute',
-            44: 'printscreen', // works only on `keyup` :(
-            45: 'insert',
-            46: 'delete',
-            91: 'meta', // <https://bugzilla.mozilla.org/show_bug.cgi?id=1232918>
-            93: 'contextmenu',
-            144: 'numlock',
-            145: 'scrolllock',
-            181: 'volumemute',
-            182: 'volumedown',
-            183: 'volumeup',
-            224: 'meta',
-            225: 'altgraph',
-            246: 'attn',
-            247: 'crsel',
-            248: 'exsel',
-            249: 'eraseeof',
-            250: 'play',
-            251: 'zoomout',
-            // num
-            48: ['0', ')'],
-            49: ['1', '!'],
-            50: ['2', '@'],
-            51: ['3', '#'],
-            52: ['4', '$'],
-            53: ['5', '%'],
-            54: ['6', '^'],
-            55: ['7', '&'],
-            56: ['8', '*'],
-            57: ['9', '('],
-            // symbol
-            32: ' ',
-            59: [';', ':'],
-            61: ['=', '+'],
-            173: ['-', '_'],
-            188: [',', '<'],
-            190: ['.', '>'],
-            191: ['/', '?'],
-            192: ['`', '~'],
-            219: ['[', '{'],
-            220: ['\\', '|'],
-            221: [']', '}'],
-            222: ['\'', '"']
-        },
-
-        // key alias(es)
-        keys_alias = {
-            'alternate': keys[18],
-            'option': keys[18],
-            'ctrl': keys[17],
-            'cmd': keys[17],
-            'command': keys[17],
-            'os': keys[224], // <https://bugzilla.mozilla.org/show_bug.cgi?id=1232918>
-            'context': keys[93],
-            'menu': keys[93],
-            'context-menu': keys[93],
-            'return': keys[13],
-            'ins': keys[45],
-            'del': keys[46],
-            'esc': keys[27],
-            'left': keys[37],
-            'right': keys[39],
-            'up': keys[38],
-            'down': keys[40],
-            'arrow-left': keys[37],
-            'arrow-right': keys[39],
-            'arrow-up': keys[38],
-            'arrow-down': keys[40],
-            'back': keys[8],
-            'back-space': keys[8],
-            'space': keys[32],
-            'plus': keys[61][1],
-            'minus': keys[173][0],
-            'caps-lock': keys[20],
-            'non-convert': keys[29],
-            'mode-change': keys[31],
-            'page-up': keys[33],
-            'page-down': keys[34],
-            'print-screen': keys[44],
-            'num-lock': keys[144],
-            'numeric-lock': keys[144],
-            'scroll-lock': keys[145],
-            'volume-mute': keys[181],
-            'volume-down': keys[182],
-            'volume-up': keys[183],
-            'altgr': keys[225],
-            'alt-gr': keys[225],
-            'alt-graph': keys[225]
-        }, i, j;
-
-        // function
-        for (i = 1; i < 25; ++i) {
-            keys[111 + i] = 'f' + i;
-        }
-
-        // alphabet
-        for (i = 65; i < 91; ++i) {
-            keys[i] = to_lower_case(String.fromCharCode(i));
-        }
-
-        // register key(s)
-        $.keys = keys;
-        $.keys_alias = keys_alias;
-
-        // add `KeyboardEvent.TE` property
-        Object.defineProperty(KeyboardEvent.prototype, 'TE', {
-            configurable: true,
-            get: function() {
-                // custom `KeyboardEvent.key` for internal use
-                var t = this,
-                    keys = $.keys, // refresh ...
-                    keys_alias = $.keys_alias, // refresh ...
-                    k = t.key ? to_lower_case(t.key) : keys[t.which || t.keyCode];
-                if (is_object(k)) {
-                    k = t.shiftKey ? (k[1] || k[0]) : k[0];
-                }
-                k = to_lower_case(k);
-                function ret(x, y) {
-                    if (is_string(y)) {
-                        y = t[y + 'Key'];
-                    }
-                    if (!x || x === true) {
-                        if (is_boolean(y)) {
-                            return y;
-                        }
-                        return k;
-                    }
-                    if (is_pattern(x)) {
-                        return y && x.test(k);
-                    }
-                    if (is_object(x)) {
-                        if (y) {
-                            for (i = 0, j = count(x); i < j; ++i) {
-                                l = to_lower_case(x[i]);
-                                if ((keys_alias[l] || l) === k) return true;
-                            }
-                        }
-                        return false;
-                    }
-                    return x = to_lower_case(x), y && (keys_alias[x] || x) === k;
-                }
-                return {
-                    key: function(x) {
-                        return ret(x, 1);
-                    },
-                    control: function(x) {
-                        return ret(x, 'ctrl');
-                    },
-                    shift: function(x) {
-                        return ret(x, 'shift');
-                    },
-                    option: function(x) {
-                        return ret(x, 'alt');
-                    },
-                    meta: function(x) {
-                        return ret(x, 'meta');
-                    }
-                };
-            }
-        });
-
         // plugin version
-        $.version = '2.8.4';
+        $.version = '2.8.5';
 
         // collect all instance(s)
         $[instance] = {};
@@ -466,6 +279,13 @@
         // current script path
         s = doc.currentScript;
         $.path = ((s && s.src) || win.location.href).split('/').slice(0, -1).join('/');
+
+        // key(s)
+        TE.keys = K.keys;
+        TE.keys_a = K.keys_a;
+        K.id = 'TE';
+
+        K.set();
 
     })(win.TE = function(target) {
 

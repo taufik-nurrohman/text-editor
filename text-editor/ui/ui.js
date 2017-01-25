@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.10.0
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.10.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -909,7 +909,7 @@ TE.ui = function(target, o) {
             a = after[0],
             length = s.length,
             keys = ui.keys,
-            keys_a = TE.keys_alias,
+            keys_a = TE.keys_a,
             keys_controls = {
                 'control': 0,
                 'shift': 0,
