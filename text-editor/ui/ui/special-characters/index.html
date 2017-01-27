@@ -31,7 +31,7 @@ var editor = TE.ui(document.querySelector('textarea'), {
     symbol: true
 });
 &lt;/script&gt;
-&lt;script src="../text-editor/ui/ui/emoji/emoji.min.js"&gt;&lt;/script&gt;</code></pre>
+&lt;script src="../text-editor/ui/ui/special-characters/specal-characters.min.js"&gt;&lt;/script&gt;</code></pre>
       <h2 id="section:configure">Configure</h2>
       <h3>Symbol</h3>
       <p>Default symbol data are stored in <code>editor.config.symbol</code>:</p>
@@ -65,7 +65,7 @@ var editor = TE.ui(document.querySelector('textarea'), {
     [ &hellip; ]
 ];</code></pre>
       <p>Each category title consists of a title and its icon (optional):</p>
-      <pre><code>editor.config.symbol[1][0] = ['All SYmbols', '&#10070;'];</code></pre>
+      <pre><code>editor.config.symbol[1][0] = ['All Symbols', '&#10070;'];</code></pre>
       <p>Each category data consists of an icon, title and its custom string to insert (optional). By default, it will insert the first array but if the third array is defined, then it will insert the third array item:</p>
       <pre><code>editor.config.symbol[1][1] = [
     ['&amp;quot;', 'QUOTATION MARK'],
