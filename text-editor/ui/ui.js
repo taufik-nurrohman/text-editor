@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.10.1
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.10.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -1124,7 +1124,7 @@ TE.ui = function(target, o) {
             class_set(_container, n);
             event_set(_MOUSEDOWN, _sizer_s, do_resize_down);
             event_set(_MOUSEMOVE, doc, do_resize_move);
-            event_set(_MOUSEUP, body, do_resize_up);
+            event_set(_MOUSEUP, doc, do_resize_up);
         } else {
             class_reset(_container, n);
         }
