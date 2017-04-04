@@ -1193,21 +1193,6 @@ TE.ui = function(target, o) {
         return hook !== 0 ? hook_fire('freeze', [$]) : $;
     };
 
-    // plugin helper
-    $.plugs = {};
-    $.plug = function(path, attr, node) {
-        s = /\.css$/i.test(path);
-        t = el(s ? 'link' : 'script', false, attr);
-        if (s) {
-            t.href = path;
-            t.rel = 'stylesheet';
-        } else {
-            t.src = path;
-        }
-        $.plugs[path] = t;
-        return dom_set(node || head, t), $;
-    };
-
     ui.exit = function(select, k, hook) {
         f = {
             panel: function() {
@@ -2152,4 +2137,20 @@ TE.ui = function(target, o) {
 
     return $.create();
 
+};
+
+// plugin helper
+TE.plugs = {};
+TE.plug = function(path, attr, node) {
+    var doc = document,
+        is_css = /\.css$/i.test(path),
+        el = doc.createElement(is_css ? 'link' : 'script');
+    if (is_css) {
+        el.href = path;
+        el.rel = 'stylesheet';
+    } else {
+        el.src = path;
+    }
+    TE.plugs[path] = el;
+    return (node || doc.head).appendChild(el), TE;
 };

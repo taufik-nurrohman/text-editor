@@ -31,7 +31,7 @@ var editor = TE.ui(document.querySelector('textarea'), {
     auto_grow: true,
     resize: false // optional to disable the text area resize
 });
-editor.plug('../text-editor/ui/ui/grow/grow.min.js');
+TE.plug('../text-editor/ui/ui/grow/grow.min.js');
 &lt;/script&gt;</code></pre>
     </section>
 
@@ -48,7 +48,7 @@ editor.plug('../text-editor/ui/ui/grow/grow.min.js');
     var editor = TE.ui.HTML(document.querySelector('#editor'), {
         auto_grow: true
     });
-    editor.plug('grow.min.js');
+    TE.plug('grow.min.js');
 
     </script>
 

@@ -30,7 +30,7 @@
 var editor = TE.ui(document.querySelector('textarea'), {
     symbol: true
 });
-editor.plug('../text-editor/ui/ui/special-characters/specal-characters.min.js');
+TE.plug('../text-editor/ui/ui/special-characters/specal-characters.min.js');
 &lt;/script&gt;</code></pre>
       <h2 id="section:configure">Configure</h2>
       <h3>Symbol</h3>
@@ -117,7 +117,7 @@ editor.config.symbol[1][1][0] = ['&lt;img src="../img/snow.png"&gt;', 'SNOW', '*
     var editor = TE.ui.HTML(document.querySelector('#editor'), {
         symbol: true
     });
-    editor.plug('special-characters.min.js');
+    TE.plug('special-characters.min.js');
 
     </script>
 

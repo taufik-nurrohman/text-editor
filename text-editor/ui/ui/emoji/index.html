@@ -39,11 +39,11 @@
 var editor = TE.ui(document.querySelector('textarea'), {
     emoji: true
 });
-editor.plug('../text-editor/ui/ui/emoji/emoji.min.js');
+TE.plug('../text-editor/ui/ui/emoji/emoji.min.js');
 &lt;/script&gt;</code></pre>
       <p><em>Emoji</em> aliases based on <a href="http://emoji-cheat-sheet.com" rel="nofollow" target="_blank">http://emoji-cheat-sheet.com</a> is available in <a href="emoji.alias.min.js" target="_blank"><code>emoji.alias.min.js</code></a>. Just include the script right after the <a href="emoji.min.js" target="_blank"><code>emoji.min.js</code></a> script. This way, you can insert <code>:grinning:</code> instead of 😀:</p>
-      <pre><code>editor.plug('../text-editor/ui/ui/emoji/emoji.min.js');
-editor.plug('../text-editor/ui/ui/emoji/emoji.alias.min.js');</code></pre>
+      <pre><code>TE.plug('../text-editor/ui/ui/emoji/emoji.min.js');
+TE.plug('../text-editor/ui/ui/emoji/emoji.alias.min.js');</code></pre>
       <h2 id="section:configure">Configure</h2>
       <h3>Emoji</h3>
       <p>Default <em>emoji</em> data are stored in <code>editor.config.emoji</code>:</p>
@@ -179,7 +179,7 @@ editor.config.emoji[1][1][0] = ['&lt;img src="../img/smile.png"&gt;', 'SMILING F
     var editor = TE.ui.HTML(document.querySelector('#editor'), {
         emoji: true
     });
-    editor.plug('emoji.min.js');
+    TE.plug('emoji.min.js');
 
     </script>
 
