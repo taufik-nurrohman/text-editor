@@ -39,8 +39,8 @@ Other types of search engines do not store an index. Crawler, or spider type sea
 &lt;script src="../text-editor/ui/ui.min.js"&gt;&lt;/script&gt;
 &lt;script&gt;
 var editor = TE.ui(document.querySelector('textarea'));
-&lt;/script&gt;
-&lt;script src="../text-editor/ui/ui/find-replace/find-replace.min.js"&gt;&lt;/script&gt;</code></pre>
+editor.plug('../text-editor/ui/ui/find-replace/find-replace.min.js');
+&lt;/script&gt;</code></pre>
       <h2 id="section:hint">Keyboard Hints</h2>
       <ul>
         <li>Press <kbd>&#8984;+F</kbd> to <strong>Find and Replace</strong>.</li>
@@ -69,9 +69,9 @@ var editor = TE.ui(document.querySelector('textarea'));
     <script>
 
     var editor = TE.ui.Markdown(document.querySelector('#editor'), {extra: true});
+    editor.plug('find-replace.min.js');
 
     </script>
-    <script src="find-replace.min.js"></script>
 
     <script src="../../../../index.min.js"></script>
 

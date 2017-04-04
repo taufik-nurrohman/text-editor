@@ -30,8 +30,8 @@
 var editor = TE.ui(document.querySelector('textarea'), {
     auto_close_html: true
 });
-&lt;/script&gt;
-&lt;script src="../text-editor/ui/ui/auto-complete-html/auto-complete-html.min.js"&gt;&lt;/script&gt;</code></pre>
+editor.plug('../text-editor/ui/ui/auto-complete-html/auto-complete-html.min.js');
+&lt;/script&gt;</code></pre>
       <h2 id="section:hint">Keyboard Hints</h2>
       <p>Press <kbd>&#9251;</kbd> key after typing the left characters to produce the right characters:</p>
       <ul>
@@ -70,9 +70,9 @@ var editor = TE.ui(document.querySelector('textarea'), {
     var editor = TE.ui.HTML(document.querySelector('#editor'), {
         auto_close_html: true
     });
+    editor.plug('auto-complete-html.min.js');
 
     </script>
-    <script src="auto-complete-html.min.js"></script>
 
     <script src="../../../../index.min.js"></script>
 

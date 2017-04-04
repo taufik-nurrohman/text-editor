@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.10.2
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.2.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -1191,6 +1191,21 @@ TE.ui = function(target, o) {
         class_reset(_container, _prefix + '-is-can-update');
         class_set(_container, _prefix + '-is-can-copy');
         return hook !== 0 ? hook_fire('freeze', [$]) : $;
+    };
+
+    // plugin helper
+    $.plugs = {};
+    $.plug = function(path, attr, node) {
+        s = /\.css$/i.test(path);
+        t = el(s ? 'link' : 'script', false, attr);
+        if (s) {
+            t.href = path;
+            t.rel = 'stylesheet';
+        } else {
+            t.src = path;
+        }
+        $.plugs[path] = t;
+        return dom_set(node || head, t), $;
     };
 
     ui.exit = function(select, k, hook) {

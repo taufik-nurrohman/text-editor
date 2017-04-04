@@ -30,8 +30,8 @@
 var editor = TE.ui(document.querySelector('textarea'), {
     tools_alt: true
 });
-&lt;/script&gt;
-&lt;script src="../text-editor/ui/ui/bubble-tools/bubble-tools.min.js"&gt;&lt;/script&gt;</code></pre>
+editor.plug('../text-editor/ui/ui/bubble-tools/bubble-tools.min.js');
+&lt;/script&gt;</code></pre>
       <h2 id="section:configure">Configure</h2>
       <h3>Custom Tools</h3>
       <pre><code>editor.update({
@@ -58,9 +58,9 @@ var editor = TE.ui(document.querySelector('textarea'), {
     var editor = TE.ui.HTML(document.querySelector('#editor'), {
         tools_alt: true
     });
+    editor.plug('bubble-tools.min.js');
 
     </script>
-    <script src="bubble-tools.min.js"></script>
 
     <script src="../../../../index.min.js"></script>
 

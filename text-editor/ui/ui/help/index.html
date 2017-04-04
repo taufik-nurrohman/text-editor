@@ -28,8 +28,8 @@
 &lt;script src="../text-editor/ui/ui.min.js"&gt;&lt;/script&gt;
 &lt;script&gt;
 var editor = TE.ui(document.querySelector('textarea'));
-&lt;/script&gt;
-&lt;script src="../text-editor/ui/ui/help/help.min.js"&gt;&lt;/script&gt;</code></pre>
+editor.plug('../text-editor/ui/ui/help/help.min.js');
+&lt;/script&gt;</code></pre>
       <h2 id="section:configure">Configure</h2>
       <h3>Custom Help Content</h3>
       <p>Set custom help content by configuring the <code>help</code> item:</p>
@@ -55,9 +55,9 @@ var editor = TE.ui(document.querySelector('textarea'));
     <script>
 
     var editor = TE.ui.HTML(document.querySelector('#editor'));
+    editor.plug('help.min.js');
 
     </script>
-    <script src="help.min.js"></script>
 
     <script src="../../../../index.min.js"></script>
 

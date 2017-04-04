@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BBCODE TEXT EDITOR PLUGIN 1.2.1
+ *  BBCODE TEXT EDITOR PLUGIN 1.2.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -23,6 +23,7 @@ TE.ui.BBCode = function(target, o) {
                     ['\u005B', '\u005D']
                 ]
             ],
+            suffix: '\u005D',
             formats: {
                 b: 'b',
                 i: 'i',

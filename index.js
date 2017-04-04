@@ -56,7 +56,7 @@
                 option = doc.createElement('option');
                 option.innerHTML = o[i];
                 option.value = i;
-                if (i === '.') {
+                if (i === '..') {
                     option.disabled = true;
                 } else if (i === '.1960 .i') {
                     option.selected = true;

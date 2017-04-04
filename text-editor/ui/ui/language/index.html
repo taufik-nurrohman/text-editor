@@ -28,8 +28,8 @@
 &lt;script src="../text-editor/ui/ui.min.js"&gt;&lt;/script&gt;
 &lt;script&gt;
 var editor = TE.ui(document.querySelector('textarea'));
-&lt;/script&gt;
-&lt;script src="../text-editor/ui/ui/language/id-id.min.js"&gt;&lt;/script&gt;</code></pre>
+editor.plug('../text-editor/ui/ui/language/id-id.min.js');
+&lt;/script&gt;</code></pre>
     </section>
 
     <footer>
@@ -43,9 +43,9 @@ var editor = TE.ui(document.querySelector('textarea'));
     <script>
 
     var editor = TE.ui.HTML(document.querySelector('#editor'));
+    editor.plug('id-id.min.js');
 
     </script>
-    <script src="id-id.min.js"></script>
 
     <script src="../../../../index.min.js"></script>
 

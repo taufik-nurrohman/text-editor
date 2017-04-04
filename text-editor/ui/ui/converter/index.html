@@ -30,8 +30,8 @@
 var editor = TE.ui(document.querySelector('textarea'), {
     converters: true
 });
-&lt;/script&gt;
-&lt;script src="../text-editor/ui/ui/converter/converter.min.js"&gt;&lt;/script&gt;</code></pre>
+editor.plug('../text-editor/ui/ui/converter/converter.min.js');
+&lt;/script&gt;</code></pre>
       <h2 id="section:configure">Configure</h2>
       <h3>Custom Converters</h3>
       <pre><code>editor.update({
@@ -85,9 +85,9 @@ var editor = TE.ui(document.querySelector('textarea'), {
             }
         }
     });
+    editor.plug('converter.min.js');
 
     </script>
-    <script src="converter.min.js"></script>
 
     <script src="../../../../index.min.js"></script>
 

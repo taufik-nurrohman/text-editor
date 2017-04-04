@@ -28,8 +28,8 @@
 &lt;script src="../text-editor/ui/ui.min.js"&gt;&lt;/script&gt;
 &lt;script&gt;
 var editor = TE.ui(document.querySelector('textarea'));
-&lt;/script&gt;
-&lt;script src="../text-editor/ui/ui/expand/expand.min.js"&gt;&lt;/script&gt;</code></pre>
+editor.plug('../text-editor/ui/ui/expand/expand.min.js');
+&lt;/script&gt;</code></pre>
     </section>
 
     <footer>
@@ -46,9 +46,10 @@ var editor = TE.ui(document.querySelector('textarea'));
         word_counter: true
     });
 
+    editor.plug('expand.min.js');
+    editor.plug('../word-counter/word-counter.min.js');
+
     </script>
-    <script src="expand.min.js"></script>
-    <script src="../word-counter/word-counter.min.js"></script>
 
     <script src="../../../../index.min.js"></script>
 
