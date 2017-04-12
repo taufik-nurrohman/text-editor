@@ -7,7 +7,7 @@
     <link href="../../../../favicon.ico" rel="shortcut icon">
 
     <link href="../../../../index.min.css" rel="stylesheet">
-    <link href="../../ui.min.css" rel="stylesheet">
+    <link href="../../../ui.min.css" rel="stylesheet">
 
   </head>
   <body>
@@ -17,7 +17,7 @@
       <p>Auto&ndash;close HTML tags and auto&ndash;add HTML attributes.</p>
       <section>
         <p><textarea class="textarea no-animation" id="editor">&lt;div</textarea></p>
-        <p id="text-editor-shell-selector" data-shell-path="../../ui"></p>
+        <p id="text-editor-shell-selector" data-shell-path="../.."></p>
       </section>
     </header>
 
@@ -25,12 +25,12 @@
       <h2 id="section:start">Start</h2>
       <p>Include the script just after the plugin instances, then set a new configuration data called <code>auto_close_html</code> as <code>true</code>:</p>
       <pre><code>&lt;script src="../text-editor.min.js"&gt;&lt;/script&gt;
-&lt;script src="../text-editor/ui/ui.min.js"&gt;&lt;/script&gt;
+&lt;script src="../text-editor/ui.min.js"&gt;&lt;/script&gt;
 &lt;script&gt;
 var editor = TE.ui(document.querySelector('textarea'), {
     auto_close_html: true
 });
-TE.plug('../text-editor/ui/ui/auto-complete-html/auto-complete-html.min.js');
+TE.plug('../text-editor/ui/ui/auto-complete-h-t-m-l.min.js');
 &lt;/script&gt;</code></pre>
       <h2 id="section:hint">Keyboard Hints</h2>
       <p>Press <kbd>&#9251;</kbd> key after typing the left characters to produce the right characters:</p>
@@ -63,14 +63,14 @@ TE.plug('../text-editor/ui/ui/auto-complete-html/auto-complete-html.min.js');
     </footer>
 
     <script src="../../../../text-editor.min.js"></script>
-    <script src="../../ui.min.js"></script>
-    <script src="../../html/html.min.js"></script>
+    <script src="../../../ui.min.js"></script>
+    <script src="../../h-t-m-l.min.js"></script>
     <script>
 
     var editor = TE.ui.HTML(document.querySelector('#editor'), {
         auto_close_html: true
     });
-    TE.plug('auto-complete-html.min.js');
+    TE.plug('../auto-complete-h-t-m-l.min.js');
 
     </script>
 

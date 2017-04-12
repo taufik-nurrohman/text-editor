@@ -1,6 +1,6 @@
 /*!
  * ===========================================================
- *  FIND AND REPLACE PLUGIN FOR USER INTERFACE MODULE 1.3.0
+ *  FIND AND REPLACE PLUGIN FOR USER INTERFACE MODULE 1.3.1
  * ===========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -208,7 +208,6 @@
         });
 
         _events_set("click", status, do_find_advance);
-        _events_set("click", status_label, do_find_advance);
 
         if (config.tools) {
             ui.tool('find', {

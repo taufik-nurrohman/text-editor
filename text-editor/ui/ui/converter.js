@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  STRING CONVERTER PLUGIN FOR USER INTERFACE MODULE 1.2.0
+ *  STRING CONVERTER PLUGIN FOR USER INTERFACE MODULE 1.3.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -31,7 +31,7 @@
             _replace = _.replace,
             _timer_set = _.timer.set;
 
-        if (!config[converter + 's']) return;
+        if (!config[converter]) return;
 
         if (once) {
             _dom_append(doc.head, _el('style', '@font-face{font-family:' + prefix_i + '-' + converter + ';src:url(data:application/octet-stream;base64,d09GRgABAAAAAAR0AAsAAAAAB2wAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADsAAABUIIwleU9TLzIAAAFEAAAAQgAAAFZAiUonY21hcAAAAYgAAABKAAABcOEoo6pnbHlmAAAB1AAAAFAAAABQ2W0xuGhlYWQAAAIkAAAAMAAAADYPE7apaGhlYQAAAlQAAAAgAAAAJAz3BfdobXR4AAACdAAAAAgAAAAIDID/9GxvY2EAAAJ8AAAABgAAAAYAKAAAbWF4cAAAAoQAAAAeAAAAIAENACFuYW1lAAACpAAAAakAAAOB0bY/gXBvc3QAAARQAAAAIgAAADM7+ePmeJxjYGRgYOBiMGCwY2DKSSzJY+BzcfMJYZBiYGGAAJA8MpsxJzM9kYEDxgPKsYBpDiBmg4gCAClZBUgAeJxjYGRzYJzAwMrAwFLI8oyBgeEXhGaOYQhnPMfAwMTAysyAFQSkuaYwODxgeMDAxvCfgWEhGwMjSBhMAAAL5gsyAAB4nO2QsQ2AMBADz8pDgRiBKjWzULG/2CT5GNgils6ST189sAAlOZMA3YiRK63sC5t9UH0Twz+09nfucKOVmd19fMu/ekEdGiYJUQAAAAH/9P+ABYwFAAAUAAABFgcBERQHBiMiJwEmNREBJjYzITIFexEf/hMnDQwbEv8AE/4THyIqBQAqBNkpHf4T/RoqEQUTAQATGgHmAe0dUAB4nGNgZGBgAOId3E8ux/PbfGXgZmcAgSsN5mIw+v+X/w3sDKwgLgcDE4gCAD5UCvh4nGNgZGBgY/jPwMDAzvD/y/8v7AwMQBEUwAQAeAAE/gcAAAAFgP/0AAAAAAAoAAB4nGNgZGBgYGIQZQDRIBYDAxcQMjD8B/MZAAqkAS8AAHiclZHNThsxFIXPhEAFkbooEt16VUDVTH4kWLBCigSLsqJS9sPE8xNN7MhzE5EFC1ZseIs+A6/BI1Sq+hTdceJYCFXKImP5+vO5xx77GsAX/EaE9XfGvuYIXzlbcwufcBN4h/rPwG3yJPAuOngMvEf9OfABvuNX4A4O8codovY+ZxP8CRwhiX4EbuFztAy8Q/0pcJv8EngXR9HfwHvU/wU+wKh1HLiDb62HoZ0tXVWUok6Gp2rQ65+ru6WylCqT1iqdS2ldoy5Vbo3ourZJZqei7yXW40qsi6s4s2ahnWh3q4t5nboN2Q3ySLumskb1k94Gx7U22qWix6uTNYtiIJKr3NmpugpnUjNnJzqTpBSZXXS7H8+KISxmWMKhQoESAoUTqqccB+ihj3PSHR2KzrWrgkGKmkqKOVeUPtNwfsmec2aoajpqcoKMceqVe8aY45h7iF8Vk2LvMFgw47zP4Zax4O41/+G2XLude+Rjw+wqo3jjhPfebo9rRuMp9cr4vWYNfQUrKWy5r47z1VC4+q9Oiu+wyk2oZNQT/xpC9QJdtg11fQONK7XTAAAAeJxjYGKAAEEG7ICJkYmRmYEzOT+vLLWoJLWIgQEAHx0D/gAA)format(\'woff\')}.' + prefix_i + '-' + converter + ':before{content:\'\\e000\';font-family:' + prefix_i + '-' + converter + '}', {
@@ -158,7 +158,7 @@
             } : 0
         };
 
-        a = config[converter + 's'];
+        a = config[converter];
         a = typeof a === "object" ? a : {};
 
         if (a && Object.keys(a).length) {

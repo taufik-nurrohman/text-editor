@@ -7,7 +7,7 @@
     <link href="../../../../favicon.ico" rel="shortcut icon">
 
     <link href="../../../../index.min.css" rel="stylesheet">
-    <link href="../../ui.min.css" rel="stylesheet">
+    <link href="../../../ui.min.css" rel="stylesheet">
 
   </head>
   <body>
@@ -17,7 +17,7 @@
       <p>Counts words in editor&rsquo;s text area.</p>
       <section>
         <p><textarea class="textarea" id="editor"></textarea></p>
-        <p id="text-editor-shell-selector" data-shell-path="../../ui"></p>
+        <p id="text-editor-shell-selector" data-shell-path="../.."></p>
       </section>
     </header>
 
@@ -25,15 +25,15 @@
       <h2 id="section:start">Start</h2>
       <p>Include the script just after the plugin instances:</p>
       <pre><code>&lt;script src="../text-editor.min.js"&gt;&lt;/script&gt;
-&lt;script src="../text-editor/ui/ui.min.js"&gt;&lt;/script&gt;
+&lt;script src="../text-editor/ui.min.js"&gt;&lt;/script&gt;
 &lt;script&gt;
 var editor = TE.ui(document.querySelector('textarea'));
-TE.plug('../text-editor/ui/ui/word-counter/word-counter.min.js');
+TE.plug('../text-editor/ui/ui/counter.min.js');
 &lt;/script&gt;</code></pre>
       <h2 id="section:configure">Configure</h2>
       <h3>Disable Word Counter</h3>
       <pre><code>editor.update({
-    word_counter: false
+    counter: false
 });</code></pre>
     </section>
 
@@ -43,12 +43,12 @@ TE.plug('../text-editor/ui/ui/word-counter/word-counter.min.js');
     </footer>
 
     <script src="../../../../text-editor.min.js"></script>
-    <script src="../../ui.min.js"></script>
-    <script src="../../html/html.min.js"></script>
+    <script src="../../../ui.min.js"></script>
+    <script src="../../h-t-m-l.min.js"></script>
     <script>
 
     var editor = TE.ui.HTML(document.querySelector('#editor'));
-    TE.plug('word-counter.min.js');
+    TE.plug('../counter.min.js');
 
     </script>
 

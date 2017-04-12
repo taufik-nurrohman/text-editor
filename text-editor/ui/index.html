@@ -7,7 +7,7 @@
     <link href="../../favicon.ico" rel="shortcut icon">
 
     <link href="../../index.min.css" rel="stylesheet">
-    <link href="ui.min.css" rel="stylesheet">
+    <link href="../ui.min.css" rel="stylesheet">
     <style>
     @font-face {
       font-family:'demo';
@@ -63,7 +63,7 @@
       <p>This is a module to create the <abbr title="Graphic User Interface">GUI</abbr> appearance as you can see in the text editor below.</p>
       <section>
         <p><textarea class="textarea" id="editor">Lorem ipsum dolor sit amet.</textarea></p>
-        <p id="text-editor-shell-selector" data-shell-path="ui"></p>
+        <p id="text-editor-shell-selector" data-shell-path="."></p>
         <p>
           <a href="" onclick="return editor.destroy(), false;">Destroy</a> &middot;
           <a href="" onclick="return editor.create(), false;">Create</a> &middot;
@@ -93,7 +93,7 @@
 
     <section>
       <h2 id="section:start">Start</h2>
-      <p>Include <a href="ui.min.css" target="_blank"><code>ui.min.css</code></a> and <a href="ui.i.min.css" target="_blank"><code>ui.i.min.css</code></a> in the head section, include <a href="../../text-editor.min.js" target="_blank"><code>text-editor.min.js</code></a> and <a href="ui.min.js" target="_blank"><code>ui.min.js</code></a> next to the text area:</p>
+      <p>Include <a href="../ui.min.css" target="_blank"><code>ui.min.css</code></a> and <a href="../ui.i.min.css" target="_blank"><code>ui.i.min.css</code></a> in the head section, include <a href="../../text-editor.min.js" target="_blank"><code>text-editor.min.js</code></a> and <a href="../ui.min.js" target="_blank"><code>ui.min.js</code></a> next to the text area:</p>
       <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html dir="ltr"&gt;
   &lt;head&gt;
@@ -901,7 +901,7 @@ TE._.events.set("click", <var>node</var>, do_click);</code></pre>
     </footer>
 
     <script src="../../text-editor.min.js"></script>
-    <script src="ui.min.js"></script>
+    <script src="../ui.min.js"></script>
     <script>
 
     var editor = TE.ui(document.querySelector('#editor'));

@@ -7,7 +7,7 @@
     <link href="favicon.ico" rel="shortcut icon">
 
     <link href="index.min.css" rel="stylesheet">
-    <link href="text-editor/ui/ui.min.css" rel="stylesheet">
+    <link href="text-editor/ui.min.css" rel="stylesheet">
 
   </head>
   <body>
@@ -18,7 +18,7 @@
       <p><a class="button" href="https://github.com/tovic/text-editor/archive/master.zip"><i class="icon icon-download"></i> Download</a> <a class="button" href="text-editor"><i class="icon icon-flask"></i> Documentation</a></p>
       <section>
         <p><textarea class="textarea" id="editor">Yay! Finally, a documentation page!</textarea></p>
-        <p id="text-editor-shell-selector" data-shell-path="text-editor/ui/ui"></p>
+        <p id="text-editor-shell-selector" data-shell-path="text-editor/ui"></p>
       </section>
     </header>
 
@@ -37,14 +37,14 @@
   &lt;head&gt;
     &lt;meta charset="utf-8"&gt;
     &lt;title&gt;Text Editor&lt;/title&gt;
-    &lt;link href="text-editor/ui/ui.min.css" rel="stylesheet"&gt;
-    &lt;link href="text-editor/ui/ui.i.min.css" rel="stylesheet"&gt;
+    &lt;link href="text-editor/ui.min.css" rel="stylesheet"&gt;
+    &lt;link href="text-editor/ui.i.min.css" rel="stylesheet"&gt;
   &lt;/head&gt;
   &lt;body&gt;
     &lt;p&gt;&lt;textarea id="editor"&gt;&lt;/textarea&gt;&lt;/p&gt;
     &lt;script src="text-editor.min.js"&gt;&lt;/script&gt;
-    &lt;script src="text-editor/ui/ui.min.js"&gt;&lt;/script&gt;
-    &lt;script src="text-editor/ui/html/html.min.js"&gt;&lt;/script&gt;
+    &lt;script src="text-editor/ui.min.js"&gt;&lt;/script&gt;
+    &lt;script src="text-editor/ui/h-t-m-l.min.js"&gt;&lt;/script&gt;
     &lt;script&gt;
     var editor = TE.ui.HTML(document.querySelector('#editor'));
     &lt;/script&gt;
@@ -57,27 +57,27 @@
       </ul>
       <p>These are plugins for user interface module:</p>
       <ul>
-        <li><a href="text-editor/ui/html"><abbr title="Hyper Text Markup Language">HTML</abbr> Text Editor</a></li>
+        <li><a href="text-editor/ui/h-t-m-l"><abbr title="Hyper Text Markup Language">HTML</abbr> Text Editor</a></li>
         <li><a href="text-editor/ui/markdown">Markdown Text Editor</a> &larr; depends on <code>TE.ui.HTML()</code> plugin</li>
         <li><a href="text-editor/ui/textile">Textile Text Editor</a> &larr; depends on <code>TE.ui.HTML()</code> plugin</li>
-        <li><a href="text-editor/ui/bbcode">BBCode Text Editor</a> &larr; depends on <code>TE.ui.HTML()</code> plugin</li>
+        <li><a href="text-editor/ui/b-b-code">BBCode Text Editor</a> &larr; depends on <code>TE.ui.HTML()</code> plugin</li>
       </ul>
       <p>Miscellaneous:</p>
       <ul>
         <li><a href="text-editor/ui/ui/language">Editor Internationalization</a></li>
         <li><a href="text-editor/ui/ui/expand">Editor Maximize/Minimize</a></li>
-        <li><a href="text-editor/ui/ui/table-grid">Table Grid Selector</a></li>
+        <li><a href="text-editor/ui/ui/table">Table Grid Selector</a></li>
         <li><a href="text-editor/ui/ui/converter">Common String Converters</a></li>
         <li><a href="text-editor/ui/ui/emoji">Native Emoji</a></li>
-        <li><a href="text-editor/ui/ui/bubble-tools">Bubble Tools</a></li>
+        <li><a href="text-editor/ui/ui/bubble">Bubble Tools</a></li>
         <li><a href="text-editor/ui/ui/grow">Editor Grow</a></li>
         <li>Auto&ndash;Complete</li>
-        <li><a href="text-editor/ui/ui/auto-complete-html"><abbr title="Hyper Text Markup Language">HTML</abbr> Auto&ndash;Complete</a></li>
-        <li><a href="text-editor/ui/ui/word-counter">Word Counter</a></li>
+        <li><a href="text-editor/ui/ui/auto-complete-h-t-m-l"><abbr title="Hyper Text Markup Language">HTML</abbr> Auto&ndash;Complete</a></li>
+        <li><a href="text-editor/ui/ui/counter">Word Counter</a></li>
         <li><abbr title="Hyper Text Markup Language">HTML</abbr> Preview</li>
         <li><a href="text-editor/ui/ui/help">Help Panel</a></li>
-        <li><a href="text-editor/ui/ui/find-replace">Find and Replace</a></li>
-        <li><a href="text-editor/ui/ui/special-characters">Special Characters</a></li>
+        <li><a href="text-editor/ui/ui/find">Find and Replace</a></li>
+        <li><a href="text-editor/ui/ui/symbol">Special Characters</a></li>
       </ul>
       <h2 id="section:support">Support</h2>
       <p>This text editor project was initially cultivated to support the <a href="https://github.com/mecha-cms">Mecha <abbr title="Content Management System">CMS</abbr></a> project that is currently being inactive for a while. But now, this project becomes an individual project; makes it possible to be extended into any other projects. Your small donation will keep this project going and allow me to do any further development.</p>
@@ -94,11 +94,11 @@
     </footer>
 
     <script src="text-editor.min.js"></script>
-    <script src="text-editor/ui/ui.min.js"></script>
-    <script src="text-editor/ui/html/html.min.js"></script>
+    <script src="text-editor/ui.min.js"></script>
+    <script src="text-editor/ui/h-t-m-l.min.js"></script>
     <script>
     var editor = TE.ui.HTML(document.querySelector('#editor'));
-    TE.plug('text-editor/ui/ui/word-counter/word-counter.min.js');
+    TE.plug('text-editor/ui/ui/counter.min.js');
     </script>
 
     <script src="index.min.js"></script>

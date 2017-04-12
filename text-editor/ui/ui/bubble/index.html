@@ -7,7 +7,7 @@
     <link href="../../../../favicon.ico" rel="shortcut icon">
 
     <link href="../../../../index.min.css" rel="stylesheet">
-    <link href="../../ui.min.css" rel="stylesheet">
+    <link href="../../../ui.min.css" rel="stylesheet">
 
   </head>
   <body>
@@ -17,28 +17,28 @@
       <p>Floating tools bar.</p>
       <section>
         <p><textarea class="textarea" id="editor">Lorem ipsum dolor sit amet.</textarea></p>
-        <p id="text-editor-shell-selector" data-shell-path="../../ui"></p>
+        <p id="text-editor-shell-selector" data-shell-path="../.."></p>
       </section>
     </header>
 
     <section>
       <h2 id="section:start">Start</h2>
-      <p>Include the script just after the plugin instances, then set a new configuration data called <code>tools_alt</code> as <code>true</code>:</p>
+      <p>Include the script just after the plugin instances, then set a new configuration data called <code>bubble</code> to <code>true</code>:</p>
       <pre><code>&lt;script src="../text-editor.min.js"&gt;&lt;/script&gt;
-&lt;script src="../text-editor/ui/ui.min.js"&gt;&lt;/script&gt;
+&lt;script src="../text-editor/ui.min.js"&gt;&lt;/script&gt;
 &lt;script&gt;
 var editor = TE.ui(document.querySelector('textarea'), {
-    tools_alt: true
+    bubble: true
 });
-TE.plug('../text-editor/ui/ui/bubble-tools/bubble-tools.min.js');
+TE.plug('../text-editor/ui/ui/bubble.min.js');
 &lt;/script&gt;</code></pre>
       <h2 id="section:configure">Configure</h2>
       <h3>Custom Tools</h3>
       <pre><code>editor.update({
-    tools_alt: 'b i | a img'
+    bubble: 'b i | a img'
 });</code></pre>
       <pre><code>editor.update({
-    tools_alt: [
+    bubble: [
         'b i u', // span
         'p hr table' // block
     ]
@@ -51,14 +51,14 @@ TE.plug('../text-editor/ui/ui/bubble-tools/bubble-tools.min.js');
     </footer>
 
     <script src="../../../../text-editor.min.js"></script>
-    <script src="../../ui.min.js"></script>
-    <script src="../../html/html.min.js"></script>
+    <script src="../../../ui.min.js"></script>
+    <script src="../../h-t-m-l.min.js"></script>
     <script>
 
     var editor = TE.ui.HTML(document.querySelector('#editor'), {
-        tools_alt: true
+        bubble: true
     });
-    TE.plug('bubble-tools.min.js');
+    TE.plug('../bubble.min.js');
 
     </script>
 

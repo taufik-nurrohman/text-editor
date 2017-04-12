@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.0.10
+ *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.2.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -49,7 +49,7 @@ TE.each(function($) {
 
         block, d, e, f, g, h, i, j, k, l, m;
 
-    if (!config.tools_alt) return;
+    if (!config.bubble) return;
 
     function do_modals(id, data, $) {
         ui.tools[id].click(null, $);
@@ -158,18 +158,23 @@ TE.each(function($) {
                     'padding': 0,
                     'font-size': '80%'
                 });
-                tools_alt = config.tools_alt;
+                tools_alt = config.bubble;
                 tools_alt = tools_alt === true ? tools_alt_default : tools_alt;
                 if (typeof tools_alt === "string") {
                     tools_alt = [tools_alt, tools_alt];
                 } else {
-                    tools_alt = _extend(tools_alt, tools_alt_default);
+                    tools_alt = _extend(tools_alt_default, tools_alt);
                 }
-                d = _trim(tools_alt[block ? 1 : 0]).split(/\s+/);
-                for (j in d) {
-                    j = d[j];
-                    if (!(f = tools[j])) continue;
-                    do_tools(f, j, bubble);
+                e = tools_alt[block ? 1 : 0];
+                if (e) {
+                    d = _trim(e || "").split(/\s+/);
+                    for (j in d) {
+                        j = d[j];
+                        if (!(f = tools[j])) continue;
+                        do_tools(f, j, bubble);
+                    }
+                } else {
+                    ui.bubble.exit();
                 }
             });
         } else {

@@ -45,11 +45,11 @@
                 select = doc.createElement('select'),
                 o = {
                     '..': 'Theme&hellip;',
-                    '. .i': 'None',
-                    '.white .i': 'White',
-                    '.black .i': 'Black',
-                    '.1960 .i': '1960',
-                    '.fam-fam-fam /ui.i.fam-fam-fam': 'Fam Fam Fam'
+                    'ui.i ': 'None',
+                    'ui.i ui/white': 'White',
+                    'ui.i ui/black': 'Black',
+                    'ui.i ui/1960': '1960',
+                    'ui/ui/fam-fam-fam.i ui/fam-fam-fam': 'Fam Fam Fam'
                 },
                 option, i, v;
             for (i in o) {
@@ -58,7 +58,7 @@
                 option.value = i;
                 if (i === '..') {
                     option.disabled = true;
-                } else if (i === '.1960 .i') {
+                } else if (i === 'ui.i ui/1960') {
                     option.selected = true;
                 }
                 select.appendChild(option);
@@ -73,20 +73,23 @@
             doc.head.appendChild(s_1);
             function add_css(id) {
                 id = id.split(' ');
-                doc.documentElement.className = 'shell-' + id[0].slice(1);
-                if (id[0] || id[1]) {
+                doc.documentElement.className = 'shell-' + id[0];
+                if (id[0]) {
                     v = select.parentNode.getAttribute('data-shell-path');
-                    s_0.href = v + '/ui' + id[0] + '.min.css';
-                    s_1.href = v + '/../ui' + id[1] + '.min.css';
+                    s_0.href = v + '/../' + id[0] + '.min.css';
+                    if (id[1]) {
+                        s_1.href = v + '/' + id[1] + '.min.css';
+                    } else {
+                        s_1.href = '#';
+                    }
                 } else {
                     s_0.href = '#';
-                    s_1.href = '#';
                 }
             }
             function select_css() {
                 v = this.value;
                 add_css(v);
-            } add_css('.1960 .i');
+            } add_css('ui.i ui/1960');
             select.onchange = select_css;
             select.onclick = function() {
                 ack = true;

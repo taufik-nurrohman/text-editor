@@ -7,7 +7,7 @@
     <link href="../../../../favicon.ico" rel="shortcut icon">
 
     <link href="../../../../index.min.css" rel="stylesheet">
-    <link href="../../ui.min.css" rel="stylesheet">
+    <link href="../../../ui.min.css" rel="stylesheet">
 
   </head>
   <body>
@@ -28,7 +28,7 @@ The list of items that meet the criteria specified by the query is typically sor
 To provide a set of matching items that are sorted according to some criteria quickly, a search engine will typically collect metadata about the group of items under consideration beforehand through a process referred to as indexing. The index typically requires a smaller amount of computer storage, which is why some search engines only store the indexed information and not the full content of each item, and instead provide a method of navigating to the items in the search engine result page. Alternatively, the search engine may store a copy of each item in a cache so that users can see the state of the item at the time it was indexed or for archive purposes or to make repetitive processes work more efficiently and quickly.
 
 Other types of search engines do not store an index. Crawler, or spider type search engines (a.k.a. real-time search engines) may collect and assess items at the time of the search query, dynamically considering additional items based on the contents of a starting item (known as a seed, or seed URL in the case of an Internet crawler). Meta search engines store neither an index nor a cache and instead simply reuse the index or results of one or more other search engines to provide an aggregated, final set of results.</textarea></p>
-        <p id="text-editor-shell-selector" data-shell-path="../../ui"></p>
+        <p id="text-editor-shell-selector" data-shell-path="../.."></p>
       </section>
     </header>
 
@@ -36,14 +36,14 @@ Other types of search engines do not store an index. Crawler, or spider type sea
       <h2 id="section:start">Start</h2>
       <p>Include the script just after the plugin instances:</p>
       <pre><code>&lt;script src="../text-editor.min.js"&gt;&lt;/script&gt;
-&lt;script src="../text-editor/ui/ui.min.js"&gt;&lt;/script&gt;
+&lt;script src="../text-editor/ui.min.js"&gt;&lt;/script&gt;
 &lt;script&gt;
 var editor = TE.ui(document.querySelector('textarea'));
-TE.plug('../text-editor/ui/ui/find-replace/find-replace.min.js');
+TE.plug('../text-editor/ui/ui/find.min.js');
 &lt;/script&gt;</code></pre>
       <h2 id="section:hint">Keyboard Hints</h2>
       <ul>
-        <li>Press <kbd>&#8984;+F</kbd> to <strong>Find and Replace</strong>.</li>
+        <li>Press <kbd>&#8984;+f</kbd> to <strong>Find and Replace</strong>.</li>
         <li>Type something in the <em>find</em> field then press <kbd>&#8629;</kbd> to find.</li>
         <li>Press <kbd>&#8677;</kbd> after typing something in the <em>find</em> field. Type something in the <em>replace</em> field then press <kbd>&#8629;</kbd> to replace.</li>
         <li>Press <kbd>&#8997;</kbd> either in <em>find</em> field or <em>replace</em> field to change the search mode:
@@ -63,13 +63,13 @@ TE.plug('../text-editor/ui/ui/find-replace/find-replace.min.js');
     </footer>
 
     <script src="../../../../text-editor.min.js"></script>
-    <script src="../../ui.min.js"></script>
-    <script src="../../html/html.min.js"></script>
-    <script src="../../markdown/markdown.min.js"></script>
+    <script src="../../../ui.min.js"></script>
+    <script src="../../h-t-m-l.min.js"></script>
+    <script src="../../markdown.min.js"></script>
     <script>
 
     var editor = TE.ui.Markdown(document.querySelector('#editor'), {extra: true});
-    TE.plug('find-replace.min.js');
+    TE.plug('../find.min.js');
 
     </script>
 
