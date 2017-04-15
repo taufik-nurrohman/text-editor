@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  WORD COUNTER PLUGIN FOR USER INTERFACE MODULE 1.2.0
+ *  WORD COUNTER PLUGIN FOR USER INTERFACE MODULE 1.2.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -26,12 +26,13 @@ TE.each(function($) {
         is_unset = $.is.x,
 
         config = $.config,
+        c = config.classes[""],
         esc_unit = config.union[0][0],
         debounce = config.debounce,
         i18n = config.languages.others,
         right = _dom_get('.' + (config.direction === 'ltr' ? 'right' : 'left'), ui.el.footer)[0],
         container = _.el('span', "", {
-            'class': config.classes[""] + '-counter'
+            'class': c + '-counter'
         });
 
     i18n = _extend({
@@ -47,7 +48,7 @@ TE.each(function($) {
         }
         var words = $.get().replace(_pattern(esc_unit[0] + '.*?' + esc_unit[1], 'g'), "").match(/\w+/g) || [],
             i = words.length;
-        _dom_content_set(container, _format(i18n['%1 word'][i === 1 ? 0 : 1], [i]));
+        _dom_content_set(container, '<a class="' + c + '-a" href="javascript:;">' + _format(i18n['%1 word'][i === 1 ? 0 : 1], [i]) + '</span>');
     } count_words();
 
     function count_words_debounce() {

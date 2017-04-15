@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.2.0
+ *  BUBBLE TOOLS PLUGIN FOR USER INTERFACE MODULE 1.2.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -151,7 +151,7 @@ TE.each(function($) {
 
     _events.set("copy cut keyup mouseup paste scroll", $target, function(e) {
         k = $.$();
-        block = $.get(0) && /(^|\n)$/.test(k.before) && /(\n|$)$/.test(k.after);
+        block = $.get(0) && /(^|\n)$/.test(k.before) && /^(\n|$)/.test(k.after);
         if (k.length || block) {
             ui.bubble(tools_class, function(bubble) {
                 _css(bubble, {

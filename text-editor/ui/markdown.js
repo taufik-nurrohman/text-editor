@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  MARKDOWN TEXT EDITOR PLUGIN 1.4.1
+ *  MARKDOWN TEXT EDITOR PLUGIN 1.4.2
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -161,6 +161,7 @@ TE.ui.Markdown = function(target, o) {
     };
 
     _extend(ui.tools, {
+        clear: 0,
         b: {
             click: function(e, $) {
                 return $.i().mark(formats.b[0]), false;

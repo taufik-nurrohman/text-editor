@@ -1,52 +1,71 @@
 /*!
  * ==========================================================
- *  HELP PANEL PLUGIN FOR USER INTERFACE MODULE 0.1.0
+ *  PREVIEW PANEL PLUGIN FOR USER INTERFACE MODULE 1.0.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
  * ----------------------------------------------------------
  */
 
-(function(win, doc) {
+TE.each(function($) {
 
-    var once = 1;
+    var ui = $.ui,
+        _ = $._,
+        _is_string = $.is.s,
+        _dom = _.dom,
+        _dom_append = _dom.append,
+        _dom_get = _dom.get,
+        _events = _.events,
+        _extend = _.extend,
 
-    TE.each(function($) {
+        preview = 'preview',
+        config = $.config,
+        c = config.classes[""],
+        i18n = config.languages.tools,
+        left = _dom_get('.' + (config.direction === 'ltr' ? 'left' : 'right'), ui.el.footer)[0],
+        container = _.el('span', "", {
+            'class': c + '-preview'
+        }), i, j, k;
 
-        var ui = $.ui,
-            _ = $._,
-            config = $.config,
-            tools = config.languages.tools,
-            prefix = config.classes[""],
-            prefix_i = config.classes.i.split(' ')[0],
-            preview = 'preview',
-            i, j, k;
+    i18n = _extend({
+        preview: ['Preview', '\u2325+F8']
+    }, i18n);
 
-        if (once) {
-            _.dom.append(doc.head, _.el('style', '@font-face{font-family:' + prefix_i + '-' + help + ';src:url(data:application/octet-stream;base64,d09GRgABAAAAAATkAAsAAAAAB7AAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADsAAABUIIwleU9TLzIAAAFEAAAAQgAAAFZAiUpnY21hcAAAAYgAAABKAAABcOEoo6pnbHlmAAAB1AAAAM0AAADU1KHLN2hlYWQAAAKkAAAALwAAADYPHo+haGhlYQAAAtQAAAAdAAAAJA0DBgJobXR4AAAC9AAAAAgAAAAIDP8AAGxvY2EAAAL8AAAABgAAAAYAagAAbWF4cAAAAwQAAAAgAAAAIAEPAFJuYW1lAAADJAAAAZ0AAANFQMW/AHBvc3QAAATEAAAAHQAAAC5pfW12eJxjYGRgYOBiMGCwY2DKSSzJY+BzcfMJYZBiYGGAAJA8MpsxJzM9kYEDxgPKsYBpDiBmg4gCAClZBUgAeJxjYGRrYJzAwMrAwFLI8oyBgeEXhGaOYQhnPMfAwMTAysyAFQSkuaYwODxgeMDAxvCfgWEhGwMjSBhMAAAgpgtyAAB4nO2QsQ2AMBADz8pDgRiBKjWzULG/2CT5GNgils6ST189sAAlOZMA3YiRK63sC5t9UH0Twz+09nfucKOVmd19fMu/ekEdGiYJUQAAeJxjYGZg+F/PxsDayMDPYMHgysCgamqips2oxCbLKCJmzWhkxmiix6isxM4mzyhmbGRux2hsJMYuwsbOxyguClFgamLHyirCxKLDyCQgpMPIIsTcIMR3gE8ITDAy5K0I+9zAL97CziPAaepsYuDDqGFgn8UIltVxULJSkGBsOPdvwb+YfwvOnWNMYFzCmHBuAUy7ENO6iGlBVyWEUth4XAxMFNX0xGTKnFRAssI2amIGBh6TL/5bcIHpDGMK4zzGlDNMF/4tYAAAifswVAAAAHicY2BkYGAA4rZTL0Xi+W2+MnCzM4DAlfrFQQj6fz07A2sjkMvBwAQSBQA54gqmAHicY2BkYGBj+M/AwMAOxP//A0mgCApgAgBLEwMWAAAABwAAAAX/AAAAAAAAAGoAAAABAAAAAgBGAAMAAAAAAAIAAAAKAAoAAAD/AAAAAAAAeJyNkM1Kw0AUhU9qW7EFFwquZyGiSNIfUMFVpWB3Llx048bYTpMpaSZMpsUufATxWdz6Aq58BV/Al/AkHUQsQhMy95tzf3LvBbCHT3hYPWf8VuxRP3NcwTYGjreo3ziuku8d19CEcVyn/uS4gVO8OG5iH2+s4FV3eJviw7GHQ+/CcQW73p3jLerKcZX87LiGA+/VcZ36u+MGht6X4yaOKld9nS2NimIrjvsnotvunIuHpdCUVBomIpzbWJtc9MREp1YmiQ5Gemblo/XlWFltfOXHMsluZTRPQrPuWFeG0uRKp6ITtNedA5lKE1o5LrrIF1HX2omYGD0T1+7/IjN6Kkc2iK3NLlut332hD40MS65ZIUIMC4Fjqie0XbTRwTnpgRGCkasohRQhEioh5syIS0/Oe4/fhLeUqmREQg4w4jkrlUeePu2YNWyZ5ZN8ViiiM9zSRqyZsLLZKGOTmCFt0Z8qOxOcKeBkm2QOaNMyOyzjxz+7yLFgp12qlhMXU5tySoHrP/ML1il8Uyoj6kG5ZUv1Ei2+/+zrGzA+o1wAAAB4nGNgYoAAQQbsgImRiZGZgSUjNaeAgQEACuMBygAAAA==)format(\'woff\')}.' + prefix_i + '-' + help + ':before{content:\'\\e000\';font-family:' + prefix_i + '-' + help + '}', {
-                'id': prefix + ':style-' + help
-            }));
-            once = 0;
-        }
-
-        tools[preview] = ['Preview', 'F8'];
-
-        if (config.tools) {
-            ui.tool(preview, {
-                click: function(e, $) {
-                    if (_.dom.parent(ui.el.panel)) {
-                        ui.panel.exit(1);
-                    } else {
-                        ui.panel(preview, '<h2>foo</h2>', 0, preview);
-                    }
-                    return $.select(), false;
-                }
-            });
-        }
-
-        // press `f8` for "preview"
-        ui.key('f1', preview);
-
+    j = i18n[preview] || [""];
+    k = _.el('a', j[0], {
+        'class': c + '-a',
+        'title': j[0] + (j[1] ? ' (' + j[1] + ')' : "")
     });
 
-})(window, document);
+    _dom_append(left, container);
+    _dom_append(container, k);
+
+    function fn_preview(e) {
+        if (_dom.parent(ui.el.panel)) {
+            ui.panel.exit(1);
+        } else {
+            var css = config[preview + '_css'] || [],
+                js = config[preview + '_js'] || [],
+                css_s = "",
+                js_s = "";
+            if (_is_string(css)) css = [css];
+            if (_is_string(js)) js = [js];
+            for (i in css) css[i] && (css_s += '<li' + 'nk href="' + css[i] + '" rel="stylesheet">');
+            for (i in js) js[i] && (js_s += '<scr' + 'ipt src="' + js[i] + '"></scr' + 'ipt>');
+            ui.panel(preview, {
+                header: "",
+                body: '<iframe frameborder="0" style="display:block;width:100%;height:100%;margin:0;padding:0;border:0;position:absolute;top:0;right:0;bottom:0;left:0;" src="data:text/html,' + encodeURIComponent('<!DOCTYPE html><html dir="' + config.direction + '"><head><meta charset="utf-8">' + css_s + '</head><body>' + $.get() + js_s + '</body></html>') + '"></iframe>'
+            }, 0, preview);
+            j = 'children';
+            i = ui.el.panel[j][1];
+            i[j][0][j][0].style.height = _dom.size(i).h + 'px';
+        }
+        return $.select(), _events.x(e), false;
+    }
+
+    _events.set("click", k, fn_preview);
+
+    // press `alternate+f8` for "preview"
+    ui.key('alternate+f8', fn_preview);
+
+});

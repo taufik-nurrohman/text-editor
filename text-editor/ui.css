@@ -58,7 +58,10 @@
 }
 .text-editor-header,
 .text-editor-body,
-.text-editor-footer {position:relative}
+.text-editor-footer {
+  position:relative;
+  cursor:default;
+}
 .text-editor-header {min-height:2px}
 .text-editor-button,
 .text-editor-input,

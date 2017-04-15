@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.2.0
+ *  EMOJI PLUGIN FOR USER INTERFACE MODULE 1.2.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -1435,7 +1435,7 @@
                         p = config[emoji];
                         q = _css(drop, ['background-color', 'color', 'padding-top']);
                         r = _dom.children;
-                        _el(style, h + '{max-height:20em;overflow:auto}' + h + ' div{max-width:20em;margin:0 0 ' + q[2] + 'px;border-color:inherit;font-size:100%;overflow:hidden}' + h + ' div[title]:before{content:attr(title);display:block;padding:.5em;background:' + q[0] + ';border-bottom:1px solid;margin-bottom:' + q[2] + 'px;border-color:inherit}' + h + ' a{float:left;width:10%;height:1.8785714285714286em;line-height:1.8785714285714286em;text-align:center;background:rgba(0,0,0,.025);color:inherit;text-decoration:none;overflow:hidden;white-space:nowrap}' + h + ' a img{display:block;width:60%;height:60%;max-width:none;max-height:none;min-width:0;min-height:0;margin:20%;background:0 0;border:0;outline:0;box-shadow:none;border-radius:0}' + h + ':hover a:focus{background:;background:rgba(0,0,0,.025);color:inherit}' + h + ' a:focus,' + h + ' a:hover,' + h + ':hover a:hover{outline:0;background:' + q[1] + ';color:' + q[0] + '}');
+                        _el(style, h + '{max-height:20em;overflow:auto}' + h + ' div{max-width:20em;margin:0 0 ' + q[2] + 'px;border-color:inherit;font-size:100%;overflow:hidden}' + h + ' div[title]:before{content:attr(title);display:block;padding:.5em;background:' + q[0] + ';border-bottom:1px solid;margin-bottom:' + q[2] + 'px;border-color:inherit;cursor:default}' + h + ' a{font-size:125%;float:left;width:10%;height:1.5em;line-height:1.5em;text-align:center;background:rgba(0,0,0,.025);color:inherit;text-decoration:none;overflow:hidden;white-space:nowrap}' + h + ' a img{display:block;width:60%;height:60%;max-width:none;max-height:none;min-width:0;min-height:0;margin:20%;background:0 0;border:0;outline:0;box-shadow:none;border-radius:0}' + h + ':hover a:focus{background:;background:rgba(0,0,0,.025);color:inherit}' + h + ' a:focus,' + h + ' a:hover,' + h + ':hover a:hover{outline:0;background:' + q[1] + ';color:' + q[0] + '}');
                         for (i in p) {
                             if (!p[i] || !p[i][1] || !(k = p[i])[1].length) continue;
                             l = _el('div', false, {

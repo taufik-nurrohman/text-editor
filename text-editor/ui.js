@@ -79,7 +79,7 @@ TE.ui = function(target, o) {
             },
             languages: {
                 tools: {
-                    tools: ['Focus Tools', 'F10'],
+                    tools: ['Focus Tools', _u2325 + '+F10'],
                     undo: ['Undo', _u2318 + '+Z'],
                     redo: ['Redo', _u2318 + '+Y'],
                     indent: ['Indent',  _u21E5],
@@ -2023,7 +2023,7 @@ TE.ui = function(target, o) {
             }
         },
         // tools focus
-        'f10': function(e, $) {
+        'alternate+f10': function(e, $) {
             return dom_get('a', _tool)[0].focus(), false;
         },
         'tab': auto_tab ? 'indent' : 0,
