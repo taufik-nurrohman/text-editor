@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.2.0
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.3.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -2140,17 +2140,35 @@ TE.ui = function(target, o) {
 };
 
 // plugin helper
-TE.plugs = {};
-TE.plug = function(path, attr, node) {
-    var doc = document,
-        is_css = /\.css$/i.test(path),
-        el = doc.createElement(is_css ? 'link' : 'script');
-    if (is_css) {
-        el.href = path;
-        el.rel = 'stylesheet';
-    } else {
-        el.src = path;
-    }
-    TE.plugs[path] = el;
-    return (node || doc.head).appendChild(el), TE;
-};
+(function(win, doc) {
+    var $ = TE,
+        head = doc.head,
+        html = 'innerHTML',
+        create = 'createElement',
+        append = 'appendChild';
+    $.plugs = {};
+    $.plug = function(path, attr, node) {
+        var is_css = /\.css$/i.test(path),
+            el = doc[create](is_css ? 'link' : 'script');
+        if (is_css) {
+            el.href = path;
+            el.rel = 'stylesheet';
+        } else {
+            el.src = path;
+        }
+        $.plugs[path] = el;
+        return (node || head)[append](el), $;
+    };
+    $.css = function(css, id, node) {
+        var style = doc[create]('style');
+        style[html] = css;
+        if (id) style.id = id;
+        return (node || head)[append](style), $;
+    };
+    $.js = function(js, id, node) {
+        var script = doc[create]('script');
+        script[html] = js;
+        if (id) script.id = id;
+        return (node || head)[append](script), $;
+    };
+})(window, document);
