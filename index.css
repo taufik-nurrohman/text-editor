@@ -36,6 +36,7 @@ code {
   -moz-box-sizing:border-box;
   box-sizing:border-box;
 }
+:focus {outline:none}
 b,strong,th {font-weight:bold}
 i,em,var {font-style:italic}
 ins,u {text-decoration:underline}
@@ -59,10 +60,10 @@ html {
   color:#000;
 }
 a {
-  color:#00f;
+  color:#00a;
   text-decoration:none;
 }
-a:focus,a:active {color:#f00}
+a:focus,a:active {color:#a00}
 abbr {
   border:0;
   cursor:help;
@@ -139,11 +140,14 @@ th,td {
   vertical-align:top;
 }
 blockquote {
-  border-left:4px solid #faf;
+  border-left:4px solid #fed;
   padding-left:1.5em;
 }
 pre {
-  background:#afa;
+  background:#000;
+  color:#fff;
+  font-size:86%;
+  line-height:1.25em;
   padding:1em 1.2em;
   white-space:pre-wrap;
   word-wrap:break-word;
