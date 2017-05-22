@@ -44,15 +44,15 @@ TE.plug('../text-editor/ui/ui/preview.min.js');
       <h3>Custom Preview Content</h3>
       <p>Use <code>enter.panel.preview</code> hook to update the preview content with custom task:</p>
       <pre><code>editor._.hooks.set('enter.panel.preview', function($, panel) {
-        // `.text-editor-panel &lt; .text-editor-panel-body &lt; .text-editor-panel-content &lt; iframe`
-        var frame = panel.children[1].children[0].children[0];
-        // Loading&hellip;
-        frame.src = 'data:text/html,' + encodeURIComponent('Loading&hellip;');
-        // Do AJAX stuff&hellip;
-        do_ajax_stuff_then_do(function(responseText) {
-            frame.src = 'data:text/html,' + encodeURIComponent(responseText);
-        });
-    });</code></pre>
+    // `.text-editor-panel &lt; .text-editor-panel-body &lt; .text-editor-panel-content &lt; iframe`
+    var frame = panel.children[1].children[0].children[0];
+    // Loading&hellip;
+    frame.src = 'data:text/html,' + encodeURIComponent('Loading&hellip;');
+    // Do AJAX stuff&hellip;
+    do_ajax_stuff_then_do(function(responseText) {
+        frame.src = 'data:text/html,' + encodeURIComponent(responseText);
+    });
+});</code></pre>
     </section>
 
     <footer>
