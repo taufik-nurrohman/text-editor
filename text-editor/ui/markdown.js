@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  MARKDOWN TEXT EDITOR PLUGIN 1.4.2
+ *  MARKDOWN TEXT EDITOR PLUGIN 1.4.3
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -212,7 +212,7 @@ TE.ui.Markdown = function(target, o) {
                             b = s.before;
                             start = s.start;
                             end = s.end;
-                            $.set(b + x + _trim(s.after, 1) + n + ' [' + (v || _trim(x) || placeholders[""]) + ']: ' + (!implicit ? state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "") : "")).select(start, end);
+                            $.set(b + (x || placeholders[""]) + _trim(s.after, 1) + n + ' [' + (v || _trim(x) || placeholders[""]) + ']: ' + (!implicit ? state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "") : "")).select(start, end);
                             if (implicit) $.focus(1).insert(http);
                         }
                     } else {
@@ -240,8 +240,7 @@ TE.ui.Markdown = function(target, o) {
                     n = /^ {0,3}\[[^\^]+?\]:/.test(g.split('\n').pop()) ? '\n' : '\n\n',
                     images = g.match(/^ {0,3}\[[^\^]+?\]:/gm) || [],
                     i18n = languages.modals.img,
-                    keep = /^\n* {0,3}\[.+?\]:/.test(a) ? ' ' : "",
-                    A = _trim(a),
+                    keep = /^\n* {0,3}\*?\[.+?\]:/.test(a) ? '\n\n ' : "",
                     state, src, title, index, start, end, i;
                 // collect all embedded reference image(s)
                 for (i in images) {
@@ -256,8 +255,8 @@ TE.ui.Markdown = function(target, o) {
                         alt = src.split(/[\/\\\\]/).pop();
                     }
                     alt = attr_title(alt);
-                    $[0]().trim(_trim(b) ? '\n\n' : "", keep);
                     if (state[v]) {
+                        $[0]().trim(_trim(b) ? '\n\n' : "", keep);
                         $.insert('![' + alt + '][' + v + ']\n\n', 0, 1);
                         if (keep) $.select($.$().start);
                         index = images.indexOf(' [' + v + ']:');
@@ -266,11 +265,12 @@ TE.ui.Markdown = function(target, o) {
                             b = s.before;
                             start = s.start;
                             end = s.end;
-                            $.set(b + x + s.after + (A ? n : "") + ' [' + v + ']: ' + state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "")).select(start, end);
+                            $.set(b + s.after + n + ' [' + v + ']: ' + state[v][0] + (state[v][1] ? ' "' + state[v][1] + '"' : "")).select(start, end);
                         }
                     } else {
                         ui.prompt(i18n.title[1], i18n.placeholder[1], 0, function(e, $, v) {
                             title = attr_title(v);
+                            $[0]().trim(_trim(b) ? '\n\n' : "", keep);
                             $.insert('![' + alt + '](' + src + (title ? ' "' + title + '"' : "") + ')\n\n', 0, 1);
                             if (keep) $.select($.$().start);
                         }, 0, 0, 'img[title]');
@@ -568,7 +568,7 @@ TE.ui.Markdown = function(target, o) {
                     a = s.after,
                     i18n = languages.modals.note,
                     g = $.get(),
-                    n = /^ {0,3}\[\^.+?\]:/.test(_trim(g).split('\n').pop()) ? '\n' : '\n\n',
+                    n = /^ {0,3}\[\^.+?\]:/.test(g.split('\n').pop()) ? '\n' : '\n\n',
                     notes = g.match(/^ {0,3}\[\^.+?\]:/gm) || [],
                     i = 0, index;
                 for (i in notes) {
@@ -583,7 +583,7 @@ TE.ui.Markdown = function(target, o) {
                         $.select(i, i + v.length);
                         target.scrollTop = $.$(1).caret[0].y;
                     } else {
-                        $.trim(_trim(b) ? ' ' : "", !_trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n' : ' ').insert('[^' + v + ']').set(_trim($.get(), 1) + n + ' [^' + v + ']: ').focus(1).insert(placeholders[""]);
+                        $.trim(_trim(b) ? ' ' : "", !_trim(a) || /^[\t ]*\n+[\t ]*/.test(a) ? '\n\n ' : ' ').insert('[^' + v + ']').set(_trim($.get(), 1) + n + ' [^' + v + ']: ').focus(1).insert(placeholders[""]);
                     }
                 }, 0, 0, 'note[id]'), false;
             }

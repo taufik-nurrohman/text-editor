@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.3.0
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.3.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -945,7 +945,7 @@ TE.ui = function(target, o) {
                 if (is_string(keys[i])) {
                     keys[i] = ui.tools[keys[i]].click;
                 }
-                l = is_function(keys[i]) && keys[i](e, $);
+                l = is_function(keys[i]) ? keys[i](e, $) : 0;
                 if (l === false) return event_exit(e);
             }
         }
