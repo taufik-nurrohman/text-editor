@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.3.0
+ *  USER INTERFACE MODULE FOR TEXT EDITOR PLUGIN 1.3.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -362,8 +362,11 @@ TE.ui = function(target, o) {
     }
 
     function pointer(node, e) {
-        var x = !!e.touches ? e.touches[0].pageX : e.pageX,
-            y = !!e.touches ? e.touches[0].pageY : e.pageY,
+        var T = 'touches',
+            X = 'clientX',
+            Y = 'clientY',
+            x = !!e[T] ? e[T][0][X] : e[X],
+            y = !!e[T] ? e[T][0][Y] : e[Y],
             o = offset(node);
         return {
             x: x - o.l,
@@ -372,15 +375,10 @@ TE.ui = function(target, o) {
     }
 
     function offset(node) {
-        l = node.offsetLeft;
-        t = node.offsetTop;
-        while (node = node.offsetParent) {
-            l += node.offsetLeft;
-            t += node.offsetTop;
-        }
+        r = node.getBoundingClientRect();
         return {
-            l: l,
-            t: t
+            l: r.x,
+            t: r.y
         };
     }
 
@@ -945,7 +943,7 @@ TE.ui = function(target, o) {
                 if (is_string(keys[i])) {
                     keys[i] = ui.tools[keys[i]].click;
                 }
-                l = is_function(keys[i]) && keys[i](e, $);
+                l = is_function(keys[i]) ? keys[i](e, $) : 0;
                 if (l === false) return event_exit(e);
             }
         }
