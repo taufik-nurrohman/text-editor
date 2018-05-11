@@ -1,8 +1,16 @@
-+<p align="center"><img src="horizontal 800px.png" alt="text-editor" height="150px"></p>
-
 Text Editor
 ===========
 
 > A text selection range API written in pure JavaScript, for modern browsers.
 
+![Text Editor](https://user-images.githubusercontent.com/1669261/39924715-218a6b24-5553-11e8-8d04-69c4031ce777.png)
+
+Demo
+----
+
 [Demo and Documentation](http://tovic.github.io/text-editor "View Demo")
+
+Credits
+-------
+
+ - Logo by @mirzazulfan
