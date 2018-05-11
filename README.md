@@ -1,3 +1,5 @@
++<p align="center"><img src="horizontal 800px.png" alt="text-editor" height="150px"></p>
+
 Text Editor
 ===========
 
