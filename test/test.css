@@ -1,0 +1,32 @@
+* {
+  margin:0;
+  padding:0;
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  box-sizing:border-box;
+}
+html {
+  background:#fff;
+  font:normal normal 13px/1.5 Helmet,FreeSans,sans-serif;
+  color:#000;
+}
+body {padding:1em}
+p {margin-bottom:1em}
+textarea {
+  display:block;
+  width:100%;
+  height:200px;
+  padding:.5em;
+}
+pre {
+  white-space:pre-wrap;
+  word-wrap:break-word;
+  background:#000;
+  color:#fff;
+  padding:.5em;
+}
+pre:empty {display:none}
+button {
+  padding:.5em 1em;
+  cursor:pointer;
+}

@@ -1,6 +1,6 @@
 {
   "name": "t-e",
-  "version": "2.8.5",
+  "version": "2.9.0",
   "description": "A text selection range API written in pure JavaScript, for modern browsers.",
   "main": "text-editor.js",
   "scripts": {
