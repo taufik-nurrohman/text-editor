@@ -7,13 +7,174 @@
     <link href="favicon.ico" rel="shortcut icon">
     <script src="text-editor.js"></script>
   </head>
-  <body>
+  <body spellcheck="false">
+    <h1>Text Editor</h1>
     <p><textarea>Lorem ipsum dolor sit amet.</textarea></p>
     <p>
       <button onclick="editor.wrap('<b>', '</b>');"><b>B</b></button>
       <button onclick="editor.wrap('<i>', '</i>');"><i>I</i></button>
-      <button onclick="editor.insertBefore('😎', true);">😎</button>
+      <button onclick="editor.insert('\u263A', -1, true);">&#x263A;</button>
     </p>
+    <h2>Features</h2>
+    <ul>
+      <li>Light library. No dependencies. <strong>Text Editor</strong> uses plain JavaScript language.</li>
+      <li>Powerful <abbr title="Application Programming Interface">API</abbr>. Easy to learn.</li>
+      <li>Extensible &rarr; <a href="#">check it out</a></li>
+      <li>No hack. No feature detection. Optimized for modern browsers with their built-in JavaScript features.</li>
+      <li>Make your own. The core functionality is enough to help you making your own text editor.</li>
+    </ul>
+    <h2>Start</h2>
+    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html dir="ltr"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Test&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;p&gt;&lt;textarea&gt;&lt;/textarea&gt;&lt;/p&gt;
+    &lt;script src="<a href="text-editor.min.js" target="_blank">text-editor.min.js</a>"&gt;&lt;/script&gt;
+    &lt;script&gt;
+    var editor = new TE(document.querySelector('textarea'));
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    <h2>Configure</h2>
+    <pre><code>new TE(<var>self</var>, <var>dent = '\t'</var>)</code></pre>
+    <ul>
+      <li><var>self</var> &rarr; the text area element</li>
+      <li><var>dent</var> &rarr; the default indent character for <code>editor.dent</code> method</li>
+    </ul>
+    <h2>Instance</h2>
+    <p>All editor instances will be stored in <code>TE.__instance__</code>. To iterate the instances is possible with <code>TE.each</code>:</p>
+    <pre><code>TE.each(function(key, any) {
+    console.log(key);
+    console.log(this.target);
+});</code></pre>
+    <ul>
+      <li><var>this</var> &rarr; refers to the editor instance</li>
+      <li><var>key</var> &rarr; refers to the editor target&rsquo;s <code>id</code> or <code>name</code> attribute value, or its current order</li>
+      <li><var>any</var> &rarr; refers to <code>TE.__instance__</code></li>
+    </ul>
+    <h2>Methods and Properties</h2>
+    <h3><code>editor.self</code></h3>
+    <p>Return the <code>&lt;textarea&gt;</code> element.</p>
+    <h3><code>editor.value</code></h3>
+    <p>Return the initial value of the <code>&lt;textarea&gt;</code> element.</p>
+    <h3><code>editor.set(value)</code></h3>
+    <p>Set value to the <code>&lt;textarea&gt;</code> element.</p>
+    <h3><code>editor.reset()</code></h3>
+    <p>Reset value to the initial value of the <code>&lt;textarea&gt;</code> element.</p>
+    <h3><code>editor.get([default = ""])</code></h3>
+    <p>Get current value of the <code>&lt;textarea&gt;</code> element if not empty, otherwise, return <code>default</code>.</p>
+    <h3><code>editor.$([key[, default]])</code></h3>
+    <p>Get current text selection data.</p>
+    <p>If <code>key</code> is defined, then the property with the same name as the <code>key</code> value will be returned, if no key available in the selection data or if the value can be evaluated to boolean <code>false</code>, then the <code>default</code> value will be returned.</p>
+    <pre><code>// `a|b|c`
+var s = editor.$(),
+    value = editor.$('value', 1),
+    foo = editor.$('foo', 1);
+console.log([s, value, foo]); // [{"start":1,"end":2,"value":"b","before":"a","after":"c","length":1},"b",1]</code></pre>
+    <h3><code>editor.save([key = 0])</code></h3>
+    <p>Save current state.</p>
+    <h3><code>editor.restore([key = 0[, default]])</code></h3>
+    <p>Restore the previously saved state.</p>
+    <h3><code>editor.focus([mode = 0])</code></h3>
+    <p>Focus to the <code>&lt;textarea&gt;</code>.</p>
+    <pre><code>editor.focus(); // just focus
+editor.focus(-1); // focus start
+editor.focus(1); // focus end
+editor.focus(true); // select all</code></pre>
+    <h3><code>editor.blur()</code></h3>
+    <p>Blur from the <code>&lt;textarea&gt;</code>.</p>
+    <h3><code>editor.select([a[, b])</code></h3>
+    <p>Set selection range.</p>
+    <pre><code>editor.select(); // just select the current selection
+editor.select(2); // move caret to the index `2`
+editor.select(0, 2); // select from range `0` to `2`</code></pre>
+    <h3><code>editor.match(pattern[, fn])</code></h3>
+    <p>Match current selection with the pattern provided.</p>
+    <pre><code>if (editor.match(/^\s*:\w+:\s*$/)) {
+    alert('detected as emoji!'); // &rarr; <a href="text-editor.match.html" target="_blank">demo</a>
+}</code></pre>
+    <p>Do something with the current matched selection.</p>
+    <pre><code>var maps = {
+    ':happy:': '😀',
+    ':sad:': '😩',
+    ':wonder:': '😕'
+}
+
+editor.match(/^\s*:\w+:\s*$/, function(m) {
+    if (m[0] && maps[TE.t(m[0])]) {
+        this.insert(maps[TE.t(m[0])]); // &rarr; <a href="text-editor.alter.html" target="_blank">demo</a>
+    }
+});</code></pre>
+    <p>Match to the characters before selection, current selection and characters after selection.</p>
+    <pre><code>var test = editor.match([/:$/, /^\w+$/, /^:/]);
+console.log(test[0] && test[1] && test[2]);</code></pre>
+    <pre><code>editor.match([/:$/, /^\w+$/, /^:/], function(before, value, after) {
+    console.log([before, value, after]); // &rarr; <a href="text-editor.toggle.html" target="_blank">demo</a>
+});</code></pre>
+    <h3><code>editor.replace(pattern, str[, mode = 0])</code></h3>
+    <p>Replace current selection with <code>str</code>.</p>
+    <pre><code>editor.replace(/<.*?>/g, ""); // strip HTML tags in selection
+editor.replace(/<.*?>/g, "", -1); // strip HTML tags before selection
+editor.replace(/<.*?>/g, "", 1); // strip HTML tags after selection</code></pre>
+    <h3><code>editor.insert(str[, mode = 0[, clear = false]])</code></h3>
+    <p>Insert <var>str</var> to (replace) the current selection.</p>
+    <pre><code>editor.insert(':)'); // insert at selection (replace selection)
+editor.insert('&lt;b&gt;', -1); // insert before selection
+editor.insert('&lt;/b&gt;', 1); // insert after selection
+editor.insert(':)', -1, true); // insert before selection and delete selection
+editor.insert(':)', 1, true); // insert after selection and delete selection</code></pre>
+    <h3><code>editor.wrap(open, close[, wrap = false])</code></h3>
+    <p>Wrap current selection with <var>open</var> and <var>close</var>.</p>
+    <pre><code>editor.wrap('&lt;', '&gt;'); // wrap with `&lt;` and `&gt;`
+editor.wrap('&lt;', '&gt;', true); // wrap with `&lt;` and `&gt;` then select</code></pre>
+    <h3><code>editor.peel(open, close[, wrap = false])</code></h3>
+    <p>Unwrap current selection from <var>open</var> and <var>close</var>.</p>
+    <pre><code>editor.peel('&lt;', '&gt;'); // remove `&lt;` before selection and `&gt;` after selection
+editor.peel('&lt;', '&gt;', true); // remove `&lt;` at selection start and `&gt;` at selection end
+editor.peel(/&lt;+/, /&gt;+/); // remove any `&lt;` before selection and any `&gt;` after selection
+editor.peel(/&lt;+/, /&gt;+/, true); // remove any `&lt;` at selection start and any `&gt;` at selection end</code></pre>
+    <h3><code>editor.dent([mode = 1[, by = '\t'[, include_empty_lines = false]]])</code></h3>
+    <p>Indent/outdent current selection with <var>by</var>.</p>
+    <pre><code>editor.dent(); // indent with `\t`
+editor.dent(-1); // outdent from `\t`
+editor.dent(1, '****'); // indent with `****`
+editor.dent(-1, '****'); // outdent from `****`
+editor.dent(-1, /[\t ]+/); // outdent from any length of white-space</code></pre>
+    <h3><code>editor.trim(open = ""[, close = ""[, start = ""[, end = ""[, tidy = true]]]])</code></h3>
+    <p>Trim current selection from white-spaces, and optionally insert characters at the specified points.</p>
+    <pre><code>// `a&lt;open&gt;<mark>&lt;start&gt;b&lt;end&gt;</mark>&lt;close&gt;c`
+
+editor.trim(); // remove any white-spaces before and after selection, start and end of selection
+editor.trim(false, false); // remove any white-spaces at the start and end of selection
+editor.trim("", "", false, false); // remove any white-spaces before and after selection
+editor.trim(' ', ' '); // force a space before and after selection
+editor.trim('\n\n', '\n\n'); // force line-break before and after selection
+editor.trim('\n\n', '\n\n', false); // ignore empty value before and after selection, just insert that `\n\n` away</code></pre>
+    <h2>Examples</h2>
+    <ul>
+      <li><a href="text-editor.html" target="_blank">No Idea?</a></li>
+      <li><a href="text-editor.self.html" target="_blank">Multiple Instances</a></li>
+      <li><a href="text-editor.set-get-reset.html" target="_blank">Set, Get and Reset Value</a></li>
+      <li><a href="text-editor.$.html" target="_blank">Get Selection Data</a></li>
+      <li><a href="text-editor.save-restore.html" target="_blank">Save, Restore State</a></li>
+      <li><a href="text-editor.focus-blur.html" target="_blank">Focus, Blur Events</a></li>
+      <li><a href="text-editor.select.html" target="_blank">Set Selection Range</a></li>
+      <li><a href="text-editor.match.html" target="_blank">Match Selection</a></li>
+      <li><a href="text-editor.alter.html" target="_blank">Alter Selection</a></li>
+      <li><a href="text-editor.toggle.html" target="_blank">Toggle Replace Selection</a></li>
+      <li><a href="text-editor.replace.html" target="_blank">Replace Selection</a></li>
+      <li><a href="text-editor.insert.html" target="_blank">Insert Selection</a></li>
+      <li><a href="text-editor.wrap-peel.html" target="_blank">Wrap, Peel Selection</a></li>
+      <li><a href="text-editor.dent.html" target="_blank">Indent, Outdent Selection</a></li>
+      <li><a href="text-editor.dent.type.html" target="_blank">Indent, Outdent by Custom Character</a></li>
+      <li><a href="text-editor.dent.key.html" target="_blank">Indent, Outdent with Keyboard Key</a></li>
+      <li><a href="text-editor.trim.html" target="_blank">Trim Selection</a></li>
+      <li><a href="text-editor.rect.html" target="_blank">Get Selection Offset</a> (<a href="text-editor.rect.min.js" target="_blank">+text-editor.rect.min.js</a>)</li>
+      <li><a href="text-editor.rect.html" target="_blank">Get Selection Offset Example 1</a></li>
+    </ul>
     <script>
     var editor = new TE(document.querySelector('textarea'));
     </script>

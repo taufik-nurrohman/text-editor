@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Rect &middot; Text Editor</title>
+    <script src="text-editor.min.js"></script>
+    <script src="text-editor.rect.min.js"></script>
+  </head>
+  <body spellcheck="false">
+    <p><textarea cols="100" rows="20">&lt;h1&gt;The MIT License (MIT)&lt;/h1&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Copyright © 2016 Taufik Nurrohman&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:&lt;/p&gt;
+
+&lt;p&gt;The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.&lt;/p&gt;
+
+&lt;p&gt;THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURsetCaretPositionE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.&lt;/p&gt;
+
+a
+b
+c
+d</textarea></p>
+    <p><label><input type="checkbox"> Toggle Mirror Visibility</label></p>
+    <script>
+
+    var editor = new TE(document.querySelector('textarea')),
+        check = document.querySelector('input[type="checkbox"]');
+    var caret = [
+        document.createElement('span'),
+        document.createElement('span')
+    ];
+    document.body.appendChild(caret[0]);
+    document.body.appendChild(caret[1]);
+    var s = 'position:absolute;width:2px;z-index:9999;visibility:hidden;pointer-events:none;margin-left:-1px;';
+    caret[0].style.cssText = s + 'background:red;';
+    caret[1].style.cssText = s + 'background:blue;';
+    function setCaretPosition() {
+        var $ = editor.$(),
+            rect = editor.rect(),
+            e = editor.self,
+            h = TE.i(window.getComputedStyle(editor.self).getPropertyValue('line-height'));
+        caret[0].style.top = (rect[0].y - e.scrollTop) + 'px';
+        caret[0].style.left = (rect[0].x - e.scrollLeft) + 'px';
+        caret[0].style.height = h + 'px';
+        caret[0].style.marginTop = '-' + ((h - rect[0].h) / 2) + 'px';
+        caret[1].style.visibility = $.length ? 'visible' : 'hidden';
+        caret[1].style.top = (rect[1].y - e.scrollTop) + 'px';
+        caret[1].style.left = (rect[1].x - e.scrollLeft) + 'px';
+        caret[1].style.height = h + 'px';
+        caret[1].style.marginTop = '-' + ((h - rect[1].h) / 2) + 'px';
+        toggleMirrorVisibility.call(check);
+    }
+    check.onchange = toggleMirrorVisibility;
+    editor.self.onfocus = function() {
+        caret[0].style.visibility = 'visible';
+        caret[1].style.visibility = 'visible';
+        setCaretPosition();
+    };
+    editor.self.onblur = function() {
+        caret[0].style.visibility = 'hidden';
+        caret[1].style.visibility = 'hidden';
+    };
+    ['scroll', 'resize', 'keydown', 'cut', 'paste', 'mousedown', 'mouseup', 'mousemove', 'select'].forEach(function(event) {
+        editor.self.addEventListener(event, function(e) {
+            setTimeout(setCaretPosition, 1);
+        }, false);
+    });
+
+    function toggleMirrorVisibility(el) {
+        TE.mirror.style.pointerEvents = 'none';
+        TE.mirror.style.visibility = this.checked ? 'visible' : 'hidden';
+    }
+
+    </script>
+  </body>
+</html>

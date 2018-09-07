@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Text Editor</title>
+    <script src="text-editor.min.js"></script>
+  </head>
+  <body>
+    <p><textarea spellcheck="false">abcdef</textarea></p>
+    <p>
+      <button onclick="return alert(JSON.stringify(editor.$(), null, 2)), false;">Inspect</button>
+    </p>
+    <script>
+    var editor = new TE(document.querySelector('textarea'));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Text Editor</title>
+    <script src="text-editor.min.js"></script>
+    <style>textarea:focus{background:#ff0}</style>
+  </head>
+  <body>
+    <p><textarea spellcheck="false">a
+b
+c
+d
+e
+f
+g
+h
+i
+j
+k
+l
+m
+n
+o
+p
+q
+r
+s
+t
+u
+v
+w
+x
+y
+z</textarea></p>
+    <p>
+      <button onclick="return editor.focus(), false;">Focus</button>
+      <button onclick="return editor.focus(-1), false;">Focus Start</button>
+      <button onclick="return editor.focus(1), false;">Focus End</button>
+      <button onmouseover="return editor.blur(), false;" onmouseout="return editor.focus(), false;">Enter to Blur, Exit to Focus</button>
+    </p>
+    <script>
+    var editor = new TE(document.querySelector('textarea'));
+    </script>
+  </body>
+</html>

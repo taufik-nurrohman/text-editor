@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Text Editor</title>
+    <script src="text-editor.min.js"></script>
+  </head>
+  <body>
+    <p><textarea spellcheck="false">abcdef</textarea></p>
+    <p>
+      <button onclick="return editor_1.wrap('*', '*'), false;"><b>B</b></button>
+      <button onclick="return editor_1.wrap('_', '_'), false;"><i>I</i></button>
+    </p>
+    <p><textarea spellcheck="false">abcdef</textarea></p>
+    <p>
+      <button onclick="return editor_2.wrap('*', '*'), false;"><b>B</b></button>
+      <button onclick="return editor_2.wrap('_', '_'), false;"><i>I</i></button>
+    </p>
+    <p><textarea spellcheck="false">abcdef</textarea></p>
+    <p>
+      <button onclick="return editor_3.wrap('*', '*'), false;"><b>B</b></button>
+      <button onclick="return editor_3.wrap('_', '_'), false;"><i>I</i></button>
+    </p>
+    <script>
+    var area = document.querySelectorAll('textarea'),
+        editor_1 = new TE(area[0]),
+        editor_2 = new TE(area[1]),
+        editor_3 = new TE(area[2]);
+    </script>
+  </body>
+</html>

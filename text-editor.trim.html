@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Text Editor</title>
+    <script src="text-editor.min.js"></script>
+  </head>
+  <body>
+    <p><textarea spellcheck="false" cols="100" rows="5"> a  b  c  d  e  f 
+ a  b  c  d  e  f 
+ 1  2  3  4  5  6 
+ 1  2  3  4  5  6 </textarea></p>
+    <p>
+      <button onclick="return editor.trim(), false;">Trim</button>
+      <button onclick="return editor.trim(false, false), false;">Trim Start and End of Selection</button>
+      <button onclick="return editor.trim('', '', false, false), false;">Trim Before and After Selection</button>
+      <button onclick="return editor.trim(' ', ' '), false;">Tidy with a Space</button>
+      <button onclick="return editor.trim('\n\n', '\n\n'), false;">Tidy with Line Break</button>
+    </p>
+    <script>
+    var editor = new TE(document.querySelector('textarea'));
+    </script>
+  </body>
+</html>

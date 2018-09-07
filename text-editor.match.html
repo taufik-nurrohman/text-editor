@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Text Editor</title>
+    <script src="text-editor.min.js"></script>
+  </head>
+  <body>
+    <p><textarea spellcheck="false">123456abcdeftruefalse</textarea></p>
+    <p>
+      <button onclick="return check(), false;">Check</button>
+    </p>
+    <script>
+    var editor = new TE(document.querySelector('textarea'));
+    function check() {
+        if (editor.match(/^\d+$/)) {
+            alert('number');
+        } else if (editor.match(/^(true|false)$/)) {
+            alert('boolean');
+        } else {
+            alert('string');
+        }
+    }
+    </script>
+  </body>
+</html>

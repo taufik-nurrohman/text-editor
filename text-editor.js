@@ -93,12 +93,7 @@
     }
 
     function trim(s, x) {
-        if (x === -1) {
-            return s[replace](/^[\s\uFEFF\xA0]+/, ""); // Trim left
-        } else if (x === 1) {
-            return s[replace](/[\s\uFEFF\xA0]+$/, ""); // Trim right
-        }
-        return s[replace](/^[\s\uFEFF\xA0]*|[\s\uFEFF\xA0]*$/g, "") // Trim left and right
+        return s['trim' + (x === -1 ? 'Left' : x === 1 ? 'Right' : "")]();
     }
 
     (function($) {
@@ -127,7 +122,7 @@
             return setTimeout(function() {
                 j = $[__instance__];
                 for (i in j) {
-                    fn(j[i], i, j);
+                    fn.call(j[i], i, j);
                 }
             }, t === 0 ? 0 : (t || 1)), $;
         };
@@ -144,7 +139,7 @@
         var s = doc.currentScript || doc.getElementsByTagName('script').pop();
         $.path = ((s && s.src) || win.location.href).split('/').slice(0, -1).join('/');
 
-    })(win[NS] = function(target, dent) {
+    })(win[NS] = function(self, dent) {
 
         var $ = win[NS],
             $$ = this, // Self
@@ -160,33 +155,33 @@
 
         // Return a new instance of `TE` if `TE` was called without the `new` operator
         if (!($$ instanceof $)) {
-            return new $(target);
+            return new $(self);
         }
 
         // Store editor instance to `TE.__instance__`
-        $[__instance__][target.id || target.name || count(Object.keys($[__instance__]))] = $$;
+        $[__instance__][self.id || self.name || count(Object.keys($[__instance__]))] = $$;
 
         function val() {
-            return target.value[replace](/\r/g, "");
+            return self.value[replace](/\r/g, "");
         }
 
         // The `<textarea>` element
-        $$.target = target;
+        $$.self = self;
 
         // The initial value
         $$.value = val();
 
         // Set value ($value)
         $$.set = function(v) {
-            if (target.disabled || target.readOnly) {
+            if (self.disabled || self.readOnly) {
                 return $$;
             }
-            return (target.value = v), $$;
+            return (self.value = v), $$;
         };
 
         // Restore to the initial value
         $$.reset = function() {
-            return (target.value = $.value), $$;
+            return (self.value = $$.value), $$;
         };
 
         // Get value {$default = ""}
@@ -194,7 +189,7 @@
             if (!is_set(def)) {
                 def = "";
             }
-            return !target.disabled && trim(target.value) || def;
+            return !self.disabled && trim(self.value) || def;
         };
 
         function _$$(a, b, c) {
@@ -211,24 +206,28 @@
 
         // Get selection {$key, $default}
         $$.$ = function(k, def) {
-            var o = new _$$(target[selectionStart], target[selectionEnd], val());
+            var o = new _$$(self[selectionStart], self[selectionEnd], val());
             o.length = count(o.value);
-            return k ? (is_set(o[k]) ? o[k] : def) : o;
+            return k ? (is_set(o[k]) && o[k] ? o[k] : def) : o;
         };
 
-        // Save selection {$value, $key = 0}
-        $$.save = function(v, k) {
-            return (bin[k || 0] = v), $$;
+        // Save state {$key = 0}
+        $$.save = function(k) {
+            return (bin[k || 0] = $$.$()), $$;
         };
 
-        // Restore selection {$default = "", $key = 0}
-        $$.restore = function(def, k) {
+        // Restore state {$key = 0}
+        $$.restore = function(k, def) {
             if (k === true) {
-                return bin; // Read all storage with `$$.restore("", true)`
+                return bin; // Read all storage with `$$.restore(true)`
             } else if (!is_set(k)) {
                 k = 0;
             }
-            return is_set(bin[k]) ? bin[k] : (is_set(def) ? def : "");
+            if (is_set(bin[k])) {
+                var s = bin[k];
+                return $$.set(s.before + s.value + s.after)[select](s.start, s.end), s;
+            }
+            return $$[select](), def;
         };
 
         // Focus to the editor {$mode}
@@ -238,18 +237,18 @@
                 x = y = 0; // Put caret at the start of the editor, scroll to the start of the editor
             } else if (x === 1) {
                 x = count(val()); // Put caret at the end of the editor
-                y = target[scroll + 'Height']; // Scroll to the end of the editor
+                y = self[scroll + 'Height']; // Scroll to the end of the editor
             }
             if (is_set(x)) {
-                target[selectionStart] = target[selectionEnd] = x;
-                target[scrollTop] = y;
+                self[selectionStart] = self[selectionEnd] = x;
+                self[scrollTop] = y;
             }
-            return target[focus](), $$;
+            return self[focus](), $$;
         };
 
         // Blur from the editor
         $$[blur] = function() {
-            return target[blur](), $$;
+            return self[blur](), $$;
         };
 
         // Select value {} or {true} or {$caret} or {$start, $end}
@@ -260,25 +259,30 @@
                 x, y, z;
             x = win.pageXOffset || html[scrollLeft] || body[scrollLeft];
             y = win.pageYOffset || html[scrollTop] || body[scrollTop];
-            z = target[scrollTop];
+            z = self[scrollTop];
             if (counts === 0) { // Restore selection with `$.select()`
                 arg[0] = s.start;
                 arg[1] = s.end;
             } else if (counts === 1) { // Move caret position with `$.select(7)`
                 if (arg[0] === true) { // Select all with `$.select(true)`
-                    return target[select](), $$;
+                    return self[select](), $$;
                 }
                 arg[1] = arg[0];
             }
-            if (target.disabled) return $$;
-            target[focus]();
-            target.setSelectionRange(arg[0], arg[1]); // Default `$.select(7, 100)`
-            target[scrollTop] = z, win.scroll(x, y);
+            if (self.disabled) return $$;
+            self[focus]();
+            self.setSelectionRange(arg[0], arg[1]); // Default `$.select(7, 100)`
+            self[scrollTop] = z, win.scroll(x, y);
             return $$;
         };
 
         // Match at selection {$pattern, $fn}
         $$.match = function(pattern, fn) {
+            if (is_array(pattern)) {
+                var s = $$.$(),
+                    m = [s.before.match(pattern[0]), s.value.match(pattern[1]), s.after.match(pattern[2])];
+                return is_function(fn) ? fn.call($$, m[0] || [], m[1] || [], m[2] || []) : [!!m[0], !!m[1], !!m[2]];
+            }
             var m = $$.$().value.match(pattern);
             return is_function(fn) ? fn.call($$, m || []) : !!m;
         };
@@ -288,7 +292,7 @@
             var s = $$.$(),
                 b = s.before,
                 a = s.after,
-                v = s.value, B, E;
+                v = s.value;
             if (x === -1) { // Replace before
                 b = b[replace](f, t);
             } else if (x === 1) { // Replace after
@@ -296,19 +300,7 @@
             } else { // Replace value
                 v = v[replace](f, t);
             }
-            B = count(b);
-            E = B + count(v);
-            return $$.set(b + v + a)[select](B, E);
-        };
-
-        // Replace before selection {$from, $to}
-        $$[replace + 'Before'] = function(f, t) {
-            return $$[replace](f, t, -1);
-        };
-
-        // Replace after selection {$from, $to}
-        $$[replace + 'After'] = function(f, t) {
-            return $$[replace](f, t, 1);
+            return $$.set(b + v + a)[select](b = count(b), b + count(v));
         };
 
         // Insert/replace at caret {$value, $mode, $clear = false}
@@ -323,16 +315,6 @@
                 f = /^/;
             }
             return $$[replace](f, v, x);
-        };
-
-        // Insert before selection {$value, $clear = false}
-        $$[insert + 'Before'] = function(v, clear) {
-            return $$[insert](v, -1, clear);
-        };
-
-        // Insert after selection {$value, $clear = false}
-        $$[insert + 'After'] = function(v, clear) {
-            return $$[insert](v, 1, clear);
         };
 
         // Wrap current selection {$open, $close, $wrap = false}
@@ -389,8 +371,8 @@
             return $$[replace](pattern(by + '$'), "", -1);
         }
 
-        // Dent {$by = '\t', $mode, $include_empty_lines = false}
-        $$.dent = function(by, x, e) {
+        // Dent {$mode, $by = '\t', $include_empty_lines = false}
+        $$.dent = function(x, by, e) {
             if (x === 1) {
                 return indent(by, e);
             } else if (x === -1) {
@@ -399,8 +381,11 @@
             return indent(by, e);
         };
 
-        // Trim white-space before and after selection range {$open = "", $close = "", $start = "", $end = ""}
-        $$.trim = function(o, c, s, e) {
+        // Trim white-space before and after selection range {$open = "", $close = "", $start = "", $end = "", $tidy = true}
+        $$.trim = function(o, c, s, e, tidy) {
+            if (!is_set(tidy)) {
+                tidy = true;
+            }
             if (o !== false) o = o || "";
             if (c !== false) c = c || "";
             if (s !== false) s = s || "";
@@ -408,10 +393,13 @@
             var S = $$.$(),
                 b = S.before,
                 a = S.after,
-                v = S.value;
-            b = o !== false ? trim(b, 1) + o : b;
-            a = c !== false ? c + trim(a, -1) : a;
-            v = (s !== false ? s : "") + trim(v) + (e !== false ? e : "");
+                v = S.value,
+                B = trim(b, 1),
+                A = trim(a, -1);
+            b = o !== false ? trim(b, 1) + (B || !tidy ? o : "") : b;
+            a = c !== false ? (A || !tidy ? c : "") + trim(a, -1) : a;
+            if (s !== false) v = trim(v, -1);
+            if (e !== false) v = trim(v, 1);
             return $$.set(b + v + a)[select](b = count(b), b + count(v));
         };
 

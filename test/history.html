@@ -8,7 +8,7 @@
     <script src="../text-editor.js"></script>
     <script src="../text-editor.history.js"></script>
   </head>
-  <body>
+  <body spellcheck="false">
     <h1>History Test</h1>
     <p><textarea id="area" placeholder="Type something&hellip;"></textarea></p>
     <p>
@@ -19,7 +19,8 @@
       <button onclick="return editor.loss(editor._historyState), false;">delete last history</button>
       <button onclick="return editor.loss(0), false;">delete first history</button>
       <button onclick="return editor.loss(true), false;">delete all history</button>
-      <br>
+    </p>
+    <p>
       <button onclick="return editor.record().wrap('**', '**').record(), false;"><b>B</b></button>
       <button onclick="return editor.record().wrap('_', '_').record(), false;"><i>I</i></button>
       <button onclick="return editor.undo(), false;">undo</button>
@@ -30,7 +31,7 @@
     var editor = new TE(document.getElementById('area')),
         dump = document.getElementById('dump');
     editor.record(); // Record the initial value
-    editor.target.addEventListener("keydown", function() {
+    editor.self.addEventListener("keydown", function() {
         setTimeout(function() {
             editor.record(); // Record keyboard interaction
         }, 1);

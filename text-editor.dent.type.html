@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Text Editor</title>
+    <script src="text-editor.min.js"></script>
+  </head>
+  <body>
+    <p><textarea spellcheck="false" cols="100" rows="24">a
+b
+c
+d
+e
+f
+
+1
+2
+3
+4
+5
+6</textarea></p>
+    <p>
+      <button onclick="return editor.dent(1, options.value, !e.checked), false;">Indent</button>
+      <button onclick="return editor.dent(-1, options.value, !e.checked), false;">Outdent</button>
+    </p>
+    <p>
+      <select>
+        <option value="" disabled>Indent With</option>
+        <option value="&#x0009;">1 Tab</option>
+        <option value="    ">4 Space(s)</option>
+      </select>
+      <label>
+        <input type="checkbox" checked> Ignore Empty Lines?
+      </label>
+    </p>
+    <script>
+    var editor = new TE(document.querySelector('textarea')),
+        options = document.querySelector('select'),
+        e = document.querySelector('input[type="checkbox"]');
+    </script>
+  </body>
+</html>
