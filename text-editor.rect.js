@@ -17,11 +17,12 @@
         getBoundingClientRect = 'getBoundingClientRect',
         getComputedStyle = 'getComputedStyle',
         getPropertyValue = 'getPropertyValue',
-        replace = 'replace',
-        X = 'left',
-        Y = 'top',
-        W = 'width',
-        H = 'height';
+        offset = 'offset',
+        offsetLeft = offset + 'Left',
+        offsetTop = offset + 'Top',
+        offsetWidth = offset + 'Width',
+        offsetHeight = offset + 'Height',
+        replace = 'replace';
 
     $.mirror = div;
 
@@ -39,12 +40,12 @@
             text = 'text-',
             padding = 'padding-',
             border = 'border-',
-            width = '-' + W,
+            width = '-width',
             property = [
                 border + 'bottom' + width,
-                border + X + width,
+                border + 'left' + width,
                 border + 'right' + width,
-                border + Y + width,
+                border + 'top' + width,
                 '-webkit-box-sizing',
                 '-moz-box-sizing',
                 'box-sizing',
@@ -56,59 +57,64 @@
                 font + 'style',
                 font + 'variant',
                 font + 'weight',
-                H,
+                'height',
                 'letter-spacing',
-                'line-' + H,
+                'line-height',
                 padding + 'bottom',
-                padding + X,
+                padding + 'left',
                 padding + 'right',
-                padding + Y,
+                padding + 'top',
                 'tab-size',
                 text + 'align',
                 text + 'decoration',
                 text + 'indent',
                 text + 'transform',
-                W,
+                'width',
                 'word-spacing'
-            ], i, r, c;
+            ], i, c;
         doc.body.appendChild(div);
         div.innerHTML = encode($.before) + span + '<mark>' + encode($.value) + '</mark>' + span + encode($.after);
         var s = "", v;
         for (i in property) {
-            v = css($$.self, property[i]);
+            v = css($$, property[i]);
             v && (s += property[i] + ':' + v + ';');
         }
-        r = $$.self[getBoundingClientRect]();
-        div.style.cssText = s + 'border-style:solid;white-space:pre-wrap;word-wrap:break-word;overflow:auto;position:absolute;' + Y + ':' + r[Y] + 'px;' + X + ':' + r[X] + 'px;visibility:hidden;';
+        var X = $$[offsetLeft],
+            Y = $$[offsetTop],
+            L = number(css($$, property[1])),
+            T = number(css($$, property[3])),
+            W = $$[offsetWidth],
+            H = $$[offsetHeight];
+        div.style.cssText = s + 'border-style:solid;white-space:pre-wrap;word-wrap:break-word;overflow:auto;position:absolute;left:' + X + 'px;top:' + Y + 'px;visibility:hidden;';
         c = div.children;
-        var start = c[0][getBoundingClientRect](),
-            rect = c[1][getBoundingClientRect](),
-            end = c[2][getBoundingClientRect]();
+        var start = c[0],
+            rect = c[1],
+            end = c[2];
         return [{
-            x: start[X], // left offset of selection start
-            y: start[Y], // top offset of selection start
+            x: start[offsetLeft] + X + L, // left offset of selection start
+            y: start[offsetTop] + Y + T, // top offset of selection start
             w: 0, // caret width is always zero
-            h: start[H] // caret height (must be the font size)
+            h: start[offsetHeight] // caret height (must be the font size)
         }, {
-            x: end[X], // left offset of selection end
-            y: end[Y], // top offset of selection end
+            x: end[offsetLeft] + X + L, // left offset of selection end
+            y: end[offsetTop] + Y + T, // top offset of selection end
             w: 0, // caret width is always zero
-            h: end[H] // caret height (must be the font size)
+            h: end[offsetHeight] // caret height (must be the font size)
         }, {
-            x: rect[X], // left offset of the whole selection
-            y: rect[Y], // top offset of the whole selection
-            w: rect[W], // total selection width
-            h: rect[H] // total selection height
+            x: rect[offsetLeft] + X + L, // left offset of the whole selection
+            y: rect[offsetTop] + Y + T, // top offset of the whole selection
+            w: rect[offsetWidth], // total selection width
+            h: rect[offsetHeight] // total selection height
         }, {
-            x: r[X], // left offset of text area
-            y: r[Y], // top offset of text area
-            w: r[W], // text area width
-            h: r[H] // text area height
+            x: X, // left offset of text area
+            y: Y, // top offset of text area
+            w: W, // text area width
+            h: H // text area height
         }];
     }
 
     $$.rect = function(k) {
-        var o = rect(this.$(), this);
+        var o = rect(this.$(), this.self);
         return x(k) ? o : [o[0][k], o[1][k]];
     };
 
