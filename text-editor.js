@@ -136,7 +136,7 @@
         $.t = trim;
       
         // Get current script path…
-        var s = doc.currentScript || doc.getElementsByTagName('script').pop();
+        var s = doc.currentScript;
         $.path = ((s && s.src) || win.location.href).split('/').slice(0, -1).join('/');
 
     })(win[NS] = function(self, dent) {
