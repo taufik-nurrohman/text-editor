@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>History &middot; Text Editor</title>
+    <link href="test.css" rel="stylesheet">
+    <script src="../text-editor.min.js"></script>
+    <script src="history.min.js"></script>
+  </head>
+  <body>
+    <p><textarea placeholder="Type something&hellip;" spellcheck="false"></textarea></p>
+    <p>
+      <button onclick="return dump.innerHTML = 'Current: ' + editor._historyState + '\n---\nAll: ' + JSON.stringify(editor.history(), null, 2), false;">Inspect History</button>
+      <button onclick="return dump.innerHTML = JSON.stringify(editor.history(1), null, 2), false;">Inspect the 2(nd) History</button>
+      <button onclick="return editor.record(), false;">Save Selection to History</button>
+      <button onclick="return editor.loss(), false;">Delete Current History</button>
+      <button onclick="return editor.loss(editor._historyState), false;">Delete the Last History</button>
+      <button onclick="return editor.loss(0), false;">Delete the First History</button>
+      <button onclick="return editor.loss(true), false;">Delete All History</button>
+    </p>
+    <p>
+      <button onclick="return editor.record().wrap('**', '**').record(), false;"><b>B</b></button>
+      <button onclick="return editor.record().wrap('_', '_').record(), false;"><i>I</i></button>
+      <button onclick="return editor.undo(), false;">Undo</button>
+      <button onclick="return editor.redo(), false;">Redo</button>
+    </p>
+    <pre><code></code></pre>
+    <script>
+    var editor = new TE(document.querySelector('textarea')),
+        dump = document.querySelector('code');
+    editor.record(); // Record the initial value
+    editor.self.addEventListener("keydown", function() {
+        setTimeout(function() {
+            editor.record(); // Record keyboard interaction
+        }, 1);
+    }, false);
+    </script>
+  </body>
+</html>
