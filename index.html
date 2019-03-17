@@ -9,7 +9,7 @@
   </head>
   <body spellcheck="false">
     <h1>Text Editor</h1>
-    <p><textarea>Lorem ipsum dolor sit amet.</textarea></p>
+    <p><textarea style="display:block;width:100%;height:6em;box-sizing:border-box;">Lorem ipsum dolor sit amet.</textarea></p>
     <p>
       <button onclick="editor.wrap('<b>', '</b>');"><b>B</b></button>
       <button onclick="editor.wrap('<i>', '</i>');"><i>I</i></button>
@@ -46,14 +46,13 @@
     </ul>
     <h2>Instance</h2>
     <p>All editor instances will be stored in <code>TE.__instance__</code>. To iterate the instances is possible with <code>TE.each</code>:</p>
-    <pre><code>TE.each(function(key, any) {
+    <pre><code>TE.each(function(key) {
     console.log(key);
-    console.log(this.target);
+    console.log(this.self);
 });</code></pre>
     <ul>
       <li><var>this</var> &rarr; refers to the editor instance</li>
       <li><var>key</var> &rarr; refers to the editor target&rsquo;s <code>id</code> or <code>name</code> attribute value, or its current order</li>
-      <li><var>any</var> &rarr; refers to <code>TE.__instance__</code></li>
     </ul>
     <h2>Methods and Properties</h2>
     <h3><code>editor.self</code></h3>
@@ -175,6 +174,7 @@ editor.trim('\n\n', '\n\n', false); // ignore empty value before and after selec
       <li><a href="text-editor/rect.html" target="_blank">Get Selection Offset</a> (<a href="text-editor/rect.min.js" target="_blank">+rect.min.js</a>)</li>
       <li><a href="text-editor/rect.caret.html" target="_blank">Custom Caret Example</a></li>
       <li><a href="text-editor/history.html" target="_blank">Undo and Redo Feature</a> (<a href="text-editor/history.min.js" target="_blank">+history.min.js</a>)</li>
+      <li><a href="text-editor/_close.html" target="_blank">Auto-Close Feature</a> (<a href="text-editor/_close.min.js" target="_blank">+_close.min.js</a>)</li>
     </ul>
     <script>
     var editor = new TE(document.querySelector('textarea'));

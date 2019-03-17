@@ -122,7 +122,7 @@
             return setTimeout(function() {
                 j = $[__instance__];
                 for (i in j) {
-                    fn.call(j[i], i, j);
+                    fn.call(j[i], i);
                 }
             }, t === 0 ? 0 : (t || 1)), $;
         };
@@ -152,6 +152,8 @@
         if (!is_set(dent)) {
             dent = '\t';
         }
+
+        $$._dent = dent;
 
         // Return a new instance of `TE` if `TE` was called without the `new` operator
         if (!($$ instanceof $)) {

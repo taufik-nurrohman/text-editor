@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Auto-Close Brackets &middot; Text Editor</title>
+    <script src="../text-editor.min.js"></script>
+    <script src="_close.min.js"></script>
+  </head>
+  <body>
+    <p><textarea spellcheck="false" placeholder="function foo() {}" style="display:block;width:100%;height:6em;box-sizing:border-box;"></textarea></p>
+    <p>
+      <button onclick="return TE._close.reset(editor), false;">Destroy</button>
+    </p>
+    <h3><code>TE._close.set(editor[, options = {}])</code></h3>
+    <p>Trigger auto-close feature.</p>
+    <pre><code>var editor = new TE(document.querySelector('textarea'));
+
+// Create
+TE._close.set(editor, {
+    '(': ')',
+    '{': '}',
+    '[': ']',
+    '&lt;': '&gt;'
+});</code></pre>
+    <h3><code>TE._close.reset(editor)</code></h3>
+    <p>Remove auto-close feature.</p>
+    <script>
+    var editor = new TE(document.querySelector('textarea'));
+    // Create
+    TE._close.set(editor, {
+        // Auto-close bold, italic and code marker for Markdown
+        '*': '*',
+        '_': '_',
+        '`': '`'
+    });
+    </script>
+  </body>
+</html>
