@@ -10,11 +10,7 @@
 (function(win, doc, NS) {
 
     var $ = win[NS],
-        $$ = $._,
-        x = $.is.x,
-        n = function(x) {
-            return parseFloat(x);
-        },
+        _ = $._,
 
         appendChild = 'appendChild',
         children = 'children',
@@ -40,7 +36,15 @@
         return x[replace](/&/g, '&amp;')[replace](/</g, '&lt;')[replace](/>/g, '&gt;');
     }
 
-    function rect($, $$) {
+    function isSet(x) {
+        return 'undefined' !== typeof x;
+    }
+
+    function number(x) {
+        return parseFloat(x);
+    }
+
+    function rect($, el) {
         var span = '<span>&zwnj;</span>',
             font = 'font-',
             text = 'text-',
@@ -82,46 +86,47 @@
         div[innerHTML] = encode($.before) + span + '<mark>' + encode($.value) + '</mark>' + span + encode($.after);
         var s = "", v;
         for (i in property) {
-            v = css($$, property[i]);
+            v = css(el, property[i]);
             v && (s += property[i] + ':' + v + ';');
         }
-        var X = $$[offsetLeft],
-            Y = $$[offsetTop],
-            L = n(css($$, property[1])),
-            T = n(css($$, property[3])),
-            W = $$[offsetWidth],
-            H = $$[offsetHeight];
+        var X = el[offsetLeft],
+            Y = el[offsetTop],
+            L = number(css(el, property[1])),
+            T = number(css(el, property[3])),
+            W = el[offsetWidth],
+            H = el[offsetHeight];
         div.style.cssText = s + 'border-style:solid;white-space:pre-wrap;word-wrap:break-word;overflow:auto;position:absolute;left:' + X + 'px;top:' + Y + 'px;visibility:hidden;';
         c = div[children];
         var start = c[0],
             rect = c[1],
             end = c[2];
         return [{
+            h: start[offsetHeight], // Caret height (must be the font size)
+            w: 0, // Caret width is always zero
             x: start[offsetLeft] + X + L, // Left offset of selection start
-            y: start[offsetTop] + Y + T, // Top offset of selection start
-            w: 0, // Caret width is always zero
-            h: start[offsetHeight] // Caret height (must be the font size)
+            y: start[offsetTop] + Y + T // Top offset of selection start
         }, {
+            h: end[offsetHeight], // Caret height (must be the font size)
+            w: 0, // Caret width is always zero
             x: end[offsetLeft] + X + L, // Left offset of selection end
-            y: end[offsetTop] + Y + T, // Top offset of selection end
-            w: 0, // Caret width is always zero
-            h: end[offsetHeight] // Caret height (must be the font size)
+            y: end[offsetTop] + Y + T // Top offset of selection end
         }, {
-            x: rect[offsetLeft] + X + L, // Left offset of the whole selection
-            y: rect[offsetTop] + Y + T, // Top offset of the whole selection
+            h: rect[offsetHeight], // Total selection height
             w: rect[offsetWidth], // Total selection width
-            h: rect[offsetHeight] // Total selection height
+            x: rect[offsetLeft] + X + L, // Left offset of the whole selection
+            y: rect[offsetTop] + Y + T // Top offset of the whole selection
         }, {
-            x: X, // Left offset of text area
-            y: Y, // Top offset of text area
+            h: H, // Text area height
             w: W, // Text area width
-            h: H // Text area height
+            x: X, // Left offset of text area
+            y: Y // Top offset of text area
         }];
     }
 
-    $$.rect = function(k) {
-        var o = rect(this.$(), this.self);
-        return x(k) ? o : [o[0][k], o[1][k]];
+    _.rect = function(key) {
+        var t = this,
+            out = rect(t.$(), t.self);
+        return isSet(key) ? [out[0][key], out[1][key]] : out;
     };
 
 })(window, document, 'TE');
