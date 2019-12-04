@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR HISTORY 1.0.0
+ *  TEXT EDITOR HISTORY 1.1.0
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -11,27 +11,36 @@
 
     var $ = win[NS],
         $$ = $._,
-        edge = $.edge,
         x = $.is.x,
         _history = '_history',
         _historyState = _history + 'State';
 
+    function edge(a, b, c) {
+        if (!x(b) && a < b) {
+            return b;
+        }
+        if (!x(c) && a > c) {
+            return c;
+        }
+        return a;
+    }
+
     $$[_history] = [];
     $$[_historyState] = -1;
 
-    // Get history data {$index, $default}
-    $$.history = function(i, def) {
-        if (x(i)) {
+    // Get history data
+    $$.history = function(index) {
+        if (x(index)) {
             return this[_history];
         }
-        return x(this[_history][i]) ? def : this[_history][i]; 
+        return x(this[_history][index]) ? null : this[_history][index]; 
     };
 
-    // Save current state to history {$index}
-    $$.record = function(i) {
-        var s = this.$(),
+    // Save current state to history
+    $$.record = function(index) {
+        var selection = this.$(),
             current = this[_history][this[_historyState]] || [],
-            next = [this.get(this.value), s.start, s.end];
+            next = [this.get(this.value), selection.start, selection.end];
         if (
             next[0] === current[0] &&
             next[1] === current[1] &&
@@ -40,17 +49,17 @@
             return this; // Do not save duplicate
         }
         ++this[_historyState];
-        return (this[_history][x(i) ? this[_historyState] : i] = next), this;
+        return (this[_history][x(index) ? this[_historyState] : index] = next), this;
     };
 
-    // Remove state from history {$index} or {true}
-    $$.loss = function(i) {
-        if (i === true) {
+    // Remove state from history
+    $$.loss = function(index) {
+        if (true === index) {
             this[_history] = [];
             this[_historyState] = -1;
             return [];
         }
-        var current = this[_history].splice(x(i) ? this[_historyState] : i, 1);
+        var current = this[_history].splice(x(index) ? this[_historyState] : index, 1);
         this[_historyState] = edge(this[_historyState] - 1, -1);
         return current;
     };

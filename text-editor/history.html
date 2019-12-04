@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width">
     <title>History &middot; Text Editor</title>
     <link href="test.css" rel="stylesheet">
-    <script src="../text-editor.min.js"></script>
-    <script src="history.min.js"></script>
   </head>
   <body>
     <p><textarea placeholder="Type something&hellip;" spellcheck="false"></textarea></p>
@@ -26,15 +24,20 @@
       <button onclick="return editor.redo(), false;">Redo</button>
     </p>
     <pre><code></code></pre>
+    <script src="../text-editor.min.js"></script>
+    <script src="history.min.js"></script>
     <script>
+
     var editor = new TE(document.querySelector('textarea')),
         dump = document.querySelector('code');
+
     editor.record(); // Record the initial value
-    editor.self.addEventListener("keydown", function() {
+    editor.self.addEventListener('keydown', function() {
         setTimeout(function() {
             editor.record(); // Record keyboard interaction
         }, 1);
     }, false);
+
     </script>
   </body>
 </html>

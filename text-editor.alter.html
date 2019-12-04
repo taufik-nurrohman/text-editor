@@ -4,31 +4,35 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Text Editor</title>
-    <script src="text-editor.min.js"></script>
   </head>
   <body>
     <p><textarea spellcheck="false">abcdef :happy: :sad: :angry: :wonder: :tongue:</textarea></p>
     <p>
-      <button onclick="return replace_auto(), false;">replace emoji</button>
+      <button onclick="return replaceToEmoji(), false;">Replace Emoji</button>
     </p>
+    <script src="text-editor.min.js"></script>
     <script>
+
     var editor = new TE(document.querySelector('textarea')),
         maps = {
             ':happy:': '😀',
             ':sad:': '😩',
             ':wonder:': '😕'
         };
-    function replace_auto() {
+
+    function replaceToEmoji() {
         editor.match(/^\s*:\w+:\s*$/, function(m) {
             console.log(m);
-            if (m[0] && maps[TE.t(m[0])]) {
-                this.insert(maps[TE.t(m[0])]).trim(' ', ' ');
+            var exists = maps[m[0] = m[0] ? m[0].trim() : ""];
+            if (exists) {
+                this.insert(exists).trim(' ', ' ');
             } else if (m[0]) {
                 this.select();
-                alert('no data available');
+                alert('Could not replace \u201C' + m[0] + '\u201D to emoji.');
             }
         });
     }
+
     </script>
   </body>
 </html>

@@ -8,7 +8,7 @@ Text Editor
 Demo
 ----
 
-[Demo and Documentation](http://tovic.github.io/text-editor "View Demo")
+[Demo and Documentation](http://taufik-nurrohman.github.io/text-editor "View Demo")
 
 Credits
 -------

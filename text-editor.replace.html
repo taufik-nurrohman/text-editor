@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Text Editor</title>
-    <script src="text-editor.min.js"></script>
   </head>
   <body>
     <p><textarea spellcheck="false">a b c d e f
@@ -14,8 +13,11 @@
       <button onclick="return editor.replace(/ /g, '*', -1), false;">Replace All Spaces Before Selection with <code>*</code></button>
       <button onclick="return editor.replace(/ /g, '*', 1), false;">Replace All Spaces After Selection with <code>*</code></button>
     </p>
+    <script src="text-editor.min.js"></script>
     <script>
+
     var editor = new TE(document.querySelector('textarea'));
+
     </script>
   </body>
 </html>

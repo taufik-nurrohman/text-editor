@@ -21,8 +21,8 @@ f
 5
 6</textarea></p>
     <p>
-      <button onclick="return editor.dent(1, options.value, !e.checked), false;">Indent</button>
-      <button onclick="return editor.dent(-1, options.value, !e.checked), false;">Outdent</button>
+      <button onclick="return editor.push(options.value, !e.checked), false;">Indent</button>
+      <button onclick="return editor.pull(options.value), false;">Outdent</button>
     </p>
     <p>
       <select>
@@ -31,13 +31,15 @@ f
         <option value="    ">4 Space(s)</option>
       </select>
       <label>
-        <input type="checkbox" checked> Ignore Empty Lines?
+        <input type="checkbox" checked> Ignore empty lines?
       </label>
     </p>
     <script>
+
     var editor = new TE(document.querySelector('textarea')),
         options = document.querySelector('select'),
         e = document.querySelector('input[type="checkbox"]');
+
     </script>
   </body>
 </html>

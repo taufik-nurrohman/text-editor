@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Text Editor</title>
-    <script src="text-editor.min.js"></script>
   </head>
   <body>
     <p><textarea spellcheck="false">0123456789
@@ -16,8 +15,11 @@
       <button onclick="return editor.select(8), false;">Move Caret to 8</button>
       <button onclick="return editor.select(4, 8), false;">Select 4 to 8</button>
     </p>
+    <script src="text-editor.min.js"></script>
     <script>
+
     var editor = new TE(document.querySelector('textarea'));
+
     </script>
   </body>
 </html>
