@@ -26,6 +26,8 @@
         keydown = 'keydown',
         match = 'match',
         mousedown = 'mousedown',
+        pull = 'pull',
+        push = 'push',
         record = 'record',
         redo = 'redo',
         replace = 'replace',
@@ -50,11 +52,11 @@
         };
 
     function eventLet(el, name, fn) {
-        el.removeEventListener(name, fn);
+        el && fn && el.removeEventListener(name, fn);
     }
 
     function eventSet(el, name, fn) {
-        el.addEventListener(name, fn, false);
+        el && fn && el.addEventListener(name, fn, false);
     }
 
     function extend(a, b) {
@@ -111,7 +113,7 @@
                 }
             }
         } else if (isTab) {
-            t[isShift ? 'pull' : 'push'](tab);
+            t[isShift ? pull : push](tab);
             canUndo && t[record]();
             offKeyDown(e); // TODO: Control how to escape from text area using `Tab` key
         } else if ('\\' !== charBefore && kk === charAfter) {
@@ -147,7 +149,7 @@
             if (end && end === charAfter) {
                 t.wrap('\n' + tab + dent, '\n' + dent)[blur]()[focus]();
             } else {
-                t.insert('\n', -1).push(dent)[blur]()[focus]();
+                t.insert('\n', -1)[push](dent)[blur]()[focus]();
             }
             canUndo && t[record]();
             offKeyDown(e);
@@ -176,8 +178,8 @@
         eventLet(el, keydown, stateScoped.e[keydown]);
 
         if (false !== alt) {
-            stateScoped.e[touch] = stateScoped.e[touch] || onTouch.bind(t);
-            stateScoped.e[keydown] = stateScoped.e[keydown] || onKeyDown.bind(t);
+            stateScoped.e[touch] = onTouch.bind(t);
+            stateScoped.e[keydown] = onKeyDown.bind(t);
             if (stateScoped[select]) {
                 eventSet(el, mousedown, stateScoped.e[touch]);
                 eventSet(el, touchstart, stateScoped.e[touch]);
