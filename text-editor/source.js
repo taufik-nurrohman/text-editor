@@ -138,7 +138,7 @@
                 rec(), $.wrap(kk, end);
                 rec(), offKeyDown(e);
             } else if ('backspace' === kk || 8 === k) {
-                if ("" === value && before[match](new RegExp(esc(tab) + '$'))) {
+                if (value && before[match](new RegExp(esc(tab) + '$'))) {
                     $[pull](tab), offKeyDown(e);
                 } else {
                     end = closure[charBefore];
@@ -159,7 +159,7 @@
                 if (end && end === charAfter) {
                     $.wrap('\n' + tab + tabs, '\n' + tabs)[blur]()[focus]();
                     offKeyDown(e);
-                } else if ("" !== value || tabs) {
+                } else if (value || tabs) {
                     $.insert('\n', -1, true)[push](tabs)[blur]()[focus]();
                     offKeyDown(e);
                 } else {
