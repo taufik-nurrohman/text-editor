@@ -45,7 +45,7 @@
         var t = this,
             selection = t.$(),
             current = t[_history][t[_historyState]] || [],
-            next = [t.get(), selection.start, selection.end];
+            next = [t.self.value, selection.start, selection.end];
         if (
             next[0] === current[0] &&
             next[1] === current[1] &&

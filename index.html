@@ -58,9 +58,9 @@
     <h3><code>TE.x</code></h3>
     <p>List of regular expression characters to be escaped.</p>
     <h3><code>TE.esc(input)</code></h3>
+    <p>Escape regular expression characters listed in <code>editor.x</code> from a string or array input.</p>
     <h3><code>TE._</code></h3>
     <p>Return the text editor prototypes.</p>
-    <p>Escape regular expression characters listed in <code>editor.x</code> from a string or array input.</p>
     <h3><code>editor.state</code></h3>
     <p>Return the text editor states if any.</p>
     <h3><code>editor.self</code></h3>
@@ -95,7 +95,8 @@ editor.focus(true); // Select all</code></pre>
     <p>Set selection range.</p>
     <pre><code>editor.select(); // Is the same as `editor.focus()`
 editor.select(2); // Move caret to the index `2`
-editor.select(0, 2); // Select from range `0` to `2`</code></pre>
+editor.select(0, 2); // Select from range `0` to `2`
+editor.select(true); // Select all</code></pre>
     <h3><code>editor.match(pattern, fn)</code></h3>
     <p>Match current selection with the pattern provided.</p>
     <pre><code>if (editor.match(/^\s*:\w+:\s*$/)) {
@@ -180,6 +181,7 @@ editor.trim('\n\n', '\n\n', "", "", false); // Ignore empty value before and aft
       <li><a href="text-editor/rect.html" target="_blank">Get Selection Offset</a> (<a href="text-editor/rect.min.js" target="_blank">+rect.min.js</a>)</li>
       <li><a href="text-editor/rect.caret.html" target="_blank">Custom Caret Example</a></li>
       <li><a href="text-editor/history.html" target="_blank">Undo and Redo Feature</a> (<a href="text-editor/history.min.js" target="_blank">+history.min.js</a>)</li>
+      <li><a href="text-editor/i-d-e.html" target="_blank">Source Code Editor</a> (<a href="text-editor/i-d-e.min.js" target="_blank">+i-d-e.min.js</a>)</li>
       <!-- li><a href="text-editor/_close.html" target="_blank">Auto-Close Feature</a> (<a href="text-editor/_close.min.js" target="_blank">+_close.min.js</a>)</li -->
     </ul>
     <script src="text-editor.js"></script>
