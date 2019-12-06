@@ -159,7 +159,7 @@
                 if (end && end === charAfter) {
                     $.wrap('\n' + tab + tabs, '\n' + tabs)[blur]()[focus]();
                     offKeyDown(e);
-                } else if ("" !== value) {
+                } else if ("" !== value || tabs) {
                     $.insert('\n', -1, true)[push](tabs)[blur]()[focus]();
                     offKeyDown(e);
                 } else {
