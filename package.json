@@ -1,14 +1,14 @@
 {
   "name": "@taufik-nurrohman/text-editor",
-  "version": "3.1.0",
   "description": "A text selection range API written in pure JavaScript, for modern browsers.",
+  "version": "3.1.0",
   "main": "text-editor.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tovic/text-editor.git"
+    "url": "git+https://github.com/taufik-nurrohman/text-editor.git"
   },
   "keywords": [
     "text",
@@ -19,7 +19,7 @@
   "author": "Taufik Nurrohman",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tovic/text-editor/issues"
+    "url": "https://github.com/taufik-nurrohman/text-editor/issues"
   },
-  "homepage": "https://tovic.github.io/text-editor"
+  "homepage": "https://taufik-nurrohman.github.io/text-editor"
 }

@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  TEXT EDITOR 3.1.0
+ *  TEXT EDITOR 3.1.1
  * ==========================================================
  * Author: Taufik Nurrohman <https://github.com/tovic>
  * License: MIT
@@ -122,7 +122,7 @@
 
         $$._ = $$.prototype;
 
-        $$.version = '3.1.0';
+        $$.version = '3.1.1';
 
         $$[instance] = {};
 
@@ -157,7 +157,7 @@
         var currentScript = doc.currentScript;
         $$.path = ((currentScript && currentScript.src) || win.location.href).split('/').slice(0, -1).join('/');
 
-    })(win[NS] = function(source, dent) {
+    })(win[NS] = function(source, state) {
 
         if (!source) return;
 
@@ -174,15 +174,23 @@
             return $;
         }
 
-        if (!isSet(dent)) {
-            dent = '\t';
+        state = state || {};
+        if (isString(state)) {
+            state = {
+                tab: state
+            }
         }
 
-        $._dent = dent;
+        if (!isSet(state.tab)) {
+            state.tab = '\t';
+        }
+
+        // Return the text editor state
+        $.state = state;
 
         // Return new instance if `TE` was called without the `new` operator
         if (!($ instanceof $$)) {
-            return new $$(source, dent);
+            return new $$(source, state);
         }
 
         // Store text editor instance to `TE.__instance__`
@@ -247,7 +255,7 @@
                 x = count(sourceValueGet()); // Put caret at the end of the editor
                 y = source[scroll + 'Height']; // Scroll to the end of the editor
             }
-            if (isSet(x)) {
+            if (isSet(x) && isSet(y)) {
                 source[selectionStart] = source[selectionEnd] = x;
                 source[scrollTop] = y;
             }
@@ -361,7 +369,7 @@
 
         $.pull = function(by) {
             var selection = $.$();
-            by = by || dent;
+            by = isSet(by) ? by : state.tab;
             by = isPattern(by) || esc(by);
             if (count(selection)) {
                 return $[replace](toPattern('^' + by, 'gm'), "");
@@ -371,7 +379,7 @@
 
         $.push = function(by, includeEmptyLines) {
             var selection = $.$();
-            by = by || dent;
+            by = isSet(by) ? by : state.tab;
             if (count(selection)) {
                 return $[replace](toPattern('^' + (includeEmptyLines ? "" : '(?!$)'), 'gm'), by);
             }

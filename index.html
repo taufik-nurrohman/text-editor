@@ -37,10 +37,10 @@
   &lt;/body&gt;
 &lt;/html&gt;</code></pre>
     <h2>Configure</h2>
-    <pre><code>new TE(<var>self</var>, <var>dent = '\t'</var>)</code></pre>
+    <pre><code>new TE(<var>self</var>, <var>tab = '\t'</var>)</code></pre>
     <ul>
       <li><var>self</var> &rarr; the text area element.</li>
-      <li><var>dent</var> &rarr; the default indent character for <code>editor.pull()</code> and <code>editor.push()</code> method.</li>
+      <li><var>tab</var> &rarr; the default indent character for <code>editor.pull()</code> and <code>editor.push()</code> method.</li>
     </ul>
     <h2>Instance</h2>
     <p>All editor instances will be stored in <code>TE.__instance__</code>. To iterate the instances is possible with <code>TE.each()</code>:</p>
@@ -53,6 +53,16 @@
       <li><var>key</var> &rarr; Refers to the editor target&rsquo;s <code>id</code> or <code>name</code> attribute value, or its current order.</li>
     </ul>
     <h2>Methods and Properties</h2>
+    <h3><code>TE.version</code></h3>
+    <p>Return the text editor version.</p>
+    <h3><code>TE.x</code></h3>
+    <p>List of regular expression characters to be escaped.</p>
+    <h3><code>TE.esc(input)</code></h3>
+    <h3><code>TE._</code></h3>
+    <p>Return the text editor prototypes.</p>
+    <p>Escape regular expression characters listed in <code>editor.x</code> from a string or array input.</p>
+    <h3><code>editor.state</code></h3>
+    <p>Return the text editor states if any.</p>
     <h3><code>editor.self</code></h3>
     <p>Return the <code>&lt;textarea&gt;</code> element.</p>
     <h3><code>editor.source</code></h3>
@@ -174,7 +184,9 @@ editor.trim('\n\n', '\n\n', "", "", false); // Ignore empty value before and aft
     </ul>
     <script src="text-editor.js"></script>
     <script>
+
     var editor = new TE(document.querySelector('textarea'));
+
     </script>
   </body>
 </html>

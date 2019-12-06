@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>IDE &middot; Text Editor</title>
+    <style>
+
+    textarea {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      height: 300px;
+    }
+
+    </style>
+  </head>
+  <body>
+    <p tabindex="0">Previous tabbable element.</p>
+    <p><textarea placeholder="Type CSS or JavaScript code here&hellip;" spellcheck="false"></textarea></p>
+    <p tabindex="0">Next tabbable element.</p>
+    <script src="../text-editor.min.js"></script>
+    <script src="i-d-e.js"></script>
+    <script>
+
+    var editor = new TE(document.querySelector('textarea'), '  ');
+
+    editor.IDE();
+
+    </script>
+  </body>
+</html>
