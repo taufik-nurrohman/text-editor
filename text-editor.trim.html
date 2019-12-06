@@ -11,11 +11,11 @@
  1  2  3  4  5  6 
  1  2  3  4  5  6 </textarea></p>
     <p>
-      <button onclick="return editor.trim(), false;">Trim</button>
-      <button onclick="return editor.trim(false, false), false;">Trim Start and End of Selection</button>
-      <button onclick="return editor.trim('', '', false, false), false;">Trim Before and After Selection</button>
-      <button onclick="return editor.trim(' ', ' '), false;">Tidy with a Space</button>
-      <button onclick="return editor.trim('\n\n', '\n\n'), false;">Tidy with Line Break</button>
+      <button onclick="editor.trim();">Trim</button>
+      <button onclick="editor.trim(false, false);">Trim Start and End of Selection</button>
+      <button onclick="editor.trim('', '', false, false);">Trim Before and After Selection</button>
+      <button onclick="editor.trim(' ', ' ');">Tidy with a Space</button>
+      <button onclick="editor.trim('\n\n', '\n\n');">Tidy with Line Break</button>
     </p>
     <script src="text-editor.min.js"></script>
     <script>

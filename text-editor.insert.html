@@ -8,11 +8,11 @@
   <body>
     <p><textarea spellcheck="false">abcdef</textarea></p>
     <p>
-      <button onclick="return editor.insert('#'), false;">Insert <code>#</code></button>
-      <button onclick="return editor.insert('<', -1), false;">Prepend <code>&lt;</code></button>
-      <button onclick="return editor.insert('>', 1), false;">Append <code>&gt;</code></button>
-      <button onclick="return editor.insert('<', -1, true), false;">Prepend <code>&lt;</code> and Delete Selection</button>
-      <button onclick="return editor.insert('>', 1, true), false;">Append <code>&gt;</code> and Delete Selection</button>
+      <button onclick="editor.insert('#');">Insert <code>#</code></button>
+      <button onclick="editor.insert('<', -1);">Prepend <code>&lt;</code></button>
+      <button onclick="editor.insert('>', 1);">Append <code>&gt;</code></button>
+      <button onclick="editor.insert('<', -1, true);">Prepend <code>&lt;</code> and Delete Selection</button>
+      <button onclick="editor.insert('>', 1, true);">Append <code>&gt;</code> and Delete Selection</button>
     </p>
     <script src="text-editor.min.js"></script>
     <script>

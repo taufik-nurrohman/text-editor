@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Source &middot; Text Editor</title>
+    <style>
+
+    textarea {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      height: 20em;
+      margin: 0;
+      font: normal normal 15px/1.25 Consolas, monospace;
+      padding: .25em .5em;
+      background: #000;
+      color: #fff;
+      border: 0;
+    }
+
+    </style>
+  </head>
+  <body>
+    <p tabindex="0">Previous tabbable element.</p>
+    <p><textarea placeholder="Code goes here&hellip;" spellcheck="false">node.addEventListener('click', e =&gt; {
+    fetch(this.href).then(response =&gt; {
+        return response.json();
+    }).then(json =&gt; {
+        console.log(json);
+    });
+}, false);</textarea></p>
+    <p>
+      <label>
+        <input checked onchange="console.log(editor = this.checked ? new TE(editor.self, '  ') : editor.pop());" type="checkbox">
+        <span>Enable <abbr title="Integrated Development Environment">IDE</abbr></span>
+      </label>
+    </p>
+    <h2>Configure</h2>
+    <pre><code>new TE(<var>self</var>, <var>state</var> = {
+    tab: '\t',
+    source: {
+        close: {
+            '(': ')',
+            '{': '}',
+            '[': ']',
+            '"': '"',
+            "'": "'",
+            '&lt;': '&gt;'
+        },
+        select: true
+    }
+})</code></pre>
+    <ul>
+      <li><var>state.tab</var> &rarr; The default indent character.</li>
+      <li><var>state.source.close</var> &rarr; List of token on the left that should be &ldquo;auto-closed&rdquo; by token on the right.</li>
+      <li><var>state.source.select</var> &rarr; Set to <code>false</code> to disable the smart selection feature.</li>
+    </ul>
+    <script src="../text-editor.js"></script>
+    <script src="history.min.js"></script>
+    <script src="source.min.js"></script>
+    <script>
+
+    var editor = new TE(document.querySelector('textarea'), '  ');
+
+    </script>
+  </body>
+</html>

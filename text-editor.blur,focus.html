@@ -40,10 +40,10 @@ x
 y
 z</textarea></p>
     <p>
-      <button onclick="return editor.focus(), false;">Focus</button>
-      <button onclick="return editor.focus(-1), false;">Focus Start</button>
-      <button onclick="return editor.focus(1), false;">Focus End</button>
-      <button onmouseover="return editor.blur(), false;" onmouseout="return editor.focus(), false;" disabled>Enter to Blur, Exit to Focus</button>
+      <button onclick="editor.focus();">Focus</button>
+      <button onclick="editor.focus(-1);">Focus Start</button>
+      <button onclick="editor.focus(1);">Focus End</button>
+      <button disabled onmouseout="editor.focus();" onmouseover="editor.blur();">Enter to Blur, Exit to Focus</button>
     </p>
     <script src="text-editor.min.js"></script>
     <script>

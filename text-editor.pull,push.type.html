@@ -20,12 +20,12 @@ f
 5
 6</textarea></p>
     <p>
-      <button onclick="return editor.push(options.value, !e.checked), false;">Indent</button>
-      <button onclick="return editor.pull(options.value), false;">Outdent</button>
+      <button onclick="editor.push(options.value, !e.checked);">Indent</button>
+      <button onclick="editor.pull(options.value);">Outdent</button>
     </p>
     <p>
       <select>
-        <option value="" disabled>Indent With</option>
+        <option disabled value="">Indent With</option>
         <option value="&#x0009;">1 Tab</option>
         <option value="    ">4 Space(s)</option>
       </select>

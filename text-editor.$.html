@@ -8,7 +8,7 @@
   <body>
     <p><textarea spellcheck="false">abcdef</textarea></p>
     <p>
-      <button onclick="return alert(JSON.stringify(editor.$(), null, 2)), false;">Inspect</button>
+      <button onclick="alert(JSON.stringify(editor.$(), null, 2));">Inspect</button>
     </p>
     <script src="text-editor.min.js"></script>
     <script>

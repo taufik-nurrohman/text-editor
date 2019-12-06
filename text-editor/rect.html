@@ -8,7 +8,7 @@
   <body>
     <p><textarea spellcheck="false">abcdef</textarea></p>
     <p>
-      <button onclick="return alert(JSON.stringify(editor.rect(), null, 2)), false;">Inspect</button>
+      <button onclick="alert(JSON.stringify(editor.rect(), null, 2));">Inspect</button>
     </p>
     <pre><code>// [&lt;selection start&gt;, &lt;selection end&gt;, &lt;selection as rectangle&gt;, &lt;the editor&gt;]
 

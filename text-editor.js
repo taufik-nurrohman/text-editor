@@ -163,7 +163,6 @@
 
         var $ = this,
             $$ = win[NS],
-            bin = {}, // Storage
             patternAny = /^([\s\S]*?)$/, // Any character(s),
 
             body = doc.body,
@@ -228,23 +227,6 @@
         $.$ = function() {
             var selection = new $$[Selection](source[selectionStart], source[selectionEnd], sourceValueGet());
             return selection;
-        };
-
-        // Save state
-        $.save = function(key) {
-            return (bin[key || 0] = $.$()), $;
-        };
-
-        // Restore state
-        $.restore = function(key) {
-            if (!isSet(key)) {
-                key = 0;
-            }
-            if (isSet(bin[key])) {
-                var selection = bin[key];
-                return $.set(selection.before + selection.value + selection.after)[select](selection.start, selection.end), selection;
-            }
-            return $[select]();
         };
 
         $[focus] = function(mode) {

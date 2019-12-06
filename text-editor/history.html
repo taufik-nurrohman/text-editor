@@ -8,19 +8,19 @@
   <body>
     <p><textarea placeholder="Type something&hellip;" spellcheck="false"></textarea></p>
     <p>
-      <button onclick="return dump.innerHTML = 'Current: ' + editor._historyState + '\n---\nAll: ' + JSON.stringify(editor.history(), null, 2), false;">Inspect History</button>
-      <button onclick="return dump.innerHTML = JSON.stringify(editor.history(1), null, 2), false;">Inspect the 2(nd) History</button>
-      <button onclick="return editor.record(), false;">Save Selection to History</button>
-      <button onclick="return editor.loss(), false;">Delete Current History</button>
-      <button onclick="return editor.loss(editor._historyState), false;">Delete the Last History</button>
-      <button onclick="return editor.loss(0), false;">Delete the First History</button>
-      <button onclick="return editor.loss(true), false;">Delete All History</button>
+      <button onclick="dump.innerHTML = 'Current: ' + editor._historyState + '\n---\nAll: ' + JSON.stringify(editor.history(), null, 2);">Inspect History</button>
+      <button onclick="dump.innerHTML = JSON.stringify(editor.history(1), null, 2);">Inspect the 2(nd) History</button>
+      <button onclick="editor.record();">Save Selection to History</button>
+      <button onclick="editor.loss();">Delete Current History</button>
+      <button onclick="editor.loss(editor._historyState);">Delete the Last History</button>
+      <button onclick="editor.loss(0);">Delete the First History</button>
+      <button onclick="editor.loss(true);">Delete All History</button>
     </p>
     <p>
-      <button onclick="return editor.record().wrap('**', '**').record(), false;"><b>B</b></button>
-      <button onclick="return editor.record().wrap('_', '_').record(), false;"><i>I</i></button>
-      <button onclick="return editor.undo(), false;">Undo</button>
-      <button onclick="return editor.redo(), false;">Redo</button>
+      <button onclick="editor.record().wrap('**', '**').record();"><b>B</b></button>
+      <button onclick="editor.record().wrap('_', '_').record();"><i>I</i></button>
+      <button onclick="editor.undo();">Undo</button>
+      <button onclick="editor.redo();">Redo</button>
     </p>
     <pre><code></code></pre>
     <h2>Methods and Properties</h2>

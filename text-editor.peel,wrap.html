@@ -8,16 +8,16 @@
   <body>
     <p><textarea spellcheck="false">abcdef</textarea></p>
     <p>
-      <button onclick="return editor.wrap('<', '>'), false;">Wrap</button>
-      <button onclick="return editor.wrap('<', '>', true), false;">Wrap and Select</button>
+      <button onclick="editor.wrap('<', '>');">Wrap</button>
+      <button onclick="editor.wrap('<', '>', true);">Wrap and Select</button>
     </p>
     <p>
-      <button onclick="return editor.peel('<', '>'), false;">Unwrap From Selection</button>
-      <button onclick="return editor.peel('<', '>', true), false;">Unwrap of Selection</button>
+      <button onclick="editor.peel('<', '>');">Unwrap From Selection</button>
+      <button onclick="editor.peel('<', '>', true);">Unwrap of Selection</button>
     </p>
     <p>
-      <button onclick="return editor.peel(/<+/, />+/), false;">Unwrap All From Selection</button>
-      <button onclick="return editor.peel(/<+/, />+/, true), false;">Unwrap All of Selection</button>
+      <button onclick="editor.peel(/<+/, />+/);">Unwrap All From Selection</button>
+      <button onclick="editor.peel(/<+/, />+/, true);">Unwrap All of Selection</button>
     </p>
     <script src="text-editor.min.js"></script>
     <script>
