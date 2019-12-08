@@ -7,17 +7,23 @@
     <link href="favicon.ico" rel="shortcut icon">
   </head>
   <body spellcheck="false">
+    <p style="
+      background: #ffa;
+      border: 1px dashed;
+      line-height: 2.5em;
+      padding: 0 1em;
+    ">Like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
     <h1>Text Editor</h1>
     <p><textarea style="display:block;width:100%;height:6em;box-sizing:border-box;">Lorem ipsum dolor sit amet.</textarea></p>
     <p>
       <button onclick="editor.wrap('<b>', '</b>');"><b>B</b></button>
       <button onclick="editor.wrap('<i>', '</i>');"><i>I</i></button>
-      <button onclick="editor.insert('\u263A', -1, true);">&#x263A;</button>
+      <button onclick="editor.insert('😀', -1, true);">&#x263A;</button>
     </p>
     <h2>Features</h2>
     <ul>
       <li>Light-weight library. No dependencies. <strong>Text Editor</strong> uses plain JavaScript language.</li>
-      <li>Powerful <abbr title="Application Programming Interface">API</abbr>. Easy to learn.</li>
+      <li>Simple <abbr title="Application Programming Interface">API</abbr>. Easy to learn.</li>
       <li>Extensible &rarr; <a href="#examples">check it out</a></li>
       <li>No hack. No feature detection. Optimized for modern browsers with their built-in JavaScript features.</li>
       <li>Make your own. The core functionality is enough to help you making your own text editor.</li>
@@ -37,10 +43,15 @@
   &lt;/body&gt;
 &lt;/html&gt;</code></pre>
     <h2>Configure</h2>
-    <pre><code>new TE(<var>self</var>, <var>tab = '\t'</var>)</code></pre>
+    <pre><code>var editor = new TE(<var>self</var>, <var>tab</var> = '\t');</code></pre>
+    <pre><code>var editor = new TE(<var>self</var>, <var>state</var> = {
+        tab: '\t'
+    });</code></pre>
     <ul>
       <li><var>self</var> &rarr; The text area element.</li>
       <li><var>tab</var> &rarr; The default indent character for <code>editor.pull()</code> and <code>editor.push()</code> method.</li>
+      <li><var>state</var> &rarr; The configuration data.</li>
+      <li><var>state.tab</var> &rarr; The default indent character for <code>editor.pull()</code> and <code>editor.push()</code> method.</li>
     </ul>
     <h2>Instance</h2>
     <p>All editor instances will be stored in <code>TE.__instance__</code>. To iterate the instances is possible with <code>TE.each()</code>:</p>
@@ -49,8 +60,8 @@
     console.log(this.self);
 });</code></pre>
     <ul>
-      <li><var>this</var> &rarr; Refers to the editor instance.</li>
-      <li><var>key</var> &rarr; Refers to the editor target&rsquo;s <code>id</code> or <code>name</code> attribute value, or its current order.</li>
+      <li><var>this</var> &rarr; Refers to the text editor instance.</li>
+      <li><var>key</var> &rarr; Refers to the text editor target&rsquo;s <code>id</code> or <code>name</code> attribute value, or its current order.</li>
     </ul>
     <h2>Methods and Properties</h2>
     <h3><code>TE.version</code></h3>
@@ -141,7 +152,7 @@ editor.peel(/&lt;+/, /&gt;+/, true); // Remove any `&lt;` at selection start and
     <p>Indent current selection with <var>by</var>.</p>
     <pre><code>editor.push(); // Indent with `\t`
 editor.push('****'); // Indent with `****`</code></pre>
-    <h3><code>editor.pull(by = '\t')</code></h3>
+    <h3><code>editor.pull(by = '\t', includeEmptyLines = true)</code></h3>
     <p>Outdent current selection from <var>by</var>.</p>
     <pre><code>editor.pull(); // Outdent from `\t`
 editor.pull('****'); // Outdent from `****`

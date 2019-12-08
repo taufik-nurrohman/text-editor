@@ -1,7 +1,7 @@
 {
   "name": "@taufik-nurrohman/text-editor",
   "description": "A text selection range API written in pure JavaScript, for modern browsers.",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "main": "text-editor.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
