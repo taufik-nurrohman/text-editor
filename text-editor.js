@@ -1,10 +1,10 @@
 /*!
- * ==========================================================
- *  TEXT EDITOR 3.1.1
- * ==========================================================
- * Author: Taufik Nurrohman <https://github.com/tovic>
+ * ==============================================================
+ *  TEXT EDITOR 3.1.2
+ * ==============================================================
+ * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
- * ----------------------------------------------------------
+ * --------------------------------------------------------------
  */
 
 (function(win, doc, NS) {
@@ -37,32 +37,12 @@
         return x instanceof Array;
     }
 
-    function isBool(x) {
-        return 'boolean' === typeof x;
-    }
-
     function isFunction(x) {
         return 'function' === typeof x;
     }
 
-    function isNode(x) {
-        return x instanceof HTMLElement;
-    }
-
-    function isNumber(x) {
-        return 'number' === typeof x;
-    }
-
-    function isObject(x) {
-        return 'object' === typeof x;
-    }
-
     function isPattern(x) {
         return x instanceof RegExp ? (x.source || true) : false;
-    }
-
-    function isPlainObject(x) {
-        return (isArray(x) || isObject(x)) && !isNode(x) && x.toString() === '[object Object]';
     }
 
     function isSet(x) {
@@ -104,25 +84,9 @@
 
     (function($$) {
 
-        $$.is = {
-            a: isArray,
-            b: isBool,
-            f: isFunction,
-            i: isNumber,
-            o: isObject,
-            O: isPlainObject,
-            r: isPattern,
-            s: isString,
-            h: isNode,
-            x: function(x) {
-                return 'undefined' === typeof x;
-            },
-            v: isSet
-        };
-
         $$._ = $$.prototype;
 
-        $$.version = '3.1.1';
+        $$.version = '3.1.2';
 
         $$[instance] = {};
 
@@ -349,19 +313,29 @@
             return $[select]();
         };
 
-        $.pull = function(by) {
+        $.pull = function(by, includeEmptyLines /* = true */) {
             var selection = $.$();
             by = isSet(by) ? by : state.tab;
             by = isPattern(by) || esc(by);
+            isSet(includeEmptyLines) || (includeEmptyLines = true);
             if (count(selection)) {
-                return $[replace](toPattern('^' + by, 'gm'), "");
+                if (includeEmptyLines) {
+                    return $[replace](toPattern('^' + by, 'gm'), "");
+                }
+                return $[insert](selection.value.split('\n').map(function(v) {
+                    if (toPattern('^(' + by + ')*$').test(v)) {
+                        return v;
+                    }
+                    return v[replace](toPattern('^' + by), "");
+                }).join('\n'));
             }
             return $[replace](toPattern(by + '$'), "", -1);
         };
 
-        $.push = function(by, includeEmptyLines) {
+        $.push = function(by, includeEmptyLines /* = false */) {
             var selection = $.$();
             by = isSet(by) ? by : state.tab;
+            isSet(includeEmptyLines) || (includeEmptyLines = false);
             if (count(selection)) {
                 return $[replace](toPattern('^' + (includeEmptyLines ? "" : '(?!$)'), 'gm'), by);
             }
