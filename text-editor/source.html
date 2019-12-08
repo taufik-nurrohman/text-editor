@@ -11,12 +11,6 @@
       box-sizing: border-box;
       width: 100%;
       height: 20em;
-      margin: 0;
-      font: normal normal 15px/1.25 Consolas, monospace;
-      padding: .25em .5em;
-      background: #000;
-      color: #fff;
-      border: 0;
     }
 
     </style>
@@ -37,26 +31,26 @@
       </label>
     </p>
     <h2>Configure</h2>
-    <pre><code>new TE(<var>self</var>, <var>state</var> = {
-    tab: '\t',
-    source: {
-        close: {
-            '(': ')',
-            '{': '}',
-            '[': ']',
-            '"': '"',
-            "'": "'",
-            '&lt;': '&gt;'
-        },
-        select: true
-    }
-})</code></pre>
+    <pre><code>var editor = new TE(<var>self</var>, <var>state</var> = {
+        tab: '\t',
+        source: {
+            close: {
+                '(': ')',
+                '{': '}',
+                '[': ']',
+                '"': '"',
+                "'": "'",
+                '&lt;': '&gt;'
+            },
+            select: true
+        }
+    });</code></pre>
     <ul>
       <li><var>state.tab</var> &rarr; The default indent character.</li>
       <li><var>state.source.close</var> &rarr; List of token on the left that should be &ldquo;auto-closed&rdquo; by token on the right.</li>
       <li><var>state.source.select</var> &rarr; Set to <code>false</code> to disable the smart selection feature.</li>
     </ul>
-    <script src="../text-editor.js"></script>
+    <script src="../text-editor.min.js"></script>
     <script src="history.min.js"></script>
     <script src="source.min.js"></script>
     <script>

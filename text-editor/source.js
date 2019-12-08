@@ -1,10 +1,10 @@
 /*!
- * ==========================================================
- *  TEXT EDITOR SOURCE 1.1.0
- * ==========================================================
- * Author: Taufik Nurrohman <https://github.com/tovic>
+ * ==============================================================
+ *  TEXT EDITOR SOURCE 1.1.1
+ * ==============================================================
+ * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
- * ----------------------------------------------------------
+ * --------------------------------------------------------------
  */
 
 (function(win, doc, NS) {
@@ -15,6 +15,7 @@
         esc = $$.esc,
 
         blur = 'blur',
+        close = 'close',
         ctrlKey = 'ctrlKey',
         focus = 'focus',
         fromCharCode = 'fromCharCode',
@@ -23,6 +24,7 @@
         keydown = 'keydown',
         match = 'match',
         mousedown = 'mousedown',
+        mouseup = 'mouseup',
         pull = 'pull',
         push = 'push',
         record = 'record',
@@ -32,21 +34,26 @@
         shiftKey = 'shiftKey',
         toLowerCase = 'toLowerCase',
         touch = 'touch',
+        touchend = touch + 'end',
         touchstart = touch + 'start',
         undo = 'undo',
 
         $$$, prop;
 
     function eventLet(el, name, fn) {
-        el && fn && el.removeEventListener(name, fn);
+        el.removeEventListener(name, fn);
     }
 
     function eventSet(el, name, fn) {
-        el && fn && el.addEventListener(name, fn, false);
+        el.addEventListener(name, fn, false);
     }
 
     function extend(a, b) {
         return Object.assign(a, b);
+    }
+
+    function isFunction(x) {
+        return 'function' === typeof x;
     }
 
     function offKeyDown(e) {
@@ -56,6 +63,7 @@
     $$$ = function(source, state) {
 
         var $ = this,
+            pop = $.pop,
             canUndo = undo in $$._;
 
         // Is the same as `parent::__construct()` in PHP
@@ -63,25 +71,26 @@
 
         var name = 'source',
             state = $.state,
-            defaults = {
-                close: {
-                    '(': ')',
-                    '{': '}',
-                    '[': ']',
-                    '"': '"',
-                    "'": "'",
-                    '<': '>'
-                },
-                select: true // Enable smart selection?
-            },
+            defaults = {},
             // Is enabled by default, unless you set the `source` option to `false`
             active = !(name in state) || state[name];
+
+        defaults[close] = {
+            '(': ')',
+            '{': '}',
+            '[': ']',
+            '"': '"',
+            "'": "'",
+            '<': '>'
+        };
+        defaults[select] = true; // Enable smart selection?
 
         if (active) {
             state[name] = extend(defaults, true === state[name] ? {} : state[name]);
         }
 
-        var stateScoped = state[name] || {};
+        var stateScoped = state[name] || {},
+            previousSelectionStart;
 
         function onTouch() {
             delay(function() {
@@ -89,15 +98,22 @@
                     from = /\W/g,
                     to = '.',
                     start = selection.before[replace](from, to)[lastIndexOf](to),
-                    end = selection.after[replace](from, to)[indexOf](to);
+                    end = selection.after[replace](from, to)[indexOf](to),
+                    value = selection.value;
                 start = start < 0 ? 0 : start + 1;
                 end = end < 0 ? selection.after.length : end;
-                $[select](start, selection.end + end);
+                if (previousSelectionStart !== selection.start) {
+                    $[select](start, selection.end + end);
+                }
             }, 0);
         }
 
+        function onTouchEnd() {
+            previousSelectionStart = $.$().start;
+        }
+
         function onKeyDown(e) {
-            var closure = stateScoped.close,
+            var closure = stateScoped[close],
                 tab = state.tab,
                 k = e.keyCode,
                 kk = (e.key || String[fromCharCode](k))[toLowerCase](),
@@ -138,7 +154,7 @@
                 rec(), $.wrap(kk, end);
                 rec(), offKeyDown(e);
             } else if ('backspace' === kk || 8 === k) {
-                if (value && before[match](new RegExp(esc(tab) + '$'))) {
+                if (!value && before[match](new RegExp(esc(tab) + '$'))) {
                     $[pull](tab), offKeyDown(e);
                 } else {
                     end = closure[charBefore];
@@ -177,20 +193,25 @@
         }
 
         if (active) {
+            eventSet(source, keydown, onKeyDown);
             if (stateScoped[select]) {
                 eventSet(source, mousedown, onTouch);
+                eventSet(source, mouseup, onTouchEnd);
+                eventSet(source, touchend, onTouchEnd);
                 eventSet(source, touchstart, onTouch);
             }
-            eventSet(source, keydown, onKeyDown);
             rec(); // Initialize history
         }
 
         // Destructor
         $.pop = function() {
+            isFunction(pop) && pop.call($);
             // Remove event(s) from memory
-            eventLet(source, mousedown, onTouch);
-            eventLet(source, touchstart, onTouch);
             eventLet(source, keydown, onKeyDown);
+            eventLet(source, mousedown, onTouch);
+            eventLet(source, mouseup, onTouchEnd);
+            eventLet(source, touchend, onTouchEnd);
+            eventLet(source, touchstart, onTouch);
             // Delete marker
             delete source[NS];
             // Reset history
