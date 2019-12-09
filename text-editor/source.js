@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR SOURCE 1.1.1
+ *  TEXT EDITOR SOURCE 1.1.2
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -17,6 +17,7 @@
         blur = 'blur',
         close = 'close',
         ctrlKey = 'ctrlKey',
+        disabled = 'disabled',
         focus = 'focus',
         fromCharCode = 'fromCharCode',
         indexOf = 'indexOf',
@@ -27,6 +28,7 @@
         mouseup = 'mouseup',
         pull = 'pull',
         push = 'push',
+        readOnly = 'readOnly',
         record = 'record',
         redo = 'redo',
         replace = 'replace',
@@ -93,6 +95,9 @@
             previousSelectionStart;
 
         function onTouch() {
+            if (source[disabled] || source[readOnly]) {
+                return;
+            }
             delay(function() {
                 var selection = $.$(),
                     from = /\W/g,
@@ -113,6 +118,9 @@
         }
 
         function onKeyDown(e) {
+            if (source[disabled] || source[readOnly]) {
+                return;
+            }
             var closure = stateScoped[close],
                 tab = state.tab,
                 k = e.keyCode,

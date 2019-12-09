@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Text Editor</title>
+  </head>
+  <body>
+    <p><textarea spellcheck="false">abcdef</textarea></p>
+    <p>
+      <button onclick="editor.wrap('*', '*');"><b>B</b></button>
+      <button onclick="editor.wrap('_', '_');"><i>I</i></button>
+    </p>
+    <p>
+      <label>
+        <input onchange="editor.self.readOnly = !editor.self.readOnly;" type="checkbox">
+        <span>Read Only</span>
+      </label>
+    </p>
+    <script src="text-editor.min.js"></script>
+    <script>
+
+    var editor = new TE(document.querySelector('textarea'));
+
+    </script>
+  </body>
+</html>

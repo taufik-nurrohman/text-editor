@@ -69,7 +69,7 @@
     <h3><code>TE.x</code></h3>
     <p>List of regular expression characters to be escaped.</p>
     <h3><code>TE.esc(input)</code></h3>
-    <p>Escape regular expression characters listed in <code>editor.x</code> from a string or array input.</p>
+    <p>Escape regular expression characters listed in <code>TE.x</code> from a string or array input.</p>
     <h3><code>TE._</code></h3>
     <p>Return the text editor prototypes.</p>
     <h3><code>editor.state</code></h3>
@@ -127,7 +127,7 @@ console.log(test[0] && test[1] && test[2]);</code></pre>
     console.log([before, value, after]); // &rarr; <a href="text-editor.toggle.html" target="_blank">demo</a>
 });</code></pre>
     <h3><code>editor.replace(from, to, mode = 0)</code></h3>
-    <p>Replace current selection with <code>to</code>.</p>
+    <p>Replace current, before or after selection from <var>from</var> to <var>to</var>.</p>
     <pre><code>editor.replace(/<.*?>/g, ""); // Strip HTML tags in selection
 editor.replace(/<.*?>/g, "", -1); // Strip HTML tags before selection
 editor.replace(/<.*?>/g, "", 1); // Strip HTML tags after selection</code></pre>
@@ -171,6 +171,8 @@ editor.trim('\n\n', '\n\n', "", "", false); // Ignore empty value before and aft
     <ul>
       <li><a href="text-editor.html" target="_blank">No Idea?</a></li>
       <li><a href="text-editor.self.html" target="_blank">Multiple Instances</a></li>
+      <li><a href="text-editor.disabled.html" target="_blank">Disabled Input</a></li>
+      <li><a href="text-editor.read-only.html" target="_blank">Read-Only Input</a></li>
       <li><a href="text-editor.get,let,set.html" target="_blank">Set, Get and Let Value</a></li>
       <li><a href="text-editor.$.html" target="_blank">Get Selection Data</a></li>
       <li><a href="text-editor.blur,focus.html" target="_blank">Focus, Blur Events</a></li>

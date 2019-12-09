@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR 3.1.2
+ *  TEXT EDITOR 3.1.3
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -9,14 +9,17 @@
 
 (function(win, doc, NS) {
 
-    var Selection = 'Selection',
+    var __instance__ = '__instance__',
+
+        Selection = 'Selection',
 
         blur = 'blur',
+        disabled = 'disabled',
         focus = 'focus',
         insert = 'insert',
-        instance = '__instance__',
         match = 'match',
         parentNode = 'parentNode',
+        readOnly = 'readOnly',
         replace = 'replace',
         scroll = 'scroll',
         scrollLeft = scroll + 'Left',
@@ -86,14 +89,14 @@
 
         $$._ = $$.prototype;
 
-        $$.version = '3.1.2';
+        $$.version = '3.1.3';
 
-        $$[instance] = {};
+        $$[__instance__] = {};
 
         $$.each = function(fn, t) {
             var i, j;
             return delay(function() {
-                j = $[instance];
+                j = $[__instance__];
                 for (i in j) {
                     fn.call(j[i], i);
                 }
@@ -157,7 +160,7 @@
         }
 
         // Store text editor instance to `TE.__instance__`
-        $$[instance][source.id || source.name || count(Object.keys($$[instance]))] = $;
+        $$[__instance__][source.id || source.name || count(Object.keys($$[__instance__]))] = $;
 
         function sourceValueGet() {
             return source.value[replace](/\r/g, "");
@@ -171,7 +174,7 @@
 
         // Get value
         $.get = function() {
-            return !source.disabled && trim(source.value) || null;
+            return !source[disabled] && trim(source.value) || null;
         };
 
         // Reset to the initial value
@@ -181,7 +184,7 @@
 
         // Set value
         $.set = function(value) {
-            if (source.disabled || source.readOnly) {
+            if (source[disabled] || source[readOnly]) {
                 return $;
             }
             return (source.value = value), $;
@@ -215,6 +218,9 @@
 
         // Select value
         $[select] = function() {
+            if (source[disabled] || source[readOnly]) {
+                return source[focus](), $;
+            }
             var arg = arguments,
                 counts = count(arg),
                 s = $.$(),
@@ -230,9 +236,6 @@
                     return source[focus](), source[select](), $;
                 }
                 arg[1] = arg[0];
-            }
-            if (source.disabled) {
-                return $;
             }
             source[focus]();
             source.setSelectionRange(arg[0], arg[1]); // Default `$.select(7, 100)`
