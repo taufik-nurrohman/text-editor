@@ -64,47 +64,47 @@
       <li><var>key</var> &rarr; Refers to the text editor target&rsquo;s <code>id</code> or <code>name</code> attribute value, or its current order.</li>
     </ul>
     <h2>Methods and Properties</h2>
-    <h3><code>TE.version</code></h3>
+    <h3>TE.version</h3>
     <p>Return the text editor version.</p>
-    <h3><code>TE.x</code></h3>
+    <h3>TE.x</h3>
     <p>List of regular expression characters to be escaped.</p>
-    <h3><code>TE.esc(input)</code></h3>
+    <h3>TE.esc(input)</h3>
     <p>Escape regular expression characters listed in <code>TE.x</code> from a string or array input.</p>
-    <h3><code>TE._</code></h3>
+    <h3>TE._</h3>
     <p>Return the text editor prototypes.</p>
-    <h3><code>editor.state</code></h3>
+    <h3>editor.state</h3>
     <p>Return the text editor states if any.</p>
-    <h3><code>editor.self</code></h3>
+    <h3>editor.self</h3>
     <p>Return the <code>&lt;textarea&gt;</code> element.</p>
-    <h3><code>editor.source</code></h3>
+    <h3>editor.source</h3>
     <p>Alias for <code>editor.self</code> property.</p>
-    <h3><code>editor.value</code></h3>
+    <h3>editor.value</h3>
     <p>Return the initial value of the <code>&lt;textarea&gt;</code> element.</p>
-    <h3><code>editor.set(value)</code></h3>
+    <h3>editor.set(value)</h3>
     <p>Set value to the <code>&lt;textarea&gt;</code> element.</p>
-    <h3><code>editor.let()</code></h3>
+    <h3>editor.let()</h3>
     <p>Reset value to the initial value of the <code>&lt;textarea&gt;</code> element.</p>
-    <h3><code>editor.get()</code></h3>
+    <h3>editor.get()</h3>
     <p>Get current value of the <code>&lt;textarea&gt;</code> element if not empty, otherwise, return <code>null</code>.</p>
-    <h3><code>editor.$()</code></h3>
+    <h3>editor.$()</h3>
     <p>Get current text selection data.</p>
     <pre><code>// `a|b|c`
 console.log(editor.$()); // `{"start":1,"end":2,"value":"b","before":"a","after":"c","length":1}`</code></pre>
-    <h3><code>editor.focus(mode = 0)</code></h3>
+    <h3>editor.focus(mode = 0)</h3>
     <p>Focus to the <code>&lt;textarea&gt;</code>.</p>
     <pre><code>editor.focus(); // Focus to the last selection
 editor.focus(-1); // Focus to the start of text area value
 editor.focus(1); // Focus to the end of text area value
 editor.focus(true); // Select all</code></pre>
-    <h3><code>editor.blur()</code></h3>
+    <h3>editor.blur()</h3>
     <p>Blur from the <code>&lt;textarea&gt;</code>.</p>
-    <h3><code>editor.select(...args)</code></h3>
+    <h3>editor.select(...args)</h3>
     <p>Set selection range.</p>
     <pre><code>editor.select(); // Is the same as `editor.focus()`
 editor.select(2); // Move caret to the index `2`
 editor.select(0, 2); // Select from range `0` to `2`
 editor.select(true); // Select all</code></pre>
-    <h3><code>editor.match(pattern, fn)</code></h3>
+    <h3>editor.match(pattern, fn)</h3>
     <p>Match current selection with the pattern provided.</p>
     <pre><code>if (editor.match(/^\s*:\w+:\s*$/)) {
     alert('Selection is detected as emoji!'); // &rarr; <a href="text-editor.match.html" target="_blank">demo</a>
@@ -126,38 +126,38 @@ console.log(test[0] && test[1] && test[2]);</code></pre>
     <pre><code>editor.match([/:$/, /^\w+$/, /^:/], function(before, value, after) {
     console.log([before, value, after]); // &rarr; <a href="text-editor.toggle.html" target="_blank">demo</a>
 });</code></pre>
-    <h3><code>editor.replace(from, to, mode = 0)</code></h3>
+    <h3>editor.replace(from, to, mode = 0)</h3>
     <p>Replace current, before or after selection from <var>from</var> to <var>to</var>.</p>
     <pre><code>editor.replace(/<.*?>/g, ""); // Strip HTML tags in selection
 editor.replace(/<.*?>/g, "", -1); // Strip HTML tags before selection
 editor.replace(/<.*?>/g, "", 1); // Strip HTML tags after selection</code></pre>
-    <h3><code>editor.insert(string, mode = 0, clear = false)</code></h3>
+    <h3>editor.insert(string, mode = 0, clear = false)</h3>
     <p>Insert <var>string</var> to (replace) the current selection.</p>
     <pre><code>editor.insert(':)'); // Insert at selection (replace selection)
 editor.insert('&lt;b&gt;', -1); // Insert before selection
 editor.insert('&lt;/b&gt;', 1); // Insert after selection
 editor.insert(':)', -1, true); // Insert before selection and delete selection
 editor.insert(':)', 1, true); // Insert after selection and delete selection</code></pre>
-    <h3><code>editor.wrap(open, close, wrap = false)</code></h3>
+    <h3>editor.wrap(open, close, wrap = false)</h3>
     <p>Wrap current selection with <var>open</var> and <var>close</var>.</p>
     <pre><code>editor.wrap('&lt;', '&gt;'); // Wrap with `&lt;` and `&gt;`
 editor.wrap('&lt;', '&gt;', true); // Wrap with `&lt;` and `&gt;` then select</code></pre>
-    <h3><code>editor.peel(open, close, wrap = false)</code></h3>
+    <h3>editor.peel(open, close, wrap = false)</h3>
     <p>Unwrap current selection from <var>open</var> and <var>close</var>.</p>
     <pre><code>editor.peel('&lt;', '&gt;'); // Remove `&lt;` before selection and `&gt;` after selection
 editor.peel('&lt;', '&gt;', true); // Remove `&lt;` at selection start and `&gt;` at selection end
 editor.peel(/&lt;+/, /&gt;+/); // Remove any `&lt;` before selection and any `&gt;` after selection
 editor.peel(/&lt;+/, /&gt;+/, true); // Remove any `&lt;` at selection start and any `&gt;` at selection end</code></pre>
-    <h3><code>editor.push(by = '\t', includeEmptyLines = false)</code></h3>
+    <h3>editor.push(by = '\t', includeEmptyLines = false)</h3>
     <p>Indent current selection with <var>by</var>.</p>
     <pre><code>editor.push(); // Indent with `\t`
 editor.push('****'); // Indent with `****`</code></pre>
-    <h3><code>editor.pull(by = '\t', includeEmptyLines = true)</code></h3>
+    <h3>editor.pull(by = '\t', includeEmptyLines = true)</h3>
     <p>Outdent current selection from <var>by</var>.</p>
     <pre><code>editor.pull(); // Outdent from `\t`
 editor.pull('****'); // Outdent from `****`
 editor.pull(/[\t ]+/); // Outdent from any length of white-space</code></pre>
-    <h3><code>editor.trim(open = "", close = "", start = "", end = "", tidy = true)</code></h3>
+    <h3>editor.trim(open = "", close = "", start = "", end = "", tidy = true)</h3>
     <p>Trim current selection from white-spaces, and optionally insert characters at the specified points.</p>
     <pre><code>// `a&lt;open&gt;<mark>&lt;start&gt;b&lt;end&gt;</mark>&lt;close&gt;c`
 
