@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR SOURCE 1.1.2
+ *  TEXT EDITOR SOURCE 1.1.3
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -69,7 +69,7 @@
             canUndo = undo in $$._;
 
         // Is the same as `parent::__construct()` in PHP
-        $$.call(this, source, state);
+        $$.call($, source, state);
 
         var name = 'source',
             state = $.state,
@@ -128,7 +128,6 @@
                 isCtrl = e[ctrlKey],
                 isEnter = 'enter' === kk || 13 === k,
                 isShift = e[shiftKey],
-                isTab = 'tab' === kk || 9 === k,
                 selection = $.$(),
                 before = selection.before,
                 value = selection.value,
@@ -139,31 +138,27 @@
                 tabs = lastTabs ? lastTabs[1] : "",
                 end = closure[kk];
             if (isCtrl) {
-                if (canUndo) {
-                    // Undo
-                    if ('z' === kk || 90 === k) {
-                        $[undo]();
-                        offKeyDown(e);
-                    // Redo
-                    } else if ('y' === kk || 89 === k) {
-                        $[redo]();
-                        offKeyDown(e);
-                    }
+                // Undo
+                if ('z' === kk || 90 === k) {
+                    $[undo](), rec(), offKeyDown(e);
+                // Redo
+                } else if ('y' === kk || 89 === k) {
+                    $[redo](), rec(), offKeyDown(e);
+                // Indent
+                } else if (']' === kk || 221 === k) {
+                    $[push](tab), rec(), offKeyDown(e);
+                // Outdent
+                } else if ('[' === kk || 219 === k) {
+                    $[pull](tab), rec(), offKeyDown(e);
                 }
-            } else if (isTab) {
-                $[isShift ? pull : push](tab);
-                // TODO: Control how to escape from text area using `Tab` key
-                rec(), offKeyDown(e);
             } else if ('\\' !== charBefore && kk === charAfter) {
                 // Move to the next character
-                $[select](selection.end + 1);
-                rec(), offKeyDown(e);
+                $[select](selection.end + 1), rec(), offKeyDown(e);
             } else if ('\\' !== charBefore && end) {
-                rec(), $.wrap(kk, end);
-                rec(), offKeyDown(e);
+                rec(), $.wrap(kk, end), rec(), offKeyDown(e);
             } else if ('backspace' === kk || 8 === k) {
                 if (!value && before[match](new RegExp(esc(tab) + '$'))) {
-                    $[pull](tab), offKeyDown(e);
+                    $[pull](tab), rec(), offKeyDown(e);
                 } else {
                     end = closure[charBefore];
                     if (end && end === charAfter) {
@@ -213,15 +208,13 @@
 
         // Destructor
         $.pop = function() {
-            isFunction(pop) && pop.call($);
+            pop.call($);
             // Remove event(s) from memory
             eventLet(source, keydown, onKeyDown);
             eventLet(source, mousedown, onTouch);
             eventLet(source, mouseup, onTouchEnd);
             eventLet(source, touchend, onTouchEnd);
             eventLet(source, touchstart, onTouch);
-            // Delete marker
-            delete source[NS];
             // Reset history
             canUndo && $[loss](true);
             return $;

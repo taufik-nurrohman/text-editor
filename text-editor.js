@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR 3.1.3
+ *  TEXT EDITOR 3.1.4
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -89,7 +89,7 @@
 
         $$._ = $$.prototype;
 
-        $$.version = '3.1.3';
+        $$.version = '3.1.4';
 
         $$[__instance__] = {};
 
@@ -372,6 +372,11 @@
             if (false !== start) value = trim(value, -1);
             if (false !== end) value = trim(value, 1);
             return $.set(before + value + after)[select](before = count(before), before + count(value));
+        };
+
+        // Destructor
+        $.pop = function() {
+            return (delete source[NS]), $;
         };
 
     });
