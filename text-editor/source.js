@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR SOURCE 1.1.3
+ *  TEXT EDITOR SOURCE 1.1.4
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -208,7 +208,7 @@
 
         // Destructor
         $.pop = function() {
-            pop.call($);
+            pop && pop.call($);
             // Remove event(s) from memory
             eventLet(source, keydown, onKeyDown);
             eventLet(source, mousedown, onTouch);
@@ -216,7 +216,7 @@
             eventLet(source, touchend, onTouchEnd);
             eventLet(source, touchstart, onTouch);
             // Reset history
-            canUndo && $[loss](true);
+            canUndo && $.loss(true);
             return $;
         };
 
