@@ -1,15 +1,15 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR RECT 1.1.0
+ *  TEXT EDITOR RECT 1.1.1
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
  * --------------------------------------------------------------
  */
 
-(function(win, doc, NS) {
+(function(win, doc, name) {
 
-    var $ = win[NS],
+    var $ = win[name],
         _ = $._,
 
         appendChild = 'appendChild',
@@ -129,4 +129,4 @@
         return isSet(key) ? [out[0][key], out[1][key]] : out;
     };
 
-})(window, document, 'TE');
+})(this, this.document, 'TE');

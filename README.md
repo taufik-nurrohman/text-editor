@@ -16,7 +16,7 @@ Demo
 
 ![Smart word selection](https://user-images.githubusercontent.com/1669261/70342114-f72fa300-1886-11ea-8939-2a81c61703d0.gif)
 
-[Demo and Documentation](http://taufik-nurrohman.github.io/text-editor "View Demo")
+[Demo and Documentation](https://taufik-nurrohman.github.io/text-editor "View Demo")
 
 Credits
 -------

@@ -1,17 +1,17 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR SOURCE 1.1.4
+ *  TEXT EDITOR SOURCE 1.1.5
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
  * --------------------------------------------------------------
  */
 
-(function(win, doc, NS) {
+(function(win, doc, name) {
 
-    var $$ = win[NS],
+    var $$ = win[name],
 
-        delay = setTimeout,
+        delay = win.setTimeout,
         esc = $$.esc,
 
         blur = 'blur',
@@ -234,6 +234,6 @@
     $$$.prototype = $$$._ = $$._;
 
     // Override
-    win[NS] = $$$;
+    win[name] = $$$;
 
-})(window, document, 'TE');
+})(this, this.document, 'TE');

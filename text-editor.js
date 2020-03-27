@@ -1,13 +1,13 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR 3.1.4
+ *  TEXT EDITOR 3.1.5
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
  * --------------------------------------------------------------
  */
 
-(function(win, doc, NS) {
+(function(win, doc, name) {
 
     var __instance__ = '__instance__',
 
@@ -30,7 +30,7 @@
         selectionStart = selection + 'Start',
         substring = 'substring',
 
-        delay = setTimeout;
+        delay = win.setTimeout;
 
     function count(x) {
         return x.length;
@@ -74,7 +74,7 @@
             }
             return o;
         }
-        return x[replace](toPattern('[' + win[NS].x[replace](/./g, '\\$&') + ']', 'g'), '\\$&');
+        return x[replace](toPattern('[' + win[name].x[replace](/./g, '\\$&') + ']', 'g'), '\\$&');
     }
 
     function toPattern(a, b) {
@@ -87,9 +87,7 @@
 
     (function($$) {
 
-        $$._ = $$.prototype;
-
-        $$.version = '3.1.4';
+        $$.version = '3.1.5';
 
         $$[__instance__] = {};
 
@@ -120,23 +118,21 @@
             };
         };
 
-        // Get current script path…
-        var currentScript = doc.currentScript;
-        $$.path = ((currentScript && currentScript.src) || win.location.href).split('/').slice(0, -1).join('/');
+        $$._ = $$.prototype;
 
-    })(win[NS] = function(source, state) {
+    })(win[name] = function(source, state) {
 
         if (!source) return;
 
         var $ = this,
-            $$ = win[NS],
-            patternAny = /^([\s\S]*?)$/, // Any character(s),
+            $$ = win[name],
+            patternAny = /^([\s\S]*?)$/, // Any character(s)
 
             body = doc.body,
             html = body[parentNode];
 
         // Already instantiated, skip!
-        if (source[NS]) {
+        if (source[name]) {
             return $;
         }
 
@@ -376,9 +372,9 @@
 
         // Destructor
         $.pop = function() {
-            return (delete source[NS]), $;
+            return (delete source[name]), $;
         };
 
     });
 
-})(window, document, 'TE');
+})(this, this.document, 'TE');

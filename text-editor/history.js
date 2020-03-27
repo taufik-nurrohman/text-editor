@@ -1,15 +1,15 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR HISTORY 1.1.0
+ *  TEXT EDITOR HISTORY 1.1.1
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
  * --------------------------------------------------------------
  */
 
-(function(win, doc, NS) {
+(function(win, doc, name) {
 
-    var $ = win[NS],
+    var $ = win[name],
         _ = $._,
         _history = '_history',
         _historyState = _history + 'State';
@@ -86,4 +86,4 @@
         return t.set(state[0]).select(state[1], state[2]);
     };
 
-})(window, document, 'TE');
+})(this, this.document, 'TE');
