@@ -39,8 +39,8 @@
       padding: .75em 1em;
     ">Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
     <header>
-      <h1>Text Editor v3.1.5</h1>
-      <p>Text Editor is a simple JavaScript plugin that aims to provide accessibility improvements to the native HTML <code>&lt;textarea&gt;</code> elements so that users can control and manipulate the data they provide to the editor as they wish.</p>
+      <h1>Text Editor v3.1.6</h1>
+      <p>Text Editor is a simple JavaScript application that aims to provide accessibility improvements to the native HTML <code>&lt;textarea&gt;</code> elements so that users can control and manipulate their data in the text editor as they wish.</p>
       <hr>
     </header>
     <main>
@@ -111,35 +111,48 @@
       <pre><code>const editor = new TE(<var>self</var>, <var>state</var> = {
         tab: '\t'
     });</code></pre>
-    <ul>
-      <li><var>self</var> &rarr; The text area element.</li>
-      <li><var>tab</var> &rarr; The default indent character for <code>editor.pull()</code> and <code>editor.push()</code> method.</li>
-      <li><var>state</var> &rarr; The configuration data.</li>
-      <li><var>state.tab</var> &rarr; The default indent character for <code>editor.pull()</code> and <code>editor.push()</code> method.</li>
-    </ul>
-      <h2>Instance</h2>
-      <p>All text editor instances will be stored in <code>TE.__instance__</code>. To iterate the instances is possible with <code>TE.each()</code>:</p>
-      <pre><code>TE.each(function(key) {
-    console.log(key);
-    console.log(this.source);
-});</code></pre>
       <ul>
-        <li><var>this</var> &rarr; Refers to the text editor instance.</li>
-        <li><var>key</var> &rarr; Refers to the text editor target&rsquo;s <code>id</code> or <code>name</code> attribute value, or its current order.</li>
+        <li><var>self</var> &rarr; The text area element.</li>
+        <li><var>tab</var> &rarr; The default indent character for <code>editor.pull()</code> and <code>editor.push()</code> method.</li>
+        <li><var>state</var> &rarr; The configuration data.</li>
+        <li><var>state.tab</var> &rarr; The default indent character for <code>editor.pull()</code> and <code>editor.push()</code> method.</li>
       </ul>
       <h2>Methods and Properties</h2>
       <h3>TE.version</h3>
       <p>Return the text editor version.</p>
+      <pre><code>let version = TE.version,
+    major = version.split('.')[0];
+
+if (+major &lt; 3) { &hellip; }</code></pre>
+      <h3>TE.instances</h3>
+      <p>Return the text editor instances.</p>
+      <pre><code>for (let key in TE.instances) {
+    console.log(key);
+    console.log(TE.instances[key]);
+}</code></pre>
       <h3>TE.x</h3>
       <p>List of regular expression characters to be escaped.</p>
       <h3>TE.esc(input)</h3>
       <p>Escape regular expression characters listed in <code>TE.x</code> from a string or array of string.</p>
       <h3>TE._</h3>
-      <p>Return the text editor prototypes if any.</p>
+      <p>Alias of <code>TE.prototype</code> used to formalize the prototype creation.</p>
+      <pre><code>// Create `clear()` method
+TE._.clear = function() {
+    this.self.value = "";
+    return this;
+};</code></pre>
       <h3>editor.state</h3>
       <p>Return the text editor states if any.</p>
       <h3>editor.self</h3>
       <p>Return the <code>&lt;textarea&gt;</code> element.</p>
+      <pre><code>editor.self.addEventListener('keydown', function(e) {
+    if (
+        (e.key &amp;&amp; 'Enter' === e.key) ||
+        (e.keyCode &amp;&amp; 13 === e.keyCode)
+    ) {
+        // Do something with `Enter` key!
+    }
+}, false);</code></pre>
       <h3>editor.source</h3>
       <p>Alias for <code>editor.self</code> property.</p>
       <h3>editor.value</h3>

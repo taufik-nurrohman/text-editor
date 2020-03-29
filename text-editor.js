@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR 3.1.5
+ *  TEXT EDITOR 3.1.6
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -9,9 +9,7 @@
 
 (function(win, doc, name) {
 
-    var __instance__ = '__instance__',
-
-        Selection = 'Selection',
+    var Selection = 'Selection',
 
         blur = 'blur',
         disabled = 'disabled',
@@ -30,7 +28,8 @@
         selectionStart = selection + 'Start',
         substring = 'substring',
 
-        delay = win.setTimeout;
+        delay = win.setTimeout,
+        instances = 'instances';
 
     function count(x) {
         return x.length;
@@ -87,19 +86,9 @@
 
     (function($$) {
 
-        $$.version = '3.1.5';
+        $$.version = '3.1.6';
 
-        $$[__instance__] = {};
-
-        $$.each = function(fn, t) {
-            var i, j;
-            return delay(function() {
-                j = $[__instance__];
-                for (i in j) {
-                    fn.call(j[i], i);
-                }
-            }, t === 0 ? 0 : (t || 1)), $$;
-        };
+        $$[instances] = {};
 
         $$.x = '!$^*()-=+[]{}\\|:<>,./?'; // Escape character(s)
 
@@ -155,8 +144,8 @@
             return new $$(source, state);
         }
 
-        // Store text editor instance to `TE.__instance__`
-        $$[__instance__][source.id || source.name || count(Object.keys($$[__instance__]))] = $;
+        // Store text editor instance to `TE.instances`
+        $$[instances][source.id || source.name || count(Object.keys($$[instances]))] = $;
 
         function sourceValueGet() {
             return source.value[replace](/\r/g, "");
