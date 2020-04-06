@@ -22,3 +22,21 @@ Credits
 -------
 
  - Logo by [@mirzazulfan](https://github.com/mirzazulfan)
+
+---
+
+Release Notes
+-------------
+
+### 3.1.6
+
+ - Removed `TE.each()` method.
+ - Renamed `TE.__instance__` to `TE.instances`.
+
+### 3.1.5
+
+ - Refactor.
+
+### 2.8.5
+
+ - None.

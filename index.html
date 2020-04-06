@@ -3,19 +3,44 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
+    <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
     <title>Text Editor</title>
     <link href="favicon.ico" rel="icon">
     <style>
-    html {
+    :root {
       background: #fff;
       color: #000;
+      border-top: 4px solid;
+      font-family: serif;
+    }
+    a {
+      color: #00f;
+      text-decoration: none;
+    }
+    a:focus {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #009;
     }
     a, code {
       word-wrap: break-word;
     }
+    code {
+      font-family: monospace;
+    }
     footer, header, main {
       max-width: 700px;
       margin: 0 auto;
+    }
+    footer hr, header hr {
+      display: none;
+    }
+    footer {
+      border-top: 1px dashed;
+    }
+    header {
+      border-bottom: 1px dashed;
     }
     pre {
       white-space: pre-wrap;
@@ -132,8 +157,6 @@ if (+major &lt; 3) { &hellip; }</code></pre>
 }</code></pre>
       <h3>TE.x</h3>
       <p>List of regular expression characters to be escaped.</p>
-      <h3>TE.esc(input)</h3>
-      <p>Escape regular expression characters listed in <code>TE.x</code> from a string or array of string.</p>
       <h3>TE._</h3>
       <p>Alias of <code>TE.prototype</code> used to formalize the prototype creation.</p>
       <pre><code>// Create `clear()` method
@@ -141,6 +164,8 @@ TE._.clear = function() {
     this.self.value = "";
     return this;
 };</code></pre>
+      <h3>TE.esc(input)</h3>
+      <p>Escape regular expression characters listed in <code>TE.x</code> from a string or array of string.</p>
       <h3>editor.state</h3>
       <p>Return the text editor states if any.</p>
       <h3>editor.self</h3>
@@ -255,7 +280,7 @@ editor.trim('\n\n', '\n\n', "", "", false); // Ignore empty value before and aft
     </main>
     <footer>
       <hr>
-      <p>&copy; 2020 <a href="https://github.com/taufik-nurrohman">Taufik Nurrohman</a></p>
+      <p>&copy; 2020 <a href="/">Taufik Nurrohman</a></p>
     </footer>
     <script src="text-editor.js"></script>
     <script>
