@@ -2,45 +2,41 @@
 <html dir="ltr">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    <meta content="#000" name="theme-color">
+    <meta content="width=device-width" name="viewport">
     <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
     <title>Text Editor</title>
     <link href="favicon.ico" rel="icon">
     <style>
+    * {
+      box-sizing: border-box;
+    }
     :root {
       background: #fff;
       color: #000;
       border-top: 4px solid;
-      font-family: serif;
+      font: normal normal 16px/1.25 serif;
     }
     a {
-      color: #00f;
-      text-decoration: none;
-    }
-    a:focus {
-      text-decoration: underline;
-    }
-    a:visited {
       color: #009;
+      text-decoration: none;
     }
     a, code {
       word-wrap: break-word;
     }
     code {
       font-family: monospace;
+      font-size: 80%;
     }
-    footer, header, main {
+    footer, header, main, nav {
       max-width: 700px;
       margin: 0 auto;
     }
-    footer hr, header hr {
-      display: none;
-    }
-    footer {
+    hr {
+      border: 0;
+      color: inherit;
       border-top: 1px dashed;
-    }
-    header {
-      border-bottom: 1px dashed;
+      height: 0;
     }
     pre {
       white-space: pre-wrap;
@@ -53,6 +49,16 @@
     }
     table {
       width: 100%;
+    }
+    td, th {
+      text-align: left;
+      vertical-align: top;
+    }
+    body > p:first-child {
+      background: #ffa;
+      border: 1px dashed;
+      margin-top: 0;
+      padding: .75em 1em;
     }
     </style>
   </head>
