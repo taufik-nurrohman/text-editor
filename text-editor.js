@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR 3.1.6
+ *  TEXT EDITOR 3.1.7
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -55,16 +55,6 @@
         return 'string' === typeof x;
     }
 
-    function edge(a, b, c) {
-        if (isSet(b) && a < b) {
-            return b;
-        }
-        if (isSet(c) && a > c) {
-            return c;
-        }
-        return a;
-    }
-
     function esc(x) {
         if (isArray(x)) {
             var o = [], i;
@@ -86,7 +76,11 @@
 
     (function($$) {
 
-        $$.version = '3.1.6';
+        $$.version = '3.1.7';
+
+        $$.state = {
+            'tab': '\t'
+        };
 
         $$[instances] = {};
 
@@ -109,7 +103,7 @@
 
         $$._ = $$.prototype;
 
-    })(win[name] = function(source, state) {
+    })(win[name] = function(source, o) {
 
         if (!source) return;
 
@@ -118,26 +112,15 @@
             patternAny = /^([\s\S]*?)$/, // Any character(s)
 
             body = doc.body,
-            html = body[parentNode];
+            html = body[parentNode],
+            state = Object.assign({}, $$.state, isString(o) ? {
+                'tab': o
+            } : (o || {}));
 
         // Already instantiated, skip!
         if (source[name]) {
             return $;
         }
-
-        state = state || {};
-        if (isString(state)) {
-            state = {
-                tab: state
-            }
-        }
-
-        if (!isSet(state.tab)) {
-            state.tab = '\t';
-        }
-
-        // Return the text editor state
-        $.state = state;
 
         // Return new instance if `TE` was called without the `new` operator
         if (!($ instanceof $$)) {
@@ -363,6 +346,9 @@
         $.pop = function() {
             return (delete source[name]), $;
         };
+
+        // Return the text editor state
+        $.state = state;
 
     });
 
