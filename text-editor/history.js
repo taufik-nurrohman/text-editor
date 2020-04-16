@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR HISTORY 1.1.1
+ *  TEXT EDITOR HISTORY 1.1.2
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -14,18 +14,18 @@
         _history = '_history',
         _historyState = _history + 'State';
 
-    function edge(a, b, c) {
-        if (isSet(b) && a < b) {
-            return b;
-        }
-        if (isSet(c) && a > c) {
-            return c;
-        }
-        return a;
-    }
-
     function isSet(x) {
         return 'undefined' !== typeof x;
+    }
+
+    function toEdge(a, b) {
+        if (isSet(b[0]) && a < b[0]) {
+            return b[0];
+        }
+        if (isSet(b[1]) && a > b[1]) {
+            return b[1];
+        }
+        return a;
     }
 
     _[_history] = [];
@@ -66,14 +66,14 @@
             return [];
         }
         current = t[_history].splice(isSet(index) ? index : t[_historyState], 1);
-        t[_historyState] = edge(t[_historyState] - 1, -1);
+        t[_historyState] = toEdge(t[_historyState] - 1, [-1]);
         return current;
     };
 
     // Undo current state
     _.undo = function() {
         var t = this, state;
-        t[_historyState] = edge(t[_historyState] - 1, 0, t[_history].length - 1);
+        t[_historyState] = toEdge(t[_historyState] - 1, [0, t[_history].length - 1]);
         state = t[_history][t[_historyState]];
         return t.set(state[0]).select(state[1], state[2]);
     };
@@ -81,7 +81,7 @@
     // Redo previous state
     _.redo = function() {
         var t = this, state;
-        t[_historyState] = edge(t[_historyState] + 1, 0, t[_history].length - 1);
+        t[_historyState] = toEdge(t[_historyState] + 1, [0, t[_history].length - 1]);
         state = t[_history][t[_historyState]];
         return t.set(state[0]).select(state[1], state[2]);
     };

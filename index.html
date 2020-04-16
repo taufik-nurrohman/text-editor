@@ -63,14 +63,9 @@
     </style>
   </head>
   <body>
-    <p style="
-      background: #ffa;
-      border: 1px dashed;
-      margin-top: 0;
-      padding: .75em 1em;
-    ">Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
+    <p>Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
     <header>
-      <h1>Text Editor v3.1.6</h1>
+      <h1>Text Editor v3.1.7</h1>
       <p>Text Editor is a simple JavaScript application that aims to provide accessibility improvements to the native HTML <code>&lt;textarea&gt;</code> elements so that users can control and manipulate their data in the text editor as they wish.</p>
       <hr>
     </header>
@@ -106,7 +101,7 @@
     &lt;p&gt;&lt;textarea&gt;&lt;/textarea&gt;&lt;/p&gt;
     &lt;script src="<a href="text-editor.min.js" target="_blank">text-editor.min.js</a>"&gt;&lt;/script&gt;
     &lt;script&gt;
-    const editor = new TE(document.querySelector('textarea'));
+    let editor = new TE(document.querySelector('textarea'));
     &lt;/script&gt;
   &lt;/body&gt;
 &lt;/html&gt;</code></pre>
@@ -138,8 +133,8 @@
         <li><a href="text-editor/source.html" target="_blank">Source Code Editor</a> (<a href="text-editor/source.min.js" target="_blank">+source.min.js</a>)</li>
       </ul>
       <h2>Settings</h2>
-      <pre><code>const editor = new TE(<var>self</var>, <var>tab</var> = '\t');</code></pre>
-      <pre><code>const editor = new TE(<var>self</var>, <var>state</var> = {
+      <pre><code>let editor = new TE(<var>self</var>, <var>tab</var> = '\t');</code></pre>
+      <pre><code>let editor = new TE(<var>self</var>, <var>state</var> = {
         tab: '\t'
     });</code></pre>
       <ul>
@@ -155,6 +150,13 @@
     major = version.split('.')[0];
 
 if (+major &lt; 3) { &hellip; }</code></pre>
+      <h3>TE.state</h3>
+      <p>This property stores the initial values of <code>editor.state</code>.</p>
+      <pre><code>let editor = new TE(source, {
+        foo: ['bar', 'baz', 'qux']
+    });
+
+console.log([TE.state, editor.state]);</code></pre>
       <h3>TE.instances</h3>
       <p>Return the text editor instances.</p>
       <pre><code>for (let key in TE.instances) {

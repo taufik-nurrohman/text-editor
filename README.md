@@ -28,6 +28,10 @@ Credits
 Release Notes
 -------------
 
+### 3.1.7
+
+ - Added `TE.state` property to set initial state globally.
+
 ### 3.1.6
 
  - Removed `TE.each()` method.
