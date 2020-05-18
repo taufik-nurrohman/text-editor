@@ -186,8 +186,8 @@
                 }
                 bracketsOpen = '([' + esc(bracketsOpen) + '])';
                 bracketsClose = '([' + esc(bracketsClose) + '])';
-                var matchBefore = before[match](toPattern(bracketsOpen + '\\n[ \\t]+$')),
-                    matchAfter = after[match](toPattern('^\\n[ \\t]*' + bracketsClose));
+                var matchBefore = before[match](toPattern(bracketsOpen + '\\n(?:' + esc(tabs) + ')$')),
+                    matchAfter = after[match](toPattern('^\\n(?:' + esc(tabs) + ')' + bracketsClose));
                 if (!value && matchBefore && matchAfter && matchAfter[1] === closure[matchBefore[1]]) {
                     // Collapse bracket(s)
                     $.trim("", ""), rec(), offKeyDown(e);
