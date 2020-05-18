@@ -34,30 +34,14 @@ editor.on('click', onClick); // With context</code></pre>
 
     var editor = new TE(document.querySelector('textarea'));
 
-    // Apply some hook(s) to the native HTML event(s)
-    ([
-        'blur',
-        'click',
-        'copy',
-        'cut',
-        'focus',
-        'input',
-        'paste',
-        'select'
-    ]).forEach(function(name) {
-        editor.self.addEventListener(name, function(e) {
-            editor.fire(e.type, [e]);
-        }, false);
-    });
-
     // Add a click hook example
-    editor.on('click', function(e) {
-        console.log(['click', e])
+    editor.on('click', function() {
+        console.log('click');
     });
 
     // Add a blur hook example
-    editor.on('blur', function(e) {
-        console.log(['blur', e])
+    editor.on('blur', function() {
+        console.log('blur');
     });
 
     </script>
