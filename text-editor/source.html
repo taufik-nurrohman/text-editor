@@ -31,7 +31,7 @@
       </label>
     </p>
     <h2>Settings</h2>
-    <pre><code>var editor = new TE(<var>self</var>, <var>state</var> = {
+    <pre><code>let editor = new TE(<var>self</var>, <var>state</var> = {
         tab: '\t',
         source: {
             close: {
@@ -42,6 +42,15 @@
                 "'": "'",
                 '&lt;': '&gt;'
             },
+            // Custom function to trigger the outdent
+            pull: function(e) {
+                let isCtrl = e.ctrlKey,
+                    key = e.key,
+                    keyCode = e.keyCode;
+                return isCtrl && ((key && '[' === key) || (keyCode && 219 === keyCode));
+            },
+            // Custom function to trigger the indent
+            push: function(e) { &hellip; }
             select: true
         }
     });</code></pre>

@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR SOURCE 1.1.5
+ *  TEXT EDITOR SOURCE 1.1.6
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -15,6 +15,7 @@
         esc = $$.esc,
 
         blur = 'blur',
+        call = 'call',
         close = 'close',
         ctrlKey = 'ctrlKey',
         disabled = 'disabled',
@@ -22,6 +23,7 @@
         fromCharCode = 'fromCharCode',
         indexOf = 'indexOf',
         lastIndexOf = 'lastIndexOf',
+        length = 'length',
         keydown = 'keydown',
         match = 'match',
         mousedown = 'mousedown',
@@ -62,6 +64,10 @@
         e && e.preventDefault();
     }
 
+    function toPattern(a, b) {
+        return new RegExp(a, b);
+    }
+
     $$$ = function(source, state) {
 
         var $ = this,
@@ -69,13 +75,13 @@
             canUndo = undo in $$._;
 
         // Is the same as `parent::__construct()` in PHP
-        $$.call($, source, state);
+        $$[call]($, source, state);
 
-        var name = 'source',
+        var plugin = 'source',
             state = $.state,
             defaults = {},
             // Is enabled by default, unless you set the `source` option to `false`
-            active = !(name in state) || state[name];
+            active = !(plugin in state) || state[plugin];
 
         defaults[close] = {
             '(': ')',
@@ -85,13 +91,28 @@
             "'": "'",
             '<': '>'
         };
+
+        defaults[pull] = function(e) {
+            var isCtrl = e.ctrlKey,
+                key = e.key,
+                keyCode = e.keyCode;
+            return isCtrl && ((key && '[' === key) || (keyCode && 219 === keyCode));
+        };
+
+        defaults[push] = function(e) {
+            var isCtrl = e.ctrlKey,
+                key = e.key,
+                keyCode = e.keyCode;
+            return isCtrl && ((key && ']' === key) || (keyCode && 221 === keyCode));
+        };
+
         defaults[select] = true; // Enable smart selection?
 
         if (active) {
-            state[name] = extend(defaults, true === state[name] ? {} : state[name]);
+            state[plugin] = extend(defaults, true === state[plugin] ? {} : state[plugin]);
         }
 
-        var stateScoped = state[name] || {},
+        var stateScoped = state[plugin] || {},
             previousSelectionStart;
 
         function onTouch() {
@@ -101,12 +122,12 @@
             delay(function() {
                 var selection = $.$(),
                     from = /\W/g,
-                    to = '.',
+                    to = '|',
                     start = selection.before[replace](from, to)[lastIndexOf](to),
                     end = selection.after[replace](from, to)[indexOf](to),
                     value = selection.value;
                 start = start < 0 ? 0 : start + 1;
-                end = end < 0 ? selection.after.length : end;
+                end = end < 0 ? selection.after[length] : end;
                 if (previousSelectionStart !== selection.start) {
                     $[select](start, selection.end + end);
                 }
@@ -134,22 +155,22 @@
                 after = selection.after,
                 charBefore = before.slice(-1),
                 charAfter = after.slice(0, 1),
-                lastTabs = before[match](new RegExp('(?:^|\\n)(' + esc(tab) + '+).*$')),
+                lastTabs = before[match](toPattern('(?:^|\\n)(' + esc(tab) + '+).*$')),
                 tabs = lastTabs ? lastTabs[1] : "",
                 end = closure[kk];
-            if (isCtrl) {
+            // Indent
+            if (stateScoped[push] && stateScoped[push][call]($, e)) {
+                $[push](tab), rec(), offKeyDown(e);
+            // Outdent
+            } else if (stateScoped[pull] && stateScoped[pull][call]($, e)) {
+                $[pull](tab), rec(), offKeyDown(e);
+            } else if (isCtrl) {
                 // Undo
                 if ('z' === kk || 90 === k) {
                     $[undo](), rec(), offKeyDown(e);
                 // Redo
                 } else if ('y' === kk || 89 === k) {
                     $[redo](), rec(), offKeyDown(e);
-                // Indent
-                } else if (']' === kk || 221 === k) {
-                    $[push](tab), rec(), offKeyDown(e);
-                // Outdent
-                } else if ('[' === kk || 219 === k) {
-                    $[pull](tab), rec(), offKeyDown(e);
                 }
             } else if ('\\' !== charBefore && kk === charAfter) {
                 // Move to the next character
@@ -157,7 +178,20 @@
             } else if ('\\' !== charBefore && end) {
                 rec(), $.wrap(kk, end), rec(), offKeyDown(e);
             } else if ('backspace' === kk || 8 === k) {
-                if (!value && before[match](new RegExp(esc(tab) + '$'))) {
+                var bracketsOpen = "",
+                    bracketsClose = "";
+                for (var i in closure) {
+                    bracketsOpen += i;
+                    bracketsClose += closure[i];
+                }
+                bracketsOpen = '([' + esc(bracketsOpen) + '])';
+                bracketsClose = '([' + esc(bracketsClose) + '])';
+                var matchBefore = before[match](toPattern(bracketsOpen + '\\n[ \\t]+$')),
+                    matchAfter = after[match](toPattern('^\\n[ \\t]*' + bracketsClose));
+                if (!value && matchBefore && matchAfter && matchAfter[1] === closure[matchBefore[1]]) {
+                    // Collapse bracket(s)
+                    $.trim("", ""), rec(), offKeyDown(e);
+                } else if (!value && before[match](toPattern(esc(tab) + '$'))) {
                     $[pull](tab), rec(), offKeyDown(e);
                 } else {
                     end = closure[charBefore];
@@ -208,7 +242,7 @@
 
         // Destructor
         $.pop = function() {
-            pop && pop.call($);
+            pop && pop[call]($);
             // Remove event(s) from memory
             eventLet(source, keydown, onKeyDown);
             eventLet(source, mousedown, onTouch);

@@ -28,6 +28,11 @@ Credits
 Release Notes
 -------------
 
+### 3.1.8
+
+ - Added ability to collapse brackets for `text-editor/source.js` extension.
+ - Added ability to set custom indent and outdent handler for `text-editor/source.js` extension.
+
 ### 3.1.7
 
  - Added `TE.state` property to set initial state globally.

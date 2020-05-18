@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR 3.1.7
+ *  TEXT EDITOR 3.1.8
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -76,7 +76,7 @@
 
     (function($$) {
 
-        $$.version = '3.1.7';
+        $$.version = '3.1.8';
 
         $$.state = {
             'tab': '\t'
@@ -206,7 +206,9 @@
                 arg[1] = arg[0];
             }
             source[focus]();
-            source.setSelectionRange(arg[0], arg[1]); // Default `$.select(7, 100)`
+            // Default `$.select(7, 100)`
+            source[selectionStart] = arg[0];
+            source[selectionEnd] = arg[1];
             return source[scrollTop] = z, win.scroll(x, y), $;
         };
 
