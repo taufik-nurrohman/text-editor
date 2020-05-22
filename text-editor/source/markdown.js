@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR SOURCE 1.1.7
+ *  TEXT EDITOR MARKDOWN SOURCE 1.0.0
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -36,6 +36,7 @@
         replace = 'replace',
         select = 'select',
         shiftKey = 'shiftKey',
+        slice = 'slice',
         toLowerCase = 'toLowerCase',
         touch = 'touch',
         touchend = touch + 'end',
@@ -43,6 +44,10 @@
         undo = 'undo',
 
         $$$, prop;
+
+    function count(x) {
+        return x.length;
+    }
 
     function eventLet(el, name, fn) {
         el.removeEventListener(name, fn);
@@ -77,74 +82,35 @@
         // Is the same as `parent::__construct()` in PHP
         $$[call]($, source, state);
 
-        var plugin = 'source',
+        var patternAny = /^([\s\S]*?)$/,
+            plugin = 'source',
             state = $.state,
             defaults = {},
             // Is enabled by default, unless you set the `source` option to `false`
             active = !(plugin in state) || state[plugin];
 
-        defaults[close] = {
-            '`': '`',
-            '(': ')',
-            '{': '}',
-            '[': ']',
-            '"': '"',
-            "'": "'",
-            '<': '>'
-        };
-
-        defaults[pull] = function(e) {
-            var isCtrl = e.ctrlKey,
-                key = e.key,
-                keyCode = e.keyCode;
-            return isCtrl && ((key && '[' === key) || (keyCode && 219 === keyCode));
-        };
-
-        defaults[push] = function(e) {
-            var isCtrl = e.ctrlKey,
-                key = e.key,
-                keyCode = e.keyCode;
-            return isCtrl && ((key && ']' === key) || (keyCode && 221 === keyCode));
-        };
-
-        defaults[select] = true; // Enable smart selection?
-
-        if (active) {
-            state[plugin] = extend(defaults, true === state[plugin] ? {} : state[plugin]);
-        }
-
-        var stateScoped = state[plugin] || {},
-            previousSelectionStart;
-
-        function onTouch() {
-            if (source[disabled] || source[readOnly]) {
-                return;
-            }
-            delay(function() {
-                var selection = $.$(),
-                    from = /\W/g,
-                    to = '|',
-                    start = selection.before[replace](from, to)[lastIndexOf](to),
-                    end = selection.after[replace](from, to)[indexOf](to),
-                    value = selection.value;
-                start = start < 0 ? 0 : start + 1;
-                end = end < 0 ? selection.after[length] : end;
-                if (previousSelectionStart !== selection.start) {
-                    $[select](start, selection.end + end);
+        function toggle(open, close, wrap) {
+            var selection = $.$(),
+                before = selection.before,
+                after = selection.after,
+                value = selection.value;
+            if (wrap) {
+                if (open === value[slice](0, count(open)) && close === value[slice](-count(close))) {
+                    return $.peel(open, close, wrap);
                 }
-            }, 0);
-        }
-
-        function onTouchEnd() {
-            previousSelectionStart = $.$().start;
+                return $.wrap(open, close, wrap);
+            }
+            if (open === before[slice](-count(open)) && close === after[slice](0, count(close))) {
+                return $.peel(open, close, wrap);
+            }
+            return $.wrap(open, close, wrap);
         }
 
         function onKeyDown(e) {
             if (source[disabled] || source[readOnly]) {
                 return;
             }
-            var closure = stateScoped[close],
-                tab = state.tab,
+            var tab = state.tab,
                 k = e.keyCode,
                 kk = (e.key || String[fromCharCode](k))[toLowerCase](),
                 isCtrl = e[ctrlKey],
@@ -157,8 +123,8 @@
                 charBefore = before.slice(-1),
                 charAfter = after.slice(0, 1),
                 lastTabs = before[match](toPattern('(?:^|\\n)(' + esc(tab) + '+).*$')),
-                tabs = lastTabs ? lastTabs[1] : "",
-                end = closure[kk];
+                tabs = lastTabs ? lastTabs[1] : "";
+            /*
             // Indent
             if (stateScoped[push] && stateScoped[push][call]($, e)) {
                 $[push](tab), rec(), offKeyDown(e);
@@ -224,6 +190,22 @@
                 // Record history
                 delay(rec, 0);
             }
+            */
+            if (isCtrl) {
+                if ('b' === kk || 66 === k) {
+                    rec(), toggle('**', '**'), rec();
+                    offKeyDown(e);
+                } else if ('h' === kk || 72 === k) {
+                    console.log('toggle block');
+                    offKeyDown(e);
+                } else if ('i' === kk || 73 === k) {
+                    rec(), toggle('_', '_'), rec();
+                    offKeyDown(e);
+                } else if ('k' === kk || 75 === k) {
+                    rec(), toggle('`', '`'), rec();
+                    offKeyDown(e);
+                }
+            }
         }
 
         function rec() {
@@ -232,12 +214,6 @@
 
         if (active) {
             eventSet(source, keydown, onKeyDown);
-            if (stateScoped[select]) {
-                eventSet(source, mousedown, onTouch);
-                eventSet(source, mouseup, onTouchEnd);
-                eventSet(source, touchend, onTouchEnd);
-                eventSet(source, touchstart, onTouch);
-            }
             rec(); // Initialize history
         }
 
@@ -246,10 +222,6 @@
             pop && pop[call]($);
             // Remove event(s) from memory
             eventLet(source, keydown, onKeyDown);
-            eventLet(source, mousedown, onTouch);
-            eventLet(source, mouseup, onTouchEnd);
-            eventLet(source, touchend, onTouchEnd);
-            eventLet(source, touchstart, onTouch);
             // Reset history
             canUndo && $.loss(true);
             return $;
