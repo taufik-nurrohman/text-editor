@@ -28,8 +28,9 @@ Credits
 Release Notes
 -------------
 
-### 3.1.8
+### 3.1.x
 
+ - Added ability to clear the hook storage object if it’s empty.
  - Added ability to collapse brackets for `text-editor/source.js` extension.
  - Added ability to set custom indent and outdent handler for `text-editor/source.js` extension.
 
