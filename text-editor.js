@@ -354,4 +354,4 @@
 
     });
 
-})(this, this.document, 'TE');
+})(window, document, 'TE');
