@@ -28,12 +28,13 @@ Credits
 Release Notes
 -------------
 
-### 3.1.x
+### 3.1.8
 
  - Added ability to clear the hook storage object if it’s empty.
  - Added ability to collapse brackets for `text-editor/source.js` extension.
  - Added ability to set custom indent and outdent handler for `text-editor/source.js` extension.
  - Fixed common issue with ES6 module which does not reference the `this` scope to `window` object by default.
+ - Updated donation target.
 
 ### 3.1.7
 
