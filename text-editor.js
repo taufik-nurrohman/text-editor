@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR 3.1.8
+ *  TEXT EDITOR 3.1.9
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -76,7 +76,7 @@
 
     (function($$) {
 
-        $$.version = '3.1.8';
+        $$.version = '3.1.9';
 
         $$.state = {
             'tab': '\t'
@@ -100,8 +100,6 @@
                 return d;
             };
         };
-
-        $$._ = $$.prototype;
 
     })(win[name] = function(source, o) {
 

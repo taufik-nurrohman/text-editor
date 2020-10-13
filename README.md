@@ -28,6 +28,10 @@ Credits
 Release Notes
 -------------
 
+### 3.1.9
+
+ - Removed `TE._` method.
+
 ### 3.1.8
 
  - Added ability to clear the hook storage object if it’s empty.

@@ -65,7 +65,7 @@
   <body>
     <p>Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
     <header>
-      <h1>Text Editor v3.1.8</h1>
+      <h1>Text Editor v3.1.9</h1>
       <p>Text Editor is a simple JavaScript application that aims to provide accessibility improvements to the native HTML <code>&lt;textarea&gt;</code> elements so that users can control and manipulate their data in the text editor as they wish.</p>
       <hr>
     </header>
@@ -165,13 +165,6 @@ console.log([TE.state, editor.state]);</code></pre>
 if (+major &lt; 3) { &hellip; }</code></pre>
       <h3>TE.x</h3>
       <p>List of regular expression characters to be escaped.</p>
-      <h3>TE._</h3>
-      <p>Alias of <code>TE.prototype</code> used to formalize the prototype creation.</p>
-      <pre><code>// Create `clear()` method
-TE._.clear = function() {
-    this.self.value = "";
-    return this;
-};</code></pre>
       <h3>TE.esc(input)</h3>
       <p>Escape regular expression characters listed in <code>TE.x</code> from a string or array of string.</p>
       <h3>editor.self</h3>
