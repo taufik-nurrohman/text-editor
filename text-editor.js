@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR 3.1.9
+ *  TEXT EDITOR 3.1.10
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -76,7 +76,7 @@
 
     (function($$) {
 
-        $$.version = '3.1.9';
+        $$.version = '3.1.10';
 
         $$.state = {
             'tab': '\t'

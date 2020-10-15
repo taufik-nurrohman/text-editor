@@ -28,6 +28,10 @@ Credits
 Release Notes
 -------------
 
+### 3.1.10
+
+ - Updated all extensions.
+
 ### 3.1.9
 
  - Removed `TE._` method.

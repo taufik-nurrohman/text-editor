@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR SOURCE 1.1.7
+ *  TEXT EDITOR SOURCE 1.1.8
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -72,7 +72,7 @@
 
         var $ = this,
             pop = $.pop,
-            canUndo = undo in $$._;
+            canUndo = undo in $$.prototype;
 
         // Is the same as `parent::__construct()` in PHP
         $$[call]($, source, state);
@@ -266,9 +266,9 @@
     }
 
     // Clone prototype(s)
-    $$$.prototype = $$$._ = $$._;
+    $$$.prototype = $$.prototype;
 
     // Override
     win[name] = $$$;
 
-})(this, this.document, 'TE');
+})(window, document, 'TE');

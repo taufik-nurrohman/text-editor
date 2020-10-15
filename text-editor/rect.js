@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR RECT 1.1.1
+ *  TEXT EDITOR RECT 1.1.2
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -10,7 +10,7 @@
 (function(win, doc, name) {
 
     var $ = win[name],
-        _ = $._,
+        _ = $.prototype,
 
         appendChild = 'appendChild',
         children = 'children',
@@ -56,8 +56,6 @@
                 border + 'left' + width,
                 border + 'right' + width,
                 border + 'top' + width,
-                '-webkit-box-sizing',
-                '-moz-box-sizing',
                 'box-sizing',
                 'direction',
                 font + 'family',
@@ -129,4 +127,4 @@
         return isSet(key) ? [out[0][key], out[1][key]] : out;
     };
 
-})(this, this.document, 'TE');
+})(window, document, 'TE');

@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR HISTORY 1.1.2
+ *  TEXT EDITOR HISTORY 1.1.3
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -10,7 +10,7 @@
 (function(win, doc, name) {
 
     var $ = win[name],
-        _ = $._,
+        _ = $.prototype,
         _history = '_history',
         _historyState = _history + 'State';
 
@@ -37,7 +37,7 @@
         if (!isSet(index)) {
             return t[_history];
         }
-        return isSet(t[_history][index]) ? t[_history][index] : null; 
+        return isSet(t[_history][index]) ? t[_history][index] : null;
     };
 
     // Save current state to history
@@ -86,4 +86,4 @@
         return t.set(state[0]).select(state[1], state[2]);
     };
 
-})(this, this.document, 'TE');
+})(window, document, 'TE');

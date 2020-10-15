@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR HOOK 1.0.1
+ *  TEXT EDITOR HOOK 1.0.2
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -112,9 +112,9 @@
     }
 
     // Clone prototype(s)
-    $$$.prototype = $$$._ = $$._;
+    $$$.prototype = $$.prototype;
 
     // Override
     win[name] = $$$;
 
-})(this, this.document, 'TE');
+})(window, document, 'TE');
