@@ -175,30 +175,29 @@
         $[blur] = () => source[blur](), $;
 
         // Select value
-        $[select] = () => {
+        $[select] = (...args) => {
             if (source[disabled] || source[readOnly]) {
                 return source[focus](), $;
             }
-            let arg = arguments,
-                counts = count(arg),
+            let counts = count(args),
                 s = $.$(),
                 x, y, z;
             x = win.pageXOffset || html[scrollLeft] || body[scrollLeft];
             y = win.pageYOffset || html[scrollTop] || body[scrollTop];
             z = source[scrollTop];
             if (0 === counts) { // Restore selection with `$.select()`
-                arg[0] = s.start;
-                arg[1] = s.end;
+                args[0] = s.start;
+                args[1] = s.end;
             } else if (1 === counts) { // Move caret position with `$.select(7)`
-                if (true === arg[0]) { // Select all with `$.select(true)`
+                if (true === args[0]) { // Select all with `$.select(true)`
                     return source[focus](), source[select](), $;
                 }
-                arg[1] = arg[0];
+                args[1] = args[0];
             }
             source[focus]();
             // Default `$.select(7, 100)`
-            source[selectionStart] = arg[0];
-            source[selectionEnd] = arg[1];
+            source[selectionStart] = args[0];
+            source[selectionEnd] = args[1];
             return source[scrollTop] = z, win.scroll(x, y), $;
         };
 
