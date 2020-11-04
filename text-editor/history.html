@@ -38,15 +38,15 @@
     <script src="history.min.js"></script>
     <script>
 
-    var editor = new TE(document.querySelector('textarea')),
-        dump = document.querySelector('code');
+    const editor = new TE(document.querySelector('textarea'));
+
+    let dump = document.querySelector('code');
 
     editor.record(); // Record the initial value
-    editor.self.addEventListener('keydown', function() {
-        setTimeout(function() {
-            editor.record(); // Record keyboard interaction
-        }, 1);
-    }, false);
+
+    editor.self.addEventListener('keydown', () => {
+        setTimeout(() => editor.record(), 1); // Record keyboard interaction
+    });
 
     </script>
   </body>

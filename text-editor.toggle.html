@@ -14,12 +14,12 @@
     <script src="text-editor.min.js"></script>
     <script>
 
-    var editor = new TE(document.querySelector('textarea'));
+    const editor = new TE(document.querySelector('textarea'));
 
     function toggleHeaders() {
         editor.match([/<(?:p|h([0-6]))(\s[^>]*?)?>$/, /.*/, /^<\/(?:p|h[0-6])>/], function(before, value, after) {
             console.log([before, value, after]);
-            var h = +(before[1] || 0),
+            let h = +(before[1] || 0),
                 attr = before[2] || "";
             // ``
             this.peel(/<(?:p|h[0-6])(?:\s[^>]*?)?>/, /<\/(?:p|h[0-6])>/);

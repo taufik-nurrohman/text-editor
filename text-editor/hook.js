@@ -1,15 +1,15 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR HOOK 1.0.2
+ *  TEXT EDITOR HOOK 1.0.3
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
  * --------------------------------------------------------------
  */
 
-(function(win, doc, name) {
+((win, doc, name) => {
 
-    var $$ = win[name],
+    let $$ = win[name],
 
         call = 'call',
         forEach = 'forEach',
@@ -26,7 +26,7 @@
 
     $$$ = function(source, state) {
 
-        var $ = this,
+        let $ = this,
             hooks = {},
             nativeEvents = [
                 'blur',
@@ -47,7 +47,7 @@
             if (!isSet(hooks[name])) {
                 return $;
             }
-            for (var i = 0, j = hooks[name].length; i < j; ++i) {
+            for (let i = 0, j = hooks[name].length; i < j; ++i) {
                 hooks[name][i].apply($, lot);
             }
             return $;
@@ -61,7 +61,7 @@
             }
             if (isSet(hooks[name])) {
                 if (isSet(fn)) {
-                    for (var i = 0, j = hooks[name].length; i < j; ++i) {
+                    for (let i = 0, j = hooks[name].length; i < j; ++i) {
                         if (fn === hooks[name][i]) {
                             hooks[name].splice(i, 1);
                         }
@@ -77,7 +77,7 @@
             return $;
         };
 
-        $.on = function(name, fn) {
+        $.on = (name, fn) => {
             if (!isSet(hooks[name])) {
                 hooks[name] = [];
             }
@@ -92,13 +92,13 @@
         }
 
         // Apply hook to all event(s)
-        nativeEvents[forEach](function(n) {
+        nativeEvents[forEach](n => {
             source.addEventListener(n, doApplyHookToNativeEvents, false);
         });
 
-        $.pop = function() {
+        $.pop = () => {
             // Remove hook from all event(s)
-            nativeEvents[forEach](function(n) {
+            nativeEvents[forEach](n => {
                 source.removeEventListener(n, doApplyHookToNativeEvents);
             });
             return isFunction(pop) ? pop[call]($) : $;

@@ -29,7 +29,7 @@ d</textarea></p>
     <script src="rect.min.js"></script>
     <script>
 
-    var check = document.querySelector('input[type="checkbox"]'),
+    let check = document.querySelector('input[type="checkbox"]'),
         caret = [
             document.createElement('span'),
             document.createElement('span')
@@ -38,12 +38,12 @@ d</textarea></p>
     document.body.appendChild(caret[1]);
 
     function run(el) {
-        var editor = new TE(el);
-        var s = 'position:absolute;width:2px;z-index:9999;visibility:hidden;pointer-events:none;margin-left:-1px;';
+        const editor = new TE(el);
+        let s = 'position:absolute;width:2px;z-index:9999;visibility:hidden;pointer-events:none;margin-left:-1px;';
         caret[0].style.cssText = s + 'background:red;';
         caret[1].style.cssText = s + 'background:blue;';
         function setCaretPosition() {
-            var $ = editor.$(),
+            let $ = editor.$(),
                 rect = editor.rect(),
                 e = editor.self,
                 h = parseFloat(window.getComputedStyle(editor.self).getPropertyValue('line-height'));
@@ -59,17 +59,17 @@ d</textarea></p>
             toggleMirrorVisibility.call(check);
         }
         check.onchange = toggleMirrorVisibility;
-        editor.self.onfocus = function() {
+        editor.self.onfocus = () => {
             caret[0].style.visibility = 'visible';
             caret[1].style.visibility = 'visible';
             setCaretPosition();
         };
-        editor.self.onblur = function() {
+        editor.self.onblur = () => {
             caret[0].style.visibility = 'hidden';
             caret[1].style.visibility = 'hidden';
         };
-        ['scroll', 'resize', 'keydown', 'cut', 'paste', 'mousedown', 'mouseup', 'select'].forEach(function(event) {
-            editor.self.addEventListener(event, function(e) {
+        ['scroll', 'resize', 'keydown', 'cut', 'paste', 'mousedown', 'mouseup', 'select'].forEach(event => {
+            editor.self.addEventListener(event, e => {
                 setTimeout(setCaretPosition, 1);
             }, false);
         });

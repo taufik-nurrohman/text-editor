@@ -8,12 +8,19 @@
   <body>
     <p><textarea placeholder="Type something&hellip;" spellcheck="false"></textarea></p>
     <h2>Methods and Properties</h2>
+    <h3>editor.fire(name, lot)</h3>
+    <p>Trigger hooks.</p>
+    <pre><code>editor.fire('click', [data]);</code></pre>
     <h3>editor.hooks</h3>
     <p>Return the added hooks.</p>
     <pre><code>console.log(editor.hooks);</code></pre>
+    <h3>editor.off(name, fn)</h3>
+    <p>Remove a hook.</p>
+    <pre><code>editor.off('click');</code></pre>
+    <pre><code>editor.off('click', onClick); // With context</code></pre>
     <h3>editor.on(name, fn)</h3>
     <p>Add a new hook.</p>
-    <pre><code>editor.on('click', function(data) {
+    <pre><code>editor.on('click', data =&gt; {
     alert('Click!');
 });</code></pre>
     <pre><code>function onClick(data) {
@@ -21,28 +28,17 @@
 }
 
 editor.on('click', onClick); // With context</code></pre>
-    <h3>editor.off(name, fn)</h3>
-    <p>Remove a hook.</p>
-    <pre><code>editor.off('click');</code></pre>
-    <pre><code>editor.off('click', onClick); // With context</code></pre>
-    <h3>editor.fire(name, lot)</h3>
-    <p>Trigger hooks.</p>
-    <pre><code>editor.fire('click', [data]);</code></pre>
     <script src="../text-editor.min.js"></script>
     <script src="hook.min.js"></script>
     <script>
 
-    var editor = new TE(document.querySelector('textarea'));
+    const editor = new TE(document.querySelector('textarea'));
 
     // Add a click hook example
-    editor.on('click', function() {
-        console.log('click');
-    });
+    editor.on('click', () => console.log('click'));
 
     // Add a blur hook example
-    editor.on('blur', function() {
-        console.log('blur');
-    });
+    editor.on('blur', () => console.log('blur'));
 
     </script>
   </body>

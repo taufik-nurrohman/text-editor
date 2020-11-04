@@ -1,15 +1,15 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR HISTORY 1.1.3
+ *  TEXT EDITOR HISTORY 1.1.4
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
  * --------------------------------------------------------------
  */
 
-(function(win, doc, name) {
+((win, doc, name) => {
 
-    var $ = win[name],
+    let $ = win[name],
         _ = $.prototype,
         _history = '_history',
         _historyState = _history + 'State';
@@ -33,7 +33,7 @@
 
     // Get history data
     _.history = function(index) {
-        var t = this;
+        let t = this;
         if (!isSet(index)) {
             return t[_history];
         }
@@ -42,7 +42,7 @@
 
     // Save current state to history
     _.record = function(index) {
-        var t = this,
+        let t = this,
             selection = t.$(),
             current = t[_history][t[_historyState]] || [],
             next = [t.self.value, selection.start, selection.end];
@@ -59,7 +59,7 @@
 
     // Remove state from history
     _.loss = function(index) {
-        var t = this, current;
+        let t = this, current;
         if (true === index) {
             t[_history] = [];
             t[_historyState] = -1;
@@ -72,7 +72,7 @@
 
     // Undo current state
     _.undo = function() {
-        var t = this, state;
+        let t = this, state;
         t[_historyState] = toEdge(t[_historyState] - 1, [0, t[_history].length - 1]);
         state = t[_history][t[_historyState]];
         return t.set(state[0]).select(state[1], state[2]);
@@ -80,7 +80,7 @@
 
     // Redo previous state
     _.redo = function() {
-        var t = this, state;
+        let t = this, state;
         t[_historyState] = toEdge(t[_historyState] + 1, [0, t[_history].length - 1]);
         state = t[_history][t[_historyState]];
         return t.set(state[0]).select(state[1], state[2]);

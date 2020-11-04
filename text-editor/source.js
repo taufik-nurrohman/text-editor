@@ -7,9 +7,9 @@
  * --------------------------------------------------------------
  */
 
-(function(win, doc, name) {
+((win, doc, name) => {
 
-    var $$ = win[name],
+    let $$ = win[name],
 
         delay = win.setTimeout,
         esc = $$.esc,
@@ -70,14 +70,14 @@
 
     $$$ = function(source, state) {
 
-        var $ = this,
+        let $ = this,
             pop = $.pop,
             canUndo = undo in $$.prototype;
 
         // Is the same as `parent::__construct()` in PHP
         $$[call]($, source, state);
 
-        var plugin = 'source',
+        let plugin = 'source',
             state = $.state,
             defaults = {},
             // Is enabled by default, unless you set the `source` option to `false`
@@ -93,15 +93,15 @@
             '<': '>'
         };
 
-        defaults[pull] = function(e) {
-            var isCtrl = e.ctrlKey,
+        defaults[pull] = e => {
+            let isCtrl = e.ctrlKey,
                 key = e.key,
                 keyCode = e.keyCode;
             return isCtrl && ((key && '[' === key) || (keyCode && 219 === keyCode));
         };
 
-        defaults[push] = function(e) {
-            var isCtrl = e.ctrlKey,
+        defaults[push] = e => {
+            let isCtrl = e.ctrlKey,
                 key = e.key,
                 keyCode = e.keyCode;
             return isCtrl && ((key && ']' === key) || (keyCode && 221 === keyCode));
@@ -113,15 +113,15 @@
             state[plugin] = extend(defaults, true === state[plugin] ? {} : state[plugin]);
         }
 
-        var stateScoped = state[plugin] || {},
+        let stateScoped = state[plugin] || {},
             previousSelectionStart;
 
         function onTouch() {
             if (source[disabled] || source[readOnly]) {
                 return;
             }
-            delay(function() {
-                var selection = $.$(),
+            delay(() => {
+                let selection = $.$(),
                     from = /\W/g,
                     to = '|',
                     start = selection.before[replace](from, to)[lastIndexOf](to),
@@ -143,7 +143,7 @@
             if (source[disabled] || source[readOnly]) {
                 return;
             }
-            var closure = stateScoped[close],
+            let closure = stateScoped[close],
                 tab = state.tab,
                 k = e.keyCode,
                 kk = (e.key || String[fromCharCode](k))[toLowerCase](),
@@ -179,15 +179,15 @@
             } else if ('\\' !== charBefore && end) {
                 rec(), $.wrap(kk, end), rec(), offKeyDown(e);
             } else if ('backspace' === kk || 8 === k) {
-                var bracketsOpen = "",
+                let bracketsOpen = "",
                     bracketsClose = "";
-                for (var i in closure) {
+                for (let i in closure) {
                     bracketsOpen += i;
                     bracketsClose += closure[i];
                 }
                 bracketsOpen = '([' + esc(bracketsOpen) + '])';
                 bracketsClose = '([' + esc(bracketsClose) + '])';
-                var matchBefore = before[match](toPattern(bracketsOpen + '\\n(?:' + esc(tabs) + ')$')),
+                let matchBefore = before[match](toPattern(bracketsOpen + '\\n(?:' + esc(tabs) + ')$')),
                     matchAfter = after[match](toPattern('^\\n(?:' + esc(tabs) + ')' + bracketsClose));
                 if (!value && matchBefore && matchAfter && matchAfter[1] === closure[matchBefore[1]]) {
                     // Collapse bracket(s)
@@ -242,7 +242,7 @@
         }
 
         // Destructor
-        $.pop = function() {
+        $.pop = () => {
             pop && pop[call]($);
             // Remove event(s) from memory
             eventLet(source, keydown, onKeyDown);

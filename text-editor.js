@@ -1,15 +1,15 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR 3.1.10
+ *  TEXT EDITOR 3.1.11
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
  * --------------------------------------------------------------
  */
 
-(function(win, doc, name) {
+((win, doc, name) => {
 
-    var Selection = 'Selection',
+    let Selection = 'Selection',
 
         blur = 'blur',
         disabled = 'disabled',
@@ -57,7 +57,7 @@
 
     function esc(x) {
         if (isArray(x)) {
-            var o = [], i;
+            let o = [], i;
             for (i in x) {
                 o[i] = esc(x[i]);
             }
@@ -74,9 +74,9 @@
         return s['trim' + (-1 === x ? 'Left' : 1 === x ? 'Right' : "")]();
     }
 
-    (function($$) {
+    ($$ => {
 
-        $$.version = '3.1.10';
+        $$.version = '3.1.11';
 
         $$.state = {
             'tab': '\t'
@@ -89,23 +89,21 @@
         $$.esc = esc;
 
         $$[Selection] = function(a, b, c) {
-            var t = this, d;
+            let t = this, d;
             t.start = a;
             t.end = b;
             t.value = (d = c[substring](a, b));
             t.before = c[substring](0, a);
             t.after = c[substring](b);
             t.length = count(d);
-            t.toString = function() {
-                return d;
-            };
+            t.toString = () => d;
         };
 
     })(win[name] = function(source, o) {
 
         if (!source) return;
 
-        var $ = this,
+        let $ = this,
             $$ = win[name],
             patternAny = /^([\s\S]*?)$/, // Any character(s)
 
@@ -139,17 +137,13 @@
         $.value = sourceValueGet();
 
         // Get value
-        $.get = function() {
-            return !source[disabled] && trim(source.value) || null;
-        };
+        $.get = () => !source[disabled] && trim(source.value) || null;
 
         // Reset to the initial value
-        $.let = function() {
-            return (source.value = $.value), $;
-        };
+        $.let = () => (source.value = $.value), $;
 
         // Set value
-        $.set = function(value) {
+        $.set = value => {
             if (source[disabled] || source[readOnly]) {
                 return $;
             }
@@ -157,13 +151,13 @@
         };
 
         // Get selection
-        $.$ = function() {
-            var selection = new $$[Selection](source[selectionStart], source[selectionEnd], sourceValueGet());
+        $.$ = () => {
+            let selection = new $$[Selection](source[selectionStart], source[selectionEnd], sourceValueGet());
             return selection;
         };
 
-        $[focus] = function(mode) {
-            var x, y;
+        $[focus] = mode => {
+            let x, y;
             if (-1 === mode) {
                 x = y = 0; // Put caret at the start of the editor, scroll to the start of the editor
             } else if (1 === mode) {
@@ -178,16 +172,14 @@
         };
 
         // Blur from the editor
-        $[blur] = function() {
-            return source[blur](), $;
-        };
+        $[blur] = () => source[blur](), $;
 
         // Select value
-        $[select] = function() {
+        $[select] = () => {
             if (source[disabled] || source[readOnly]) {
                 return source[focus](), $;
             }
-            var arg = arguments,
+            let arg = arguments,
                 counts = count(arg),
                 s = $.$(),
                 x, y, z;
@@ -211,19 +203,19 @@
         };
 
         // Match at selection
-        $[match] = function(pattern, fn) {
+        $[match] = (pattern, fn) => {
             if (isArray(pattern)) {
-                var selection = $.$(),
+                let selection = $.$(),
                     m = [selection.before[match](pattern[0]), selection.value[match](pattern[1]), selection.after[match](pattern[2])];
                 return isFunction(fn) ? fn.call($, m[0] || [], m[1] || [], m[2] || []) : [!!m[0], !!m[1], !!m[2]];
             }
-            var m = $.$().value[match](pattern);
+            let m = $.$().value[match](pattern);
             return isFunction(fn) ? fn.call($, m || []) : !!m;
         };
 
         // Replace at selection
-        $[replace] = function(from, to, mode) {
-            var selection = $.$(),
+        $[replace] = (from, to, mode) => {
+            let selection = $.$(),
                 before = selection.before,
                 after = selection.after,
                 value = selection.value;
@@ -238,8 +230,8 @@
         };
 
         // Insert/replace at caret
-        $[insert] = function(value, mode, clear) {
-            var from = patternAny;
+        $[insert] = (value, mode, clear) => {
+            let from = patternAny;
             if (clear) {
                 $[replace](from, ""); // Force to delete selection on insert before/after?
             }
@@ -252,8 +244,8 @@
         };
 
         // Wrap current selection
-        $.wrap = function(open, close, wrap) {
-            var selection = $.$(),
+        $.wrap = (open, close, wrap) => {
+            let selection = $.$(),
                 before = selection.before,
                 after = selection.after,
                 value = selection.value;
@@ -264,14 +256,14 @@
         };
 
         // Unwrap current selection
-        $.peel = function(open, close, wrap) {
-            var selection = $.$(),
+        $.peel = (open, close, wrap) => {
+            let selection = $.$(),
                 before = selection.before,
                 after = selection.after,
                 value = selection.value;
             open = isPattern(open) || esc(open);
             close = isPattern(close) || esc(close);
-            var openPattern = toPattern(open + '$'),
+            let openPattern = toPattern(open + '$'),
                 closePattern = toPattern('^' + close);
             if (wrap) {
                 return $[replace](toPattern('^' + open + '([\\s\\S]*?)' + close + '$'), '$1');
@@ -284,8 +276,8 @@
             return $[select]();
         };
 
-        $.pull = function(by, includeEmptyLines /* = true */) {
-            var selection = $.$();
+        $.pull = (by, includeEmptyLines /* = true */) => {
+            let selection = $.$();
             by = isSet(by) ? by : state.tab;
             by = isPattern(by) || esc(by);
             isSet(includeEmptyLines) || (includeEmptyLines = true);
@@ -293,7 +285,7 @@
                 if (includeEmptyLines) {
                     return $[replace](toPattern('^' + by, 'gm'), "");
                 }
-                return $[insert](selection.value.split('\n').map(function(v) {
+                return $[insert](selection.value.split('\n').map(v => {
                     if (toPattern('^(' + by + ')*$').test(v)) {
                         return v;
                     }
@@ -303,8 +295,8 @@
             return $[replace](toPattern(by + '$'), "", -1);
         };
 
-        $.push = function(by, includeEmptyLines /* = false */) {
-            var selection = $.$();
+        $.push = (by, includeEmptyLines /* = false */) => {
+            let selection = $.$();
             by = isSet(by) ? by : state.tab;
             isSet(includeEmptyLines) || (includeEmptyLines = false);
             if (count(selection)) {
@@ -313,7 +305,7 @@
             return $[insert](by, -1);
         };
 
-        $.trim = function(open, close, start, end, tidy) {
+        $.trim = (open, close, start, end, tidy) => {
             if (!isSet(tidy)) {
                 tidy = true;
             }
@@ -329,7 +321,7 @@
             if (null !== end && false !== end) {
                 end = end || "";
             }
-            var selection = $.$(),
+            let selection = $.$(),
                 before = selection.before,
                 after = selection.after,
                 value = selection.value,
@@ -343,9 +335,7 @@
         };
 
         // Destructor
-        $.pop = function() {
-            return (delete source[name]), $;
-        };
+        $.pop = () => (delete source[name]), $;
 
         // Return the text editor state
         $.state = state;

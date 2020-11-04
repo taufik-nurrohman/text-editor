@@ -1,15 +1,15 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR RECT 1.1.2
+ *  TEXT EDITOR RECT 1.1.3
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
  * --------------------------------------------------------------
  */
 
-(function(win, doc, name) {
+((win, doc, name) => {
 
-    var $ = win[name],
+    let $ = win[name],
         _ = $.prototype,
 
         appendChild = 'appendChild',
@@ -45,7 +45,7 @@
     }
 
     function rect($, el) {
-        var span = '<span>&zwnj;</span>',
+        let span = '<span>&zwnj;</span>',
             font = 'font-',
             text = 'text-',
             padding = 'padding-',
@@ -82,12 +82,12 @@
             ], i, c;
         doc.body[appendChild](div);
         div[innerHTML] = encode($.before) + span + '<mark>' + encode($.value) + '</mark>' + span + encode($.after);
-        var s = "", v;
+        let s = "", v;
         for (i in property) {
             v = css(el, property[i]);
             v && (s += property[i] + ':' + v + ';');
         }
-        var X = el[offsetLeft],
+        let X = el[offsetLeft],
             Y = el[offsetTop],
             L = number(css(el, property[1])),
             T = number(css(el, property[3])),
@@ -95,7 +95,7 @@
             H = el[offsetHeight];
         div.style.cssText = s + 'border-style:solid;white-space:pre-wrap;word-wrap:break-word;overflow:auto;position:absolute;left:' + X + 'px;top:' + Y + 'px;visibility:hidden;';
         c = div[children];
-        var start = c[0],
+        let start = c[0],
             rect = c[1],
             end = c[2];
         return [{
@@ -122,7 +122,7 @@
     }
 
     _.rect = function(key) {
-        var t = this,
+        let t = this,
             out = rect(t.$(), t.self);
         return isSet(key) ? [out[0][key], out[1][key]] : out;
     };

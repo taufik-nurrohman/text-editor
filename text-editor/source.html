@@ -48,7 +48,7 @@
                 let isCtrl = e.ctrlKey,
                     key = e.key,
                     keyCode = e.keyCode;
-                return isCtrl && ((key && '[' === key) || (keyCode && 219 === keyCode));
+                return isCtrl &amp;&amp; ((key &amp;&amp; '[' === key) || (keyCode &amp;&amp; 219 === keyCode));
             },
             // Custom function to trigger the indent
             push: function(e) { &hellip; }
@@ -65,7 +65,7 @@
     <script src="source.min.js"></script>
     <script>
 
-    var editor = new TE(document.querySelector('textarea'), '  ');
+    const editor = new TE(document.querySelector('textarea'), '  ');
 
     </script>
   </body>

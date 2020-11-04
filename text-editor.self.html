@@ -24,10 +24,11 @@
     <script src="text-editor.min.js"></script>
     <script>
 
-    var area = document.querySelectorAll('textarea'),
-        editor_1 = new TE(area[0]),
-        editor_2 = new TE(area[1]),
-        editor_3 = new TE(area[2]);
+    let sources = document.querySelectorAll('textarea');
+
+    const editor_1 = new TE(sources[0]);
+    const editor_2 = new TE(sources[1]);
+    const editor_3 = new TE(sources[2]);
 
     </script>
   </body>

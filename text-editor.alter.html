@@ -13,8 +13,9 @@
     <script src="text-editor.min.js"></script>
     <script>
 
-    var editor = new TE(document.querySelector('textarea')),
-        maps = {
+    const editor = new TE(document.querySelector('textarea'));
+
+    let maps = {
             ':happy:': '😀',
             ':sad:': '😩',
             ':wonder:': '😕'
@@ -23,7 +24,7 @@
     function replaceToEmoji() {
         editor.match(/^\s*:\w+:\s*$/, function(m) {
             console.log(m);
-            var exists = maps[m[0] = m[0] ? m[0].trim() : ""];
+            let exists = maps[m[0] = m[0] ? m[0].trim() : ""];
             if (exists) {
                 this.insert(exists).trim(' ', ' ');
             } else if (m[0]) {

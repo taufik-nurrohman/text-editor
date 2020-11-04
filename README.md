@@ -28,6 +28,10 @@ Credits
 Release Notes
 -------------
 
+### master
+
+ - Modernize syntax.
+
 ### 3.1.10
 
  - Updated all extensions.
