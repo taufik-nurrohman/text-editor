@@ -1,6 +1,6 @@
 /*!
  * ==============================================================
- *  TEXT EDITOR SOURCE 1.1.8
+ *  TEXT EDITOR SOURCE 1.1.9
  * ==============================================================
  * Author: Taufik Nurrohman <https://github.com/taufik-nurrohman>
  * License: MIT
@@ -37,9 +37,6 @@
         select = 'select',
         shiftKey = 'shiftKey',
         toLowerCase = 'toLowerCase',
-        touch = 'touch',
-        touchend = touch + 'end',
-        touchstart = touch + 'start',
         undo = 'undo',
 
         $$$, prop;
@@ -68,14 +65,14 @@
         return new RegExp(a, b);
     }
 
-    $$$ = function(source, state) {
+    $$$ = function(source, o) {
 
         let $ = this,
             pop = $.pop,
             canUndo = undo in $$.prototype;
 
         // Is the same as `parent::__construct()` in PHP
-        $$[call]($, source, state);
+        $$[call]($, source, o);
 
         let plugin = 'source',
             state = $.state,
@@ -107,37 +104,11 @@
             return isCtrl && ((key && ']' === key) || (keyCode && 221 === keyCode));
         };
 
-        defaults[select] = true; // Enable smart selection?
-
         if (active) {
             state[plugin] = extend(defaults, true === state[plugin] ? {} : state[plugin]);
         }
 
-        let stateScoped = state[plugin] || {},
-            previousSelectionStart;
-
-        function onTouch() {
-            if (source[disabled] || source[readOnly]) {
-                return;
-            }
-            delay(() => {
-                let selection = $.$(),
-                    from = /\W/g,
-                    to = '|',
-                    start = selection.before[replace](from, to)[lastIndexOf](to),
-                    end = selection.after[replace](from, to)[indexOf](to),
-                    value = selection.value;
-                start = start < 0 ? 0 : start + 1;
-                end = end < 0 ? selection.after[length] : end;
-                if (previousSelectionStart !== selection.start) {
-                    $[select](start, selection.end + end);
-                }
-            }, 0);
-        }
-
-        function onTouchEnd() {
-            previousSelectionStart = $.$().start;
-        }
+        let stateScoped = state[plugin] || {};
 
         function onKeyDown(e) {
             if (source[disabled] || source[readOnly]) {
@@ -232,24 +203,13 @@
 
         if (active) {
             eventSet(source, keydown, onKeyDown);
-            if (stateScoped[select]) {
-                eventSet(source, mousedown, onTouch);
-                eventSet(source, mouseup, onTouchEnd);
-                eventSet(source, touchend, onTouchEnd);
-                eventSet(source, touchstart, onTouch);
-            }
             rec(); // Initialize history
         }
 
         // Destructor
         $.pop = () => {
             pop && pop[call]($);
-            // Remove event(s) from memory
             eventLet(source, keydown, onKeyDown);
-            eventLet(source, mousedown, onTouch);
-            eventLet(source, mouseup, onTouchEnd);
-            eventLet(source, touchend, onTouchEnd);
-            eventLet(source, touchstart, onTouch);
             // Reset history
             canUndo && $.loss(true);
             return $;

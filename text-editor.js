@@ -9,9 +9,7 @@
 
 ((win, doc, name) => {
 
-    let Selection = 'Selection',
-
-        blur = 'blur',
+    let blur = 'blur',
         disabled = 'disabled',
         focus = 'focus',
         insert = 'insert',
@@ -26,7 +24,7 @@
         selection = select + 'ion',
         selectionEnd = selection + 'End',
         selectionStart = selection + 'Start',
-        substring = 'substring',
+        slice = 'slice',
 
         delay = win.setTimeout,
         instances = 'instances';
@@ -76,28 +74,28 @@
 
     ($$ => {
 
-        $$.version = '3.1.11';
+        $$.S = function(a, b, c) {
+            let t = this, d;
+            t.start = a;
+            t.end = b;
+            t.value = (d = c[slice](a, b));
+            t.before = c[slice](0, a);
+            t.after = c[slice](b);
+            t.length = count(d);
+            t.toString = () => d;
+        };
+
+        $$.esc = esc;
+
+        $$[instances] = {};
 
         $$.state = {
             'tab': '\t'
         };
 
-        $$[instances] = {};
+        $$.version = '3.1.11';
 
         $$.x = '!$^*()-=+[]{}\\|:<>,./?'; // Escape character(s)
-
-        $$.esc = esc;
-
-        $$[Selection] = function(a, b, c) {
-            let t = this, d;
-            t.start = a;
-            t.end = b;
-            t.value = (d = c[substring](a, b));
-            t.before = c[substring](0, a);
-            t.after = c[substring](b);
-            t.length = count(d);
-            t.toString = () => d;
-        };
 
     })(win[name] = function(source, o) {
 
@@ -152,7 +150,7 @@
 
         // Get selection
         $.$ = () => {
-            let selection = new $$[Selection](source[selectionStart], source[selectionEnd], sourceValueGet());
+            let selection = new $$.S(source[selectionStart], source[selectionEnd], sourceValueGet());
             return selection;
         };
 
@@ -172,7 +170,7 @@
         };
 
         // Blur from the editor
-        $[blur] = () => source[blur](), $;
+        $[blur] = () => (source[blur](), $);
 
         // Select value
         $[select] = (...args) => {
@@ -334,7 +332,7 @@
         };
 
         // Destructor
-        $.pop = () => (delete source[name]), $;
+        $.pop = () => ((delete source[name]), $);
 
         // Return the text editor state
         $.state = state;

@@ -144,6 +144,8 @@
         <li><var>state.tab</var> &rarr; The default indent character for <code>editor.pull()</code> and <code>editor.push()</code> method.</li>
       </ul>
       <h2>Methods and Properties</h2>
+      <h3>TE.esc(input)</h3>
+      <p>Escape regular expression characters listed in <code>TE.x</code> from a string or array of string.</p>
       <h3>TE.instances</h3>
       <p>Return the text editor instances.</p>
       <pre><code>for (let key in TE.instances) {
@@ -165,24 +167,6 @@ console.log([TE.state, editor.state]);</code></pre>
 if (+major &lt; 3) { &hellip; }</code></pre>
       <h3>TE.x</h3>
       <p>List of regular expression characters to be escaped.</p>
-      <h3>TE.esc(input)</h3>
-      <p>Escape regular expression characters listed in <code>TE.x</code> from a string or array of string.</p>
-      <h3>editor.self</h3>
-      <p>Return the <code>&lt;textarea&gt;</code> element.</p>
-      <pre><code>editor.self.addEventListener('keydown', function(e) {
-    if (
-        (e.key &amp;&amp; 'Enter' === e.key) ||
-        (e.keyCode &amp;&amp; 13 === e.keyCode)
-    ) {
-        // Do something with `Enter` key!
-    }
-}, false);</code></pre>
-      <h3>editor.source</h3>
-      <p>Alias of <code>editor.self</code> property.</p>
-      <h3>editor.state</h3>
-      <p>Return the text editor states if any.</p>
-      <h3>editor.value</h3>
-      <p>Return the initial value of the <code>&lt;textarea&gt;</code> element.</p>
       <h3>editor.blur()</h3>
       <p>Blur from the <code>&lt;textarea&gt;</code>.</p>
       <h3>editor.focus(mode = 0)</h3>
@@ -250,8 +234,22 @@ editor.replace(/<.*?>/g, "", 1); // Strip HTML tags after selection</code></pre>
 editor.select(2); // Move caret to the index `2`
 editor.select(0, 2); // Select from range `0` to `2`
 editor.select(true); // Select all</code></pre>
+      <h3>editor.self</h3>
+      <p>Return the <code>&lt;textarea&gt;</code> element.</p>
+      <pre><code>editor.self.addEventListener('keydown', e =&gt; {
+    if (
+        (e.key &amp;&amp; 'Enter' === e.key) ||
+        (e.keyCode &amp;&amp; 13 === e.keyCode)
+    ) {
+        // Do something with `Enter` key!
+    }
+});</code></pre>
       <h3>editor.set(value)</h3>
       <p>Set value to the <code>&lt;textarea&gt;</code> element.</p>
+      <h3>editor.source</h3>
+      <p>Alias of <code>editor.self</code> property.</p>
+      <h3>editor.state</h3>
+      <p>Return the text editor states if any.</p>
       <h3>editor.trim(open = "", close = "", start = "", end = "", tidy = true)</h3>
       <p>Trim current selection from white-spaces, and optionally insert characters at the specified points.</p>
       <pre><code>// `a&lt;open&gt;<mark>&lt;start&gt;b&lt;end&gt;</mark>&lt;close&gt;c`
@@ -262,6 +260,8 @@ editor.trim("", "", false, false); // Remove any white-spaces before and after s
 editor.trim(' ', ' '); // Force a space before and after selection
 editor.trim('\n\n', '\n\n'); // Force line-break before and after selection
 editor.trim('\n\n', '\n\n', "", "", false); // Ignore empty value before and after selection, just insert that `\n\n` away</code></pre>
+      <h3>editor.value</h3>
+      <p>Return the initial value of the <code>&lt;textarea&gt;</code> element.</p>
       <h3>editor.wrap(open, close, wrap = false)</h3>
       <p>Wrap current selection with <var>open</var> and <var>close</var>.</p>
       <pre><code>editor.wrap('&lt;', '&gt;'); // Wrap with `&lt;` and `&gt;`

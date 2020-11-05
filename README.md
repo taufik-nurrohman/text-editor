@@ -30,7 +30,8 @@ Release Notes
 
 ### master
 
- - Modernize syntax.
+ - Modernized syntax.
+ - Removed `select` option in `text-editor/source.js` extension.
 
 ### 3.1.10
 
