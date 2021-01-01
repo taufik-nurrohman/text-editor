@@ -38,7 +38,7 @@ Credits
 Release Notes
 -------------
 
-### main
+### 3.2.0
 
  - Prioritized maintainability over file size. Say hello to Node.js and ES6! :wave:
  - Output file for the browser is now using the [Universal Module Definition](https://github.com/umdjs/umd) format.
