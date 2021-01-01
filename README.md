@@ -18,6 +18,16 @@ Demo
 
 [Demo and Documentation](https://taufik-nurrohman.github.io/text-editor "View Demo")
 
+Contribute
+----------
+
+ - **Please do not make pull requests by editing the files that are in the root of the project. They are generated automatically by the build tool.**
+ - Install [Git](https://en.wikipedia.org/wiki/Git) and [Node.js](https://en.wikipedia.org/wiki/Node.js)
+ - Run `git clone https://github.com/taufik-nurrohman/text-editor.git`
+ - Run `cd text-editor && npm install`
+ - Edit the files in the `.source/-` folder.
+ - Run `npm run pack` to generate the production ready files.
+
 Credits
 -------
 
@@ -28,10 +38,10 @@ Credits
 Release Notes
 -------------
 
-### master
+### main
 
- - Modernized syntax.
- - Removed `select` option in `text-editor/source.js` extension.
+ - Prioritized maintainability over file size. Say hello to Node.js and ES6! :wave:
+ - Output file for the browser is now using the [Universal Module Definition](https://github.com/umdjs/umd) format.
 
 ### 3.1.10
 

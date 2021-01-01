@@ -1,0 +1,32 @@
+<!DOCTYPE html><html dir="ltr"><head><meta charset="utf-8"><meta content="width=device-width" name="viewport"><meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description"><title>Source &middot; Text Editor</title><style>textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 20em;
+}</style></head><body><main><p tabindex="0">Previous tabbable element.</p><p><textarea placeholder="Code goes here&hellip;" spellcheck="false">node.addEventListener('click', e =&gt; {
+    fetch(this.href).then(r =&gt; r.json()).then(json =&gt; {
+        console.log(json);
+    });
+});</textarea></p><p><label><input checked onchange="console.log(editor = this.checked ? new TE(editor.self, '  ') : editor.pop());" type="checkbox"> <span>Enable Source Editor</span></label></p><h2>Settings</h2><pre><code>let editor = new TE(<var>self</var>, <var>state</var> = {
+    tab: '\t',
+    source: {
+        close: {
+            '`': '`',
+            '(': ')',
+            '{': '}',
+            '[': ']',
+            '"': '"',
+            "'": "'",
+            '&lt;': '&gt;'
+        },
+        // Custom function to trigger the outdent
+        pull: e =&gt; {
+            let key = e.key,
+                keyCode = e.keyCode,
+                keyIsCtrl = e.ctrlKey;
+            return keyIsCtrl &amp;&amp; ((key &amp;&amp; '[' === key) || (keyCode &amp;&amp; 219 === keyCode));
+        },
+        // Custom function to trigger the indent
+        push: e =&gt; { &hellip; }
+    }
+});</code></pre><ul><li><var>state.tab</var> &rarr; The default indent character.</li><li><var>state.source.close</var> &rarr; List of token on the left that should be &ldquo;auto-closed&rdquo; by token on the right.</li></ul></main><script src="../index.min.js"></script><script src="history.min.js"></script><script src="source.js"></script><script>let editor = new TE(document.querySelector('textarea'), '  ');</script></body></html>

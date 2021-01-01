@@ -1,30 +1,10 @@
-<!DOCTYPE html>
-<html dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width" name="viewport">
-    <title>Text Editor</title>
-  </head>
-  <body>
-    <p><textarea spellcheck="false">123456abcdeftruefalse</textarea></p>
-    <p>
-      <button onclick="check();">Check</button>
-    </p>
-    <script src="text-editor.min.js"></script>
-    <script>
-
-    const editor = new TE(document.querySelector('textarea'));
-
-    function check() {
-        if (editor.match(/^\d+$/)) {
-            alert('number');
-        } else if (editor.match(/^(true|false)$/)) {
-            alert('boolean');
-        } else {
-            alert('string');
-        }
+<!DOCTYPE html><html dir="ltr"><head><meta charset="utf-8"><meta content="width=device-width" name="viewport"><meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description"><title>Text Editor</title></head><body><main><p><textarea spellcheck="false">123456abcdeftruefalse</textarea></p><p><button onclick="check();">Check</button></p></main><script src="index.min.js"></script><script>const editor = new TE(document.querySelector('textarea'));
+function check() {
+    if (editor.match(/^\d+$/)) {
+        alert('number');
+    } else if (editor.match(/^(true|false)$/)) {
+        alert('boolean');
+    } else {
+        alert('string');
     }
-
-    </script>
-  </body>
-</html>
+}</script></body></html>

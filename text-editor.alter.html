@@ -1,39 +1,20 @@
-<!DOCTYPE html>
-<html dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width" name="viewport">
-    <title>Text Editor</title>
-  </head>
-  <body>
-    <p><textarea spellcheck="false">abcdef :happy: :sad: :angry: :wonder: :tongue:</textarea></p>
-    <p>
-      <button onclick="replaceToEmoji();">Replace Emoji</button>
-    </p>
-    <script src="text-editor.min.js"></script>
-    <script>
+<!DOCTYPE html><html dir="ltr"><head><meta charset="utf-8"><meta content="width=device-width" name="viewport"><meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description"><title>Text Editor</title></head><body><main><p><textarea spellcheck="false">abcdef :happy: :sad: :angry: :wonder: :tongue:</textarea></p><p><button onclick="replaceToEmoji();">Replace Emoji</button></p></main><script src="index.min.js"></script><script>const editor = new TE(document.querySelector('textarea'));
 
-    const editor = new TE(document.querySelector('textarea'));
+let maps = {
+    ':happy:': '😀',
+    ':sad:': '😩',
+    ':wonder:': '😕'
+};
 
-    let maps = {
-            ':happy:': '😀',
-            ':sad:': '😩',
-            ':wonder:': '😕'
-        };
-
-    function replaceToEmoji() {
-        editor.match(/^\s*:\w+:\s*$/, function(m) {
-            console.log(m);
-            let exists = maps[m[0] = m[0] ? m[0].trim() : ""];
-            if (exists) {
-                this.insert(exists).trim(' ', ' ');
-            } else if (m[0]) {
-                this.select();
-                alert('Could not replace \u201C' + m[0] + '\u201D to emoji.');
-            }
-        });
-    }
-
-    </script>
-  </body>
-</html>
+function replaceToEmoji() {
+    editor.match(/^\s*:\w+:\s*$/, function(m) {
+        console.log(m);
+        let exists = maps[m[0] = m[0] ? m[0].trim() : ""];
+        if (exists) {
+            this.insert(exists).trim(' ', ' ');
+        } else if (m[0]) {
+            this.select();
+            alert('Could not replace \u201C' + m[0] + '\u201D to emoji.');
+        }
+    });
+}</script></body></html>

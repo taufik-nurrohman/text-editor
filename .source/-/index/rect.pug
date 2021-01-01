@@ -1,0 +1,24 @@
+extends ../_index.pug
+
+block state
+  - const title = 'Rect &middot; Text Editor'
+  - const scripts = ['../index.min.js', 'rect.min.js']
+
+block script
+  script
+    | const editor = new TE(document.querySelector('textarea'));
+
+block content
+  main
+    p: textarea(spellcheck='false') abcdef
+    p: button(onclick='alert(JSON.stringify(editor.rect(), null, 2));') Inspect
+    h2 Methods and Properties
+    h3 editor.rect()
+    p Get current selection offset and dimension data.
+    pre: code
+      | // [&lt;selection start&gt;, &lt;selection end&gt;, &lt;selection as rectangle&gt;, &lt;the editor&gt;]
+      |
+      | // x: left
+      | // y: top
+      | // w: width
+      | // h: height

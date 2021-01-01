@@ -1,0 +1,25 @@
+extends _index.pug
+
+block state
+  - const title = 'Text Editor'
+  - const scripts = ['index.min.js']
+
+block script
+  script
+    | const editor = new TE(document.querySelector('textarea'));
+
+block content
+  main
+    p: textarea(spellcheck='false') abcdef
+    p
+      button(onclick='editor.wrap(\'<\', \'>\');') Wrap
+      = ' '
+      button(onclick='editor.wrap(\'<\', \'>\', true);') Wrap and Select
+    p
+      button(onclick='editor.peel(\'<\', \'>\');') Unwrap From Selection
+      = ' '
+      button(onclick='editor.peel(\'<\', \'>\', true);') Unwrap of Selection
+    p
+      button(onclick='editor.peel(/<+/, />+/);') Unwrap All From Selection
+      = ' '
+      button(onclick='editor.peel(/<+/, />+/, true);') Unwrap All of Selection

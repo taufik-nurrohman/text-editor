@@ -1,0 +1,21 @@
+extends _index.pug
+
+block state
+  - const title = 'Text Editor'
+  - const scripts = ['index.min.js']
+
+block script
+  script
+    | const editor = new TE(document.querySelector('textarea'));
+
+block content
+  main
+    p: textarea(spellcheck='false')
+      | a b c d e f
+      | 1 2 3 4 5 6
+    p
+      button(onclick='editor.replace(/ /g, \'*\');') Replace All Spaces in Selection with #[code *]
+      = ' '
+      button(onclick='editor.replace(/ /g, \'*\', -1);') Replace All Spaces Before Selection with #[code *]
+      = ' '
+      button(onclick='editor.replace(/ /g, \'*\', 1);') Replace All Spaces After Selection with #[code *]

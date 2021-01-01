@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width" name="viewport">
-    <title>Text Editor</title>
-  </head>
-  <body>
-    <p><textarea cols="100" rows="24" spellcheck="false">a
+<!DOCTYPE html><html dir="ltr"><head><meta charset="utf-8"><meta content="width=device-width" name="viewport"><meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description"><title>Text Editor</title></head><body><main><p><textarea cols="100" rows="40" spellcheck="false">a
 b
 c
 d
@@ -18,19 +10,4 @@ f
 3
 4
 5
-6</textarea></p>
-    <p>
-      <button onclick="editor.push();">Indent</button>
-      <button onclick="editor.pull();">Outdent</button>
-      <button onclick="editor.push('****');">Indent by <code>****</code></button>
-      <button onclick="editor.pull('****');">Outdent from <code>****</code></button>
-      <button onclick="editor.pull(/[\t*]+/);">Outdent from any <code>\t</code> and <code>****</code></button>
-    </p>
-    <script src="text-editor.min.js"></script>
-    <script>
-
-    const editor = new TE(document.querySelector('textarea'));
-
-    </script>
-  </body>
-</html>
+6</textarea></p><p><button onclick="editor.push();">Indent</button> <button onclick="editor.pull();">Outdent</button> <button onclick="editor.push('****');">Indent by <code>****</code></button> <button onclick="editor.pull('****');">Outdent from <code>****</code></button> <button onclick="editor.pull(/[	*]+/);">Outdent from any <code>\t</code> and <code>****</code></button></p></main><script src="index.min.js"></script><script>const editor = new TE(document.querySelector('textarea'));</script></body></html>

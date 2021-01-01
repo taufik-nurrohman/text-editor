@@ -1,0 +1,23 @@
+extends _index.pug
+
+block state
+  - const title = 'Text Editor'
+  - const scripts = ['index.min.js']
+
+block script
+  script
+    | const editor = new TE(document.querySelector('textarea'));
+    | function check() {
+    |     if (editor.match(/^\d+$/)) {
+    |         alert('number');
+    |     } else if (editor.match(/^(true|false)$/)) {
+    |         alert('boolean');
+    |     } else {
+    |         alert('string');
+    |     }
+    | }
+
+block content
+  main
+    p: textarea(spellcheck='false') 123456abcdeftruefalse
+    p: button(onclick='check();') Check
