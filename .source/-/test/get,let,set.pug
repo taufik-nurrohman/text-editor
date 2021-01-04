@@ -1,0 +1,19 @@
+extends ../_index.pug
+
+block state
+  - const title = 'Text Editor'
+  - const scripts = ['../index.min.js']
+
+block script
+  script
+    | const editor = new TE(document.querySelector('textarea'));
+
+block content
+  main
+    p: textarea(spellcheck='false') abcdef
+    p
+      button(onclick='editor.set(\'123456\');') Set Value
+      = ' '
+      button(onclick='alert(editor.get() || \'No value available.\');') Get Value
+      = ' '
+      button(onclick='editor.let();') Let Value (Reset)

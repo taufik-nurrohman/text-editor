@@ -1,8 +1,8 @@
 extends ../_index.pug
 
 block state
-  - const title = 'Source &middot; Text Editor'
-  - const scripts = ['../index.min.js', 'history.min.js', 'source.js']
+  - const title = 'Source \xB7 Text Editor'
+  - const scripts = ['../index.min.js', 'history.min.js', 'source.min.js']
 
 block script
   script
@@ -32,6 +32,18 @@ block content
         = ' '
         span Enable Source Editor
     h2 Settings
+    table(border='1')
+      thead
+        tr
+          th Name
+          th Description
+      tbody
+        tr
+          td: code state.tab
+          td The default indent character.
+        tr
+          td: code state.source.close
+          td List of token on the left that should be &ldquo;auto-closed&rdquo; by token on the right.
     pre: code
       | let editor = new TE(#[var self], #[var state] = {
       |     tab: '\t',
@@ -49,13 +61,11 @@ block content
       |         pull: e =&gt; {
       |             let key = e.key,
       |                 keyCode = e.keyCode,
-      |                 keyIsCtrl = e.ctrlKey;
-      |             return keyIsCtrl &amp;&amp; ((key &amp;&amp; '[' === key) || (keyCode &amp;&amp; 219 === keyCode));
+      |                 keyIsCtrl = e.ctrlKey,
+      |                 keyIsShift = e.shiftKey;
+      |             return keyIsCtrl &amp;&amp; !keyIsShift &amp;&amp; ((key &amp;&amp; '[' === key) || (keyCode &amp;&amp; 219 === keyCode));
       |         },
       |         // Custom function to trigger the indent
       |         push: e =&gt; { &hellip; }
       |     }
       | });
-    ul
-      li #[var state.tab] &rarr; The default indent character.
-      li #[var state.source.close] &rarr; List of token on the left that should be &ldquo;auto-closed&rdquo; by token on the right.

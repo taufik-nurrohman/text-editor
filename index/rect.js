@@ -174,6 +174,10 @@
     return state in node;
   };
 
+  var isWindow = function isWindow(node) {
+    return node === W;
+  };
+
   var letAttribute = function letAttribute(node, attribute) {
     return node.removeAttribute(attribute), node;
   };
@@ -270,6 +274,14 @@
     return x.replace(/&/g, '&amp;').replace(/>/g, '&gt;').replace(/</g, '&lt;');
   };
 
+  var getOffset = function getOffset(node) {
+    return [node.offsetLeft, node.offsetTop];
+  };
+
+  var getSize = function getSize(node) {
+    return isWindow(node) ? [node.innerWidth, node.innerHeight] : [node.offsetWidth, node.offsetHeight];
+  };
+
   var toNumber$1 = function toNumber(x, base) {
     if (base === void 0) {
       base = 10;
@@ -286,7 +298,7 @@
     return '<' + b + '>' + a + '</' + b + '>';
   }
 
-  function getRect($, div, source) {
+  function getRectSelection($, div, source) {
     var span = el('&zwnj;'),
         props = ['border-bottom-width', 'border-left-width', 'border-right-width', 'border-top-width', 'box-sizing', 'direction', 'font-family', 'font-size', 'font-size-adjust', 'font-stretch', 'font-style', 'font-variant', 'font-weight', 'height', 'letter-spacing', 'line-height', 'max-height', 'max-width', 'min-height', 'min-width', 'padding-bottom', 'padding-left', 'padding-right', 'padding-top', 'tab-size', 'text-align', 'text-decoration', 'text-indent', 'text-transform', 'width', 'word-spacing'];
     setHTML(div, el(fromHTML($.before)) + span + el(fromHTML($.value), 'mark') + span + el(fromHTML($.after)));
@@ -295,12 +307,16 @@
       var value = getStyle(source, prop);
       value && (styles += prop + ':' + value + ';');
     });
-    var X = source.offsetLeft,
-        Y = source.offsetTop,
-        L = toNumber$1(getStyle(source, props[1]), 0),
+
+    var L = toNumber$1(getStyle(source, props[1]), 0),
         T = toNumber$1(getStyle(source, props[3]), 0),
-        W = source.offsetWidth,
-        H = source.offsetHeight;
+        _getOffset = getOffset(source),
+        X = _getOffset[0],
+        Y = _getOffset[1],
+        _getSize = getSize(source),
+        W = _getSize[0],
+        H = _getSize[1];
+
     setAttribute(div, 'style', styles);
     setStyles(div, {
       'border-style': 'solid',
@@ -316,33 +332,39 @@
     var c = getChildren(div);
     var start = c[1],
         rect = c[2],
-        end = c[3];
+        end = c[3],
+        startOffset = getOffset(start),
+        startSize = getSize(start),
+        rectOffset = getOffset(rect),
+        rectSize = getSize(rect),
+        endOffset = getOffset(end),
+        endSize = getSize(end);
     return [{
-      h: start.offsetHeight,
+      h: startSize[1],
       // Caret height (must be the font size)
       w: 0,
       // Caret width is always zero
-      x: start.offsetLeft + X + L,
+      x: startOffset[0] + X + L,
       // Left offset of selection start
-      y: start.offsetTop + Y + T // Top offset of selection start
+      y: startOffset[1] + Y + T // Top offset of selection start
 
     }, {
-      h: end.offsetHeight,
+      h: endSize[1],
       // Caret height (must be the font size)
       w: 0,
       // Caret width is always zero
-      x: end.offsetLeft + X + L,
+      x: endOffset[0] + X + L,
       // Left offset of selection end
-      y: end.offsetTop + Y + T // Top offset of selection end
+      y: endOffset[1] + Y + T // Top offset of selection end
 
     }, {
-      h: rect.offsetHeight,
+      h: rectSize[1],
       // Total selection height
-      w: rect.offsetWidth,
+      w: rectOffset[0],
       // Total selection width
-      x: rect.offsetLeft + X + L,
+      x: rectOffset[0] + X + L,
       // Left offset of the whole selection
-      y: rect.offsetTop + Y + T // Top offset of the whole selection
+      y: rectOffset[1] + Y + T // Top offset of the whole selection
 
     }, {
       h: H,
@@ -363,7 +385,7 @@
 
     __proto__.rect = function (key) {
       var t = this,
-          rect = getRect(t.$(), div, t.self);
+          rect = getRectSelection(t.$(), div, t.self);
       return isSet(key) ? [rect[0][key], rect[1][key]] : rect;
     };
   }

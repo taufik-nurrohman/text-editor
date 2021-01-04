@@ -1,0 +1,23 @@
+extends ../_index.pug
+
+block state
+  - const title = 'Text Editor'
+  - const scripts = ['../index.min.js']
+
+block script
+  script
+    | const editor = new TE(document.querySelector('textarea'));
+
+block content
+  main
+    p: textarea(spellcheck='false') abcdef
+    p
+      button(onclick='editor.insert(\'#\');') Insert #[code #]
+      = ' '
+      button(onclick='editor.insert(\'<\', -1);') Prepend #[code &lt;]
+      = ' '
+      button(onclick='editor.insert(\'>\', 1);') Append #[code &gt;]
+      = ' '
+      button(onclick='editor.insert(\'<\', -1, true);') Prepend #[code &lt;] and Delete Selection
+      = ' '
+      button(onclick='editor.insert(\'>\', 1, true);') Append #[code &gt;] and Delete Selection

@@ -222,18 +222,23 @@
       }
 
       var count = toCount(lot),
-          selection = $.$(),
+          _$$$ = $.$(),
+          start = _$$$.start,
+          end = _$$$.end,
           x,
           y,
-          z;
+          X,
+          Y;
+
       x = W.pageXOffset || R.scrollLeft || B.scrollLeft;
       y = W.pageYOffset || R.scrollTop || B.scrollTop;
-      z = source.scrollTop;
+      X = source.scrollLeft;
+      Y = source.scrollTop;
 
       if (0 === count) {
         // Restore selection with `$.select()`
-        lot[0] = selection.start;
-        lot[1] = selection.end;
+        lot[0] = start;
+        lot[1] = end;
       } else if (1 === count) {
         // Move caret position with `$.select(7)`
         if (true === lot[0]) {
@@ -248,28 +253,33 @@
 
       source.selectionStart = lot[0];
       source.selectionEnd = lot[1];
-      return source.scrollTop = z, W.scroll(x, y), $;
+      source.scrollLeft = X;
+      source.scrollTop = Y;
+      return W.scroll(x, y), $;
     }; // Match at selection
 
 
     $.match = function (pattern, then) {
-      var selection = $.$();
+      var _$$$2 = $.$(),
+          after = _$$$2.after,
+          before = _$$$2.before,
+          value = _$$$2.value;
 
       if (isArray(pattern)) {
-        var _m = [selection.before.match(pattern[0]), selection.value.match(pattern[1]), selection.after.match(pattern[2])];
+        var _m = [before.match(pattern[0]), value.match(pattern[1]), after.match(pattern[2])];
         return isFunction(then) ? then.call($, _m[0] || [], _m[1] || [], _m[2] || []) : [!!_m[0], !!_m[1], !!_m[2]];
       }
 
-      var m = selection.value.match(pattern);
+      var m = value.match(pattern);
       return isFunction(then) ? then.call($, m || []) : !!m;
     }; // Replace at selection
 
 
     $.replace = function (from, to, mode) {
-      var selection = $.$(),
-          before = selection.before,
-          after = selection.after,
-          value = selection.value;
+      var _$$$3 = $.$(),
+          after = _$$$3.after,
+          before = _$$$3.before,
+          value = _$$$3.value;
 
       if (-1 === mode) {
         // Replace before
@@ -306,10 +316,10 @@
 
 
     $.wrap = function (open, close, wrap) {
-      var selection = $.$(),
-          before = selection.before,
-          after = selection.after,
-          value = selection.value;
+      var _$$$4 = $.$(),
+          after = _$$$4.after,
+          before = _$$$4.before,
+          value = _$$$4.value;
 
       if (wrap) {
         return $.replace(any, open + '$1' + close);
@@ -320,12 +330,16 @@
 
 
     $.peel = function (open, close, wrap) {
-      var selection = $.$(),
-          before = selection.before,
-          after = selection.after,
-          value = selection.value;
+      var _$$$5 = $.$(),
+          after = _$$$5.after,
+          before = _$$$5.before,
+          value = _$$$5.value;
+
       open = fromPattern(open) || esc(open);
-      close = fromPattern(close) || esc(close);
+      close = fromPattern(close) || esc(close); // Ignore begin and end marker
+
+      open = open.replace(/^\^|\$$/g, "");
+      close = close.replace(/^\^|\$$/, "");
       var openPattern = toPattern(open + '$', ""),
           closePattern = toPattern('^' + close, "");
 
@@ -347,16 +361,21 @@
         includeEmptyLines = true;
       }
 
-      var selection = $.$();
-      by = isSet(by) ? by : state.tab;
-      by = fromPattern(by) || esc(by);
+      var _$$$6 = $.$(),
+          length = _$$$6.length,
+          value = _$$$6.value;
 
-      if (toCount(selection)) {
+      by = isSet(by) ? by : state.tab;
+      by = fromPattern(by) || esc(by); // Ignore begin marker
+
+      by = by.replace(/^\^/, "");
+
+      if (length) {
         if (includeEmptyLines) {
           return $.replace(toPattern('^' + by, 'gm'), "");
         }
 
-        return $.insert(selection.value.split('\n').map(function (v) {
+        return $.insert(value.split('\n').map(function (v) {
           if (toPattern('^(' + by + ')*$', "").test(v)) {
             return v;
           }
@@ -373,10 +392,12 @@
         includeEmptyLines = false;
       }
 
-      var selection = $.$();
+      var _$$$7 = $.$(),
+          length = _$$$7.length;
+
       by = isSet(by) ? by : state.tab;
 
-      if (toCount(selection)) {
+      if (length) {
         return $.replace(toPattern('^' + (includeEmptyLines ? "" : '(?!$)'), 'gm'), by);
       }
 
@@ -404,12 +425,13 @@
         end = end || "";
       }
 
-      var selection = $.$(),
-          before = selection.before,
-          after = selection.after,
-          value = selection.value,
+      var _$$$8 = $.$(),
+          before = _$$$8.before,
+          value = _$$$8.value,
+          after = _$$$8.after,
           beforeClean = trim(before, 1),
           afterClean = trim(after, -1);
+
       before = false !== open ? trim(before, 1) + (beforeClean || !tidy ? open : "") : before;
       after = false !== close ? (afterClean || !tidy ? close : "") + trim(after, -1) : after;
       if (false !== start) value = trim(value, -1);
@@ -452,7 +474,7 @@
     };
   };
 
-  TE.version = '3.2.0';
+  TE.version = '3.2.1';
   TE.x = x;
   return TE;
 });

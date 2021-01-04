@@ -4,7 +4,6 @@ block state
   - const title = 'Text Editor ' + version
   - const theme = '#000'
   - const scripts = ['index.min.js']
-  - const styles = ['index.min.css']
 
 block script
   script
@@ -102,60 +101,74 @@ block content
       |   &lt;/head&gt;
       |   &lt;body&gt;
       |     &lt;p&gt;&lt;textarea&gt;&lt;/textarea&gt;&lt;/p&gt;
-      |     &lt;script src="#[a(href='index.min.js' target='_blank') index.min.js]"&gt;&lt;/script&gt;
+      |     &lt;script src="#[a(href='index.min.js' target='_blank') ./index.min.js]"&gt;&lt;/script&gt;
       |     &lt;script&gt;
       |     const editor = new TE(document.querySelector('textarea'));
       |     &lt;/script&gt;
       |   &lt;/body&gt;
       | &lt;/html&gt;
-    h3 CommonJS
+    h3 Node.js
+    p Functions and methods in this application are mostly native JavaScript and are intended for use by the browser. Node.js doesn&rsquo;t know about the DOM, so this kind of practice will probably be used more often to build new browser packages than to be used directly in the Node.js server.
+    h4 CommonJS
     pre: code
       | const TE = require('@taufik-nurrohman/text-editor');
       |
       | const editor = new TE(document.querySelector('textarea'));
-    h3 ECMAScript
-    p Functions and methods in this application are mostly native JavaScript and are intended for use by the browser. Node.js doesn&rsquo;t know about the DOM, so this kind of practice will probably be used more often to build new browser packages than to be used directly in the Node.js server.
+    h4 ECMAScript
     pre: code
       | import TE from '@taufik-nurrohman/text-editor';
       |
       | const editor = new TE(document.querySelector('textarea'));
     h2 Examples
     ul
-      li: a(href='text-editor.html' target='_blank') No Idea?
-      li: a(href='text-editor.self.html' target='_blank') Multiple Instances
-      li: a(href='text-editor.disabled.html' target='_blank') Disabled Text Area
-      li: a(href='text-editor.read-only.html' target='_blank') Read-Only Text Area
-      li: a(href='text-editor.get,let,set.html' target='_blank') Set, Get and Let Value
-      li: a(href='text-editor.$.html' target='_blank') Get Selection Data
-      li: a(href='text-editor.blur,focus.html' target='_blank') Focus, Blur Events
-      li: a(href='text-editor.select.html' target='_blank') Set Selection Range
-      li: a(href='text-editor.match.html' target='_blank') Match Selection
-      li: a(href='text-editor.alter.html' target='_blank') Alter Selection
-      li: a(href='text-editor.toggle.html' target='_blank') Toggle Replace Selection
-      li: a(href='text-editor.replace.html' target='_blank') Replace Selection
-      li: a(href='text-editor.insert.html' target='_blank') Insert Selection
-      li: a(href='text-editor.peel,wrap.html' target='_blank') Wrap, Peel Selection
-      li: a(href='text-editor.pull,push.html' target='_blank') Indent, Outdent Selection
-      li: a(href='text-editor.pull,push.type.html' target='_blank') Indent, Outdent by Custom Character
-      li: a(href='text-editor.pull,push.key.html' target='_blank') Indent, Outdent with Keyboard Key
-      li: a(href='text-editor.trim.html' target='_blank') Trim Selection
-      li: a(href='text-editor.self-input.html' target='_blank') Using #[code &lt;input&gt;] Instead of #[code &lt;textarea&gt;]
+      li: a(href='test.html' target='_blank') No Idea?
+      li: a(href='test/self.html' target='_blank') Multiple Instances
+      li: a(href='test/disabled.html' target='_blank') Disabled Text Area
+      li: a(href='test/readonly.html' target='_blank') Read-Only Text Area
+      li: a(href='test/get,let,set.html' target='_blank') Set, Get and Let Value
+      li: a(href='test/$.html' target='_blank') Get Selection Data
+      li: a(href='test/blur,focus.html' target='_blank') Focus, Blur Events
+      li: a(href='test/select.html' target='_blank') Set Selection Range
+      li: a(href='test/match.html' target='_blank') Match Selection
+      li: a(href='test/alter.html' target='_blank') Alter Selection
+      li: a(href='test/toggle.html' target='_blank') Toggle Replace Selection
+      li: a(href='test/replace.html' target='_blank') Replace Selection
+      li: a(href='test/insert.html' target='_blank') Insert Selection
+      li: a(href='test/peel,wrap.html' target='_blank') Wrap, Peel Selection
+      li: a(href='test/pull,push.html' target='_blank') Indent, Outdent Selection
+      li: a(href='test/pull,push.type.html' target='_blank') Indent, Outdent by Custom Character
+      li: a(href='test/pull,push.key.html' target='_blank') Indent, Outdent with Keyboard Key
+      li: a(href='test/trim.html' target='_blank') Trim Selection
+      li: a(href='test/self.input.html' target='_blank') Using #[code &lt;input&gt;] Instead of #[code &lt;textarea&gt;]
       li #[a(href='index/rect.html' target='_blank') Get Selection Offset] (#[a(href='index/rect.min.js' target='_blank') +rect.min.js])
       li: a(href='index/rect.caret.html' target='_blank') Custom Caret Example
       li #[a(href='index/history.html' target='_blank') Undo and Redo Feature] (#[a(href='index/history.min.js' target='_blank') +history.min.js])
       li #[a(href='index/hook.html' target='_blank') Hooks Feature] (#[a(href='index/hook.min.js' target='_blank') +hook.min.js])
       li #[a(href='index/source.html' target='_blank') Source Code Editor] (#[a(href='index/source.min.js' target='_blank') +source.min.js])
     h2 Settings
+    table(border='1')
+      thead
+        tr
+          th Name
+          th Description
+      tbody
+        tr
+          td: code self
+          td The text area element.
+        tr
+          td: code tab
+          td The default indent character for #[code editor.pull()] and #[code editor.push()] method.
+        tr
+          td: code state
+          td The configuration data.
+        tr
+          td: code state.tab
+          td The default indent character for #[code editor.pull()] and #[code editor.push()] method.
     pre: code const editor = new TE(#[var self], #[var tab] = '\t');
     pre: code
       | const editor = new TE(#[var self], #[var state] = {
       |     tab: '\t'
       | });
-    ul
-      li #[var self] &rarr; The text area element.
-      li #[var tab] &rarr; The default indent character for #[code editor.pull()] and #[code editor.push()] method.
-      li #[var state] &rarr; The configuration data.
-      li #[var state.tab] &rarr; The default indent character for #[code editor.pull()] and #[code editor.push()] method.
     h2 Methods and Properties
     h3 TE.esc(string)
     p Escape regular expression&rsquo;s special characters.
@@ -208,7 +221,7 @@ block content
     p Match current selection with the pattern provided.
     pre: code
       | if (editor.match(/^\s*:\w+:\s*$/)) {
-      |     alert('Selection is detected as emoji!'); // &rarr; #[a(href='text-editor.match.html' target='_blank') demo]
+      |     alert('Selection is detected as emoji!'); // &rarr; #[a(href='test/match.html' target='_blank') demo]
       | }
     p Do something with the current matched selection.
     pre: code
@@ -220,7 +233,7 @@ block content
       |
       | editor.match(/^\s*:\w+:\s*$/, function(m) {
       |     let exists = maps[m[0] = m[0] ? m[0].trim() : ""];
-      |     exists &amp;&amp; this.insert(exists); // &rarr; #[a(href='text-editor.alter.html' target='_blank') demo]
+      |     exists &amp;&amp; this.insert(exists); // &rarr; #[a(href='test/alter.html' target='_blank') demo]
       | });
     p Match to the characters before selection, current selection and characters after selection.
     pre: code
@@ -228,7 +241,7 @@ block content
       | console.log(test[0] &amp;&amp; test[1] &amp;&amp; test[2]);
     pre: code
       | editor.match([/:$/, /^\w+$/, /^:/], function(before, value, after) {
-      |     console.log([before, value, after]); // &rarr; #[a(href='text-editor.toggle.html' target='_blank') demo]
+      |     console.log([before, value, after]); // &rarr; #[a(href='test/toggle.html' target='_blank') demo]
       | });
     h3 editor.peel(open, close, wrap = false)
     p Unwrap current selection from #[var open] and #[var close].
@@ -299,7 +312,7 @@ block content
     h3 editor.$()
     p Get current text selection data.
     pre: code
-      | // `a|b|c`
+      | // `a#[mark |b|]c`
       | console.log(editor.$()); // `{"start":1,"end":2,"value":"b","before":"a","after":"c","length":1}`
     h2 License
     p Use it for free, pay if you get paid. So, you&rsquo;ve just benefited financially after using this project? It&rsquo;s a good idea to #[a(href='https://paypal.me/tatautaufik' target='_blank') share a little financial support] with this open source project too. Your support will motivate me to do any further development, as well as to provide voluntary support to overcome problems related to this project.

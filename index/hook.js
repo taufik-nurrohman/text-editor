@@ -81,6 +81,12 @@
     return Object.assign.apply(Object, [{}].concat(lot));
   };
 
+  var hasKey = function hasKey(x, data) {
+    return x in data;
+  };
+
+  var hasObjectKey = hasKey;
+
   function fire(name, data) {
     var $ = this;
 
@@ -138,6 +144,10 @@
     return $;
   }
 
+  var toObject = function toObject(x) {
+    return Object.create(x);
+  };
+
   if (isSet(TE)) {
     var TextEditor = function TextEditor(source, state) {
       if (state === void 0) {
@@ -147,7 +157,7 @@
       var $ = this;
       TextEditorConstructor.call($, source, state);
       state = $.state;
-      var active = 'hook' in state ? state.hook : {};
+      var active = hasObjectKey('hook', state) ? state.hook : {};
 
       if (!active) {
         return $;
@@ -199,7 +209,7 @@
 
 
     var TextEditorConstructor = TE;
-    TextEditor.prototype = Object.create(TextEditorConstructor.prototype);
+    TextEditor.prototype = toObject(TextEditorConstructor.prototype);
     TextEditor.prototype.constructor = TextEditor; // Clone all static property from the old constructor
 
     for (var key in TextEditorConstructor) {

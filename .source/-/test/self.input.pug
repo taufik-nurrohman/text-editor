@@ -1,0 +1,17 @@
+extends ../_index.pug
+
+block state
+  - const title = 'Text Editor'
+  - const scripts = ['../index.min.js']
+
+block script
+  script
+    | const editor = new TE(document.querySelector('input'));
+
+block content
+  main
+    p: input(type='text' value='abcdef')
+    p
+      button(onclick='editor.wrap(\'*\', \'*\');'): b B
+      = ' '
+      button(onclick='editor.wrap(\'_\', \'_\');'): i I

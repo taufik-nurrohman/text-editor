@@ -28,8 +28,10 @@
 
 import {off as offEvent, on as onEvent} from '@taufik-nurrohman/event';
 import {fromStates} from '@taufik-nurrohman/from';
+import {hasObjectKey} from '@taufik-nurrohman/has';
 import {fire as fireHook, hooks, off as offHook, on as onHook} from '@taufik-nurrohman/hook';
 import {isFunction, isObject, isSet} from '@taufik-nurrohman/is';
+import {toObject} from '@taufik-nurrohman/to';
 
 if (isSet(TE)) {
     const TextEditorConstructor = TE;
@@ -37,7 +39,7 @@ if (isSet(TE)) {
         const $ = this;
         TextEditorConstructor.call($, source, state);
         state = $.state;
-        let active = 'hook' in state ? state.hook : {};
+        let active = hasObjectKey('hook', state) ? state.hook : {};
         if (!active) {
             return $;
         }
@@ -80,7 +82,7 @@ if (isSet(TE)) {
         return $;
     }
     // Clone all prototype(s) from the old constructor
-    TextEditor.prototype = Object.create(TextEditorConstructor.prototype);
+    TextEditor.prototype = toObject(TextEditorConstructor.prototype);
     TextEditor.prototype.constructor = TextEditor;
     // Clone all static property from the old constructor
     for (let key in TextEditorConstructor) {

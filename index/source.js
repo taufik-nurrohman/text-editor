@@ -73,6 +73,12 @@
     return Object.assign.apply(Object, [{}].concat(lot));
   };
 
+  var hasKey = function hasKey(x, data) {
+    return x in data;
+  };
+
+  var hasObjectKey = hasKey;
+
   var esc = function esc(pattern, extra) {
     if (extra === void 0) {
       extra = "";
@@ -101,6 +107,10 @@
     return x.toLowerCase();
   };
 
+  var toObject = function toObject(x) {
+    return Object.create(x);
+  };
+
   if (isSet(TE)) {
     var TextEditor = function TextEditor(source, state) {
       if (state === void 0) {
@@ -110,7 +120,7 @@
       var $ = this;
       TextEditorConstructor.call($, source, state);
       state = $.state;
-      var active = 'source' in state ? state.source : {};
+      var active = hasObjectKey('source', state) ? state.source : {};
 
       if (!active) {
         return $;
@@ -118,7 +128,7 @@
 
       var defaults = {},
           pop = $.pop,
-          canUndo = ('undo' in TextEditorConstructor.prototype);
+          canUndo = hasObjectKey('undo', TextEditorConstructor.prototype);
       defaults.close = {
         '`': '`',
         '(': ')',
@@ -132,15 +142,17 @@
       defaults.pull = function (e) {
         var key = e.key,
             keyCode = e.keyCode,
-            keyIsCtrl = e.ctrlKey;
-        return keyIsCtrl && (key && '[' === key || keyCode && 219 === keyCode);
+            keyIsCtrl = e.ctrlKey,
+            keyIsShift = e.shiftKey;
+        return keyIsCtrl && !keyIsShift && (key && '[' === key || keyCode && 219 === keyCode);
       };
 
       defaults.push = function (e) {
         var key = e.key,
             keyCode = e.keyCode,
-            keyIsCtrl = e.ctrlKey;
-        return keyIsCtrl && (key && ']' === key || keyCode && 221 === keyCode);
+            keyIsCtrl = e.ctrlKey,
+            keyIsShift = e.shiftKey;
+        return keyIsCtrl && !keyIsShift && (key && ']' === key || keyCode && 221 === keyCode);
       };
 
       if (active) {
@@ -167,15 +179,18 @@
             keyIsCtrl = e.ctrlKey,
             keyIsEnter = 'enter' === key || 13 === keyCode,
             keyIsShift = e.shiftKey,
-            selection = $.$(),
-            before = selection.before,
-            value = selection.value,
-            after = selection.after,
+            _$$$ = $.$(),
+            after = _$$$.after,
+            before = _$$$.before,
+            end = _$$$.end,
+            start = _$$$.start,
+            value = _$$$.value,
             charBefore = before.slice(-1),
             charAfter = after.slice(0, 1),
             lastTabs = before.match(toPattern('(?:^|\\n)(' + esc(tab) + '+).*$', "")),
             tabs = lastTabs ? lastTabs[1] : "",
-            end = closure[key]; // Indent
+            closureEnd = closure[key]; // Indent
+
 
         if (theState.push && theState.push.call($, e)) {
           $.push(tab), doUpdateHistory(), eventPreventDefault(e); // Outdent
@@ -190,9 +205,9 @@
           }
         } else if ('\\' !== charBefore && key === charAfter) {
           // Move to the next character
-          $.select(selection.end + 1), doUpdateHistory(), eventPreventDefault(e);
-        } else if ('\\' !== charBefore && end) {
-          doUpdateHistory(), $.wrap(key, end), doUpdateHistory(), eventPreventDefault(e);
+          $.select(end + 1), doUpdateHistory(), eventPreventDefault(e);
+        } else if ('\\' !== charBefore && closureEnd) {
+          doUpdateHistory(), $.wrap(key, closureEnd), doUpdateHistory(), eventPreventDefault(e);
         } else if ('backspace' === key || 8 === keyCode) {
           var bracketsOpen = "",
               bracketsClose = "";
@@ -213,27 +228,27 @@
           } else if (!value && before.match(toPattern(esc(tab) + '$', ""))) {
             $.pull(tab), doUpdateHistory(), eventPreventDefault(e);
           } else {
-            end = closure[charBefore];
+            closureEnd = closure[charBefore];
 
-            if (end && end === charAfter) {
+            if (closureEnd && closureEnd === charAfter) {
               $.peel(charBefore, charAfter), eventPreventDefault(e);
             }
           }
 
           doUpdateHistory();
         } else if ('delete' === key || 46 === keyCode) {
-          end = closure[charBefore];
+          closureEnd = closure[charBefore];
 
-          if (end && end === charAfter) {
+          if (closureEnd && closureEnd === charAfter) {
             $.peel(charBefore, charAfter);
             eventPreventDefault(e);
           }
 
           doUpdateHistory();
         } else if (keyIsEnter) {
-          end = closure[charBefore];
+          closureEnd = closure[charBefore];
 
-          if (end && end === charAfter) {
+          if (closureEnd && closureEnd === charAfter) {
             $.wrap('\n' + tab + tabs, '\n' + tabs).blur().focus();
             eventPreventDefault(e);
           } else if (value || tabs) {
@@ -272,7 +287,7 @@
 
 
     var TextEditorConstructor = TE;
-    TextEditor.prototype = Object.create(TextEditorConstructor.prototype);
+    TextEditor.prototype = toObject(TextEditorConstructor.prototype);
     TextEditor.prototype.constructor = TextEditor; // Clone all static property from the old constructor
 
     for (var key in TextEditorConstructor) {

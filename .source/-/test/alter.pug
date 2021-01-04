@@ -1,0 +1,33 @@
+extends ../_index.pug
+
+block state
+  - const title = 'Text Editor'
+  - const scripts = ['../index.min.js']
+
+block script
+  script
+    | const editor = new TE(document.querySelector('textarea'));
+    |
+    | let maps = {
+    |     ':happy:': '😀',
+    |     ':sad:': '😩',
+    |     ':wonder:': '😕'
+    | };
+    |
+    | function replaceToEmoji() {
+    |     editor.match(/^\s*:\w+:\s*$/, function(m) {
+    |         console.log(m);
+    |         let exists = maps[m[0] = m[0] ? m[0].trim() : ""];
+    |         if (exists) {
+    |             this.insert(exists).trim(' ', ' ');
+    |         } else if (m[0]) {
+    |             this.select();
+    |             alert('Could not replace \u201C' + m[0] + '\u201D to emoji.');
+    |         }
+    |     });
+    | }
+
+block content
+  main
+    p: textarea(spellcheck='false') abcdef :happy: :sad: :angry: :wonder: :tongue:
+    p: button(onclick='replaceToEmoji();') Replace Emoji

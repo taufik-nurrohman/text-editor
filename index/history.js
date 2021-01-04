@@ -75,9 +75,11 @@
 
     __proto__.record = function (index) {
       var t = this,
-          selection = t.$(),
+          _t$$ = t.$(),
+          end = _t$$.end,
+          start = _t$$.start,
           current = t._history[t._historyState] || [],
-          next = [t.self.value, selection.start, selection.end];
+          next = [t.self.value, start, end];
 
       if (next[0] === current[0] && next[1] === current[1] && next[2] === current[2]) {
         return t; // Do not save duplicate

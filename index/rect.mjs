@@ -29,13 +29,14 @@
 import {B, getChildren, getStyle, letElement, setAttribute, setChildLast, setElement, setHTML, setStyles} from '@taufik-nurrohman/document';
 import {fromHTML} from '@taufik-nurrohman/from';
 import {isSet} from '@taufik-nurrohman/is';
+import {getOffset, getSize} from '@taufik-nurrohman/rect';
 import {toNumber} from '@taufik-nurrohman/to';
 
 function el(a, b = 'span') {
     return '<' + b + '>' + a + '</' + b + '>';
 }
 
-function getRect($, div, source) {
+function getRectSelection($, div, source) {
     let span = el('&zwnj;'),
         props = [
             'border-bottom-width',
@@ -76,12 +77,10 @@ function getRect($, div, source) {
         let value = getStyle(source, prop);
         value && (styles += prop + ':' + value + ';');
     });
-    let X = source.offsetLeft,
-        Y = source.offsetTop,
-        L = toNumber(getStyle(source, props[1]), 0),
+    let L = toNumber(getStyle(source, props[1]), 0),
         T = toNumber(getStyle(source, props[3]), 0),
-        W = source.offsetWidth,
-        H = source.offsetHeight;
+        [X, Y] = getOffset(source),
+        [W, H] = getSize(source);
     setAttribute(div, 'style', styles);
     setStyles(div, {
         'border-style': 'solid',
@@ -97,22 +96,28 @@ function getRect($, div, source) {
     let c = getChildren(div);
     let start = c[1],
         rect = c[2],
-        end = c[3];
+        end = c[3],
+        startOffset = getOffset(start),
+        startSize = getSize(start),
+        rectOffset = getOffset(rect),
+        rectSize = getSize(rect),
+        endOffset = getOffset(end),
+        endSize = getSize(end);
     return [{
-        h: start.offsetHeight, // Caret height (must be the font size)
+        h: startSize[1], // Caret height (must be the font size)
         w: 0, // Caret width is always zero
-        x: start.offsetLeft + X + L, // Left offset of selection start
-        y: start.offsetTop + Y + T // Top offset of selection start
+        x: startOffset[0] + X + L, // Left offset of selection start
+        y: startOffset[1] + Y + T // Top offset of selection start
     }, {
-        h: end.offsetHeight, // Caret height (must be the font size)
+        h: endSize[1], // Caret height (must be the font size)
         w: 0, // Caret width is always zero
-        x: end.offsetLeft + X + L, // Left offset of selection end
-        y: end.offsetTop + Y + T // Top offset of selection end
+        x: endOffset[0] + X + L, // Left offset of selection end
+        y: endOffset[1] + Y + T // Top offset of selection end
     }, {
-        h: rect.offsetHeight, // Total selection height
-        w: rect.offsetWidth, // Total selection width
-        x: rect.offsetLeft + X + L, // Left offset of the whole selection
-        y: rect.offsetTop + Y + T // Top offset of the whole selection
+        h: rectSize[1], // Total selection height
+        w: rectOffset[0], // Total selection width
+        x: rectOffset[0] + X + L, // Left offset of the whole selection
+        y: rectOffset[1] + Y + T // Top offset of the whole selection
     }, {
         h: H, // Text area height
         w: W, // Text area width
@@ -127,7 +132,7 @@ if (isSet(TE)) {
     const __proto__ = TE.prototype;
     __proto__.rect = function(key) {
         let t = this,
-            rect = getRect(t.$(), div, t.self);
+            rect = getRectSelection(t.$(), div, t.self);
         return isSet(key) ? [rect[0][key], rect[1][key]] : rect;
     };
 }

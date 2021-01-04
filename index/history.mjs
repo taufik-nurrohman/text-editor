@@ -44,9 +44,9 @@ if (isSet(TE)) {
     // Save current state to history
     __proto__.record = function(index) {
         let t = this,
-            selection = t.$(),
+            {end, start} = t.$(),
             current = t._history[t._historyState] || [],
-            next = [t.self.value, selection.start, selection.end];
+            next = [t.self.value, start, end];
         if (
             next[0] === current[0] &&
             next[1] === current[1] &&

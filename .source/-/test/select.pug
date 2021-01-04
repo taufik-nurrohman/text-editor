@@ -1,0 +1,24 @@
+extends ../_index.pug
+
+block state
+  - const title = 'Text Editor'
+  - const scripts = ['../index.min.js']
+
+block script
+  script
+    | const editor = new TE(document.querySelector('textarea'));
+
+block content
+  main
+    p: textarea(spellcheck='false')
+      | 0123456789
+      | 0123456789
+      | 0123456789
+    p
+      button(onclick='editor.select(true);') Select All
+      = ' '
+      button(onclick='editor.select(4);') Move Caret to 4
+      = ' '
+      button(onclick='editor.select(8);') Move Caret to 8
+      = ' '
+      button(onclick='editor.select(4, 8);') Select 4 to 8

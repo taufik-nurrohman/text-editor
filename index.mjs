@@ -118,14 +118,15 @@ function TE(source, state = {}) {
             return source.focus(), $;
         }
         let count = toCount(lot),
-            selection = $.$(),
-            x, y, z;
+            {start, end} = $.$(),
+            x, y, X, Y;
         x = W.pageXOffset || R.scrollLeft || B.scrollLeft;
         y = W.pageYOffset || R.scrollTop || B.scrollTop;
-        z = source.scrollTop;
+        X = source.scrollLeft;
+        Y = source.scrollTop;
         if (0 === count) { // Restore selection with `$.select()`
-            lot[0] = selection.start;
-            lot[1] = selection.end;
+            lot[0] = start;
+            lot[1] = end;
         } else if (1 === count) { // Move caret position with `$.select(7)`
             if (true === lot[0]) { // Select all with `$.select(true)`
                 return source.focus(), source.select(), $;
@@ -136,30 +137,29 @@ function TE(source, state = {}) {
         // Default `$.select(7, 100)`
         source.selectionStart = lot[0];
         source.selectionEnd = lot[1];
-        return (source.scrollTop = z), W.scroll(x, y), $;
+        source.scrollLeft = X;
+        source.scrollTop = Y;
+        return W.scroll(x, y), $;
     };
 
     // Match at selection
     $.match = (pattern, then) => {
-        let selection = $.$();
+        let {after, before, value} = $.$();
         if (isArray(pattern)) {
             let m = [
-                selection.before.match(pattern[0]),
-                selection.value.match(pattern[1]),
-                selection.after.match(pattern[2])
+                before.match(pattern[0]),
+                value.match(pattern[1]),
+                after.match(pattern[2])
             ];
             return isFunction(then) ? then.call($, m[0] || [], m[1] || [], m[2] || []) : [!!m[0], !!m[1], !!m[2]];
         }
-        let m = selection.value.match(pattern);
+        let m = value.match(pattern);
         return isFunction(then) ? then.call($, m || []) : !!m;
     };
 
     // Replace at selection
     $.replace = (from, to, mode) => {
-        let selection = $.$(),
-            before = selection.before,
-            after = selection.after,
-            value = selection.value;
+        let {after, before, value} = $.$();
         if (-1 === mode) { // Replace before
             before = before.replace(from, to);
         } else if (1 === mode) { // Replace after
@@ -186,10 +186,7 @@ function TE(source, state = {}) {
 
     // Wrap current selection
     $.wrap = (open, close, wrap) => {
-        let selection = $.$(),
-            before = selection.before,
-            after = selection.after,
-            value = selection.value;
+        let {after, before, value} = $.$();
         if (wrap) {
             return $.replace(any, open + '$1' + close);
         }
@@ -198,12 +195,12 @@ function TE(source, state = {}) {
 
     // Unwrap current selection
     $.peel = (open, close, wrap) => {
-        let selection = $.$(),
-            before = selection.before,
-            after = selection.after,
-            value = selection.value;
+        let {after, before, value} = $.$();
         open = fromPattern(open) || esc(open);
         close = fromPattern(close) || esc(close);
+        // Ignore begin and end marker
+        open = open.replace(/^\^|\$$/g, "");
+        close = close.replace(/^\^|\$$/, "");
         let openPattern = toPattern(open + '$', ""),
             closePattern = toPattern('^' + close, "");
         if (wrap) {
@@ -218,14 +215,16 @@ function TE(source, state = {}) {
     };
 
     $.pull = (by, includeEmptyLines = true) => {
-        let selection = $.$();
+        let {length, value} = $.$();
         by = isSet(by) ? by : state.tab;
         by = fromPattern(by) || esc(by);
-        if (toCount(selection)) {
+        // Ignore begin marker
+        by = by.replace(/^\^/, "");
+        if (length) {
             if (includeEmptyLines) {
                 return $.replace(toPattern('^' + by, 'gm'), "");
             }
-            return $.insert(selection.value.split('\n').map(v => {
+            return $.insert(value.split('\n').map(v => {
                 if (toPattern('^(' + by + ')*$', "").test(v)) {
                     return v;
                 }
@@ -236,9 +235,9 @@ function TE(source, state = {}) {
     };
 
     $.push = (by, includeEmptyLines = false) => {
-        let selection = $.$();
+        let {length} = $.$();
         by = isSet(by) ? by : state.tab;
-        if (toCount(selection)) {
+        if (length) {
             return $.replace(toPattern('^' + (includeEmptyLines ? "" : '(?!$)'), 'gm'), by);
         }
         return $.insert(by, -1);
@@ -257,10 +256,7 @@ function TE(source, state = {}) {
         if (null !== end && false !== end) {
             end = end || "";
         }
-        let selection = $.$(),
-            before = selection.before,
-            after = selection.after,
-            value = selection.value,
+        let {before, value, after} = $.$(),
             beforeClean = trim(before, 1),
             afterClean = trim(after, -1);
         before = false !== open ? trim(before, 1) + (beforeClean || !tidy ? open : "") : before;
@@ -305,7 +301,7 @@ TE.S = function(a, b, c) {
     t.toString = () => d;
 };
 
-TE.version = '3.2.0';
+TE.version = '3.2.1';
 
 TE.x = x;
 

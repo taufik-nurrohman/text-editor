@@ -38,6 +38,10 @@ Credits
 Release Notes
 -------------
 
+### 3.2.1
+
+ - Restructured the test files.
+
 ### 3.2.0
 
  - Prioritized maintainability over file size. Say hello to Node.js and ES6! :wave:

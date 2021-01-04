@@ -1,0 +1,53 @@
+extends ../_index.pug
+
+block state
+  - const title = 'Text Editor'
+  - const scripts = ['../index.min.js']
+
+block script
+  script
+    | const editor = new TE(document.querySelector('textarea'));
+
+block style
+  style
+    | textarea:focus {
+    |   background: #ff0;
+    | }
+
+block content
+  main
+    p: textarea(spellcheck='false')
+      | a
+      | b
+      | c
+      | d
+      | e
+      | f
+      | g
+      | h
+      | i
+      | j
+      | k
+      | l
+      | m
+      | n
+      | o
+      | p
+      | q
+      | r
+      | s
+      | t
+      | u
+      | v
+      | w
+      | x
+      | y
+      | z
+    p
+      button(onclick='editor.focus();') Focus
+      = ' '
+      button(onclick='editor.focus(-1);') Focus Start
+      = ' '
+      button(onclick='editor.focus(1);') Focus End
+      = ' '
+      button(disabled onmouseout='editor.focus();' onmouseover='editor.blur();') Enter to Blur, Exit to Focus

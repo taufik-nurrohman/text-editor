@@ -1,0 +1,28 @@
+<!DOCTYPE html><html dir="ltr"><head><meta charset="utf-8"><meta content="width=device-width" name="viewport"><meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description"><title>Text Editor</title><style>textarea:focus {
+  background: #ff0;
+}</style></head><body><main><p><textarea spellcheck="false">a
+b
+c
+d
+e
+f
+g
+h
+i
+j
+k
+l
+m
+n
+o
+p
+q
+r
+s
+t
+u
+v
+w
+x
+y
+z</textarea></p><p><button onclick="editor.focus();">Focus</button> <button onclick="editor.focus(-1);">Focus Start</button> <button onclick="editor.focus(1);">Focus End</button> <button disabled onmouseout="editor.focus();" onmouseover="editor.blur();">Enter to Blur, Exit to Focus</button></p></main><script src="../index.min.js"></script><script>const editor = new TE(document.querySelector('textarea'));</script></body></html>
