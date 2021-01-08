@@ -474,7 +474,7 @@
     };
   };
 
-  TE.version = '3.2.1';
+  TE.version = '3.2.2';
   TE.x = x;
   return TE;
 });

@@ -22,7 +22,7 @@
     "@taufik-nurrohman/rect": "^0.0.3",
     "@taufik-nurrohman/to": "^0.0.14",
     "pug": "^3.0.0",
-    "rollup": "^2.35.1",
+    "rollup": "^2.36.1",
     "terser": "^5.5.1"
   },
   "exports": {
@@ -70,5 +70,5 @@
     "js": "node .source/mjs.mjs"
   },
   "type": "module",
-  "version": "3.2.1"
+  "version": "3.2.2"
 }

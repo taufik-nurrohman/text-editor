@@ -29,7 +29,7 @@
 import {off as offEvent, on as onEvent} from '@taufik-nurrohman/event';
 import {fromStates} from '@taufik-nurrohman/from';
 import {hasObjectKey} from '@taufik-nurrohman/has';
-import {fire as fireHook, hooks, off as offHook, on as onHook} from '@taufik-nurrohman/hook';
+import {fire as fireHook, hooks as theHooks, off as offHook, on as onHook} from '@taufik-nurrohman/hook';
 import {isFunction, isObject, isSet} from '@taufik-nurrohman/is';
 import {toObject} from '@taufik-nurrohman/to';
 
@@ -59,7 +59,7 @@ if (isSet(TE)) {
                 'select': 1
             }, events), value;
         $.fire = fire;
-        $.hooks = hooks;
+        $.hooks = theHooks;
         $.off = off;
         $.on = on;
         function doFireHooks(e) {
