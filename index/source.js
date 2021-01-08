@@ -230,7 +230,7 @@
           } else {
             closureEnd = closure[charBefore];
 
-            if (closureEnd && closureEnd === charAfter) {
+            if (closureEnd && closureEnd === charAfter && '\\' !== before.slice(-2, -1)) {
               $.peel(charBefore, charAfter), eventPreventDefault(e);
             }
           }

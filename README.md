@@ -38,6 +38,10 @@ Credits
 Release Notes
 -------------
 
+### 3.2.2
+
+ - Updated.
+
 ### 3.2.1
 
  - Restructured the test files.
