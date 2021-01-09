@@ -87,62 +87,70 @@
 
   var hasObjectKey = hasKey;
 
-  function fire(name, data) {
-    var $ = this;
+  function context($) {
+    var hooks = {};
 
-    if (!isSet(hooks[name])) {
+    function fire(name, data) {
+      if (!isSet(hooks[name])) {
+        return $;
+      }
+
+      hooks[name].forEach(function (then) {
+        return then.apply($, data);
+      });
       return $;
     }
 
-    hooks[name].forEach(function (then) {
-      return then.apply($, data);
-    });
-    return $;
-  }
+    function off(name, then) {
+      if (!isSet(name)) {
+        return hooks = {}, $;
+      }
 
-  var hooks = {};
+      if (isSet(hooks[name])) {
+        if (isSet(then)) {
+          for (var i = 0, _j = hooks[name].length; i < _j; ++i) {
+            if (then === hooks[name][i]) {
+              hooks[name].splice(i, 1);
+              break;
+            }
+          } // Clean-up empty hook(s)
 
-  function off$1(name, then) {
-    var $ = this;
 
-    if (!isSet(name)) {
-      return hooks = {}, $;
-    }
-
-    if (isSet(hooks[name])) {
-      if (isSet(then)) {
-        for (var i = 0, _j = hooks[name].length; i < _j; ++i) {
-          if (then === hooks[name][i]) {
-            hooks[name].splice(i, 1);
-            break;
+          if (0 === j) {
+            delete hooks[name];
           }
-        } // Clean-up empty hook(s)
-
-
-        if (0 === j) {
+        } else {
           delete hooks[name];
         }
-      } else {
-        delete hooks[name];
       }
+
+      return $;
     }
 
+    function on(name, then) {
+      if (!isSet(hooks[name])) {
+        hooks[name] = [];
+      }
+
+      if (isSet(then)) {
+        hooks[name].push(then);
+      }
+
+      return $;
+    }
+
+    $.hooks = hooks;
+    $.fire = fire;
+    $.off = off;
+    $.on = on;
     return $;
   }
 
-  function on$1(name, then) {
-    var $ = this;
-
-    if (!isSet(hooks[name])) {
-      hooks[name] = [];
-    }
-
-    if (isSet(then)) {
-      hooks[name].push(then);
-    }
-
-    return $;
-  }
+  var $ = context({});
+  var fire = $.fire;
+  var off$1 = $.off;
+  var on$1 = $.on;
+  var hooks = $.hooks;
 
   var toObject = function toObject(x) {
     return Object.create(x);
@@ -163,10 +171,10 @@
         return $;
       }
 
+      var _context = context($),
+          fire = _context.fire;
+
       var events = isObject(active) && active.events || {},
-          fire$1 = fire.bind($),
-          off$2 = off$1.bind($),
-          on$2 = on$1.bind($),
           pop = $.pop,
           theNativeEvents = fromStates({
         'blur': 1,
@@ -178,13 +186,9 @@
         'keyup': 1,
         'select': 1
       }, events);
-      $.fire = fire$1;
-      $.hooks = hooks;
-      $.off = off$2;
-      $.on = on$2;
 
       function doFireHooks(e) {
-        fire$1(e.type, [e]);
+        fire(e.type, [e]);
       } // Add hook to all native event(s)
 
 

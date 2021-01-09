@@ -132,8 +132,8 @@
     var $ = this; // Already instantiated, skip!
 
     if (source[name]) {
-      return $;
-    } // Return new instance if `F3H` was called without the `new` operator
+      return;
+    } // Return new instance if `TE` was called without the `new` operator
 
 
     if (!isInstance($, TE)) {
@@ -146,7 +146,7 @@
 
     $.self = $.source = source; // Store current instance to `TE.instances`
 
-    TE.instances[source.id || source.name || toObjectCount(TE.instances)] = $; // Mark current DOM as active tag picker to prevent duplicate instance
+    TE.instances[source.id || source.name || toObjectCount(TE.instances)] = $; // Mark current DOM as active text editor to prevent duplicate instance
 
     source[name] = 1;
 
@@ -474,7 +474,7 @@
     };
   };
 
-  TE.version = '3.2.2';
+  TE.version = '3.2.3';
   TE.x = x;
   return TE;
 });

@@ -1,7 +1,7 @@
 import {off as offEvent, on as onEvent} from '@taufik-nurrohman/event';
 import {fromStates} from '@taufik-nurrohman/from';
 import {hasObjectKey} from '@taufik-nurrohman/has';
-import {fire as fireHook, hooks as theHooks, off as offHook, on as onHook} from '@taufik-nurrohman/hook';
+import {context} from '@taufik-nurrohman/hook';
 import {isFunction, isObject, isSet} from '@taufik-nurrohman/is';
 import {toObject} from '@taufik-nurrohman/to';
 
@@ -15,10 +15,8 @@ if (isSet(TE)) {
         if (!active) {
             return $;
         }
+        let {fire} = context($);
         let events = isObject(active) && active.events || {},
-            fire = fireHook.bind($),
-            off = offHook.bind($),
-            on = onHook.bind($),
             pop = $.pop,
             theNativeEvents = fromStates({
                 'blur': 1,
@@ -30,10 +28,6 @@ if (isSet(TE)) {
                 'keyup': 1,
                 'select': 1
             }, events), value;
-        $.fire = fire;
-        $.hooks = theHooks;
-        $.off = off;
-        $.on = on;
         function doFireHooks(e) {
             fire(e.type, [e]);
         }

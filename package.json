@@ -16,7 +16,7 @@
     "@taufik-nurrohman/folder": "^0.0.5",
     "@taufik-nurrohman/from": "^0.0.5",
     "@taufik-nurrohman/has": "^0.0.2",
-    "@taufik-nurrohman/hook": "^0.0.4",
+    "@taufik-nurrohman/hook": "^0.0.5",
     "@taufik-nurrohman/is": "^0.1.0",
     "@taufik-nurrohman/pattern": "^0.1.3",
     "@taufik-nurrohman/rect": "^0.0.3",
@@ -26,8 +26,26 @@
     "terser": "^5.5.1"
   },
   "exports": {
-    "import": "./index.mjs",
-    "require": "./index.js"
+    ".": {
+      "import": "./index.mjs",
+      "require": "./index.js"
+    },
+    "./history": {
+      "import": "./index/history.mjs",
+      "require": "./index/history.js"
+    },
+    "./hook": {
+      "import": "./index/hook.mjs",
+      "require": "./index/hook.js"
+    },
+    "./rect": {
+      "import": "./index/rect.mjs",
+      "require": "./index/rect.js"
+    },
+    "./source": {
+      "import": "./index/source.mjs",
+      "require": "./index/source.js"
+    }
   },
   "files": [
     "index.js",
@@ -70,5 +88,5 @@
     "js": "node .source/mjs.mjs"
   },
   "type": "module",
-  "version": "3.2.2"
+  "version": "3.2.3"
 }

@@ -18,10 +18,10 @@ function TE(source, state = {}) {
 
     // Already instantiated, skip!
     if (source[name]) {
-        return $;
+        return;
     }
 
-    // Return new instance if `F3H` was called without the `new` operator
+    // Return new instance if `TE` was called without the `new` operator
     if (!isInstance($, TE)) {
         return new TE(source, state);
     }
@@ -36,7 +36,7 @@ function TE(source, state = {}) {
     // Store current instance to `TE.instances`
     TE.instances[source.id || source.name || toObjectCount(TE.instances)] = $;
 
-    // Mark current DOM as active tag picker to prevent duplicate instance
+    // Mark current DOM as active text editor to prevent duplicate instance
     source[name] = 1;
 
     let any = /^([\s\S]*?)$/, // Any character(s)
