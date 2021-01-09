@@ -38,9 +38,9 @@ Credits
 Release Notes
 -------------
 
-### 3.2.2
+### 3.2.2, 3.2.3
 
- - Updated.
+ - Maintenance.
 
 ### 3.2.1
 
