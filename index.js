@@ -59,11 +59,6 @@
     return 'string' === typeof x;
   };
 
-  var D = document;
-  var W = window;
-  var B = D.body;
-  var R = D.documentElement;
-
   var fromStates = function fromStates() {
     for (var _len = arguments.length, lot = new Array(_len), _key = 0; _key < _len; _key++) {
       lot[_key] = arguments[_key];
@@ -71,6 +66,23 @@
 
     return Object.assign.apply(Object, [{}].concat(lot));
   };
+
+  var toCount = function toCount(x) {
+    return x.length;
+  };
+
+  var toObjectCount = function toObjectCount(x) {
+    return toCount(toObjectKeys(x));
+  };
+
+  var toObjectKeys = function toObjectKeys(x) {
+    return Object.keys(x);
+  };
+
+  var D = document;
+  var W = window;
+  var B = D.body;
+  var R = D.documentElement;
 
   var esc = function esc(pattern, extra) {
     if (extra === void 0) {
@@ -104,19 +116,6 @@
   };
 
   var x = "!$^*()+=[]{}|:<>,.?/-";
-
-  var toCount = function toCount(x) {
-    return x.length;
-  };
-
-  var toObjectCount = function toObjectCount(x) {
-    return toCount(toObjectKeys(x));
-  };
-
-  var toObjectKeys = function toObjectKeys(x) {
-    return Object.keys(x);
-  };
-
   var name = 'TE';
 
   function trim(str, dir) {
@@ -474,7 +473,7 @@
     };
   };
 
-  TE.version = '3.2.3';
+  TE.version = '3.2.4';
   TE.x = x;
   return TE;
 });

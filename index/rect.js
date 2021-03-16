@@ -73,6 +73,10 @@
     return 'string' === typeof x;
   };
 
+  var fromHTML = function fromHTML(x) {
+    return x.replace(/&/g, '&amp;').replace(/>/g, '&gt;').replace(/</g, '&lt;');
+  };
+
   var fromValue = function fromValue(x) {
     if (isArray(x)) {
       return x.map(function (v) {
@@ -118,7 +122,7 @@
       base = 10;
     }
 
-    return parseInt(x, base);
+    return base ? parseInt(x, base) : parseFloat(x);
   };
 
   var toValue = function toValue(x) {
@@ -140,11 +144,19 @@
       return x;
     }
 
-    return {
-      'false': false,
-      'null': null,
-      'true': true
-    }[x] || x;
+    if ('false' === x) {
+      return false;
+    }
+
+    if ('null' === x) {
+      return null;
+    }
+
+    if ('true' === x) {
+      return true;
+    }
+
+    return x;
   };
 
   var D = document;
@@ -270,24 +282,12 @@
     return node;
   };
 
-  var fromHTML = function fromHTML(x) {
-    return x.replace(/&/g, '&amp;').replace(/>/g, '&gt;').replace(/</g, '&lt;');
-  };
-
   var getOffset = function getOffset(node) {
     return [node.offsetLeft, node.offsetTop];
   };
 
   var getSize = function getSize(node) {
     return isWindow(node) ? [node.innerWidth, node.innerHeight] : [node.offsetWidth, node.offsetHeight];
-  };
-
-  var toNumber$1 = function toNumber(x, base) {
-    if (base === void 0) {
-      base = 10;
-    }
-
-    return base ? parseInt(x, base) : parseFloat(x);
   };
 
   function el(a, b) {
@@ -308,8 +308,8 @@
       value && (styles += prop + ':' + value + ';');
     });
 
-    var L = toNumber$1(getStyle(source, props[1]), 0),
-        T = toNumber$1(getStyle(source, props[3]), 0),
+    var L = toNumber(getStyle(source, props[1]), 0),
+        T = toNumber(getStyle(source, props[3]), 0),
         _getOffset = getOffset(source),
         X = _getOffset[0],
         Y = _getOffset[1],

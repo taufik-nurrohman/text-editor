@@ -112,7 +112,9 @@
   };
 
   if (isSet(TE)) {
-    var TextEditor = function TextEditor(source, state) {
+    var TextEditorConstructor = TE;
+
+    function TextEditor(source, state) {
       if (state === void 0) {
         state = {};
       }
@@ -177,20 +179,21 @@
             key = toCaseLower(e.key || String.fromCharCode(k)),
             keyCode = e.keyCode,
             keyIsCtrl = e.ctrlKey,
-            keyIsEnter = 'enter' === key || 13 === keyCode,
-            keyIsShift = e.shiftKey,
-            _$$$ = $.$(),
+            keyIsEnter = 'enter' === key || 13 === keyCode;
+        e.shiftKey;
+
+        var _$$$ = $.$(),
             after = _$$$.after,
             before = _$$$.before,
-            end = _$$$.end,
-            start = _$$$.start,
-            value = _$$$.value,
+            end = _$$$.end;
+
+        _$$$.start;
+        var value = _$$$.value,
             charBefore = before.slice(-1),
             charAfter = after.slice(0, 1),
             lastTabs = before.match(toPattern('(?:^|\\n)(' + esc(tab) + '+).*$', "")),
             tabs = lastTabs ? lastTabs[1] : "",
             closureEnd = closure[key]; // Indent
-
 
         if (theState.push && theState.push.call($, e)) {
           $.push(tab), doUpdateHistory(), eventPreventDefault(e); // Outdent
@@ -283,10 +286,9 @@
 
       $.state = state;
       return $;
-    }; // Clone all prototype(s) from the old constructor
+    } // Clone all prototype(s) from the old constructor
 
 
-    var TextEditorConstructor = TE;
     TextEditor.prototype = toObject(TextEditorConstructor.prototype);
     TextEditor.prototype.constructor = TextEditor; // Clone all static property from the old constructor
 

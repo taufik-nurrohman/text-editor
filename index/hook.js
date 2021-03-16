@@ -147,17 +147,19 @@
   }
 
   var $ = context({});
-  var fire = $.fire;
-  var off$1 = $.off;
-  var on$1 = $.on;
-  var hooks = $.hooks;
+  $.fire;
+  $.off;
+  $.on;
+  $.hooks;
 
   var toObject = function toObject(x) {
     return Object.create(x);
   };
 
   if (isSet(TE)) {
-    var TextEditor = function TextEditor(source, state) {
+    var TextEditorConstructor = TE;
+
+    function TextEditor(source, state) {
       if (state === void 0) {
         state = {};
       }
@@ -209,10 +211,9 @@
       state.hook.events = theNativeEvents;
       $.state = state;
       return $;
-    }; // Clone all prototype(s) from the old constructor
+    } // Clone all prototype(s) from the old constructor
 
 
-    var TextEditorConstructor = TE;
     TextEditor.prototype = toObject(TextEditorConstructor.prototype);
     TextEditor.prototype.constructor = TextEditor; // Clone all static property from the old constructor
 
