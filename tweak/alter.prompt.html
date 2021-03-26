@@ -1,0 +1,15 @@
+<!DOCTYPE html><html dir="ltr"><head><meta charset="utf-8"><meta content="width=device-width" name="viewport"><meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description"><title>Text Editor</title></head><body><main><p><textarea cols="100" rows="20" spellcheck="false"></textarea></p><p><button onclick="insertLink();">Link</button> <button onclick="insertImage();">Image</button></p></main><script src="../index.min.js"></script><script>const editor = new TE(document.querySelector('textarea'));
+
+function insertImage() {
+    let value = window.prompt('URL:', 'http://');
+    if (value && 'http://' !== value) {
+        editor.trim('\n\n', '\n\n').insert('<img alt="" src="' + value + '">', 1, true);
+    }
+}
+
+function insertLink() {
+    let value = window.prompt('URL:', 'http://');
+    if (value && 'http://' !== value) {
+        editor.wrap('<a href="' + value + '">', '</a>');
+    }
+}</script></body></html>

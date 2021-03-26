@@ -1,0 +1,31 @@
+extends ../_index.pug
+
+block state
+  - const title = 'Text Editor'
+  - const scripts = ['../index.min.js']
+
+block script
+  script
+    | const editor = new TE(document.querySelector('textarea'));
+    |
+    | function insertImage() {
+    |     let value = window.prompt('URL:', 'http://');
+    |     if (value && 'http://' !== value) {
+    |         editor.trim('\n\n', '\n\n').insert('<img alt="" src="' + value + '">', 1, true);
+    |     }
+    | }
+    |
+    | function insertLink() {
+    |     let value = window.prompt('URL:', 'http://');
+    |     if (value && 'http://' !== value) {
+    |         editor.wrap('<a href="' + value + '">', '</a>');
+    |     }
+    | }
+
+block content
+  main
+    p: textarea(cols='100' rows='20' spellcheck='false')
+    p
+      button(onclick="insertLink();") Link
+      = ' '
+      button(onclick="insertImage();") Image

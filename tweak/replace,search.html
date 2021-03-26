@@ -1,0 +1,97 @@
+<!DOCTYPE html><html dir="ltr"><head><meta charset="utf-8"><meta content="width=device-width" name="viewport"><meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description"><title>Text Editor</title></head><body><main><p>Use <kbd>Ctrl+f</kbd> key to search and <kbd>Ctrl+h</kbd> to replace.</p><p><textarea cols="100" rows="20" spellcheck="false">&lt;h1&gt;The MIT License (MIT)&lt;/h1&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Copyright © 2016 Taufik Nurrohman&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:&lt;/p&gt;
+
+&lt;p&gt;The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.&lt;/p&gt;
+
+&lt;p&gt;THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.&lt;/p&gt;
+
+a
+b
+c
+d</textarea></p><p><button onclick="search();">Search</button> <button onclick="replace();">Replace</button> <button onclick="editor.undo();">Undo</button> <button onclick="editor.redo();">Redo</button></p></main><script src="../index.min.js"></script><script src="../index/history.min.js"></script><script>const editor = new TE(document.querySelector('textarea'));
+
+let searchActive,
+    searchContent,
+    searchIndex,
+    searchQuery;
+
+function clear(focus) {
+    searchActive = false;
+    searchContent = "";
+    searchIndex = 0;
+    searchQuery = "";
+    focus && editor.focus(focus);
+}
+
+function replace() {
+    searchContent = editor.get() || "";
+    searchQuery = searchQuery || window.prompt('Search:');
+    if (searchQuery) {
+        let replaceCount = 0,
+            replaceValue = window.prompt('Replace With:'),
+            // Treat as case-sensitive search if `searchQuery` contains upper-case letter(s)
+            isCaseSensitive = /[A-Z]/.test(searchQuery);
+        editor.set(searchContent.replace(new RegExp(TE.esc(searchQuery), 'g' + (isCaseSensitive ? "" : 'i')), m0 => {
+            ++replaceCount;
+            return replaceValue;
+        }));
+        editor.record();
+        window.alert('Replaced ' + replaceCount + ' occurrence' + (1 === replaceCount ? "" : 's') + '.');
+        clear(-1);
+    }
+}
+
+function search(fromLast) {
+    searchContent = editor.get() || "";
+    searchQuery = searchQuery || window.prompt('Search:');
+    if (searchQuery) {
+        let selection = editor.$(),
+            // Treat as case-sensitive search if `searchQuery` contains upper-case letter(s)
+            isCaseSensitive = /[A-Z]/.test(searchQuery);
+        if (!isCaseSensitive) {
+            searchContent = searchContent.toLowerCase();
+            searchQuery = searchQuery.toLowerCase();
+        }
+        if (fromLast) {
+            searchIndex = searchContent.slice(0, selection.start).lastIndexOf(searchQuery);
+        } else {
+            searchIndex = searchContent.indexOf(searchQuery, selection.end);
+        }
+        if (-1 === searchIndex) {
+            window.alert('Not found: “' + searchQuery + '”');
+            clear(-1);
+        } else {
+            searchActive = true;
+            editor.select(searchIndex, searchIndex + searchQuery.length);
+        }
+    }
+}
+
+clear();
+
+editor.record(); // Record the initial value
+
+editor.self.addEventListener('click', () => clear());
+editor.self.addEventListener('keydown', e => {
+    let key = e.key,
+        keyCode = e.keyCode,
+        keyIsControl = e.ctrlKey,
+        keyIsShift = e.shiftKey;
+    if (searchActive && ('Enter' === key || 13 === keyCode)) {
+        search(keyIsShift);
+        e.preventDefault();
+    } else if (keyIsControl && ('f' === key || 70 === keyCode)) {
+        clear(-1);
+        search();
+        e.preventDefault();
+    } else if (keyIsControl && ('h' === key || 72 === keyCode)) {
+        clear(-1);
+        replace();
+        e.preventDefault();
+    }
+});</script></body></html>

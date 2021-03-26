@@ -40,6 +40,7 @@ Release Notes
 
 ### 3.2.5
 
+ - Added example of search/replace functionality.
  - Maintenance.
 
 ### 3.2.1
