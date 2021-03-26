@@ -87,7 +87,7 @@
 
   var hasObjectKey = hasKey;
 
-  function context($) {
+  function hook($) {
     var hooks = {};
 
     function fire(name, data) {
@@ -146,12 +146,6 @@
     return $;
   }
 
-  var $ = context({});
-  $.fire;
-  $.off;
-  $.on;
-  $.hooks;
-
   var toObject = function toObject(x) {
     return Object.create(x);
   };
@@ -173,8 +167,8 @@
         return $;
       }
 
-      var _context = context($),
-          fire = _context.fire;
+      var _hook = hook($),
+          fire = _hook.fire;
 
       var events = isObject(active) && active.events || {},
           pop = $.pop,

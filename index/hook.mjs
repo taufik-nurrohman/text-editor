@@ -29,7 +29,7 @@
 import {off as offEvent, on as onEvent} from '@taufik-nurrohman/event';
 import {fromStates} from '@taufik-nurrohman/from';
 import {hasObjectKey} from '@taufik-nurrohman/has';
-import {context} from '@taufik-nurrohman/hook';
+import {hook} from '@taufik-nurrohman/hook';
 import {isFunction, isObject, isSet} from '@taufik-nurrohman/is';
 import {toObject} from '@taufik-nurrohman/to';
 
@@ -43,7 +43,7 @@ if (isSet(TE)) {
         if (!active) {
             return $;
         }
-        let {fire} = context($);
+        let {fire} = hook($);
         let events = isObject(active) && active.events || {},
             pop = $.pop,
             theNativeEvents = fromStates({
