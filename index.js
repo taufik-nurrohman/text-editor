@@ -473,7 +473,7 @@
     };
   };
 
-  TE.version = '3.2.5';
+  TE.version = '3.2.6';
   TE.x = x;
   return TE;
 });
