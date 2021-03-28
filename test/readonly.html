@@ -1,1 +1,23 @@
-<!DOCTYPE html><html dir="ltr"><head><meta charset="utf-8"><meta content="width=device-width" name="viewport"><meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description"><title>Text Editor</title></head><body><main><p><textarea spellcheck="false">abcdef</textarea></p><p><button onclick="editor.wrap('*', '*');"><b>B</b></button> <button onclick="editor.wrap('_', '_');"><i>I</i></button></p><p><label><input onchange="editor.self.readOnly = !editor.self.readOnly;" type="checkbox"> <span>Read Only</span></label></p></main><script src="../index.min.js"></script><script>const editor = new TE(document.querySelector('textarea'));</script></body></html>
+<!DOCTYPE html>
+<html dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width" name="viewport">
+    <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
+    <title>Text Editor</title>
+  </head>
+
+  <body>
+    <main>
+      <p><textarea spellcheck="false">abcdef</textarea></p>
+      <p><button onclick="editor.wrap('*', '*');"><b>B</b></button> <button onclick="editor.wrap('_', '_');"><i>I</i></button></p>
+      <p><label><input onchange="editor.self.readOnly = !editor.self.readOnly;" type="checkbox"> <span>Read Only</span></label></p>
+    </main>
+    <script src="../index.min.js"></script>
+    <script>
+      const editor = new TE(document.querySelector('textarea'));
+    </script>
+  </body>
+
+</html>

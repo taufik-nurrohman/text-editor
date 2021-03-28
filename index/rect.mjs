@@ -2,7 +2,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright © 2020 Taufik Nurrohman
+ * Copyright © 2021 Taufik Nurrohman
  *
  * <https://github.com/taufik-nurrohman/text-editor>
  *
@@ -26,11 +26,30 @@
  *
  */
 
-import {B, getChildren, getStyle, letElement, setAttribute, setChildLast, setElement, setHTML, setStyles} from '@taufik-nurrohman/document';
-import {fromHTML} from '@taufik-nurrohman/from';
-import {isSet} from '@taufik-nurrohman/is';
-import {getOffset, getSize} from '@taufik-nurrohman/rect';
-import {toNumber} from '@taufik-nurrohman/to';
+import {
+    B,
+    getChildren,
+    getStyle,
+    letElement,
+    setAttribute,
+    setChildLast,
+    setElement,
+    setHTML,
+    setStyles
+} from '@taufik-nurrohman/document';
+import {
+    fromHTML
+} from '@taufik-nurrohman/from';
+import {
+    isSet
+} from '@taufik-nurrohman/is';
+import {
+    getOffset,
+    getSize
+} from '@taufik-nurrohman/rect';
+import {
+    toNumber
+} from '@taufik-nurrohman/to';
 
 function el(a, b = 'span') {
     return '<' + b + '>' + a + '</' + b + '>';

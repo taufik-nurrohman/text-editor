@@ -2,7 +2,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright © 2020 Taufik Nurrohman
+ * Copyright © 2021 Taufik Nurrohman
  *
  * <https://github.com/taufik-nurrohman/text-editor>
  *
@@ -26,8 +26,13 @@
  *
  */
 
-import {isSet} from '@taufik-nurrohman/is';
-import {toCount, toEdge} from '@taufik-nurrohman/to';
+import {
+    isSet
+} from '@taufik-nurrohman/is';
+import {
+    toCount,
+    toEdge
+} from '@taufik-nurrohman/to';
 
 if (isSet(TE)) {
     const __proto__ = TE.prototype;
@@ -44,7 +49,10 @@ if (isSet(TE)) {
     // Save current state to history
     __proto__.record = function(index) {
         let t = this,
-            {end, start} = t.$(),
+            {
+                end,
+                start
+            } = t.$(),
             current = t._history[t._historyState] || [],
             next = [t.self.value, start, end];
         if (

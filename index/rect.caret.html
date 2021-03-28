@@ -1,4 +1,16 @@
-<!DOCTYPE html><html dir="ltr"><head><meta charset="utf-8"><meta content="width=device-width" name="viewport"><meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description"><title>Caret · Rect · Text Editor</title></head><body><main><p><textarea cols="100" rows="20" spellcheck="false" style="line-height:1.25em;">&lt;h1&gt;The MIT License (MIT)&lt;/h1&gt;
+<!DOCTYPE html>
+<html dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width" name="viewport">
+    <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
+    <title>Caret · Rect · Text Editor</title>
+  </head>
+
+  <body>
+    <main>
+      <p><textarea cols="100" rows="20" spellcheck="false" style="line-height:1.25em;">&lt;h1&gt;The MIT License (MIT)&lt;/h1&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;Copyright © 2016 Taufik Nurrohman&lt;/p&gt;
@@ -13,56 +25,67 @@
 a
 b
 c
-d</textarea></p><p><label><input type="checkbox"> <span>Toggle mirror visibility?</span></label></p></main><script src="../index.min.js"></script><script src="rect.min.js"></script><script>let check = document.querySelector('input[type="checkbox"]'),
-    caret = [
-        document.createElement('span'),
-        document.createElement('span')
-    ];
-document.body.appendChild(caret[0]);
-document.body.appendChild(caret[1]);
+d</textarea></p>
+      <p><label><input type="checkbox"> <span>Toggle mirror visibility?</span></label></p>
+    </main>
+    <script src="../index.min.js"></script>
+    <script src="rect.min.js"></script>
+    <script>
+      let check = document.querySelector('input[type="checkbox"]'),
+          caret = [
+              document.createElement('span'),
+              document.createElement('span')
+          ];
+      document.body.appendChild(caret[0]);
+      document.body.appendChild(caret[1]);
 
-function run(el) {
-    const editor = new TE(el);
-    let s = 'position:absolute;width:2px;z-index:9999;visibility:hidden;pointer-events:none;margin-left:-1px;';
-    caret[0].style.cssText = s + 'background:red;';
-    caret[1].style.cssText = s + 'background:blue;';
-    function setCaretPosition() {
-        let $ = editor.$(),
-            rect = editor.rect(),
-            e = editor.self,
-            h = parseFloat(window.getComputedStyle(editor.self).getPropertyValue('line-height'));
-        caret[0].style.top = (rect[0].y - e.scrollTop) + 'px';
-        caret[0].style.left = (rect[0].x - e.scrollLeft) + 'px';
-        caret[0].style.height = h + 'px';
-        caret[0].style.marginTop = '-' + ((h - rect[0].h) / 2) + 'px';
-        caret[1].style.visibility = $.length ? 'visible' : 'hidden';
-        caret[1].style.top = (rect[1].y - e.scrollTop) + 'px';
-        caret[1].style.left = (rect[1].x - e.scrollLeft) + 'px';
-        caret[1].style.height = h + 'px';
-        caret[1].style.marginTop = '-' + ((h - rect[1].h) / 2) + 'px';
-        toggleMirrorVisibility.call(check);
-    }
-    check.onchange = toggleMirrorVisibility;
-    editor.self.onfocus = () => {
-        caret[0].style.visibility = 'visible';
-        caret[1].style.visibility = 'visible';
-        setCaretPosition();
-    };
-    editor.self.onblur = () => {
-        caret[0].style.visibility = 'hidden';
-        caret[1].style.visibility = 'hidden';
-    };
-    ['scroll', 'resize', 'keydown', 'cut', 'paste', 'mousedown', 'mouseup', 'select'].forEach(event => {
-        editor.self.addEventListener(event, e => {
-            setTimeout(setCaretPosition, 1);
-        }, false);
-    });
-    editor.self.addEventListener('mousemove', setCaretPosition, false);
-}
+      function run(el) {
+          const editor = new TE(el);
+          let s = 'position:absolute;width:2px;z-index:9999;visibility:hidden;pointer-events:none;margin-left:-1px;';
+          caret[0].style.cssText = s + 'background:red;';
+          caret[1].style.cssText = s + 'background:blue;';
 
-function toggleMirrorVisibility(el) {
-    TE.mirror.style.pointerEvents = 'none';
-    TE.mirror.style.visibility = this.checked ? 'visible' : 'hidden';
-}
+          function setCaretPosition() {
+              let $ = editor.$(),
+                  rect = editor.rect(),
+                  e = editor.self,
+                  h = parseFloat(window.getComputedStyle(editor.self).getPropertyValue('line-height'));
+              caret[0].style.top = (rect[0].y - e.scrollTop) + 'px';
+              caret[0].style.left = (rect[0].x - e.scrollLeft) + 'px';
+              caret[0].style.height = h + 'px';
+              caret[0].style.marginTop = '-' + ((h - rect[0].h) / 2) + 'px';
+              caret[1].style.visibility = $.length ? 'visible' : 'hidden';
+              caret[1].style.top = (rect[1].y - e.scrollTop) + 'px';
+              caret[1].style.left = (rect[1].x - e.scrollLeft) + 'px';
+              caret[1].style.height = h + 'px';
+              caret[1].style.marginTop = '-' + ((h - rect[1].h) / 2) + 'px';
+              toggleMirrorVisibility.call(check);
+          }
+          check.onchange = toggleMirrorVisibility;
+          editor.self.onfocus = () => {
+              caret[0].style.visibility = 'visible';
+              caret[1].style.visibility = 'visible';
+              setCaretPosition();
+          };
+          editor.self.onblur = () => {
+              caret[0].style.visibility = 'hidden';
+              caret[1].style.visibility = 'hidden';
+          };
+          ['scroll', 'resize', 'keydown', 'cut', 'paste', 'mousedown', 'mouseup', 'select'].forEach(event => {
+              editor.self.addEventListener(event, e => {
+                  setTimeout(setCaretPosition, 1);
+              }, false);
+          });
+          editor.self.addEventListener('mousemove', setCaretPosition, false);
+      }
 
-run(document.querySelector('textarea'));</script></body></html>
+      function toggleMirrorVisibility(el) {
+          TE.mirror.style.pointerEvents = 'none';
+          TE.mirror.style.visibility = this.checked ? 'visible' : 'hidden';
+      }
+
+      run(document.querySelector('textarea'));
+    </script>
+  </body>
+
+</html>

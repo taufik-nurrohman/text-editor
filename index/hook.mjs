@@ -2,7 +2,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright © 2020 Taufik Nurrohman
+ * Copyright © 2021 Taufik Nurrohman
  *
  * <https://github.com/taufik-nurrohman/text-editor>
  *
@@ -26,15 +26,31 @@
  *
  */
 
-import {off as offEvent, on as onEvent} from '@taufik-nurrohman/event';
-import {fromStates} from '@taufik-nurrohman/from';
-import {hasObjectKey} from '@taufik-nurrohman/has';
-import {hook} from '@taufik-nurrohman/hook';
-import {isFunction, isObject, isSet} from '@taufik-nurrohman/is';
-import {toObject} from '@taufik-nurrohman/to';
+import {
+    off as offEvent,
+    on as onEvent
+} from '@taufik-nurrohman/event';
+import {
+    fromStates
+} from '@taufik-nurrohman/from';
+import {
+    hasObjectKey
+} from '@taufik-nurrohman/has';
+import {
+    hook
+} from '@taufik-nurrohman/hook';
+import {
+    isFunction,
+    isObject,
+    isSet
+} from '@taufik-nurrohman/is';
+import {
+    toObject
+} from '@taufik-nurrohman/to';
 
 if (isSet(TE)) {
     const TextEditorConstructor = TE;
+
     function TextEditor(source, state = {}) {
         const $ = this;
         TextEditorConstructor.call($, source, state);
@@ -43,7 +59,9 @@ if (isSet(TE)) {
         if (!active) {
             return $;
         }
-        let {fire} = hook($);
+        let {
+            fire
+        } = hook($);
         let events = isObject(active) && active.events || {},
             pop = $.pop,
             theNativeEvents = fromStates({
@@ -55,7 +73,9 @@ if (isSet(TE)) {
                 'keypress': 1,
                 'keyup': 1,
                 'select': 1
-            }, events), value;
+            }, events),
+            value;
+
         function doFireHooks(e) {
             fire(e.type, [e]);
         }

@@ -1,64 +1,85 @@
-<!DOCTYPE html><html dir="ltr"><head><meta charset="utf-8"><meta content="width=device-width" name="viewport"><meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description"><title>Text Editor</title></head><body><main><p><textarea spellcheck="false">abcdef</textarea></p><p><button onclick="toggle('b');">Toggle Bold</button> <button onclick="toggleBlocks();">Toggle Blocks</button> <button onclick="toggleCodes();">Toggle Code</button></p></main><script src="../index.min.js"></script><script>const editor = new TE(document.querySelector('textarea'));
+<!DOCTYPE html>
+<html dir="ltr">
 
-function toggle(name) {
-    let patternBefore = new RegExp('<' + name + '(?:\\s[^>]*)?>$'),
-        patternAfter = new RegExp('^<\\/' + name + '>');
-    editor.match([patternBefore, /.*/, patternAfter], function(before, value, after) {
-        if (before[0] && after[0]) {
-            this.peel(patternBefore, patternAfter);
-        } else {
-            this.wrap('<' + name + '>', '</' + name + '>');
-        }
-    });
-}
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width" name="viewport">
+    <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
+    <title>Text Editor</title>
+  </head>
 
-function toggleBlocks() {
-    editor.match([/<(?:p|h([1-6]))(\s[^>]*)?>$/, /.*/, /^<\/(?:p|h[1-6])>/], function(before, value, after) {
-        console.log([before, value, after]);
-        let h = +(before[1] || 0),
-            attr = before[2] || "";
-        // ``
-        this.peel(/<(?:p|h[1-6])(?:\s[^>]*)?>/, /<\/(?:p|h[1-6])>/);
-        if (!h) {
-            // `<h1>`
-            this.wrap('<h1' + attr + '>', '</h1>');
-        } else {
-            ++h;
-            if (h > 6) {
-                // `<p>`
-                this.wrap('<p' + attr + '>', '</p>');
-            } else {
-                // `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`
-                this.wrap('<h' + h + attr + '>', '</h' + h + '>');
-            }
-        }
-    });
-}
+  <body>
+    <main>
+      <p><textarea spellcheck="false">abcdef</textarea></p>
+      <p><button onclick="toggle('b');">Toggle Bold</button> <button onclick="toggleBlocks();">Toggle Blocks</button> <button onclick="toggleCodes();">Toggle Code</button></p>
+    </main>
+    <script src="../index.min.js"></script>
+    <script>
+      const editor = new TE(document.querySelector('textarea'));
 
-function toggleCodes() {
-    editor.match([/<(?:pre|code)(?:\s[^>]*)?>(?:\s*<code(?:\s[^>]*)?>)?$/, /.*/, /^(?:<\/code>\s*)?<\/(?:pre|code)>/], function(before, value, after) {
-        console.log([before, value, after]);
-        // ``
-        this.peel(/<(?:pre|code)(?:\s[^>]*)?>(?:\s*<code(?:\s[^>]*)?>)?/, /(?:<\/code>\s*)?<\/(?:pre|code)>/);
-        if (after[0]) {
-            // ``
-            if (/^(?:<\/code>\s*)<\/(?:pre|code)>/.test(after[0])) {
-                this.insert(decode(editor.$().value));
-            // `<pre><code> … </code></pre>`
-            } else if (after[0].slice(0, 7) === '</code>') {
-                this.wrap('<pre><code>', '</code></pre>');
-            }
-        // `<code> … </code>`
-        } else {
-            this.wrap('<code>', '</code>').insert(encode(editor.$().value));
-        }
-    });
-}
+      function toggle(name) {
+          let patternBefore = new RegExp('<' + name + '(?:\\s[^>]*)?>$'),
+              patternAfter = new RegExp('^<\\/' + name + '>');
+          editor.match([patternBefore, /.*/, patternAfter], function(before, value, after) {
+              if (before[0] && after[0]) {
+                  this.peel(patternBefore, patternAfter);
+              } else {
+                  this.wrap('<' + name + '>', '</' + name + '>');
+              }
+          });
+      }
 
-function encode(x) {
-    return x.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
+      function toggleBlocks() {
+          editor.match([/<(?:p|h([1-6]))(\s[^>]*)?>$/, /.*/, /^<\/(?:p|h[1-6])>/], function(before, value, after) {
+              console.log([before, value, after]);
+              let h = +(before[1] || 0),
+                  attr = before[2] || "";
+              // ``
+              this.peel(/<(?:p|h[1-6])(?:\s[^>]*)?>/, /<\/(?:p|h[1-6])>/);
+              if (!h) {
+                  // `<h1>`
+                  this.wrap('<h1' + attr + '>', '</h1>');
+              } else {
+                  ++h;
+                  if (h > 6) {
+                      // `<p>`
+                      this.wrap('<p' + attr + '>', '</p>');
+                  } else {
+                      // `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`
+                      this.wrap('<h' + h + attr + '>', '</h' + h + '>');
+                  }
+              }
+          });
+      }
 
-function decode(x) {
-    return x.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
-}</script></body></html>
+      function toggleCodes() {
+          editor.match([/<(?:pre|code)(?:\s[^>]*)?>(?:\s*<code(?:\s[^>]*)?>)?$/, /.*/, /^(?:<\/code>\s*)?<\/(?:pre|code)>/], function(before, value, after) {
+              console.log([before, value, after]);
+              // ``
+              this.peel(/<(?:pre|code)(?:\s[^>]*)?>(?:\s*<code(?:\s[^>]*)?>)?/, /(?:<\/code>\s*)?<\/(?:pre|code)>/);
+              if (after[0]) {
+                  // ``
+                  if (/^(?:<\/code>\s*)<\/(?:pre|code)>/.test(after[0])) {
+                      this.insert(decode(editor.$().value));
+                      // `<pre><code> … </code></pre>`
+                  } else if (after[0].slice(0, 7) === '</code>') {
+                      this.wrap('<pre><code>', '</code></pre>');
+                  }
+                  // `<code> … </code>`
+              } else {
+                  this.wrap('<code>', '</code>').insert(encode(editor.$().value));
+              }
+          });
+      }
+
+      function encode(x) {
+          return x.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function decode(x) {
+          return x.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+      }
+    </script>
+  </body>
+
+</html>

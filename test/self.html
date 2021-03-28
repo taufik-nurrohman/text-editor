@@ -1,5 +1,30 @@
-<!DOCTYPE html><html dir="ltr"><head><meta charset="utf-8"><meta content="width=device-width" name="viewport"><meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description"><title>Text Editor</title></head><body><main><p><textarea spellcheck="false">abcdef</textarea></p><p><button onclick="editor_1.wrap('*', '*');"><b>B</b></button> <button onclick="editor_1.wrap('_', '_');"><i>I</i></button></p><p><textarea spellcheck="false">abcdef</textarea></p><p><button onclick="editor_2.wrap('*', '*');"><b>B</b></button> <button onclick="editor_2.wrap('_', '_');"><i>I</i></button></p><p><textarea spellcheck="false">abcdef</textarea></p><p><button onclick="editor_3.wrap('*', '*');"><b>B</b></button> <button onclick="editor_3.wrap('_', '_');"><i>I</i></button></p></main><script src="../index.min.js"></script><script>let sources = document.querySelectorAll('textarea');
+<!DOCTYPE html>
+<html dir="ltr">
 
-const editor_1 = new TE(sources[0]);
-const editor_2 = new TE(sources[1]);
-const editor_3 = new TE(sources[2]);</script></body></html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width" name="viewport">
+    <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
+    <title>Text Editor</title>
+  </head>
+
+  <body>
+    <main>
+      <p><textarea spellcheck="false">abcdef</textarea></p>
+      <p><button onclick="editor_1.wrap('*', '*');"><b>B</b></button> <button onclick="editor_1.wrap('_', '_');"><i>I</i></button></p>
+      <p><textarea spellcheck="false">abcdef</textarea></p>
+      <p><button onclick="editor_2.wrap('*', '*');"><b>B</b></button> <button onclick="editor_2.wrap('_', '_');"><i>I</i></button></p>
+      <p><textarea spellcheck="false">abcdef</textarea></p>
+      <p><button onclick="editor_3.wrap('*', '*');"><b>B</b></button> <button onclick="editor_3.wrap('_', '_');"><i>I</i></button></p>
+    </main>
+    <script src="../index.min.js"></script>
+    <script>
+      let sources = document.querySelectorAll('textarea');
+
+      const editor_1 = new TE(sources[0]);
+      const editor_2 = new TE(sources[1]);
+      const editor_3 = new TE(sources[2]);
+    </script>
+  </body>
+
+</html>

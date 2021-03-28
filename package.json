@@ -21,8 +21,9 @@
     "@taufik-nurrohman/pattern": "^0.1.4",
     "@taufik-nurrohman/rect": "^0.0.5",
     "@taufik-nurrohman/to": "^0.0.16",
+    "js-beautify": "^1.13.5",
     "pug": "^3.0.2",
-    "rollup": "^2.42.4",
+    "rollup": "^2.43.1",
     "terser": "^5.6.1"
   },
   "exports": {
@@ -84,8 +85,8 @@
   },
   "scripts": {
     "pack": "npm run html && npm run js",
-    "html": "node .source/pug.mjs",
-    "js": "node .source/mjs.mjs"
+    "html": "node .github/src/pug.mjs",
+    "js": "node .github/src/mjs.mjs"
   },
   "type": "module",
   "version": "3.2.6"

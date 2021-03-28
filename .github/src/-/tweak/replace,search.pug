@@ -25,18 +25,32 @@ block script
     |     searchContent = editor.get() || "";
     |     searchQuery = searchQuery || window.prompt('Search:');
     |     if (searchQuery) {
-    |         let replaceCount = 0,
+    |         let selection = editor.$(),
+    |             replaceCount = 0,
     |             replaceValue = window.prompt('Replace With:'),
     |             // Treat as case-sensitive search if `searchQuery` contains upper-case letter(s)
     |             isCaseSensitive = /[A-Z]/.test(searchQuery);
-    |         editor.set(searchContent.replace(new RegExp(TE.esc(searchQuery), 'g' + (isCaseSensitive ? "" : 'i')), m0 => {
-    |             ++replaceCount;
-    |             return replaceValue;
-    |         }));
-    |         editor.record();
-    |         window.alert('Replaced ' + replaceCount + ' occurrence' + (1 === replaceCount ? "" : 's') + '.');
-    |         clear(-1);
+    |         if (selection.length) {
+    |             // Replace in selection
+    |             editor.replace(new RegExp(TE.esc(searchQuery), 'g' + (isCaseSensitive ? "" : 'i')), m0 => {
+    |                 ++replaceCount;
+    |                 return replaceValue;
+    |             });
+    |         } else {
+    |             // Replace all
+    |             editor.set(searchContent.replace(new RegExp(TE.esc(searchQuery), 'g' + (isCaseSensitive ? "" : 'i')), m0 => {
+    |                 ++replaceCount;
+    |                 return replaceValue;
+    |             }));
+    |         }
+    |         if (0 === replaceCount) {
+    |             window.alert('Not found: “' + searchQuery + '”');
+    |         } else {
+    |             editor.record();
+    |             window.alert('Replaced “' + searchQuery + '” with “' + replaceValue + '” ' + replaceCount + ' time' + (1 === replaceCount ? "" : 's') + '.');
+    |         }
     |     }
+    |     clear(-1);
     | }
     |
     | function search(fromLast) {

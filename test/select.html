@@ -1,3 +1,24 @@
-<!DOCTYPE html><html dir="ltr"><head><meta charset="utf-8"><meta content="width=device-width" name="viewport"><meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description"><title>Text Editor</title></head><body><main><p><textarea spellcheck="false">0123456789
+<!DOCTYPE html>
+<html dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width" name="viewport">
+    <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
+    <title>Text Editor</title>
+  </head>
+
+  <body>
+    <main>
+      <p><textarea spellcheck="false">0123456789
 0123456789
-0123456789</textarea></p><p><button onclick="editor.select(true);">Select All</button> <button onclick="editor.select(4);">Move Caret to 4</button> <button onclick="editor.select(8);">Move Caret to 8</button> <button onclick="editor.select(4, 8);">Select 4 to 8</button></p></main><script src="../index.min.js"></script><script>const editor = new TE(document.querySelector('textarea'));</script></body></html>
+0123456789</textarea></p>
+      <p><button onclick="editor.select(true);">Select All</button> <button onclick="editor.select(4);">Move Caret to 4</button> <button onclick="editor.select(8);">Move Caret to 8</button> <button onclick="editor.select(4, 8);">Select 4 to 8</button></p>
+    </main>
+    <script src="../index.min.js"></script>
+    <script>
+      const editor = new TE(document.querySelector('textarea'));
+    </script>
+  </body>
+
+</html>

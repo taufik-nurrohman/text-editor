@@ -2,7 +2,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright © 2020 Taufik Nurrohman
+ * Copyright © 2021 Taufik Nurrohman
  *
  * <https://github.com/taufik-nurrohman/text-editor>
  *
@@ -26,11 +26,33 @@
  *
  */
 
-import {B, D, H, R, W} from '@taufik-nurrohman/document';
-import {fromStates} from '@taufik-nurrohman/from';
-import {isArray, isFunction, isInstance, isSet, isString} from '@taufik-nurrohman/is';
-import {esc, fromPattern, toPattern, x} from '@taufik-nurrohman/pattern';
-import {toCount, toObjectCount} from '@taufik-nurrohman/to';
+import {
+    B,
+    D,
+    H,
+    R,
+    W
+} from '@taufik-nurrohman/document';
+import {
+    fromStates
+} from '@taufik-nurrohman/from';
+import {
+    isArray,
+    isFunction,
+    isInstance,
+    isSet,
+    isString
+} from '@taufik-nurrohman/is';
+import {
+    esc,
+    fromPattern,
+    toPattern,
+    x
+} from '@taufik-nurrohman/pattern';
+import {
+    toCount,
+    toObjectCount
+} from '@taufik-nurrohman/to';
 
 let name = 'TE';
 
@@ -118,7 +140,10 @@ function TE(source, state = {}) {
             return source.focus(), $;
         }
         let count = toCount(lot),
-            {start, end} = $.$(),
+            {
+                start,
+                end
+            } = $.$(),
             x, y, X, Y;
         x = W.pageXOffset || R.scrollLeft || B.scrollLeft;
         y = W.pageYOffset || R.scrollTop || B.scrollTop;
@@ -144,7 +169,11 @@ function TE(source, state = {}) {
 
     // Match at selection
     $.match = (pattern, then) => {
-        let {after, before, value} = $.$();
+        let {
+            after,
+            before,
+            value
+        } = $.$();
         if (isArray(pattern)) {
             let m = [
                 before.match(pattern[0]),
@@ -159,7 +188,11 @@ function TE(source, state = {}) {
 
     // Replace at selection
     $.replace = (from, to, mode) => {
-        let {after, before, value} = $.$();
+        let {
+            after,
+            before,
+            value
+        } = $.$();
         if (-1 === mode) { // Replace before
             before = before.replace(from, to);
         } else if (1 === mode) { // Replace after
@@ -186,7 +219,11 @@ function TE(source, state = {}) {
 
     // Wrap current selection
     $.wrap = (open, close, wrap) => {
-        let {after, before, value} = $.$();
+        let {
+            after,
+            before,
+            value
+        } = $.$();
         if (wrap) {
             return $.replace(any, open + '$1' + close);
         }
@@ -195,7 +232,11 @@ function TE(source, state = {}) {
 
     // Unwrap current selection
     $.peel = (open, close, wrap) => {
-        let {after, before, value} = $.$();
+        let {
+            after,
+            before,
+            value
+        } = $.$();
         open = fromPattern(open) || esc(open);
         close = fromPattern(close) || esc(close);
         // Ignore begin and end marker
@@ -215,7 +256,10 @@ function TE(source, state = {}) {
     };
 
     $.pull = (by, includeEmptyLines = true) => {
-        let {length, value} = $.$();
+        let {
+            length,
+            value
+        } = $.$();
         by = isSet(by) ? by : state.tab;
         by = fromPattern(by) || esc(by);
         // Ignore begin marker
@@ -235,7 +279,9 @@ function TE(source, state = {}) {
     };
 
     $.push = (by, includeEmptyLines = false) => {
-        let {length} = $.$();
+        let {
+            length
+        } = $.$();
         by = isSet(by) ? by : state.tab;
         if (length) {
             return $.replace(toPattern('^' + (includeEmptyLines ? "" : '(?!$)'), 'gm'), by);
@@ -256,7 +302,11 @@ function TE(source, state = {}) {
         if (null !== end && false !== end) {
             end = end || "";
         }
-        let {before, value, after} = $.$(),
+        let {
+            before,
+            value,
+            after
+        } = $.$(),
             beforeClean = trim(before, 1),
             afterClean = trim(after, -1);
         before = false !== open ? trim(before, 1) + (beforeClean || !tidy ? open : "") : before;

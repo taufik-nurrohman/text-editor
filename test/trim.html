@@ -1,5 +1,27 @@
-<!DOCTYPE html><html dir="ltr"><head><meta charset="utf-8"><meta content="width=device-width" name="viewport"><meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description"><title>Text Editor</title></head><body><main><p><textarea spellcheck="false"> a  b  c  d  e  f
+<!DOCTYPE html>
+<html dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width" name="viewport">
+    <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
+    <title>Text Editor</title>
+  </head>
+
+  <body>
+    <main>
+      <p><textarea spellcheck="false"> a  b  c  d  e  f
  a  b  c  d  e  f
  1  2  3  4  5  6
- 1  2  3  4  5  6</textarea></p><p><button onclick="editor.trim();">Trim</button>
-<button onclick="editor.trim(false, false);">Trim Start and End of Selection</button> <button onclick="editor.trim(&quot;&quot;, &quot;&quot;, false, false);">Trim Before and After Selection</button> <button onclick="editor.trim(' ', ' ');">Tidy with a Space</button> <button onclick="editor.trim('\n\n', '\n\n');">Tidy with Line Break</button></p></main><script src="../index.min.js"></script><script>const editor = new TE(document.querySelector('textarea'));</script></body></html>
+ 1  2  3  4  5  6</textarea></p>
+      <p><button onclick="editor.trim();">Trim</button>
+        <button onclick="editor.trim(false, false);">Trim Start and End of Selection</button> <button onclick="editor.trim(&quot;&quot;, &quot;&quot;, false, false);">Trim Before and After Selection</button> <button onclick="editor.trim(' ', ' ');">Tidy with a Space</button> <button onclick="editor.trim('\n\n', '\n\n');">Tidy with Line Break</button>
+      </p>
+    </main>
+    <script src="../index.min.js"></script>
+    <script>
+      const editor = new TE(document.querySelector('textarea'));
+    </script>
+  </body>
+
+</html>

@@ -2,7 +2,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright © 2020 Taufik Nurrohman
+ * Copyright © 2021 Taufik Nurrohman
  *
  * <https://github.com/taufik-nurrohman/text-editor>
  *
@@ -26,15 +26,34 @@
  *
  */
 
-import {eventPreventDefault, off as offEvent, on as onEvent} from '@taufik-nurrohman/event';
-import {fromStates} from '@taufik-nurrohman/from';
-import {hasObjectKey} from '@taufik-nurrohman/has';
-import {isFunction, isObject, isSet} from '@taufik-nurrohman/is';
-import {esc, toPattern} from '@taufik-nurrohman/pattern';
-import {toCaseLower, toObject} from '@taufik-nurrohman/to';
+import {
+    eventPreventDefault,
+    off as offEvent,
+    on as onEvent
+} from '@taufik-nurrohman/event';
+import {
+    fromStates
+} from '@taufik-nurrohman/from';
+import {
+    hasObjectKey
+} from '@taufik-nurrohman/has';
+import {
+    isFunction,
+    isObject,
+    isSet
+} from '@taufik-nurrohman/is';
+import {
+    esc,
+    toPattern
+} from '@taufik-nurrohman/pattern';
+import {
+    toCaseLower,
+    toObject
+} from '@taufik-nurrohman/to';
 
 if (isSet(TE)) {
     const TextEditorConstructor = TE;
+
     function TextEditor(source, state = {}) {
         const $ = this;
         TextEditorConstructor.call($, source, state);
@@ -75,6 +94,7 @@ if (isSet(TE)) {
         let sourceIsDisabled = () => source.disabled,
             sourceIsReadOnly = () => source.readOnly,
             theState = state.source || {};
+
         function onKeyDown(e) {
             if (sourceIsDisabled() || sourceIsReadOnly()) {
                 return;
@@ -86,7 +106,13 @@ if (isSet(TE)) {
                 keyIsCtrl = e.ctrlKey,
                 keyIsEnter = 'enter' === key || 13 === keyCode,
                 keyIsShift = e.shiftKey,
-                {after, before, end, start, value} = $.$(),
+                {
+                    after,
+                    before,
+                    end,
+                    start,
+                    value
+                } = $.$(),
                 charBefore = before.slice(-1),
                 charAfter = after.slice(0, 1),
                 lastTabs = before.match(toPattern('(?:^|\\n)(' + esc(tab) + '+).*$', "")),
@@ -95,14 +121,14 @@ if (isSet(TE)) {
             // Indent
             if (theState.push && theState.push.call($, e)) {
                 $.push(tab), doUpdateHistory(), eventPreventDefault(e);
-            // Outdent
+                // Outdent
             } else if (theState.pull && theState.pull.call($, e)) {
                 $.pull(tab), doUpdateHistory(), eventPreventDefault(e);
             } else if (keyIsCtrl) {
                 // Undo
                 if ('z' === key || 90 === keyCode) {
                     $.undo(), doUpdateHistory(), eventPreventDefault(e);
-                // Redo
+                    // Redo
                 } else if ('y' === key || 89 === keyCode) {
                     $.redo(), doUpdateHistory(), eventPreventDefault(e);
                 }
@@ -158,6 +184,7 @@ if (isSet(TE)) {
                 setTimeout(doUpdateHistory, 0);
             }
         }
+
         function doUpdateHistory() {
             canUndo && $.record();
         }
