@@ -4,27 +4,15 @@
   "bugs": "https://github.com/taufik-nurrohman/text-editor/issues",
   "description": "A text selection range API written in pure JavaScript, for modern browsers.",
   "devDependencies": {
-    "@babel/core": "^7.13.13",
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/plugin-proposal-private-methods": "^7.13.0",
-    "@babel/preset-env": "^7.13.12",
-    "@rollup/plugin-babel": "^5.3.0",
-    "@rollup/plugin-node-resolve": "^11.2.1",
     "@taufik-nurrohman/document": "^0.1.5",
-    "@taufik-nurrohman/event": "^0.1.2",
-    "@taufik-nurrohman/file": "^0.0.8",
-    "@taufik-nurrohman/folder": "^0.0.6",
+    "@taufik-nurrohman/event": "^0.2.0",
+    "@taufik-nurrohman/factory": "^0.1.6",
     "@taufik-nurrohman/from": "^0.0.5",
     "@taufik-nurrohman/has": "^0.0.2",
     "@taufik-nurrohman/hook": "^0.1.0",
-    "@taufik-nurrohman/is": "^0.1.0",
     "@taufik-nurrohman/pattern": "^0.1.4",
     "@taufik-nurrohman/rect": "^0.0.5",
-    "@taufik-nurrohman/to": "^0.0.16",
-    "js-beautify": "^1.13.5",
-    "pug": "^3.0.2",
-    "rollup": "^2.43.1",
-    "terser": "^5.6.1"
+    "@taufik-nurrohman/to": "^0.0.16"
   },
   "exports": {
     ".": {
@@ -84,10 +72,8 @@
     "url": "git+https://github.com/taufik-nurrohman/text-editor.git"
   },
   "scripts": {
-    "pack": "npm run html && npm run js",
-    "html": "node .github/src/pug.mjs",
-    "js": "node .github/src/mjs.mjs"
+    "pack": "pack --clean=false --from=.github/source --js-format=umd --js-name=TE --mjs=true --to=."
   },
   "type": "module",
-  "version": "3.2.6"
+  "version": "3.2.7"
 }

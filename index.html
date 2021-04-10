@@ -1,39 +1,33 @@
 <!DOCTYPE html>
 <html dir="ltr">
-
   <head>
     <meta charset="utf-8">
     <meta content="#000" name="theme-color">
     <meta content="width=device-width" name="viewport">
     <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
-    <title>Text Editor 3.2.6</title>
+    <title>Text Editor 3.2.7</title>
     <style>
       * {
         box-sizing: border-box;
       }
-
       :root {
         background: #fff;
         color: #000;
         border-top: 4px solid;
         font: normal normal 16px/1.25 serif;
       }
-
       a {
         color: #009;
         text-decoration: none;
       }
-
       a,
       code {
         word-wrap: break-word;
       }
-
       code {
         font-family: monospace;
         font-size: 80%;
       }
-
       footer,
       header,
       main,
@@ -41,36 +35,30 @@
         max-width: 700px;
         margin: 0 auto;
       }
-
       hr {
         border: 0;
         color: inherit;
         border-top: 1px dashed;
         height: 0;
       }
-
       pre {
         white-space: pre-wrap;
         word-wrap: break-word;
       }
-
       pre code {
         display: block;
         background: #eee;
         padding: 1em;
       }
-
       table {
         width: 100%;
       }
-
       td,
       th {
         text-align: left;
         vertical-align: top;
       }
-
-      body>p:first-child {
+      body > p:first-child {
         background: #ffa;
         border: 1px dashed;
         margin-top: 0;
@@ -78,11 +66,10 @@
       }
     </style>
   </head>
-
   <body>
     <p>Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
     <header>
-      <h1>Text Editor 3.2.6</h1>
+      <h1>Text Editor 3.2.7</h1>
       <p>Text Editor is a simple JavaScript application that aims to provide accessibility improvements to the native HTML <code>&lt;textarea&gt;</code> elements so that users can control and manipulate their data in the text editor as they wish.</p>
       <hr>
     </header>
@@ -148,7 +135,6 @@ const editor = new TE(document.querySelector('textarea'));</code></pre>
         <li><a href="index/rect.html" target="_blank">Get Selection Offset</a> (<a href="index/rect.min.js" target="_blank">+rect.min.js</a>)</li>
         <li><a href="index/rect.caret.html" target="_blank">Custom Caret Example</a></li>
         <li><a href="index/history.html" target="_blank">Undo and Redo Feature</a> (<a href="index/history.min.js" target="_blank">+history.min.js</a>)</li>
-        <li><a href="index/hook.html" target="_blank">Hooks Feature</a> (<a href="index/hook.min.js" target="_blank">+hook.min.js</a>)</li>
         <li><a href="index/source.html" target="_blank">Source Code Editor</a> (<a href="index/source.min.js" target="_blank">+source.min.js</a>)</li>
       </ul>
       <h2>Settings</h2>
@@ -322,5 +308,4 @@ console.log(editor.$()); // `{"start":1,"end":2,"value":"b","before":"a","after"
       const editor = new TE(document.querySelector('textarea'));
     </script>
   </body>
-
 </html>

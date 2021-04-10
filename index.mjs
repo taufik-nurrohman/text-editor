@@ -1,58 +1,8 @@
-/*!
- *
- * The MIT License (MIT)
- *
- * Copyright © 2021 Taufik Nurrohman
- *
- * <https://github.com/taufik-nurrohman/text-editor>
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the “Software”), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
- */
-
-import {
-    B,
-    D,
-    H,
-    R,
-    W
-} from '@taufik-nurrohman/document';
-import {
-    fromStates
-} from '@taufik-nurrohman/from';
-import {
-    isArray,
-    isFunction,
-    isInstance,
-    isSet,
-    isString
-} from '@taufik-nurrohman/is';
-import {
-    esc,
-    fromPattern,
-    toPattern,
-    x
-} from '@taufik-nurrohman/pattern';
-import {
-    toCount,
-    toObjectCount
-} from '@taufik-nurrohman/to';
+import {B, D, H, R, W} from '@taufik-nurrohman/document';
+import {fromStates} from '@taufik-nurrohman/from';
+import {isArray, isFunction, isInstance, isSet, isString} from '@taufik-nurrohman/is';
+import {esc, fromPattern, toPattern, x} from '@taufik-nurrohman/pattern';
+import {toCount, toObjectCount} from '@taufik-nurrohman/to';
 
 let name = 'TE';
 
@@ -66,14 +16,14 @@ function TE(source, state = {}) {
 
     const $ = this;
 
-    // Already instantiated, skip!
-    if (source[name]) {
-        return;
-    }
-
     // Return new instance if `TE` was called without the `new` operator
     if (!isInstance($, TE)) {
         return new TE(source, state);
+    }
+
+    // Already instantiated, skip!
+    if (source[name]) {
+        return;
     }
 
     $.state = state = fromStates(TE.state, isString(state) ? {
@@ -140,10 +90,7 @@ function TE(source, state = {}) {
             return source.focus(), $;
         }
         let count = toCount(lot),
-            {
-                start,
-                end
-            } = $.$(),
+            {start, end} = $.$(),
             x, y, X, Y;
         x = W.pageXOffset || R.scrollLeft || B.scrollLeft;
         y = W.pageYOffset || R.scrollTop || B.scrollTop;
@@ -169,11 +116,7 @@ function TE(source, state = {}) {
 
     // Match at selection
     $.match = (pattern, then) => {
-        let {
-            after,
-            before,
-            value
-        } = $.$();
+        let {after, before, value} = $.$();
         if (isArray(pattern)) {
             let m = [
                 before.match(pattern[0]),
@@ -188,11 +131,7 @@ function TE(source, state = {}) {
 
     // Replace at selection
     $.replace = (from, to, mode) => {
-        let {
-            after,
-            before,
-            value
-        } = $.$();
+        let {after, before, value} = $.$();
         if (-1 === mode) { // Replace before
             before = before.replace(from, to);
         } else if (1 === mode) { // Replace after
@@ -219,11 +158,7 @@ function TE(source, state = {}) {
 
     // Wrap current selection
     $.wrap = (open, close, wrap) => {
-        let {
-            after,
-            before,
-            value
-        } = $.$();
+        let {after, before, value} = $.$();
         if (wrap) {
             return $.replace(any, open + '$1' + close);
         }
@@ -232,11 +167,7 @@ function TE(source, state = {}) {
 
     // Unwrap current selection
     $.peel = (open, close, wrap) => {
-        let {
-            after,
-            before,
-            value
-        } = $.$();
+        let {after, before, value} = $.$();
         open = fromPattern(open) || esc(open);
         close = fromPattern(close) || esc(close);
         // Ignore begin and end marker
@@ -256,10 +187,7 @@ function TE(source, state = {}) {
     };
 
     $.pull = (by, includeEmptyLines = true) => {
-        let {
-            length,
-            value
-        } = $.$();
+        let {length, value} = $.$();
         by = isSet(by) ? by : state.tab;
         by = fromPattern(by) || esc(by);
         // Ignore begin marker
@@ -279,9 +207,7 @@ function TE(source, state = {}) {
     };
 
     $.push = (by, includeEmptyLines = false) => {
-        let {
-            length
-        } = $.$();
+        let {length} = $.$();
         by = isSet(by) ? by : state.tab;
         if (length) {
             return $.replace(toPattern('^' + (includeEmptyLines ? "" : '(?!$)'), 'gm'), by);
@@ -302,11 +228,7 @@ function TE(source, state = {}) {
         if (null !== end && false !== end) {
             end = end || "";
         }
-        let {
-            before,
-            value,
-            after
-        } = $.$(),
+        let {before, value, after} = $.$(),
             beforeClean = trim(before, 1),
             afterClean = trim(after, -1);
         before = false !== open ? trim(before, 1) + (beforeClean || !tidy ? open : "") : before;
@@ -351,7 +273,7 @@ TE.S = function(a, b, c) {
     t.toString = () => d;
 };
 
-TE.version = '3.2.6';
+TE.version = '3.2.7';
 
 TE.x = x;
 

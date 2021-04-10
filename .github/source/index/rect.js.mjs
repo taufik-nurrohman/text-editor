@@ -98,13 +98,11 @@ function getRectSelection($, div, source) {
     }];
 }
 
-if (isSet(TE)) {
-    let div = setElement('div');
-    TE.mirror = div;
-    const __proto__ = TE.prototype;
-    __proto__.rect = function(key) {
-        let t = this,
-            rect = getRectSelection(t.$(), div, t.self);
-        return isSet(key) ? [rect[0][key], rect[1][key]] : rect;
-    };
-}
+const __proto__ = TE.prototype;
+
+__proto__.mirror = setElement('div');
+__proto__.rect = function(key) {
+    let t = this,
+        rect = getRectSelection(t.$(), t.mirror, t.self);
+    return isSet(key) ? [rect[0][key], rect[1][key]] : rect;
+};

@@ -4,7 +4,7 @@ import {isArray, isFunction, isInstance, isSet, isString} from '@taufik-nurrohma
 import {esc, fromPattern, toPattern, x} from '@taufik-nurrohman/pattern';
 import {toCount, toObjectCount} from '@taufik-nurrohman/to';
 
-let name = '%(rollup.output.name)';
+let name = '%(js.name)';
 
 function trim(str, dir) {
     return (str || "")['trim' + (-1 === dir ? 'Left' : 1 === dir ? 'Right' : "")]();
@@ -16,14 +16,14 @@ function TE(source, state = {}) {
 
     const $ = this;
 
-    // Already instantiated, skip!
-    if (source[name]) {
-        return;
-    }
-
     // Return new instance if `TE` was called without the `new` operator
     if (!isInstance($, TE)) {
         return new TE(source, state);
+    }
+
+    // Already instantiated, skip!
+    if (source[name]) {
+        return;
     }
 
     $.state = state = fromStates(TE.state, isString(state) ? {

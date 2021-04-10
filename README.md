@@ -38,6 +38,10 @@ Credits
 Release Notes
 -------------
 
+### main
+
+ - [ ] Moved plugins to external repositories.
+
 ### 3.2.6
 
  - Added example of search/replace functionality.
