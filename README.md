@@ -40,7 +40,7 @@ Release Notes
 
 ### main
 
- - [ ] Moved plugins to external repositories.
+ - [ ] Moved extensions to external repositories.
 
 ### 3.2.6
 

@@ -5,53 +5,19 @@
   "description": "A text selection range API written in pure JavaScript, for modern browsers.",
   "devDependencies": {
     "@taufik-nurrohman/document": "^0.1.5",
-    "@taufik-nurrohman/event": "^0.2.0",
-    "@taufik-nurrohman/factory": "^0.1.6",
+    "@taufik-nurrohman/factory": "^0.1.11",
     "@taufik-nurrohman/from": "^0.0.5",
-    "@taufik-nurrohman/has": "^0.0.2",
-    "@taufik-nurrohman/hook": "^0.1.0",
     "@taufik-nurrohman/pattern": "^0.1.4",
-    "@taufik-nurrohman/rect": "^0.0.5",
     "@taufik-nurrohman/to": "^0.0.16"
   },
   "exports": {
-    ".": {
-      "import": "./index.mjs",
-      "require": "./index.js"
-    },
-    "./history": {
-      "import": "./index/history.mjs",
-      "require": "./index/history.js"
-    },
-    "./hook": {
-      "import": "./index/hook.mjs",
-      "require": "./index/hook.js"
-    },
-    "./rect": {
-      "import": "./index/rect.mjs",
-      "require": "./index/rect.js"
-    },
-    "./source": {
-      "import": "./index/source.mjs",
-      "require": "./index/source.js"
-    }
+    "import": "./index.mjs",
+    "require": "./index.js"
   },
   "files": [
     "index.js",
     "index.min.js",
-    "index.mjs",
-    "index/history.js",
-    "index/history.min.js",
-    "index/history.mjs",
-    "index/hook.js",
-    "index/hook.min.js",
-    "index/hook.mjs",
-    "index/rect.js",
-    "index/rect.min.js",
-    "index/rect.mjs",
-    "index/source.js",
-    "index/source.min.js",
-    "index/source.mjs"
+    "index.mjs"
   ],
   "funding": {
     "url": "https://paypal.me/tatautaufik"
@@ -72,8 +38,8 @@
     "url": "git+https://github.com/taufik-nurrohman/text-editor.git"
   },
   "scripts": {
-    "pack": "pack --clean=false --from=.github/source --js-format=umd --js-name=TE --mjs=true --to=."
+    "pack": "pack --clean=false --from=.github/source --js-format=umd --js-name=TE --js-top='%(js.license)' --mjs=true --to=."
   },
   "type": "module",
-  "version": "3.2.7"
+  "version": "3.3.0"
 }
