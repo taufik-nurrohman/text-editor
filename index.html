@@ -132,10 +132,6 @@ const editor = new TE(document.querySelector('textarea'));</code></pre>
         <li><a href="tweak/replace,search.html" target="_blank">Search/Replace Functionality</a></li>
         <li><a href="test/trim.html" target="_blank">Trim Selection</a></li>
         <li><a href="test/self.input.html" target="_blank">Using <code>&lt;input&gt;</code> Instead of <code>&lt;textarea&gt;</code></a></li>
-        <li><a href="index/rect.html" target="_blank">Get Selection Offset</a> (<a href="index/rect.min.js" target="_blank">+rect.min.js</a>)</li>
-        <li><a href="index/rect.caret.html" target="_blank">Custom Caret Example</a></li>
-        <li><a href="index/history.html" target="_blank">Undo and Redo Feature</a> (<a href="index/history.min.js" target="_blank">+history.min.js</a>)</li>
-        <li><a href="index/source.html" target="_blank">Source Code Editor</a> (<a href="index/source.min.js" target="_blank">+source.min.js</a>)</li>
       </ul>
       <h2>Settings</h2>
       <table border="1">
@@ -295,6 +291,15 @@ editor.wrap('&lt;', '&gt;', true); // Wrap with `&lt;` and `&gt;` then select</c
       <p>Get current text selection data.</p>
       <pre><code>// `a<mark>|b|</mark>c`
 console.log(editor.$()); // `{"start":1,"end":2,"value":"b","before":"a","after":"c","length":1}`</code></pre>
+      <h2>Extensions</h2>
+      <ul>
+        <li><a href="../text-editor.history/index.html">History Feature</a></li>
+        <li><a href="../text-editor.rect/index.html">Rect Feature</a></li>
+        <li><a href="../text-editor.source/index.html">Source Code Editor</a></li>
+        <li>BBCode Editor</li>
+        <li>HTML Editor</li>
+        <li>Markdown Editor</li>
+      </ul>
       <h2>License</h2>
       <p>Use it for free, pay if you get paid. So, you&rsquo;ve just benefited financially after using this project? It&rsquo;s a good idea to <a href="https://paypal.me/tatautaufik" target="_blank">share a little financial support</a> with this open source project too. Your support will motivate me to do any further development, as well as to provide voluntary support to overcome problems related to this project.</p>
       <p>Thank you! ❤️</p>

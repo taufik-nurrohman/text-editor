@@ -142,10 +142,6 @@ block content
       li: a(href='tweak/replace,search.html' target='_blank') Search/Replace Functionality
       li: a(href='test/trim.html' target='_blank') Trim Selection
       li: a(href='test/self.input.html' target='_blank') Using #[code &lt;input&gt;] Instead of #[code &lt;textarea&gt;]
-      li #[a(href='index/rect.html' target='_blank') Get Selection Offset] (#[a(href='index/rect.min.js' target='_blank') +rect.min.js])
-      li: a(href='index/rect.caret.html' target='_blank') Custom Caret Example
-      li #[a(href='index/history.html' target='_blank') Undo and Redo Feature] (#[a(href='index/history.min.js' target='_blank') +history.min.js])
-      li #[a(href='index/source.html' target='_blank') Source Code Editor] (#[a(href='index/source.min.js' target='_blank') +source.min.js])
     h2 Settings
     table(border='1')
       thead
@@ -315,6 +311,14 @@ block content
     pre: code
       | // `a#[mark |b|]c`
       | console.log(editor.$()); // `{"start":1,"end":2,"value":"b","before":"a","after":"c","length":1}`
+    h2 Extensions
+    ul
+      li: a(href='../text-editor.history/index.html') History Feature
+      li: a(href='../text-editor.rect/index.html') Rect Feature
+      li: a(href='../text-editor.source/index.html') Source Code Editor
+      li BBCode Editor
+      li HTML Editor
+      li Markdown Editor
     h2 License
     p Use it for free, pay if you get paid. So, you&rsquo;ve just benefited financially after using this project? It&rsquo;s a good idea to #[a(href='https://paypal.me/tatautaufik' target='_blank') share a little financial support] with this open source project too. Your support will motivate me to do any further development, as well as to provide voluntary support to overcome problems related to this project.
     p Thank you! ❤️
