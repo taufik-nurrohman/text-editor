@@ -245,8 +245,6 @@ block content
     pre: code
       | editor.peel('&lt;', '&gt;'); // Remove `&lt;` before selection and `&gt;` after selection
       | editor.peel('&lt;', '&gt;', true); // Remove `&lt;` at selection start and `&gt;` at selection end
-      | editor.peel(/&lt;+/, /&gt;+/); // Remove any `&lt;` before selection and any `&gt;` after selection
-      | editor.peel(/&lt;+/, /&gt;+/, true); // Remove any `&lt;` at selection start and any `&gt;` at selection end
     h3 editor.pull(by = editor.state.tab, includeEmptyLines = true)
     p Outdent current selection from #[var by].
     pre: code

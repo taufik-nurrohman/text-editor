@@ -75,13 +75,6 @@
         }
         return pattern.replace(toPattern('[' + extra + x.replace(/./g, '\\$&') + ']'), '\\$&');
     };
-    var fromPattern = function fromPattern(pattern) {
-        if (isPattern(pattern)) {
-            // Un-escape `/` in the pattern string
-            return pattern.source.replace(/\\\//g, '/');
-        }
-        return null;
-    };
     var isPattern = function isPattern(pattern) {
         return isInstance(pattern, RegExp);
     };
@@ -244,10 +237,8 @@
                 before,
                 value
             } = $.$();
-            open = fromPattern(open) || esc(open);
-            close = fromPattern(close) || esc(close); // Ignore begin and end marker
-            open = open.replace(/^\^|\$$/g, "");
-            close = close.replace(/^\^|\$$/, "");
+            open = esc(open);
+            close = esc(close);
             let openPattern = toPattern(open + '$', ""),
                 closePattern = toPattern('^' + close, "");
             if (wrap) {
@@ -265,9 +256,7 @@
                 length,
                 value
             } = $.$();
-            by = isSet(by) ? by : state.tab;
-            by = fromPattern(by) || esc(by); // Ignore begin marker
-            by = by.replace(/^\^/, "");
+            by = esc(isSet(by) ? by : state.tab);
             if (length) {
                 if (includeEmptyLines) {
                     return $.replace(toPattern('^' + by, 'gm'), "");

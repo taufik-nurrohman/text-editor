@@ -232,9 +232,7 @@ console.log(test[0] &amp;&amp; test[1] &amp;&amp; test[2]);</code></pre>
       <h3>editor.peel(open, close, wrap = false)</h3>
       <p>Unwrap current selection from <var>open</var> and <var>close</var>.</p>
       <pre><code>editor.peel('&lt;', '&gt;'); // Remove `&lt;` before selection and `&gt;` after selection
-editor.peel('&lt;', '&gt;', true); // Remove `&lt;` at selection start and `&gt;` at selection end
-editor.peel(/&lt;+/, /&gt;+/); // Remove any `&lt;` before selection and any `&gt;` after selection
-editor.peel(/&lt;+/, /&gt;+/, true); // Remove any `&lt;` at selection start and any `&gt;` at selection end</code></pre>
+editor.peel('&lt;', '&gt;', true); // Remove `&lt;` at selection start and `&gt;` at selection end</code></pre>
       <h3>editor.pull(by = editor.state.tab, includeEmptyLines = true)</h3>
       <p>Outdent current selection from <var>by</var>.</p>
       <pre><code>editor.pull(); // Outdent from `\t`

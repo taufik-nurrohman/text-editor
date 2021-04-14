@@ -168,11 +168,8 @@ function TE(source, state = {}) {
     // Unwrap current selection
     $.peel = (open, close, wrap) => {
         let {after, before, value} = $.$();
-        open = fromPattern(open) || esc(open);
-        close = fromPattern(close) || esc(close);
-        // Ignore begin and end marker
-        open = open.replace(/^\^|\$$/g, "");
-        close = close.replace(/^\^|\$$/, "");
+        open = esc(open);
+        close = esc(close);
         let openPattern = toPattern(open + '$', ""),
             closePattern = toPattern('^' + close, "");
         if (wrap) {
@@ -188,10 +185,7 @@ function TE(source, state = {}) {
 
     $.pull = (by, includeEmptyLines = true) => {
         let {length, value} = $.$();
-        by = isSet(by) ? by : state.tab;
-        by = fromPattern(by) || esc(by);
-        // Ignore begin marker
-        by = by.replace(/^\^/, "");
+        by = esc(isSet(by) ? by : state.tab);
         if (length) {
             if (includeEmptyLines) {
                 return $.replace(toPattern('^' + by, 'gm'), "");
