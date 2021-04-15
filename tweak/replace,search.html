@@ -9,17 +9,15 @@
   <body>
     <main>
       <p>Use <kbd>Ctrl+f</kbd> key to search and <kbd>Ctrl+h</kbd> to replace.</p>
-      <p><textarea cols="100" rows="20" spellcheck="false">&lt;h1&gt;The MIT License (MIT)&lt;/h1&gt;
+      <p><textarea cols="100" rows="20" spellcheck="false">The MIT License (MIT)
 
-&lt;blockquote&gt;
-  &lt;p&gt;Copyright © 2016 Taufik Nurrohman&lt;/p&gt;
-&lt;/blockquote&gt;
+Copyright © 2021 Taufik Nurrohman
 
-&lt;p&gt;Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:&lt;/p&gt;
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-&lt;p&gt;The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.&lt;/p&gt;
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-&lt;p&gt;THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.&lt;/p&gt;
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 a
 b
@@ -28,8 +26,10 @@ d</textarea></p>
       <p><button onclick="search();">Search</button> <button onclick="replace();">Replace</button> <button onclick="editor.undo();">Undo</button> <button onclick="editor.redo();">Redo</button></p>
     </main>
     <script src="../index.min.js"></script>
-    <script src="../index/history.min.js"></script>
+    <script src="../../text-editor.history/index.min.js"></script>
     <script>
+      Object.assign(TE.prototype, TE.History);
+
       const editor = new TE(document.querySelector('textarea'));
 
       let searchActive,

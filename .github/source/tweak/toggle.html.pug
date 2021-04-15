@@ -13,7 +13,8 @@ block script
     |         patternAfter = new RegExp('^<\\/' + name + '>');
     |     editor.match([patternBefore, /.*/, patternAfter], function(before, value, after) {
     |         if (before[0] && after[0]) {
-    |             this.peel(patternBefore, patternAfter);
+    |             this.replace(patternBefore, "", -1);
+    |             this.replace(patternAfter, "", 1);
     |         } else {
     |             this.wrap('<' + name + '>', '</' + name + '>');
     |         }
@@ -21,12 +22,14 @@ block script
     | }
     |
     | function toggleBlocks() {
-    |     editor.match([/<(?:p|h([1-6]))(\s[^>]*)?>$/, /.*/, /^<\/(?:p|h[1-6])>/], function(before, value, after) {
-    |         console.log([before, value, after]);
+    |     let patternBefore = /<(?:p|h([1-6]))(\s[^>]*)?>$/,
+    |         patternAfter = /^<\/(?:p|h[1-6])>/;
+    |     editor.match([patternBefore, /.*/, patternAfter], function(before, value, after) {
     |         let h = +(before[1] || 0),
     |             attr = before[2] || "";
     |         // ``
-    |         this.peel(/<(?:p|h[1-6])(?:\s[^>]*)?>/, /<\/(?:p|h[1-6])>/);
+    |         this.replace(patternBefore, "", -1);
+    |         this.replace(patternAfter, "", 1);
     |         if (!h) {
     |             // `<h1>`
     |             this.wrap('<h1' + attr + '>', '</h1>');
@@ -44,13 +47,15 @@ block script
     | }
     |
     | function toggleCodes() {
-    |     editor.match([/<(?:pre|code)(?:\s[^>]*)?>(?:\s*<code(?:\s[^>]*)?>)?$/, /.*/, /^(?:<\/code>\s*)?<\/(?:pre|code)>/], function(before, value, after) {
-    |         console.log([before, value, after]);
+    |     let patternBefore = /<(?:pre|code)(?:\s[^>]*)?>(?:\s*<code(?:\s[^>]*)?>)?$/,
+    |         patternAfter = /^(?:<\/code>\s*)?<\/(?:pre|code)>/;
+    |     editor.match([patternBefore, /.*/, patternAfter], function(before, value, after) {
     |         // ``
-    |         this.peel(/<(?:pre|code)(?:\s[^>]*)?>(?:\s*<code(?:\s[^>]*)?>)?/, /(?:<\/code>\s*)?<\/(?:pre|code)>/);
+    |         this.replace(patternBefore, "", -1);
+    |         this.replace(patternAfter, "", 1);
     |         if (after[0]) {
     |             // ``
-    |             if (/^(?:<\/code>\s*)<\/(?:pre|code)>/.test(after[0])) {
+    |             if (/^(?:<\/code>\s*)?<\/pre>/.test(after[0])) {
     |                 this.insert(decode(editor.$().value));
     |             // `<pre><code> … </code></pre>`
     |             } else if (after[0].slice(0, 7) === '</code>') {

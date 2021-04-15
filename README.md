@@ -38,7 +38,7 @@ Credits
 Release Notes
 -------------
 
-### main
+### 3.3.0
 
  - Moved extensions to external repositories.
  - Removed regular expression features in `editor.peel()` and `editor.pull()` method for consistency.
