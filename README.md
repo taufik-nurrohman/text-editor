@@ -40,7 +40,8 @@ Release Notes
 
 ### main
 
- - [ ] Moved extensions to external repositories.
+ - Moved extensions to external repositories.
+ - Removed regular expression features in `editor.peel()` and `editor.pull()` method for consistency.
 
 ### 3.2.6
 
