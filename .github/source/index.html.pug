@@ -250,7 +250,6 @@ block content
     pre: code
       | editor.pull(); // Outdent from `\t`
       | editor.pull('****'); // Outdent from `****`
-      | editor.pull(/[\t ]+/); // Outdent from any length of white-space
     h3 editor.push(by = editor.state.tab, includeEmptyLines = false)
     p Indent current selection with #[var by].
     pre: code
