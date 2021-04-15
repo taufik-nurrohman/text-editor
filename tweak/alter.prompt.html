@@ -18,7 +18,7 @@
       function insertImage() {
           let value = window.prompt('URL:', 'http://');
           if (value && 'http://' !== value) {
-              editor.trim('\n\n', '\n\n').insert('<img alt="" src="' + value + '">', 1, true);
+              editor.trim('\n\n', '\n\n').insert('<img alt="" src="' + value + '">', -1, true);
           }
       }
 
