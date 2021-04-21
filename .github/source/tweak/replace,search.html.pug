@@ -6,7 +6,7 @@ block state
 
 block script
   script
-    | Object.assign(TE.prototype, TE.History);
+    | Object.assign(TE.prototype, TE.History.that);
     |
     | const editor = new TE(document.querySelector('textarea'));
     |

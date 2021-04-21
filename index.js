@@ -323,15 +323,15 @@
     TE.S = function(a, b, c) {
         let t = this,
             d = c.slice(a, b);
-        t.start = a;
-        t.end = b;
-        t.value = d;
-        t.before = c.slice(0, a);
         t.after = c.slice(b);
+        t.before = c.slice(0, a);
+        t.end = b;
         t.length = toCount(d);
+        t.start = a;
+        t.value = d;
         t.toString = () => d;
     };
-    TE.version = '3.3.0';
+    TE.version = '3.3.1';
     TE.x = x;
     return TE;
 });

@@ -307,13 +307,14 @@ block content
     p Get current text selection data.
     pre: code
       | // `a#[mark |b|]c`
-      | console.log(editor.$()); // `{"start":1,"end":2,"value":"b","before":"a","after":"c","length":1}`
+      | console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start":1,"value":"b"}`
     h2 Extensions
     ul
       li: a(href='../text-editor.history/index.html' target='_blank') History Feature
       li: a(href='../text-editor.rect/index.html' target='_blank') Rect Feature
       li: a(href='../text-editor.source/index.html' target='_blank') Source Code Editor
       li: a(href='../text-editor.source-x-m-l/index.html' target='_blank') XML Source Code Editor
+      li: a(href='../text-editor.source-h-t-m-l/index.html' target='_blank') HTML Source Code Editor
       li BBCode Editor
       li HTML Editor
       li Markdown Editor

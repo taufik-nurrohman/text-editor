@@ -28,7 +28,7 @@ d</textarea></p>
     <script src="../index.min.js"></script>
     <script src="../../text-editor.history/index.min.js"></script>
     <script>
-      Object.assign(TE.prototype, TE.History);
+      Object.assign(TE.prototype, TE.History.that);
 
       const editor = new TE(document.querySelector('textarea'));
 

@@ -41,5 +41,5 @@
     "pack": "pack --clean=false --from=.github/source --js-format=umd --js-name=TE --js-top='%(js.license)' --mjs=true --to=."
   },
   "type": "module",
-  "version": "3.3.0"
+  "version": "3.3.1"
 }

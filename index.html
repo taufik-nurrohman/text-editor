@@ -5,7 +5,7 @@
     <meta content="#000" name="theme-color">
     <meta content="width=device-width" name="viewport">
     <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
-    <title>Text Editor 3.3.0</title>
+    <title>Text Editor 3.3.1</title>
     <style>
       * {
         box-sizing: border-box;
@@ -69,7 +69,7 @@
   <body>
     <p>Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
     <header>
-      <h1>Text Editor 3.3.0</h1>
+      <h1>Text Editor 3.3.1</h1>
       <p>Text Editor is a simple JavaScript application that aims to provide accessibility improvements to the native HTML <code>&lt;textarea&gt;</code> elements so that users can control and manipulate their data in the text editor as they wish.</p>
       <hr>
     </header>
@@ -287,13 +287,14 @@ editor.wrap('&lt;', '&gt;', true); // Wrap with `&lt;` and `&gt;` then select</c
       <h3>editor.$()</h3>
       <p>Get current text selection data.</p>
       <pre><code>// `a<mark>|b|</mark>c`
-console.log(editor.$()); // `{"start":1,"end":2,"value":"b","before":"a","after":"c","length":1}`</code></pre>
+console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start":1,"value":"b"}`</code></pre>
       <h2>Extensions</h2>
       <ul>
         <li><a href="../text-editor.history/index.html" target="_blank">History Feature</a></li>
         <li><a href="../text-editor.rect/index.html" target="_blank">Rect Feature</a></li>
         <li><a href="../text-editor.source/index.html" target="_blank">Source Code Editor</a></li>
         <li><a href="../text-editor.source-x-m-l/index.html" target="_blank">XML Source Code Editor</a></li>
+        <li><a href="../text-editor.source-h-t-m-l/index.html" target="_blank">HTML Source Code Editor</a></li>
         <li>BBCode Editor</li>
         <li>HTML Editor</li>
         <li>Markdown Editor</li>
