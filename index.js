@@ -331,7 +331,7 @@
         t.value = d;
         t.toString = () => d;
     };
-    TE.version = '3.3.1';
+    TE.version = '3.3.2';
     TE.x = x;
     return TE;
 });
