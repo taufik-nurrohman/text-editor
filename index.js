@@ -2,9 +2,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright © 2021 Taufik Nurrohman
- *
- * <https://github.com/taufik-nurrohman/text-editor>
+ * Copyright © 2021 Taufik Nurrohman <https://github.com/taufik-nurrohman>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the “Software”), to deal
@@ -114,7 +112,7 @@
             sourceValue = () => source.value.replace(/\r/g, ""); // The initial value
         $.value = sourceValue(); // Get value
         $.get = () => !sourceIsDisabled() && trim(sourceValue()) || null; // Reset to the initial value
-        $.let = () => source.value = $.value, $; // Set value
+        $.let = () => (source.value = $.value, $); // Set value
         $.set = value => {
             if (sourceIsDisabled() || sourceIsReadOnly()) {
                 return $;
@@ -331,7 +329,7 @@
         t.value = d;
         t.toString = () => d;
     };
-    TE.version = '3.3.2';
+    TE.version = '3.3.3';
     TE.x = x;
     return TE;
 });

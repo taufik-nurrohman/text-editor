@@ -51,7 +51,7 @@ function TE(source, state = {}) {
     $.get = () => !sourceIsDisabled() && trim(sourceValue()) || null;
 
     // Reset to the initial value
-    $.let = () => (source.value = $.value), $;
+    $.let = () => ((source.value = $.value), $);
 
     // Set value
     $.set = value => {
@@ -267,7 +267,7 @@ TE.S = function(a, b, c) {
     t.toString = () => d;
 };
 
-TE.version = '3.3.2';
+TE.version = '3.3.3';
 
 TE.x = x;
 

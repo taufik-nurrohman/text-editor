@@ -38,7 +38,7 @@ Credits
 Release Notes
 -------------
 
-### 3.3.2
+### 3.3.3
 
  - Maintenance.
  - Moved extensions to external repositories.
