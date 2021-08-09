@@ -27,6 +27,9 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.TE = factory());
 })(this, function() {
     'use strict';
+    var hasValue = function hasValue(x, data) {
+        return -1 !== data.indexOf(x);
+    };
     var isArray = function isArray(x) {
         return Array.isArray(x);
     };
@@ -66,13 +69,6 @@
     var toObjectKeys = function toObjectKeys(x) {
         return Object.keys(x);
     };
-    var D = document;
-    var W = window;
-    var B = D.body;
-    var R = D.documentElement;
-    var hasValue = function hasValue(x, data) {
-        return -1 !== data.indexOf(x);
-    };
     var fromStates = function fromStates() {
         for (var _len = arguments.length, lot = new Array(_len), _key = 0; _key < _len; _key++) {
             lot[_key] = arguments[_key];
@@ -100,6 +96,10 @@
         }
         return out;
     };
+    var D = document;
+    var W = window;
+    var B = D.body;
+    var R = D.documentElement;
     var esc = function esc(pattern, extra) {
         if (extra === void 0) {
             extra = "";
@@ -362,7 +362,7 @@
         t.value = d;
         t.toString = () => d;
     };
-    TE.version = '3.3.5';
+    TE.version = '3.3.6';
     TE.x = x;
     return TE;
 });
