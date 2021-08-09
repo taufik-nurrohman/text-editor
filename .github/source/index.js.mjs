@@ -12,9 +12,11 @@ function trim(str, dir) {
 
 function TE(source, state = {}) {
 
-    if (!source) return;
-
     const $ = this;
+
+    if (!source) {
+        return $;
+    }
 
     // Return new instance if `TE` was called without the `new` operator
     if (!isInstance($, TE)) {
@@ -23,10 +25,10 @@ function TE(source, state = {}) {
 
     // Already instantiated, skip!
     if (source[name]) {
-        return;
+        return $;
     }
 
-    $.state = state = fromStates(TE.state, isString(state) ? {
+    $.state = state = fromStates({}, TE.state, isString(state) ? {
         tab: state
     } : (state || {}));
 

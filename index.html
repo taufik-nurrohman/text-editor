@@ -5,7 +5,7 @@
     <meta content="#000" name="theme-color">
     <meta content="width=device-width" name="viewport">
     <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
-    <title>Text Editor 3.3.6</title>
+    <title>Text Editor 3.3.7</title>
     <style>
       * {
         box-sizing: border-box;
@@ -72,12 +72,18 @@
         width: 100%;
         height: 20em;
       }
+      body > p:first-child {
+        background: #ffa;
+        border: 1px dashed;
+        margin-top: 0;
+        padding: .75em 1em;
+      }
     </style>
   </head>
   <body>
     <p>Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
     <header>
-      <h1>Text Editor 3.3.6</h1>
+      <h1>Text Editor 3.3.7</h1>
       <p>Text Editor is a simple JavaScript application that aims to provide accessibility improvements to the native HTML <code>&lt;textarea&gt;</code> elements so that users can control and manipulate their data in the text editor as they wish.</p>
       <hr>
     </header>
@@ -103,7 +109,7 @@
     &lt;p&gt;&lt;textarea&gt;&lt;/textarea&gt;&lt;/p&gt;
     &lt;script src="<a href="index.min.js" target="_blank">./index.min.js</a>"&gt;&lt;/script&gt;
     &lt;script&gt;
-    const editor = new TE(document.querySelector('textarea'));
+      const editor = new TE(document.querySelector('textarea'));
     &lt;/script&gt;
   &lt;/body&gt;
 &lt;/html&gt;</code></pre>

@@ -124,15 +124,17 @@
     }
 
     function TE(source, state = {}) {
-        if (!source) return;
-        const $ = this; // Return new instance if `TE` was called without the `new` operator
+        const $ = this;
+        if (!source) {
+            return $;
+        } // Return new instance if `TE` was called without the `new` operator
         if (!isInstance($, TE)) {
             return new TE(source, state);
         } // Already instantiated, skip!
         if (source[name]) {
-            return;
+            return $;
         }
-        $.state = state = fromStates(TE.state, isString(state) ? {
+        $.state = state = fromStates({}, TE.state, isString(state) ? {
             tab: state
         } : state || {}); // The `<textarea>` element
         $.self = $.source = source; // Store current instance to `TE.instances`
@@ -362,7 +364,7 @@
         t.value = d;
         t.toString = () => d;
     };
-    TE.version = '3.3.6';
+    TE.version = '3.3.7';
     TE.x = x;
     return TE;
 });
