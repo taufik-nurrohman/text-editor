@@ -1,0 +1,22 @@
+extends ../_index.pug
+
+block state
+  - const title = 'Text Editor'
+  - const scripts = ['../index.min.js']
+
+block script
+  script
+    | const editor = new TE(document.querySelector('textarea'));
+    |
+    | editor.self.addEventListener('paste', function() {
+    |     let {after, before} = editor.$();
+    |     setTimeout(() => {
+    |         editor.select(before.length, this.value.length - after.length);
+    |         editor.replace(/\s*<.*?>\s*/g, ' '); // Strip tag(s)!
+    |     }, 0);
+    | }, false);
+
+block content
+  main
+    P Paste some text contains #[abbr(title='Hyper Text Markup Language') HTML] tags!
+    p: textarea(cols='100' rows='20' spellcheck='false') Lorem ipsum dolor sit amet.

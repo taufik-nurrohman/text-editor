@@ -1,19 +1,19 @@
 /*!
  *
  * The MIT License (MIT)
- *
+
  * Copyright © 2021 Taufik Nurrohman <https://github.com/taufik-nurrohman>
- *
+
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the “Software”), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- *
+
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -42,17 +42,20 @@
     var isNull = function isNull(x) {
         return null === x;
     };
+    var isObject = function isObject(x, isPlain) {
+        if (isPlain === void 0) {
+            isPlain = true;
+        }
+        if ('object' !== typeof x) {
+            return false;
+        }
+        return isPlain ? isInstance(x, Object) : true;
+    };
     var isSet = function isSet(x) {
         return isDefined(x) && !isNull(x);
     };
     var isString = function isString(x) {
         return 'string' === typeof x;
-    };
-    var fromStates = function fromStates() {
-        for (var _len = arguments.length, lot = new Array(_len), _key = 0; _key < _len; _key++) {
-            lot[_key] = arguments[_key];
-        }
-        return Object.assign.apply(Object, [{}].concat(lot));
     };
     var toCount = function toCount(x) {
         return x.length;
@@ -67,6 +70,36 @@
     var W = window;
     var B = D.body;
     var R = D.documentElement;
+    var hasValue = function hasValue(x, data) {
+        return -1 !== data.indexOf(x);
+    };
+    var fromStates = function fromStates() {
+        for (var _len = arguments.length, lot = new Array(_len), _key = 0; _key < _len; _key++) {
+            lot[_key] = arguments[_key];
+        }
+        var out = lot.shift();
+        for (var i = 0, j = toCount(lot); i < j; ++i) {
+            for (var k in lot[i]) {
+                // Assign value
+                if (!isSet(out[k])) {
+                    out[k] = lot[i][k];
+                    continue;
+                } // Merge array unique
+                if (isArray(out[k]) && isArray(lot[i][k])) {
+                    for (var ii = 0, jj = toCount(lot[i][k]); ii < jj; ++ii) {
+                        if (!hasValue(lot[i][k][ii], out[k])) {
+                            out[k].push(lot[i][k][ii]);
+                        }
+                    } // Merge object recursive
+                } else if (isObject(out[k]) && isObject(lot[i][k])) {
+                    fromStates(out[k], lot[i][k]); // Replace value
+                } else {
+                    out[k] = lot[i][k];
+                }
+            }
+        }
+        return out;
+    };
     var esc = function esc(pattern, extra) {
         if (extra === void 0) {
             extra = "";
@@ -329,7 +362,7 @@
         t.value = d;
         t.toString = () => d;
     };
-    TE.version = '3.3.4';
+    TE.version = '3.3.5';
     TE.x = x;
     return TE;
 });

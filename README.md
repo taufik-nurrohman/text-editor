@@ -38,8 +38,9 @@ Credits
 Release Notes
 -------------
 
-### 3.3.4
+### 3.3.5
 
+ - Added paste filter example.
  - Maintenance.
  - Moved extensions to external repositories.
  - Removed regular expression features in `editor.peel()` and `editor.pull()` method for consistency.

@@ -19,6 +19,7 @@ block style
     |   color: #000;
     |   border-top: 4px solid;
     |   font: normal normal 16px/1.25 serif;
+    |   position: relative;
     | }
     | a {
     |   color: #009;
@@ -41,6 +42,14 @@ block style
     |   border-top: 1px dashed;
     |   height: 0;
     | }
+    | mark {
+    |   display: inline-block;
+    |   vertical-align: middle;
+    |   height: 1.25em;
+    |   background: #ff0;
+    |   border: 1px solid #f00;
+    |   min-width: 3px;
+    | }
     | pre {
     |   white-space: pre-wrap;
     |   word-wrap: break-word;
@@ -57,11 +66,10 @@ block style
     |   text-align: left;
     |   vertical-align: top;
     | }
-    | body > p:first-child {
-    |   background: #ffa;
-    |   border: 1px dashed;
-    |   margin-top: 0;
-    |   padding: .75em 1em;
+    | textarea {
+    |   display: block;
+    |   width: 100%;
+    |   height: 20em;
     | }
 
 block content
@@ -140,6 +148,7 @@ block content
       li: a(href='tweak/pull,push.type.html' target='_blank') Indent, Outdent by Custom Character
       li: a(href='tweak/pull,push.key.html' target='_blank') Indent, Outdent with Keyboard Key
       li: a(href='tweak/replace,search.html' target='_blank') Search/Replace Functionality
+      li: a(href='tweak/paste.html' target='_blank') Paste as Plain Text
       li: a(href='test/trim.html' target='_blank') Trim Selection
       li: a(href='test/self.input.html' target='_blank') Using #[code &lt;input&gt;] Instead of #[code &lt;textarea&gt;]
     h2 Settings
@@ -306,7 +315,7 @@ block content
     h3 editor.$()
     p Get current text selection data.
     pre: code
-      | // `a#[mark |b|]c`
+      | // `a#[mark b]c`
       | console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start":1,"value":"b"}`
     h2 Extensions
     ul

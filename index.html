@@ -5,7 +5,7 @@
     <meta content="#000" name="theme-color">
     <meta content="width=device-width" name="viewport">
     <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
-    <title>Text Editor 3.3.4</title>
+    <title>Text Editor 3.3.5</title>
     <style>
       * {
         box-sizing: border-box;
@@ -15,6 +15,7 @@
         color: #000;
         border-top: 4px solid;
         font: normal normal 16px/1.25 serif;
+        position: relative;
       }
       a {
         color: #009;
@@ -41,6 +42,14 @@
         border-top: 1px dashed;
         height: 0;
       }
+      mark {
+        display: inline-block;
+        vertical-align: middle;
+        height: 1.25em;
+        background: #ff0;
+        border: 1px solid #f00;
+        min-width: 3px;
+      }
       pre {
         white-space: pre-wrap;
         word-wrap: break-word;
@@ -58,18 +67,17 @@
         text-align: left;
         vertical-align: top;
       }
-      body > p:first-child {
-        background: #ffa;
-        border: 1px dashed;
-        margin-top: 0;
-        padding: .75em 1em;
+      textarea {
+        display: block;
+        width: 100%;
+        height: 20em;
       }
     </style>
   </head>
   <body>
     <p>Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
     <header>
-      <h1>Text Editor 3.3.4</h1>
+      <h1>Text Editor 3.3.5</h1>
       <p>Text Editor is a simple JavaScript application that aims to provide accessibility improvements to the native HTML <code>&lt;textarea&gt;</code> elements so that users can control and manipulate their data in the text editor as they wish.</p>
       <hr>
     </header>
@@ -130,6 +138,7 @@ const editor = new TE(document.querySelector('textarea'));</code></pre>
         <li><a href="tweak/pull,push.type.html" target="_blank">Indent, Outdent by Custom Character</a></li>
         <li><a href="tweak/pull,push.key.html" target="_blank">Indent, Outdent with Keyboard Key</a></li>
         <li><a href="tweak/replace,search.html" target="_blank">Search/Replace Functionality</a></li>
+        <li><a href="tweak/paste.html" target="_blank">Paste as Plain Text</a></li>
         <li><a href="test/trim.html" target="_blank">Trim Selection</a></li>
         <li><a href="test/self.input.html" target="_blank">Using <code>&lt;input&gt;</code> Instead of <code>&lt;textarea&gt;</code></a></li>
       </ul>
@@ -286,7 +295,7 @@ editor.trim('\n\n', '\n\n', "", "", false); // Ignore empty value before and aft
 editor.wrap('&lt;', '&gt;', true); // Wrap with `&lt;` and `&gt;` then select</code></pre>
       <h3>editor.$()</h3>
       <p>Get current text selection data.</p>
-      <pre><code>// `a<mark>|b|</mark>c`
+      <pre><code>// `a<mark>b</mark>c`
 console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start":1,"value":"b"}`</code></pre>
       <h2>Extensions</h2>
       <ul>
