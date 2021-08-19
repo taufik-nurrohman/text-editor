@@ -3,8 +3,8 @@
   "browser": "index.min.js",
   "bugs": "https://github.com/taufik-nurrohman/text-editor/issues",
   "dependencies": {
-    "@taufik-nurrohman/document": "^0.1.9",
-    "@taufik-nurrohman/from": "^0.0.8",
+    "@taufik-nurrohman/document": "^0.1.10",
+    "@taufik-nurrohman/from": "^0.0.9",
     "@taufik-nurrohman/pattern": "^0.1.7",
     "@taufik-nurrohman/to": "^0.0.18"
   },
@@ -43,5 +43,5 @@
     "pack": "pack --clean=false --from=.github/source --js-format=umd --js-name=TE --js-top='%(js.license)' --mjs=true --to=."
   },
   "type": "module",
-  "version": "3.3.7"
+  "version": "3.3.8"
 }
