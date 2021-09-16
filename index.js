@@ -1,19 +1,19 @@
 /*!
  *
  * The MIT License (MIT)
-
+ *
  * Copyright © 2021 Taufik Nurrohman <https://github.com/taufik-nurrohman>
-
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the “Software”), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
-
+ *
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -132,19 +132,19 @@
         const $ = this;
         if (!source) {
             return $;
+        } // Already instantiated, skip!
+        if (source[name]) {
+            return source[name];
         } // Return new instance if `TE` was called without the `new` operator
         if (!isInstance($, TE)) {
             return new TE(source, state);
-        } // Already instantiated, skip!
-        if (source[name]) {
-            return $;
         }
         $.state = state = fromStates({}, TE.state, isString(state) ? {
             tab: state
         } : state || {}); // The `<textarea>` element
         $.self = $.source = source; // Store current instance to `TE.instances`
         TE.instances[source.id || source.name || toObjectCount(TE.instances)] = $; // Mark current DOM as active text editor to prevent duplicate instance
-        source[name] = 1;
+        source[name] = $;
         let any = /^([\s\S]*?)$/,
             // Any character(s)
             sourceIsDisabled = () => source.disabled,
@@ -369,7 +369,7 @@
         t.value = d;
         t.toString = () => d;
     };
-    TE.version = '3.3.8';
+    TE.version = '3.3.9';
     TE.x = x;
     return TE;
 });

@@ -7,6 +7,7 @@ block state
 block script
   script
     | const editor = new TE(document.querySelector('textarea'));
+    |
     | function check() {
     |     if (editor.match(/^\d+$/)) {
     |         alert('number');

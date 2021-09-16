@@ -18,14 +18,14 @@ function TE(source, state = {}) {
         return $;
     }
 
+    // Already instantiated, skip!
+    if (source[name]) {
+        return source[name];
+    }
+
     // Return new instance if `TE` was called without the `new` operator
     if (!isInstance($, TE)) {
         return new TE(source, state);
-    }
-
-    // Already instantiated, skip!
-    if (source[name]) {
-        return $;
     }
 
     $.state = state = fromStates({}, TE.state, isString(state) ? {
@@ -39,7 +39,7 @@ function TE(source, state = {}) {
     TE.instances[source.id || source.name || toObjectCount(TE.instances)] = $;
 
     // Mark current DOM as active text editor to prevent duplicate instance
-    source[name] = 1;
+    source[name] = $;
 
     let any = /^([\s\S]*?)$/, // Any character(s)
         sourceIsDisabled = () => source.disabled,
@@ -269,7 +269,7 @@ TE.S = function(a, b, c) {
     t.toString = () => d;
 };
 
-TE.version = '3.3.8';
+TE.version = '3.3.9';
 
 TE.x = x;
 

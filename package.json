@@ -10,7 +10,7 @@
   },
   "description": "A text selection range API written in pure JavaScript, for modern browsers.",
   "devDependencies": {
-    "@taufik-nurrohman/factory": "^0.1.19"
+    "@taufik-nurrohman/factory": "^0.1.20"
   },
   "exports": {
     "import": "./index.mjs",
@@ -43,5 +43,5 @@
     "pack": "pack --clean=false --from=.github/source --js-format=umd --js-name=TE --js-top='%(js.license)' --mjs=true --to=."
   },
   "type": "module",
-  "version": "3.3.8"
+  "version": "3.3.9"
 }

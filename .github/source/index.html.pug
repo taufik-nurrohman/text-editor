@@ -101,10 +101,10 @@ block content
       button(onclick='editor.insert(\'😀\', -1, true);') &#x263A;
     h2 Features
     ul
-      li Light-weight, no dependencies. It uses vanilla JavaScript.
+      li Light-weight, no dependencies.
       li Simple #[abbr(title='Application Programming Interface') API]. Easy to master.
       li No hack and no feature detection. Optimized for modern browsers with their built-in JavaScript features.
-      li Make your own. The core functionality is enough to help you making your own text editor.
+      li Make your own. The core functionality is enough to help you in making your own text editor.
     h2 Usage
     h3 Browser
     pre: code
@@ -114,7 +114,9 @@ block content
       |     &lt;meta charset="utf-8"&gt;
       |   &lt;/head&gt;
       |   &lt;body&gt;
-      |     &lt;p&gt;&lt;textarea&gt;&lt;/textarea&gt;&lt;/p&gt;
+      |     &lt;p&gt;
+      |       &lt;textarea&gt;&lt;/textarea&gt;
+      |     &lt;/p&gt;
       |     &lt;script src="#[a(href='index.min.js' target='_blank') ./index.min.js]"&gt;&lt;/script&gt;
       |     &lt;script&gt;
       |       const editor = new TE(document.querySelector('textarea'));
@@ -138,7 +140,7 @@ block content
       li: a(href='test.html' target='_blank') No Idea?
       li: a(href='test/self.html' target='_blank') Multiple Instances
       li: a(href='test/disabled.html' target='_blank') Disabled Text Area
-      li: a(href='test/readonly.html' target='_blank') Read-Only Text Area
+      li: a(href='test/read-only.html' target='_blank') Read-Only Text Area
       li: a(href='test/get,let,set.html' target='_blank') Set, Get and Let Value
       li: a(href='test/$.html' target='_blank') Get Selection Data
       li: a(href='test/blur,focus.html' target='_blank') Focus, Blur Events

@@ -12,8 +12,11 @@ block content
   main
     p: textarea(spellcheck='false') abcdef
     p
-      button(onclick='editor.set(\'123456\');') Set Value
+      button(onclick='editor.wrap(\'*\', \'*\');'): b B
       = ' '
-      button(onclick='alert(editor.get() || \'No value available.\');') Get Value
-      = ' '
-      button(onclick='editor.let();') Let Value (Reset)
+      button(onclick='editor.wrap(\'_\', \'_\');'): i I
+    p
+      label
+        input(onchange='editor.self.readOnly = !editor.self.readOnly;' type='checkbox')
+        = ' '
+        span Read Only

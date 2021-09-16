@@ -5,7 +5,7 @@
     <meta content="#000" name="theme-color">
     <meta content="width=device-width" name="viewport">
     <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
-    <title>Text Editor 3.3.8</title>
+    <title>Text Editor 3.3.9</title>
     <style>
       * {
         box-sizing: border-box;
@@ -83,7 +83,7 @@
   <body>
     <p>Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
     <header>
-      <h1>Text Editor 3.3.8</h1>
+      <h1>Text Editor 3.3.9</h1>
       <p>Text Editor is a simple JavaScript application that aims to provide accessibility improvements to the native HTML <code>&lt;textarea&gt;</code> elements so that users can control and manipulate their data in the text editor as they wish.</p>
       <hr>
     </header>
@@ -93,10 +93,10 @@
       <p><button onclick="editor.wrap('&lt;b&gt;', '&lt;/b&gt;');"><b>B</b></button> <button onclick="editor.wrap('&lt;i&gt;', '&lt;/i&gt;');"><i>I</i></button> <button onclick="editor.insert('😀', -1, true);">&#x263A;</button></p>
       <h2>Features</h2>
       <ul>
-        <li>Light-weight, no dependencies. It uses vanilla JavaScript.</li>
+        <li>Light-weight, no dependencies.</li>
         <li>Simple <abbr title="Application Programming Interface">API</abbr>. Easy to master.</li>
         <li>No hack and no feature detection. Optimized for modern browsers with their built-in JavaScript features.</li>
-        <li>Make your own. The core functionality is enough to help you making your own text editor.</li>
+        <li>Make your own. The core functionality is enough to help you in making your own text editor.</li>
       </ul>
       <h2>Usage</h2>
       <h3>Browser</h3>
@@ -106,7 +106,9 @@
     &lt;meta charset="utf-8"&gt;
   &lt;/head&gt;
   &lt;body&gt;
-    &lt;p&gt;&lt;textarea&gt;&lt;/textarea&gt;&lt;/p&gt;
+    &lt;p&gt;
+      &lt;textarea&gt;&lt;/textarea&gt;
+    &lt;/p&gt;
     &lt;script src="<a href="index.min.js" target="_blank">./index.min.js</a>"&gt;&lt;/script&gt;
     &lt;script&gt;
       const editor = new TE(document.querySelector('textarea'));
@@ -128,7 +130,7 @@ const editor = new TE(document.querySelector('textarea'));</code></pre>
         <li><a href="test.html" target="_blank">No Idea?</a></li>
         <li><a href="test/self.html" target="_blank">Multiple Instances</a></li>
         <li><a href="test/disabled.html" target="_blank">Disabled Text Area</a></li>
-        <li><a href="test/readonly.html" target="_blank">Read-Only Text Area</a></li>
+        <li><a href="test/read-only.html" target="_blank">Read-Only Text Area</a></li>
         <li><a href="test/get,let,set.html" target="_blank">Set, Get and Let Value</a></li>
         <li><a href="test/$.html" target="_blank">Get Selection Data</a></li>
         <li><a href="test/blur,focus.html" target="_blank">Focus, Blur Events</a></li>
