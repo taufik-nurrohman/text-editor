@@ -5,11 +5,6 @@ Text Editor
 
 > A text selection range API written in pure JavaScript, for modern browsers.
 
-Demo
-----
-
-![Text Editor](https://user-images.githubusercontent.com/1669261/133620601-36ad9ceb-7342-40f0-ad60-c4d8292ea347.gif)
-
 [Demo and Documentation](https://taufik-nurrohman.github.io/text-editor "View Demo")
 
 Contribute
