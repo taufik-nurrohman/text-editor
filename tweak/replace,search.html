@@ -29,9 +29,7 @@ d</textarea></p>
     <script src="../../text-editor.history/index.min.js"></script>
     <script>
       Object.assign(TE.prototype, TE.History.that);
-
       const editor = new TE(document.querySelector('textarea'));
-
       let searchActive,
           searchContent,
           searchIndex,
@@ -102,11 +100,8 @@ d</textarea></p>
               }
           }
       }
-
       clear();
-
       editor.record(); // Record the initial value
-
       editor.self.addEventListener('click', () => clear());
       editor.self.addEventListener('keydown', e => {
           let key = e.key,

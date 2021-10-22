@@ -160,6 +160,11 @@ block content
       li: a(href='test/trim.html' target='_blank') Trim Selection
       li: a(href='test/self.input.html' target='_blank') Using #[code &lt;input&gt;] Instead of #[code &lt;textarea&gt;]
     h2 Settings
+    pre: code let editor = new TE(#[var self], #[var tab] = '\t');
+    pre: code
+      | let editor = new TE(#[var self], #[var state] = {
+      |         tab: '\t'
+      |     });
     table(border='1')
       thead
         tr
@@ -178,11 +183,6 @@ block content
         tr
           td: code state.tab
           td The default indent character for #[code editor.pull()] and #[code editor.push()] method.
-    pre: code const editor = new TE(#[var self], #[var tab] = '\t');
-    pre: code
-      | const editor = new TE(#[var self], #[var state] = {
-      |     tab: '\t'
-      | });
     h2 Methods and Properties
     h3 TE.esc(string)
     p Escape regular expression&rsquo;s special characters.
