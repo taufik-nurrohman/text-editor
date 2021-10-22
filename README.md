@@ -27,7 +27,7 @@ Credits
 Release Notes
 -------------
 
-### 3.3.9
+### 3.3.10
 
  - Added example of paste as plain text functionality.
  - Maintenance.
