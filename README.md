@@ -17,10 +17,37 @@ Contribute
  - Edit the files in the `.github/factory` folder.
  - Run `npm run pack` to generate the production ready files.
 
-Credits
--------
+Contributors
+------------
 
- - Logo by [@mirzazulfan](https://github.com/mirzazulfan)
+### Code Contributors
+
+This project exists thanks to all the people who contribute.
+
+[![Contributors](https://opencollective.com/text-editor/contributors.svg?width=890&button=false)](https://github.com/taufik-nurrohman/text-editor/graphs/contributors)
+
+### Financial Contributors
+
+[Become a financial contributor](https://opencollective.com/text-editor/contribute) and help us sustain our community.
+
+#### Individuals
+
+[![Contribute](https://opencollective.com/text-editor/individuals.svg?width=890)](https://opencollective.com/text-editor)
+
+#### Organizations
+
+[Support this project with your organization](https://opencollective.com/text-editor/contribute). Your logo will show up here with a link to your website.
+
+<a href="https://opencollective.com/text-editor/organization/0/website"><img src="https://opencollective.com/text-editor/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/text-editor/organization/1/website"><img src="https://opencollective.com/text-editor/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/text-editor/organization/2/website"><img src="https://opencollective.com/text-editor/organization/2/avatar.svg"></a>
+<a href="https://opencollective.com/text-editor/organization/3/website"><img src="https://opencollective.com/text-editor/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/text-editor/organization/4/website"><img src="https://opencollective.com/text-editor/organization/4/avatar.svg"></a>
+<a href="https://opencollective.com/text-editor/organization/5/website"><img src="https://opencollective.com/text-editor/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/text-editor/organization/6/website"><img src="https://opencollective.com/text-editor/organization/6/avatar.svg"></a>
+<a href="https://opencollective.com/text-editor/organization/7/website"><img src="https://opencollective.com/text-editor/organization/7/avatar.svg"></a>
+<a href="https://opencollective.com/text-editor/organization/8/website"><img src="https://opencollective.com/text-editor/organization/8/avatar.svg"></a>
+<a href="https://opencollective.com/text-editor/organization/9/website"><img src="https://opencollective.com/text-editor/organization/9/avatar.svg"></a>
 
 ---
 
@@ -83,3 +110,10 @@ Release Notes
 ### 2.8.5
 
  - None.
+
+---
+
+Credits
+-------
+
+ - Logo by [@mirzazulfan](https://github.com/mirzazulfan)
