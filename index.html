@@ -5,17 +5,16 @@
     <meta content="#000" name="theme-color">
     <meta content="width=device-width" name="viewport">
     <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
-    <title>Text Editor 3.3.10</title>
+    <title>Text Editor 3.3.11</title>
     <style>
       * {
         box-sizing: border-box;
       }
       :root {
         background: #fff;
-        color: #000;
         border-top: 4px solid;
+        color: #000;
         font: normal normal 16px/1.25 serif;
-        position: relative;
       }
       a {
         color: #009;
@@ -33,30 +32,22 @@
       header,
       main,
       nav {
-        max-width: 700px;
         margin: 0 auto;
+        max-width: 700px;
       }
       hr {
         border: 0;
-        color: inherit;
         border-top: 1px dashed;
+        color: inherit;
         height: 0;
-      }
-      mark {
-        display: inline-block;
-        vertical-align: middle;
-        height: 1.25em;
-        background: #ff0;
-        border: 1px solid #f00;
-        min-width: 3px;
       }
       pre {
         white-space: pre-wrap;
         word-wrap: break-word;
       }
       pre code {
-        display: block;
         background: #eee;
+        display: block;
         padding: 1em;
       }
       table {
@@ -67,12 +58,7 @@
         text-align: left;
         vertical-align: top;
       }
-      textarea {
-        display: block;
-        width: 100%;
-        height: 20em;
-      }
-      body > p:first-child {
+      [role='alert'] {
         background: #ffa;
         border: 1px dashed;
         margin-top: 0;
@@ -81,9 +67,9 @@
     </style>
   </head>
   <body>
-    <p>Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
+    <p role="alert">Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
     <header>
-      <h1>Text Editor 3.3.10</h1>
+      <h1>Text Editor 3.3.11</h1>
       <p>Text Editor is a simple JavaScript application that aims to provide accessibility improvements to the native HTML <code>&lt;textarea&gt;</code> elements so that users can control and manipulate their data in the text editor as they wish.</p>
       <hr>
     </header>
@@ -323,7 +309,7 @@ console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start
     </main>
     <footer>
       <hr>
-      <p>&copy; 2021 <a href="/">Taufik Nurrohman</a></p>
+      <p>&copy; 2022 <a href="/">Taufik Nurrohman</a></p>
     </footer>
     <script src="index.min.js"></script>
     <script>

@@ -14,7 +14,7 @@ Contribute
  - Install [Git](https://en.wikipedia.org/wiki/Git) and [Node.js](https://en.wikipedia.org/wiki/Node.js)
  - Run `git clone https://github.com/taufik-nurrohman/text-editor.git`
  - Run `cd text-editor && npm install --save-dev`
- - Edit the files in the `.github/source` folder.
+ - Edit the files in the `.github/factory` folder.
  - Run `npm run pack` to generate the production ready files.
 
 Credits
@@ -27,7 +27,7 @@ Credits
 Release Notes
 -------------
 
-### 3.3.10
+### 3.3.11
 
  - Added example of paste as plain text functionality.
  - Maintenance.

@@ -269,7 +269,7 @@ TE.S = function(a, b, c) {
     t.toString = () => d;
 };
 
-TE.version = '3.3.10';
+TE.version = '3.3.11';
 
 TE.x = x;
 
