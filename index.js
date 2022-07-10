@@ -23,9 +23,9 @@
  * SOFTWARE.
  *
  */
-(function(global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.TE = factory());
-})(this, function() {
+(function(g, f) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = f() : typeof define === 'function' && define.amd ? define(f) : (g = typeof globalThis !== 'undefined' ? globalThis : g || self, g.TE = f());
+})(this, (function() {
     'use strict';
     var hasValue = function hasValue(x, data) {
         return -1 !== data.indexOf(x);
@@ -39,8 +39,8 @@
     var isFunction = function isFunction(x) {
         return 'function' === typeof x;
     };
-    var isInstance = function isInstance(x, of ) {
-        return x && isSet( of ) && x instanceof of ;
+    var isInstance = function isInstance(x, of) {
+        return x && isSet(of) && x instanceof of ;
     };
     var isNull = function isNull(x) {
         return null === x;
@@ -122,14 +122,17 @@
         return new RegExp(pattern, isSet(opt) ? opt : 'g');
     };
     var x = "!$^*()+=[]{}|:<>,.?/-";
-    let name = 'TE';
+    var name = 'TE';
 
     function trim(str, dir) {
         return (str || "")['trim' + (-1 === dir ? 'Left' : 1 === dir ? 'Right' : "")]();
     }
 
-    function TE(source, state = {}) {
-        const $ = this;
+    function TE(source, state) {
+        if (state === void 0) {
+            state = {};
+        }
+        var $ = this;
         if (!source) {
             return $;
         } // Already instantiated, skip!
@@ -145,25 +148,35 @@
         $.self = $.source = source; // Store current instance to `TE.instances`
         TE.instances[source.id || source.name || toObjectCount(TE.instances)] = $; // Mark current DOM as active text editor to prevent duplicate instance
         source[name] = $;
-        let any = /^([\s\S]*?)$/,
+        var any = /^([\s\S]*?)$/,
             // Any character(s)
-            sourceIsDisabled = () => source.disabled,
-            sourceIsReadOnly = () => source.readOnly,
-            sourceValue = () => source.value.replace(/\r/g, ""); // The initial value
+            sourceIsDisabled = function sourceIsDisabled() {
+                return source.disabled;
+            },
+            sourceIsReadOnly = function sourceIsReadOnly() {
+                return source.readOnly;
+            },
+            sourceValue = function sourceValue() {
+                return source.value.replace(/\r/g, "");
+            }; // The initial value
         $.value = sourceValue(); // Get value
-        $.get = () => !sourceIsDisabled() && trim(sourceValue()) || null; // Reset to the initial value
-        $.let = () => (source.value = $.value, $); // Set value
-        $.set = value => {
+        $.get = function() {
+            return !sourceIsDisabled() && trim(sourceValue()) || null;
+        }; // Reset to the initial value
+        $.let = function() {
+            return source.value = $.value, $;
+        }; // Set value
+        $.set = function(value) {
             if (sourceIsDisabled() || sourceIsReadOnly()) {
                 return $;
             }
             return source.value = value, $;
         }; // Get selection
-        $.$ = () => {
+        $.$ = function() {
             return new TE.S(source.selectionStart, source.selectionEnd, sourceValue());
         };
-        $.focus = mode => {
-            let x, y;
+        $.focus = function(mode) {
+            var x, y;
             if (-1 === mode) {
                 x = y = 0; // Put caret at the start of the editor, scroll to the start of the editor
             } else if (1 === mode) {
@@ -176,16 +189,20 @@
             }
             return source.focus(), $;
         }; // Blur from the editor
-        $.blur = () => (source.blur(), $); // Select value
-        $.select = (...lot) => {
+        $.blur = function() {
+            return source.blur(), $;
+        }; // Select value
+        $.select = function() {
             if (sourceIsDisabled() || sourceIsReadOnly()) {
                 return source.focus(), $;
             }
-            let count = toCount(lot),
-                {
-                    start,
-                    end
-                } = $.$(),
+            for (var _len = arguments.length, lot = new Array(_len), _key = 0; _key < _len; _key++) {
+                lot[_key] = arguments[_key];
+            }
+            var count = toCount(lot),
+                _$$$ = $.$(),
+                start = _$$$.start,
+                end = _$$$.end,
                 x,
                 y,
                 X,
@@ -213,25 +230,23 @@
             source.scrollTop = Y;
             return W.scroll(x, y), $;
         }; // Match at selection
-        $.match = (pattern, then) => {
-            let {
-                after,
-                before,
-                value
-            } = $.$();
+        $.match = function(pattern, then) {
+            var _$$$2 = $.$(),
+                after = _$$$2.after,
+                before = _$$$2.before,
+                value = _$$$2.value;
             if (isArray(pattern)) {
-                let m = [before.match(pattern[0]), value.match(pattern[1]), after.match(pattern[2])];
-                return isFunction(then) ? then.call($, m[0] || [], m[1] || [], m[2] || []) : [!!m[0], !!m[1], !!m[2]];
+                var _m = [before.match(pattern[0]), value.match(pattern[1]), after.match(pattern[2])];
+                return isFunction(then) ? then.call($, _m[0] || [], _m[1] || [], _m[2] || []) : [!!_m[0], !!_m[1], !!_m[2]];
             }
-            let m = value.match(pattern);
+            var m = value.match(pattern);
             return isFunction(then) ? then.call($, m || []) : !!m;
         }; // Replace at selection
-        $.replace = (from, to, mode) => {
-            let {
-                after,
-                before,
-                value
-            } = $.$();
+        $.replace = function(from, to, mode) {
+            var _$$$3 = $.$(),
+                after = _$$$3.after,
+                before = _$$$3.before,
+                value = _$$$3.value;
             if (-1 === mode) {
                 // Replace before
                 before = before.replace(from, to);
@@ -244,8 +259,8 @@
             }
             return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
         }; // Insert/replace at caret
-        $.insert = (value, mode, clear) => {
-            let from = any;
+        $.insert = function(value, mode, clear) {
+            var from = any;
             if (clear) {
                 $.replace(from, ""); // Force to delete selection on insert before/after?
             }
@@ -258,26 +273,24 @@
             }
             return $.replace(from, value, mode);
         }; // Wrap current selection
-        $.wrap = (open, close, wrap) => {
-            let {
-                after,
-                before,
-                value
-            } = $.$();
+        $.wrap = function(open, close, wrap) {
+            var _$$$4 = $.$(),
+                after = _$$$4.after,
+                before = _$$$4.before,
+                value = _$$$4.value;
             if (wrap) {
                 return $.replace(any, open + '$1' + close);
             }
             return $.set(before + open + value + close + after).select(before = toCount(before + open), before + toCount(value));
         }; // Unwrap current selection
-        $.peel = (open, close, wrap) => {
-            let {
-                after,
-                before,
-                value
-            } = $.$();
+        $.peel = function(open, close, wrap) {
+            var _$$$5 = $.$(),
+                after = _$$$5.after,
+                before = _$$$5.before,
+                value = _$$$5.value;
             open = esc(open);
             close = esc(close);
-            let openPattern = toPattern(open + '$', ""),
+            var openPattern = toPattern(open + '$', ""),
                 closePattern = toPattern('^' + close, "");
             if (wrap) {
                 return $.replace(toPattern('^' + open + '([\\s\\S]*?)' + close + '$', ""), '$1');
@@ -289,17 +302,19 @@
             }
             return $.select();
         };
-        $.pull = (by, includeEmptyLines = true) => {
-            let {
-                length,
-                value
-            } = $.$();
+        $.pull = function(by, includeEmptyLines) {
+            if (includeEmptyLines === void 0) {
+                includeEmptyLines = true;
+            }
+            var _$$$6 = $.$(),
+                length = _$$$6.length,
+                value = _$$$6.value;
             by = esc(isSet(by) ? by : state.tab);
             if (length) {
                 if (includeEmptyLines) {
                     return $.replace(toPattern('^' + by, 'gm'), "");
                 }
-                return $.insert(value.split('\n').map(v => {
+                return $.insert(value.split('\n').map(function(v) {
                     if (toPattern('^(' + by + ')*$', "").test(v)) {
                         return v;
                     }
@@ -308,17 +323,22 @@
             }
             return $.replace(toPattern(by + '$', ""), "", -1);
         };
-        $.push = (by, includeEmptyLines = false) => {
-            let {
-                length
-            } = $.$();
+        $.push = function(by, includeEmptyLines) {
+            if (includeEmptyLines === void 0) {
+                includeEmptyLines = false;
+            }
+            var _$$$7 = $.$(),
+                length = _$$$7.length;
             by = isSet(by) ? by : state.tab;
             if (length) {
                 return $.replace(toPattern('^' + (includeEmptyLines ? "" : '(?!$)'), 'gm'), by);
             }
             return $.insert(by, -1);
         };
-        $.trim = (open, close, start, end, tidy = true) => {
+        $.trim = function(open, close, start, end, tidy) {
+            if (tidy === void 0) {
+                tidy = true;
+            }
             if (null !== open && false !== open) {
                 open = open || "";
             }
@@ -331,11 +351,10 @@
             if (null !== end && false !== end) {
                 end = end || "";
             }
-            let {
-                before,
-                value,
-                after
-            } = $.$(),
+            var _$$$8 = $.$(),
+                before = _$$$8.before,
+                value = _$$$8.value,
+                after = _$$$8.after,
                 beforeClean = trim(before, 1),
                 afterClean = trim(after, -1);
             before = false !== open ? trim(before, 1) + (beforeClean || !tidy ? open : "") : before;
@@ -344,7 +363,7 @@
             if (false !== end) value = trim(value, 1);
             return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
         }; // Destructor
-        $.pop = () => {
+        $.pop = function() {
             if (!source[name]) {
                 return $; // Already ejected!
             }
@@ -359,7 +378,7 @@
         'tab': '\t'
     };
     TE.S = function(a, b, c) {
-        let t = this,
+        var t = this,
             d = c.slice(a, b);
         t.after = c.slice(b);
         t.before = c.slice(0, a);
@@ -367,9 +386,11 @@
         t.length = toCount(d);
         t.start = a;
         t.value = d;
-        t.toString = () => d;
+        t.toString = function() {
+            return d;
+        };
     };
-    TE.version = '3.3.11';
+    TE.version = '3.3.12';
     TE.x = x;
     return TE;
-});
+}));
