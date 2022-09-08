@@ -8,7 +8,7 @@ block script
   script
     | const editor = new TE(document.querySelector('textarea'));
     |
-    | editor.self.addEventListener('paste', function() {
+    | editor.self.addEventListener('paste', function () {
     |     let {after, before} = editor.$();
     |     setTimeout(() => {
     |         editor.select(before.length, this.value.length - after.length);

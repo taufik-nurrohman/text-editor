@@ -42,5 +42,5 @@
   "scripts": {
     "pack": "pack --clean=false --from=.github/factory --js-format=umd --js-name=TE --js-top='%(js.license)' --mjs=true --to=."
   },
-  "version": "3.3.12"
+  "version": "3.3.13"
 }

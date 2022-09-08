@@ -5,7 +5,7 @@
     <meta content="#000" name="theme-color">
     <meta content="width=device-width" name="viewport">
     <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
-    <title>Text Editor 3.3.12</title>
+    <title>Text Editor 3.3.13</title>
     <style>
       * {
         box-sizing: border-box;
@@ -69,7 +69,7 @@
   <body>
     <p role="alert">Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
     <header>
-      <h1>Text Editor 3.3.12</h1>
+      <h1>Text Editor 3.3.13</h1>
       <p>Text Editor is a simple JavaScript application that aims to provide accessibility improvements to the native HTML <code>&lt;textarea&gt;</code> elements so that users can control and manipulate their data in the text editor as they wish.</p>
       <hr>
     </header>
@@ -222,14 +222,14 @@ editor.insert(':)', 1, true); // Insert after selection and delete selection</co
     ':wonder:': '😕'
 };
 
-editor.match(/^\s*:\w+:\s*$/, function(m) {
+editor.match(/^\s*:\w+:\s*$/, function (m) {
     let exists = maps[m[0] = m[0] ? m[0].trim() : ""];
     exists &amp;&amp; this.insert(exists); // &rarr; <a href="test/alter.html" target="_blank">demo</a>
 });</code></pre>
       <p>Match to the characters before selection, current selection and characters after selection.</p>
       <pre><code>let test = editor.match([/:$/, /^\w+$/, /^:/]);
 console.log(test[0] &amp;&amp; test[1] &amp;&amp; test[2]);</code></pre>
-      <pre><code>editor.match([/:$/, /^\w+$/, /^:/], function(before, value, after) {
+      <pre><code>editor.match([/:$/, /^\w+$/, /^:/], function (before, value, after) {
     console.log([before, value, after]); // &rarr; <a href="test/toggle.html" target="_blank">demo</a>
 });</code></pre>
       <h3>editor.peel(open, close, wrap = false)</h3>

@@ -257,7 +257,7 @@ TE.state = {
     'tab': '\t'
 };
 
-TE.S = function(a, b, c) {
+TE.S = function (a, b, c) {
     let t = this,
         d = c.slice(a, b);
     t.after = c.slice(b);
@@ -269,7 +269,7 @@ TE.S = function(a, b, c) {
     t.toString = () => d;
 };
 
-TE.version = '3.3.12';
+TE.version = '3.3.13';
 
 TE.x = x;
 

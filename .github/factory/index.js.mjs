@@ -257,7 +257,7 @@ TE.state = {
     'tab': '\t'
 };
 
-TE.S = function(a, b, c) {
+TE.S = function (a, b, c) {
     let t = this,
         d = c.slice(a, b);
     t.after = c.slice(b);

@@ -23,9 +23,9 @@
  * SOFTWARE.
  *
  */
-(function(g, f) {
+(function (g, f) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = f() : typeof define === 'function' && define.amd ? define(f) : (g = typeof globalThis !== 'undefined' ? globalThis : g || self, g.TE = f());
-})(this, (function() {
+})(this, (function () {
     'use strict';
     var hasValue = function hasValue(x, data) {
         return -1 !== data.indexOf(x);
@@ -160,22 +160,22 @@
                 return source.value.replace(/\r/g, "");
             }; // The initial value
         $.value = sourceValue(); // Get value
-        $.get = function() {
+        $.get = function () {
             return !sourceIsDisabled() && trim(sourceValue()) || null;
         }; // Reset to the initial value
-        $.let = function() {
+        $.let = function () {
             return source.value = $.value, $;
         }; // Set value
-        $.set = function(value) {
+        $.set = function (value) {
             if (sourceIsDisabled() || sourceIsReadOnly()) {
                 return $;
             }
             return source.value = value, $;
         }; // Get selection
-        $.$ = function() {
+        $.$ = function () {
             return new TE.S(source.selectionStart, source.selectionEnd, sourceValue());
         };
-        $.focus = function(mode) {
+        $.focus = function (mode) {
             var x, y;
             if (-1 === mode) {
                 x = y = 0; // Put caret at the start of the editor, scroll to the start of the editor
@@ -189,10 +189,10 @@
             }
             return source.focus(), $;
         }; // Blur from the editor
-        $.blur = function() {
+        $.blur = function () {
             return source.blur(), $;
         }; // Select value
-        $.select = function() {
+        $.select = function () {
             if (sourceIsDisabled() || sourceIsReadOnly()) {
                 return source.focus(), $;
             }
@@ -230,7 +230,7 @@
             source.scrollTop = Y;
             return W.scroll(x, y), $;
         }; // Match at selection
-        $.match = function(pattern, then) {
+        $.match = function (pattern, then) {
             var _$$$2 = $.$(),
                 after = _$$$2.after,
                 before = _$$$2.before,
@@ -242,7 +242,7 @@
             var m = value.match(pattern);
             return isFunction(then) ? then.call($, m || []) : !!m;
         }; // Replace at selection
-        $.replace = function(from, to, mode) {
+        $.replace = function (from, to, mode) {
             var _$$$3 = $.$(),
                 after = _$$$3.after,
                 before = _$$$3.before,
@@ -259,7 +259,7 @@
             }
             return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
         }; // Insert/replace at caret
-        $.insert = function(value, mode, clear) {
+        $.insert = function (value, mode, clear) {
             var from = any;
             if (clear) {
                 $.replace(from, ""); // Force to delete selection on insert before/after?
@@ -273,7 +273,7 @@
             }
             return $.replace(from, value, mode);
         }; // Wrap current selection
-        $.wrap = function(open, close, wrap) {
+        $.wrap = function (open, close, wrap) {
             var _$$$4 = $.$(),
                 after = _$$$4.after,
                 before = _$$$4.before,
@@ -283,7 +283,7 @@
             }
             return $.set(before + open + value + close + after).select(before = toCount(before + open), before + toCount(value));
         }; // Unwrap current selection
-        $.peel = function(open, close, wrap) {
+        $.peel = function (open, close, wrap) {
             var _$$$5 = $.$(),
                 after = _$$$5.after,
                 before = _$$$5.before,
@@ -302,7 +302,7 @@
             }
             return $.select();
         };
-        $.pull = function(by, includeEmptyLines) {
+        $.pull = function (by, includeEmptyLines) {
             if (includeEmptyLines === void 0) {
                 includeEmptyLines = true;
             }
@@ -314,7 +314,7 @@
                 if (includeEmptyLines) {
                     return $.replace(toPattern('^' + by, 'gm'), "");
                 }
-                return $.insert(value.split('\n').map(function(v) {
+                return $.insert(value.split('\n').map(function (v) {
                     if (toPattern('^(' + by + ')*$', "").test(v)) {
                         return v;
                     }
@@ -323,7 +323,7 @@
             }
             return $.replace(toPattern(by + '$', ""), "", -1);
         };
-        $.push = function(by, includeEmptyLines) {
+        $.push = function (by, includeEmptyLines) {
             if (includeEmptyLines === void 0) {
                 includeEmptyLines = false;
             }
@@ -335,7 +335,7 @@
             }
             return $.insert(by, -1);
         };
-        $.trim = function(open, close, start, end, tidy) {
+        $.trim = function (open, close, start, end, tidy) {
             if (tidy === void 0) {
                 tidy = true;
             }
@@ -363,7 +363,7 @@
             if (false !== end) value = trim(value, 1);
             return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
         }; // Destructor
-        $.pop = function() {
+        $.pop = function () {
             if (!source[name]) {
                 return $; // Already ejected!
             }
@@ -377,7 +377,7 @@
     TE.state = {
         'tab': '\t'
     };
-    TE.S = function(a, b, c) {
+    TE.S = function (a, b, c) {
         var t = this,
             d = c.slice(a, b);
         t.after = c.slice(b);
@@ -386,11 +386,11 @@
         t.length = toCount(d);
         t.start = a;
         t.value = d;
-        t.toString = function() {
+        t.toString = function () {
             return d;
         };
     };
-    TE.version = '3.3.12';
+    TE.version = '3.3.13';
     TE.x = x;
     return TE;
 }));

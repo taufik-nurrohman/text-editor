@@ -15,7 +15,7 @@ block script
     | };
     |
     | function replaceToEmoji() {
-    |     editor.match(/^\s*:\w+:\s*$/, function(m) {
+    |     editor.match(/^\s*:\w+:\s*$/, function (m) {
     |         console.log(m);
     |         let exists = maps[m[0] = m[0] ? m[0].trim() : ""];
     |         if (exists) {

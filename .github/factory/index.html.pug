@@ -231,7 +231,7 @@ block content
       |     ':wonder:': '😕'
       | };
       |
-      | editor.match(/^\s*:\w+:\s*$/, function(m) {
+      | editor.match(/^\s*:\w+:\s*$/, function (m) {
       |     let exists = maps[m[0] = m[0] ? m[0].trim() : ""];
       |     exists &amp;&amp; this.insert(exists); // &rarr; #[a(href='test/alter.html' target='_blank') demo]
       | });
@@ -240,7 +240,7 @@ block content
       | let test = editor.match([/:$/, /^\w+$/, /^:/]);
       | console.log(test[0] &amp;&amp; test[1] &amp;&amp; test[2]);
     pre: code
-      | editor.match([/:$/, /^\w+$/, /^:/], function(before, value, after) {
+      | editor.match([/:$/, /^\w+$/, /^:/], function (before, value, after) {
       |     console.log([before, value, after]); // &rarr; #[a(href='test/toggle.html' target='_blank') demo]
       | });
     h3 editor.peel(open, close, wrap = false)
