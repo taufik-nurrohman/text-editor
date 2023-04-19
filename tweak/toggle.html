@@ -18,7 +18,7 @@
       function toggle(name) {
           let patternBefore = new RegExp('<' + name + '(?:\\s[^>]*)?>$'),
               patternAfter = new RegExp('^<\\/' + name + '>');
-          editor.match([patternBefore, /.*/, patternAfter], function (before, value, after) {
+          editor.match([patternBefore, /.*/, patternAfter], function(before, value, after) {
               if (before[0] && after[0]) {
                   this.replace(patternBefore, "", -1);
                   this.replace(patternAfter, "", 1);
@@ -31,7 +31,7 @@
       function toggleBlocks() {
           let patternBefore = /<(?:p|h([1-6]))(\s[^>]*)?>$/,
               patternAfter = /^<\/(?:p|h[1-6])>/;
-          editor.match([patternBefore, /.*/, patternAfter], function (before, value, after) {
+          editor.match([patternBefore, /.*/, patternAfter], function(before, value, after) {
               let h = +(before[1] || 0),
                   attr = before[2] || "";
               // ``
@@ -56,7 +56,7 @@
       function toggleCodes() {
           let patternBefore = /<(?:pre|code)(?:\s[^>]*)?>(?:\s*<code(?:\s[^>]*)?>)?$/,
               patternAfter = /^(?:<\/code>\s*)?<\/(?:pre|code)>/;
-          editor.match([patternBefore, /.*/, patternAfter], function (before, value, after) {
+          editor.match([patternBefore, /.*/, patternAfter], function(before, value, after) {
               // ``
               this.replace(patternBefore, "", -1);
               this.replace(patternAfter, "", 1);
