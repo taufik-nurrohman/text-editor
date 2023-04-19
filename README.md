@@ -3,6 +3,8 @@
 Text Editor
 ===========
 
+![Code Size](https://img.shields.io/github/languages/code-size/taufik-nurrohman/text-editor?color=%23444&style=for-the-badge) ![License](https://img.shields.io/github/license/taufik-nurrohman/text-editor?color=%23444&style=for-the-badge)
+
 > A text selection range API written in pure JavaScript, for modern browsers.
 
 [Demo and Documentation](https://taufik-nurrohman.github.io/text-editor "View Demo")
