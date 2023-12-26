@@ -80,20 +80,20 @@
                 if (!isSet(out[k])) {
                     out[k] = lot[i][k];
                     continue;
-                } // Merge array
+                }
+                // Merge array
                 if (isArray(out[k]) && isArray(lot[i][k])) {
-                    out[k] = [
-                        /* Clone! */
-                    ].concat(out[k]);
+                    out[k] = [ /* Clone! */ ].concat(out[k]);
                     for (var ii = 0, jj = toCount(lot[i][k]); ii < jj; ++ii) {
                         if (!hasValue(lot[i][k][ii], out[k])) {
                             out[k].push(lot[i][k][ii]);
                         }
-                    } // Merge object recursive
+                    }
+                    // Merge object recursive
                 } else if (isObject(out[k]) && isObject(lot[i][k])) {
                     out[k] = fromStates({
-                        /* Clone! */
-                    }, out[k], lot[i][k]); // Replace value
+                        /* Clone! */ }, out[k], lot[i][k]);
+                    // Replace value
                 } else {
                     out[k] = lot[i][k];
                 }
@@ -117,7 +117,8 @@
     var toPattern = function toPattern(pattern, opt) {
         if (isPattern(pattern)) {
             return pattern;
-        } // No need to escape `/` in the pattern string
+        }
+        // No need to escape `/` in the pattern string
         pattern = pattern.replace(/\//g, '\\/');
         return new RegExp(pattern, isSet(opt) ? opt : 'g');
     };
@@ -135,18 +136,23 @@
         var $ = this;
         if (!source) {
             return $;
-        } // Already instantiated, skip!
+        }
+        // Already instantiated, skip!
         if (source[name]) {
             return source[name];
-        } // Return new instance if `TE` was called without the `new` operator
+        }
+        // Return new instance if `TE` was called without the `new` operator
         if (!isInstance($, TE)) {
             return new TE(source, state);
         }
         $.state = state = fromStates({}, TE.state, isString(state) ? {
             tab: state
-        } : state || {}); // The `<textarea>` element
-        $.self = $.source = source; // Store current instance to `TE.instances`
-        TE.instances[source.id || source.name || toObjectCount(TE.instances)] = $; // Mark current DOM as active text editor to prevent duplicate instance
+        } : state || {});
+        // The `<textarea>` element
+        $.self = $.source = source;
+        // Store current instance to `TE.instances`
+        TE.instances[source.id || source.name || toObjectCount(TE.instances)] = $;
+        // Mark current DOM as active text editor to prevent duplicate instance
         source[name] = $;
         var any = /^([\s\S]*?)$/,
             // Any character(s)
@@ -158,20 +164,25 @@
             },
             sourceValue = function sourceValue() {
                 return source.value.replace(/\r/g, "");
-            }; // The initial value
-        $.value = sourceValue(); // Get value
+            };
+        // The initial value
+        $.value = sourceValue();
+        // Get value
         $.get = function () {
             return !sourceIsDisabled() && trim(sourceValue()) || null;
-        }; // Reset to the initial value
+        };
+        // Reset to the initial value
         $.let = function () {
             return source.value = $.value, $;
-        }; // Set value
+        };
+        // Set value
         $.set = function (value) {
             if (sourceIsDisabled() || sourceIsReadOnly()) {
                 return $;
             }
             return source.value = value, $;
-        }; // Get selection
+        };
+        // Get selection
         $.$ = function () {
             return new TE.S(source.selectionStart, source.selectionEnd, sourceValue());
         };
@@ -188,10 +199,12 @@
                 source.scrollTop = y;
             }
             return source.focus(), $;
-        }; // Blur from the editor
+        };
+        // Blur from the editor
         $.blur = function () {
             return source.blur(), $;
-        }; // Select value
+        };
+        // Select value
         $.select = function () {
             if (sourceIsDisabled() || sourceIsReadOnly()) {
                 return source.focus(), $;
@@ -223,13 +236,15 @@
                 }
                 lot[1] = lot[0];
             }
-            source.focus(); // Default `$.select(7, 100)`
+            source.focus();
+            // Default `$.select(7, 100)`
             source.selectionStart = lot[0];
             source.selectionEnd = lot[1];
             source.scrollLeft = X;
             source.scrollTop = Y;
             return W.scroll(x, y), $;
-        }; // Match at selection
+        };
+        // Match at selection
         $.match = function (pattern, then) {
             var _$$$2 = $.$(),
                 after = _$$$2.after,
@@ -241,7 +256,8 @@
             }
             var m = value.match(pattern);
             return isFunction(then) ? then.call($, m || []) : !!m;
-        }; // Replace at selection
+        };
+        // Replace at selection
         $.replace = function (from, to, mode) {
             var _$$$3 = $.$(),
                 after = _$$$3.after,
@@ -258,7 +274,8 @@
                 value = value.replace(from, to);
             }
             return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
-        }; // Insert/replace at caret
+        };
+        // Insert/replace at caret
         $.insert = function (value, mode, clear) {
             var from = any;
             if (clear) {
@@ -272,7 +289,8 @@
                 from = /^/;
             }
             return $.replace(from, value, mode);
-        }; // Wrap current selection
+        };
+        // Wrap current selection
         $.wrap = function (open, close, wrap) {
             var _$$$4 = $.$(),
                 after = _$$$4.after,
@@ -282,7 +300,8 @@
                 return $.replace(any, open + '$1' + close);
             }
             return $.set(before + open + value + close + after).select(before = toCount(before + open), before + toCount(value));
-        }; // Unwrap current selection
+        };
+        // Unwrap current selection
         $.peel = function (open, close, wrap) {
             var _$$$5 = $.$(),
                 after = _$$$5.after,
@@ -362,20 +381,28 @@
             if (false !== start) value = trim(value, -1);
             if (false !== end) value = trim(value, 1);
             return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
-        }; // Destructor
+        };
+        // Destructor
         $.pop = function () {
             if (!source[name]) {
                 return $; // Already ejected!
             }
             return delete source[name], $;
-        }; // Return the text editor state
+        };
+        // Return the text editor state
         $.state = state;
+        if (isArray(state.with)) {
+            for (var i = 0, j = toCount(state.with); i < j; ++i) {
+                isFunction(state.with[i]) && state.with[i].call($, source, state);
+            }
+        }
         return $;
     }
     TE.esc = esc;
     TE.instances = {};
     TE.state = {
-        'tab': '\t'
+        'tab': '\t',
+        'with': []
     };
     TE.S = function (a, b, c) {
         var t = this,
@@ -390,7 +417,7 @@
             return d;
         };
     };
-    TE.version = '3.3.14';
+    TE.version = '3.4.0';
     TE.x = x;
     return TE;
 }));

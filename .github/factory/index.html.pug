@@ -149,7 +149,8 @@ block content
     pre: code let editor = new TE(#[var self], #[var tab] = '\t');
     pre: code
       | let editor = new TE(#[var self], #[var state] = {
-      |         tab: '\t'
+      |         tab: '\t',
+      |         with: []
       |     });
     table(border='1')
       thead
@@ -169,6 +170,9 @@ block content
         tr
           td: code state.tab
           td The default indent character for #[code editor.pull()] and #[code editor.push()] method.
+        tr
+          td: code state.with
+          td List of callable functions to be invoked each time the application is initialized. A very simple “plugin” system.
     h2 Methods and Properties
     h3 TE.esc(string)
     p Escape regular expression&rsquo;s special characters.

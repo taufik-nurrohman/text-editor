@@ -245,6 +245,12 @@ function TE(source, state = {}) {
     // Return the text editor state
     $.state = state;
 
+    if (isArray(state.with)) {
+        for (let i = 0, j = toCount(state.with); i < j; ++i) {
+            isFunction(state.with[i]) && state.with[i].call($, source, state);
+        }
+    }
+
     return $;
 
 }
@@ -254,7 +260,8 @@ TE.esc = esc;
 TE.instances = {};
 
 TE.state = {
-    'tab': '\t'
+    'tab': '\t',
+    'with': []
 };
 
 TE.S = function (a, b, c) {
