@@ -1,9 +1,10 @@
 extends _index.pug
 
 block state
-  - const title = 'Text Editor ' + version
-  - const theme = '#000'
   - const scripts = ['index.min.js']
+  - const styles = ['../layout/index.min.css']
+  - const theme = '#000'
+  - const title = 'Text Editor ' + version
 
 block script
   script
@@ -11,57 +12,26 @@ block script
 
 block style
   style
-    | * {
-    |   box-sizing: border-box;
+    | body > * + * {
+    |   margin-top: 1.5rem;
     | }
-    | :root {
-    |   background: #fff;
-    |   border-top: 4px solid;
-    |   color: #000;
-    |   font: normal normal 16px/1.25 serif;
+    |
+    | p[role='group'] {
+    |   display: flex;
+    |   gap: 0.5rem;
+    |   justify-content: center;
     | }
-    | a {
-    |   color: #009;
-    |   text-decoration: none;
+    |
+    | p[role='group'] button {
+    |   min-width: 2.5rem;
     | }
-    | a, code {
-    |   word-wrap: break-word;
-    | }
-    | code {
-    |   font-family: monospace;
-    |   font-size: 80%;
-    | }
-    | footer, header, main, nav {
-    |   margin: 0 auto;
-    |   max-width: 700px;
-    | }
-    | hr {
-    |   border: 0;
-    |   border-top: 1px dashed;
-    |   color: inherit;
-    |   height: 0;
-    | }
-    | pre {
-    |   white-space: pre-wrap;
-    |   word-wrap: break-word;
-    | }
-    | pre code {
-    |   background: #eee;
-    |   display: block;
-    |   padding: 1em;
-    | }
-    | table {
-    |   width: 100%;
-    | }
-    | td, th {
-    |   text-align: left;
-    |   vertical-align: top;
-    | }
-    | [role='alert'] {
-    |   background: #ffa;
-    |   border: 1px dashed;
-    |   margin-top: 0;
-    |   padding: .75em 1em;
+    | 
+    | @media (min-width: 45rem) {
+    |   body > * {
+    |     margin-left: auto;
+    |     margin-right: auto;
+    |     max-width: 45rem;
+    |   }
     | }
 
 block content
@@ -79,18 +49,12 @@ block content
         'height': '6em',
         'box-sizing': 'border-box'
       }) Lorem ipsum dolor sit amet.
-    p
+    p(role='group')
       button(onclick='editor.wrap(\'<b>\', \'</b>\');'): b B
       = ' '
       button(onclick='editor.wrap(\'<i>\', \'</i>\');'): i I
       = ' '
       button(onclick='editor.insert(\'😀\', -1, true);') &#x263A;
-    h2 Features
-    ul
-      li Light-weight, no dependencies.
-      li Simple #[abbr(title='Application Programming Interface') API]. Easy to master.
-      li No hack and no feature detection. Optimized for modern browsers with their built-in JavaScript features.
-      li Make your own. The core functionality is enough to help you in making your own text editor.
     h2 Usage
     h3 Browser
     pre: code
@@ -174,16 +138,16 @@ block content
           td: code state.with
           td List of callable functions or objects containing an #[code attach()] method to be invoked each time the application is initialized. A very simple “plugin” system.
     h2 Methods and Properties
-    h3 TextEditor.esc(string)
+    h3: code TextEditor.esc(string)
     p Escape regular expression&rsquo;s special characters.
-    h3 TextEditor.instances
+    h3: code TextEditor.instances
     p Return the application instances.
     pre: code
       | for (let key in TextEditor.instances) {
       |     console.log(key);
       |     console.log(TextEditor.instances[key]);
       | }
-    h3 TextEditor.state
+    h3: code TextEditor.state
     p This property stores the initial values of #[code editor.state].
     pre: code
       | const editor = new TextEditor(document.querySelector('textarea'), {
@@ -191,27 +155,27 @@ block content
       | });
       |
       | console.log([TextEditor.state, editor.state]);
-    h3 TextEditor.version
+    h3: code TextEditor.version
     p Return the application version.
     pre: code
       | let version = TextEditor.version,
       |     major = version.split('.')[0];
       |
       | if (+major &lt; 3) { &hellip; }
-    h3 TextEditor.x
+    h3: code TextEditor.x
     p List of regular expression characters to be escaped.
-    h3 editor.blur()
+    h3: code editor.blur()
     p Blur from the #[code &lt;textarea&gt;] element.
-    h3 editor.focus(mode = 0)
+    h3: code editor.focus(mode = 0)
     p Focus to the #[code &lt;textarea&gt;] element.
     pre: code
       | editor.focus(); // Focus to the last selection
       | editor.focus(-1); // Focus to the start of text area value
       | editor.focus(1); // Focus to the end of text area value
       | editor.focus(true); // Select all
-    h3 editor.get()
+    h3: code editor.get()
     p Get current value of the #[code &lt;textarea&gt;] element if not empty, otherwise, return #[code null].
-    h3 editor.insert(string, mode = 0, clear = false)
+    h3: code editor.insert(string, mode = 0, clear = false)
     p Insert #[var string] to (replace) the current selection.
     pre: code
       | editor.insert(':)'); // Insert at selection (replace selection)
@@ -219,9 +183,9 @@ block content
       | editor.insert('&lt;/b&gt;', 1); // Insert after selection
       | editor.insert(':)', -1, true); // Insert before selection and delete selection
       | editor.insert(':)', 1, true); // Insert after selection and delete selection
-    h3 editor.let()
+    h3: code editor.let()
     p Reset value to the initial value of the #[code &lt;textarea&gt;] element.
-    h3 editor.match(pattern, then)
+    h3: code editor.match(pattern, then)
     p Match current selection with the pattern provided.
     pre: code
       | if (editor.match(/^\s*:\w+:\s*$/)) {
@@ -247,35 +211,35 @@ block content
       | editor.match([/:$/, /^\w+$/, /^:/], function (before, value, after) {
       |     console.log([before, value, after]); // &rarr; #[a(href='test/toggle.html' target='_blank') demo]
       | });
-    h3 editor.peel(open, close, wrap = false)
+    h3: code editor.peel(open, close, wrap = false)
     p Unwrap current selection from #[var open] and #[var close].
     pre: code
       | editor.peel('&lt;', '&gt;'); // Remove `&lt;` before selection and `&gt;` after selection
       | editor.peel('&lt;', '&gt;', true); // Remove `&lt;` at selection start and `&gt;` at selection end
-    h3 editor.pull(by = editor.state.tab, includeEmptyLines = true)
+    h3: code editor.pull(by = editor.state.tab, includeEmptyLines = true)
     p Outdent current selection from #[var by].
     pre: code
       | editor.pull(); // Outdent from `\t`
       | editor.pull('****'); // Outdent from `****`
-    h3 editor.push(by = editor.state.tab, includeEmptyLines = false)
+    h3: code editor.push(by = editor.state.tab, includeEmptyLines = false)
     p Indent current selection with #[var by].
     pre: code
       | editor.push(); // Indent with `\t`
       | editor.push('****'); // Indent with `****`
-    h3 editor.replace(from, to, mode = 0)
+    h3: code editor.replace(from, to, mode = 0)
     p Replace current, before or after selection from #[var from] to #[var to].
     pre: code
       | editor.replace(/&lt;.*?&gt;/g, ""); // Strip HTML tag(s) in selection
       | editor.replace(/&lt;.*?&gt;/g, "", -1); // Strip HTML tag(s) before selection
       | editor.replace(/&lt;.*?&gt;/g, "", 1); // Strip HTML tag(s) after selection
-    h3 editor.select(...lot)
+    h3: code editor.select(...lot)
     p Set selection range.
     pre: code
       | editor.select(); // Is the same as `editor.focus()`
       | editor.select(2); // Move caret to the index `2`
       | editor.select(0, 2); // Select from range `0` to `2`
       | editor.select(true); // Select all
-    h3 editor.self
+    h3: code editor.self
     p Return the #[code &lt;textarea&gt;] element.
     pre: code
       | editor.self.addEventListener('keydown', e =&gt; {
@@ -286,13 +250,13 @@ block content
       |         // Do something with `Enter` key!
       |     }
       | });
-    h3 editor.set(value)
+    h3: code editor.set(value)
     p Set value to the #[code &lt;textarea&gt;] element.
-    h3 editor.source
+    h3: code editor.source
     p Alias of #[code editor.self] property.
-    h3 editor.state
+    h3: code editor.state
     p Return the text editor states if any.
-    h3 editor.trim(open = "", close = "", start = "", end = "", tidy = true)
+    h3: code editor.trim(open = "", close = "", start = "", end = "", tidy = true)
     p Trim current selection from white-spaces, and optionally insert characters at the specified points.
     pre: code
       | // `a&lt;open&gt;#[mark &lt;start&gt;b&lt;end&gt;]&lt;close&gt;c`
@@ -303,14 +267,14 @@ block content
       | editor.trim(' ', ' '); // Force a space before and after selection
       | editor.trim('\n\n', '\n\n'); // Force line-break before and after selection
       | editor.trim('\n\n', '\n\n', "", "", false); // Ignore empty value before and after selection, just insert that `\n\n` away
-    h3 editor.value
+    h3: code editor.value
     p Return the initial value of the #[code &lt;textarea&gt;] element.
-    h3 editor.wrap(open, close, wrap = false)
+    h3: code editor.wrap(open, close, wrap = false)
     p Wrap current selection with #[var open] and #[var close].
     pre: code
       | editor.wrap('&lt;', '&gt;'); // Wrap with `&lt;` and `&gt;`
       | editor.wrap('&lt;', '&gt;', true); // Wrap with `&lt;` and `&gt;` then select
-    h3 editor.$()
+    h3: code editor.$()
     p Get current text selection data.
     pre: code
       | // `a#[mark b]c`

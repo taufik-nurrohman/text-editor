@@ -292,7 +292,7 @@ TextEditor.S = function (a, b, c) {
     t.toString = () => d;
 };
 
-TextEditor.version = '4.0.0';
+TextEditor.version = '4.0.1';
 
 TextEditor.x = x;
 
