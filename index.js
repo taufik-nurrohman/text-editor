@@ -24,7 +24,7 @@
  *
  */
 (function (g, f) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = f() : typeof define === 'function' && define.amd ? define(f) : (g = typeof globalThis !== 'undefined' ? globalThis : g || self, g.TE = f());
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = f() : typeof define === 'function' && define.amd ? define(f) : (g = typeof globalThis !== 'undefined' ? globalThis : g || self, g.TextEditor = f());
 })(this, (function () {
     'use strict';
     var hasValue = function hasValue(x, data) {
@@ -123,13 +123,13 @@
         return new RegExp(pattern, isSet(opt) ? opt : 'g');
     };
     var x = "!$^*()+=[]{}|:<>,.?/-";
-    var name = 'TE';
+    var name = 'TextEditor';
 
     function trim(str, dir) {
         return (str || "")['trim' + (-1 === dir ? 'Left' : 1 === dir ? 'Right' : "")]();
     }
 
-    function TE(source, state) {
+    function TextEditor(source, state) {
         if (state === void 0) {
             state = {};
         }
@@ -141,17 +141,17 @@
         if (source[name]) {
             return source[name];
         }
-        // Return new instance if `TE` was called without the `new` operator
-        if (!isInstance($, TE)) {
-            return new TE(source, state);
+        // Return new instance if `TextEditor` was called without the `new` operator
+        if (!isInstance($, TextEditor)) {
+            return new TextEditor(source, state);
         }
-        $.state = state = fromStates({}, TE.state, isString(state) ? {
+        $.state = state = fromStates({}, TextEditor.state, isString(state) ? {
             tab: state
         } : state || {});
         // The `<textarea>` element
         $.self = $.source = source;
-        // Store current instance to `TE.instances`
-        TE.instances[source.id || source.name || toObjectCount(TE.instances)] = $;
+        // Store current instance to `TextEditor.instances`
+        TextEditor.instances[source.id || source.name || toObjectCount(TextEditor.instances)] = $;
         // Mark current DOM as active text editor to prevent duplicate instance
         source[name] = $;
         var any = /^([\s\S]*?)$/,
@@ -184,7 +184,7 @@
         };
         // Get selection
         $.$ = function () {
-            return new TE.S(source.selectionStart, source.selectionEnd, sourceValue());
+            return new TextEditor.S(source.selectionStart, source.selectionEnd, sourceValue());
         };
         $.focus = function (mode) {
             var x, y;
@@ -387,24 +387,41 @@
             if (!source[name]) {
                 return $; // Already ejected!
             }
+            if (isArray(state.with)) {
+                for (var i = 0, j = toCount(state.with); i < j; ++i) {
+                    var value = state.with[i];
+                    if (isObject(value) && isFunction(value.detach)) {
+                        value.detach.call($, source, state);
+                        continue;
+                    }
+                }
+            }
             return delete source[name], $;
         };
-        // Return the text editor state
-        $.state = state;
         if (isArray(state.with)) {
             for (var i = 0, j = toCount(state.with); i < j; ++i) {
-                isFunction(state.with[i]) && state.with[i].call($, source, state);
+                var value = state.with[i];
+                // `const Extension = function (source, state = {}) {}`
+                if (isFunction(value)) {
+                    value.call($, source, state);
+                    continue;
+                }
+                // `const Extension = {attach: function (source, state = {}) {}, detach: function (source, state = {}) {}}`
+                if (isObject(value) && isFunction(value.attach)) {
+                    value.attach.call($, source, state);
+                    continue;
+                }
             }
         }
         return $;
     }
-    TE.esc = esc;
-    TE.instances = {};
-    TE.state = {
+    TextEditor.esc = esc;
+    TextEditor.instances = {};
+    TextEditor.state = {
         'tab': '\t',
         'with': []
     };
-    TE.S = function (a, b, c) {
+    TextEditor.S = function (a, b, c) {
         var t = this,
             d = c.slice(a, b);
         t.after = c.slice(b);
@@ -417,7 +434,7 @@
             return d;
         };
     };
-    TE.version = '3.4.0';
-    TE.x = x;
-    return TE;
+    TextEditor.version = '4.0.0';
+    TextEditor.x = x;
+    return TextEditor;
 }));

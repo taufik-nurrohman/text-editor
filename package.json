@@ -40,7 +40,7 @@
     "url": "git+https://github.com/taufik-nurrohman/text-editor.git"
   },
   "scripts": {
-    "pack": "pack --clean=false --from=.github/factory --js-format=umd --js-name=TE --js-top='%(js.license)' --mjs=true --to=."
+    "pack": "pack --clean=false --from=.factory --js-format=umd --js-name=TextEditor --js-top='%(js.license)' --mjs=true --to=."
   },
-  "version": "3.4.0"
+  "version": "4.0.0"
 }

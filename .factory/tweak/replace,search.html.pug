@@ -6,9 +6,9 @@ block state
 
 block script
   script
-    | Object.assign(TE.prototype, TE.History.that);
-    |
-    | const editor = new TE(document.querySelector('textarea'));
+    | const editor = new TextEditor(document.querySelector('textarea'), {
+    |     with: [TextEditor.History]
+    | });
     |
     | let searchActive,
     |     searchContent,
@@ -34,13 +34,13 @@ block script
     |             isCaseSensitive = /[A-Z]/.test(searchQuery);
     |         if (selection.length) {
     |             // Replace in selection
-    |             editor.replace(new RegExp(TE.esc(searchQuery), 'g' + (isCaseSensitive ? "" : 'i')), m0 => {
+    |             editor.replace(new RegExp(TextEditor.esc(searchQuery), 'g' + (isCaseSensitive ? "" : 'i')), m0 => {
     |                 ++replaceCount;
     |                 return replaceValue;
     |             });
     |         } else {
     |             // Replace all
-    |             editor.set(searchContent.replace(new RegExp(TE.esc(searchQuery), 'g' + (isCaseSensitive ? "" : 'i')), m0 => {
+    |             editor.set(searchContent.replace(new RegExp(TextEditor.esc(searchQuery), 'g' + (isCaseSensitive ? "" : 'i')), m0 => {
     |                 ++replaceCount;
     |                 return replaceValue;
     |             }));

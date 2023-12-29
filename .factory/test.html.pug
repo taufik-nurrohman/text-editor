@@ -1,16 +1,16 @@
-extends ../_index.pug
+extends _index.pug
 
 block state
   - const title = 'Text Editor'
-  - const scripts = ['../index.min.js']
+  - const scripts = ['index.min.js']
 
 block script
   script
-    | const editor = new TE(document.querySelector('input'));
+    | const editor = new TextEditor(document.querySelector('textarea'));
 
 block content
   main
-    p: input(type='text' value='abcdef')
+    p: textarea(spellcheck='false') abcdef
     p
       button(onclick='editor.wrap(\'*\', \'*\');'): b B
       = ' '

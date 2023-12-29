@@ -6,7 +6,7 @@ block state
 
 block script
   script
-    | const editor = new TE(document.querySelector('textarea'));
+    | const editor = new TextEditor(document.querySelector('textarea'));
 
 block content
   main
@@ -21,4 +21,4 @@ block content
       = ' '
       button(onclick='editor.select(8);') Move Caret to 8
       = ' '
-      button(onclick='editor.select(4, 8);') Select 4 to 8
+      button(onclick='editor.select(4, 9);') Select 4 to 8

@@ -7,7 +7,7 @@ block state
 
 block script
   script
-    | const editor = new TE(document.querySelector('textarea'));
+    | const editor = new TextEditor(document.querySelector('textarea'));
 
 block style
   style
@@ -68,10 +68,10 @@ block content
   p(role='alert') Do you like this project? Please support my #[a(href='https://github.com/mecha-cms') Mecha CMS] project too. Thank you!
   header
     h1= title
-    p Text Editor is a simple JavaScript application that aims to provide accessibility improvements to the native HTML #[code &lt;textarea&gt;] elements so that users can control and manipulate their data in the text editor as they wish.
+    p Text Editor is a simple JavaScript application that aims to provide accessibility enhancements to the native HTML #[code &lt;textarea&gt;] elements, allowing users to control and manipulate their data in the text editor as they wish.
     hr
   main
-    p It contains very sufficient methods to manipulate the existing text selection range data without providing unnecessary features. This ensures the file size remains small and keeps the scope of learning curve to be narrow, so that you can focus on the results.
+    p It contains very sufficient methods to manipulate the existing text selection range data without providing unnecessary features. This keeps the file size small and the learning curve low, so you can fully focus on the results.
     p
       textarea(spellcheck='false' style={
         'display': 'block',
@@ -105,7 +105,7 @@ block content
       |     &lt;/p&gt;
       |     &lt;script src="#[a(href='index.min.js' target='_blank') ./index.min.js]"&gt;&lt;/script&gt;
       |     &lt;script&gt;
-      |       const editor = new TE(document.querySelector('textarea'));
+      |       const editor = new TextEditor(document.querySelector('textarea'));
       |     &lt;/script&gt;
       |   &lt;/body&gt;
       | &lt;/html&gt;
@@ -113,14 +113,14 @@ block content
     p Functions and methods in this application are mostly native JavaScript and are intended for use by the browser. Node.js doesn&rsquo;t know about the DOM, so this kind of practice will probably be used more often to build new browser packages than to be used directly in the Node.js server.
     h4 CommonJS
     pre: code
-      | const TE = require('@taufik-nurrohman/text-editor').default;
+      | const TextEditor = require('@taufik-nurrohman/text-editor').default;
       |
-      | const editor = new TE(document.querySelector('textarea'));
+      | const editor = new TextEditor(document.querySelector('textarea'));
     h4 ECMAScript
     pre: code
-      | import TE from '@taufik-nurrohman/text-editor';
+      | import TextEditor from '@taufik-nurrohman/text-editor';
       |
-      | const editor = new TE(document.querySelector('textarea'));
+      | const editor = new TextEditor(document.querySelector('textarea'));
     h2 Examples
     ul
       li: a(href='test.html' target='_blank') No Idea?
@@ -146,12 +146,12 @@ block content
       li: a(href='test/trim.html' target='_blank') Trim Selection
       li: a(href='test/self.input.html' target='_blank') Using #[code &lt;input&gt;] Instead of #[code &lt;textarea&gt;]
     h2 Settings
-    pre: code let editor = new TE(#[var self], #[var tab] = '\t');
+    pre: code const editor = new TextEditor(self, tab = '\t');
     pre: code
-      | let editor = new TE(#[var self], #[var state] = {
-      |         tab: '\t',
-      |         with: []
-      |     });
+      | const editor = new TextEditor(self, state = {
+      |     tab: '\t',
+      |     with: []
+      | });
     table(border='1')
       thead
         tr
@@ -172,33 +172,33 @@ block content
           td The default indent character for #[code editor.pull()] and #[code editor.push()] method.
         tr
           td: code state.with
-          td List of callable functions to be invoked each time the application is initialized. A very simple “plugin” system.
+          td List of callable functions or objects containing an #[code attach()] method to be invoked each time the application is initialized. A very simple “plugin” system.
     h2 Methods and Properties
-    h3 TE.esc(string)
+    h3 TextEditor.esc(string)
     p Escape regular expression&rsquo;s special characters.
-    h3 TE.instances
+    h3 TextEditor.instances
     p Return the application instances.
     pre: code
-      | for (let key in TE.instances) {
+      | for (let key in TextEditor.instances) {
       |     console.log(key);
-      |     console.log(TE.instances[key]);
+      |     console.log(TextEditor.instances[key]);
       | }
-    h3 TE.state
+    h3 TextEditor.state
     p This property stores the initial values of #[code editor.state].
     pre: code
-      | const editor = new TE({
+      | const editor = new TextEditor(document.querySelector('textarea'), {
       |     foo: ['bar', 'baz', 'qux']
       | });
       |
-      | console.log([TE.state, editor.state]);
-    h3 TE.version
+      | console.log([TextEditor.state, editor.state]);
+    h3 TextEditor.version
     p Return the application version.
     pre: code
-      | let version = TE.version,
+      | let version = TextEditor.version,
       |     major = version.split('.')[0];
       |
       | if (+major &lt; 3) { &hellip; }
-    h3 TE.x
+    h3 TextEditor.x
     p List of regular expression characters to be escaped.
     h3 editor.blur()
     p Blur from the #[code &lt;textarea&gt;] element.
@@ -316,6 +316,29 @@ block content
       | // `a#[mark b]c`
       | console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start":1,"value":"b"}`
     h2 Extensions
+    h3 Anatomy of an Extension
+    p Extension as a function:
+    pre: code
+      | function Extension(self, state = {}) {
+      |     this.editorMethod = function () {};
+      |     this.editorProperty = 1;
+      | }
+    p Extension as an object:
+    pre: code
+      | const Extension = {
+      |     attach: function (self, state = {}) {}
+      |     detach: function (self, state = {}) {}
+      | };
+    h3 Usage of an Extension
+    p As a core extension:
+    pre: code
+      | TextEditor.state.with.push(Extension);
+    p As an optional extension:
+    pre: code
+      | const editor = new TextEditor(document.querySelector('textarea'), {
+      |     with: [Extension]
+      | });
+    h3 List of Extensions
     ul
       li: a(href='../text-editor.history/index.html' target='_blank') History Feature
       li: a(href='../text-editor.rect/index.html' target='_blank') Rect Feature
