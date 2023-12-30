@@ -10,22 +10,22 @@ function trim(str, dir) {
     return (str || "")['trim' + (-1 === dir ? 'Left' : 1 === dir ? 'Right' : "")]();
 }
 
-function TextEditor(source, state = {}) {
+function TextEditor(self, state = {}) {
 
     const $ = this;
 
-    if (!source) {
+    if (!self) {
         return $;
     }
 
     // Already instantiated, skip!
-    if (source[name]) {
-        return source[name];
+    if (self[name]) {
+        return self[name];
     }
 
     // Return new instance if `TextEditor` was called without the `new` operator
     if (!isInstance($, TextEditor)) {
-        return new TextEditor(source, state);
+        return new TextEditor(self, state);
     }
 
     $.state = state = fromStates({}, TextEditor.state, isString(state) ? {
@@ -33,39 +33,39 @@ function TextEditor(source, state = {}) {
     } : (state || {}));
 
     // The `<textarea>` element
-    $.self = $.source = source;
+    $.self = $.source = self;
 
     // Store current instance to `TextEditor.instances`
-    TextEditor.instances[source.id || source.name || toObjectCount(TextEditor.instances)] = $;
+    TextEditor.instances[self.id || self.name || toObjectCount(TextEditor.instances)] = $;
 
     // Mark current DOM as active text editor to prevent duplicate instance
-    source[name] = $;
+    self[name] = $;
 
     let any = /^([\s\S]*?)$/, // Any character(s)
-        sourceIsDisabled = () => source.disabled,
-        sourceIsReadOnly = () => source.readOnly,
-        sourceValue = () => source.value.replace(/\r/g, "");
+        isDisabled = () => self.disabled,
+        isReadOnly = () => self.readOnly,
+        theValue = () => self.value.replace(/\r/g, "");
 
     // The initial value
-    $.value = sourceValue();
+    $.value = theValue();
 
     // Get value
-    $.get = () => !sourceIsDisabled() && trim(sourceValue()) || null;
+    $.get = () => !isDisabled() && trim(theValue()) || null;
 
     // Reset to the initial value
-    $.let = () => ((source.value = $.value), $);
+    $.let = () => ((self.value = $.value), $);
 
     // Set value
     $.set = value => {
-        if (sourceIsDisabled() || sourceIsReadOnly()) {
+        if (isDisabled() || isReadOnly()) {
             return $;
         }
-        return (source.value = value), $;
+        return (self.value = value), $;
     };
 
     // Get selection
     $.$ = () => {
-        return new TextEditor.S(source.selectionStart, source.selectionEnd, sourceValue());
+        return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue());
     };
 
     $.focus = mode => {
@@ -73,46 +73,46 @@ function TextEditor(source, state = {}) {
         if (-1 === mode) {
             x = y = 0; // Put caret at the start of the editor, scroll to the start of the editor
         } else if (1 === mode) {
-            x = toCount(sourceValue()); // Put caret at the end of the editor
-            y = source.scrollHeight; // Scroll to the end of the editor
+            x = toCount(theValue()); // Put caret at the end of the editor
+            y = self.scrollHeight; // Scroll to the end of the editor
         }
         if (isSet(x) && isSet(y)) {
-            source.selectionStart = source.selectionEnd = x;
-            source.scrollTop = y;
+            self.selectionStart = self.selectionEnd = x;
+            self.scrollTop = y;
         }
-        return source.focus(), $;
+        return self.focus(), $;
     };
 
     // Blur from the editor
-    $.blur = () => (source.blur(), $);
+    $.blur = () => (self.blur(), $);
 
     // Select value
     $.select = (...lot) => {
-        if (sourceIsDisabled() || sourceIsReadOnly()) {
-            return source.focus(), $;
+        if (isDisabled() || isReadOnly()) {
+            return self.focus(), $;
         }
         let count = toCount(lot),
             {start, end} = $.$(),
             x, y, X, Y;
         x = W.pageXOffset || R.scrollLeft || B.scrollLeft;
         y = W.pageYOffset || R.scrollTop || B.scrollTop;
-        X = source.scrollLeft;
-        Y = source.scrollTop;
+        X = self.scrollLeft;
+        Y = self.scrollTop;
         if (0 === count) { // Restore selection with `$.select()`
             lot[0] = start;
             lot[1] = end;
         } else if (1 === count) { // Move caret position with `$.select(7)`
             if (true === lot[0]) { // Select all with `$.select(true)`
-                return source.focus(), source.select(), $;
+                return self.focus(), self.select(), $;
             }
             lot[1] = lot[0];
         }
-        source.focus();
+        self.focus();
         // Default `$.select(7, 100)`
-        source.selectionStart = lot[0];
-        source.selectionEnd = lot[1];
-        source.scrollLeft = X;
-        source.scrollTop = Y;
+        self.selectionStart = lot[0];
+        self.selectionEnd = lot[1];
+        self.scrollLeft = X;
+        self.scrollTop = Y;
         return W.scroll(x, y), $;
     };
 
@@ -236,32 +236,38 @@ function TextEditor(source, state = {}) {
 
     // Destructor
     $.pop = () => {
-        if (!source[name]) {
+        if (!self[name]) {
             return $; // Already ejected!
         }
         if (isArray(state.with)) {
             for (let i = 0, j = toCount(state.with); i < j; ++i) {
                 let value = state.with[i];
+                if (isString(value)) {
+                    value = TextEditor[value];
+                }
                 if (isObject(value) && isFunction(value.detach)) {
-                    value.detach.call($, source, state);
+                    value.detach.call($, self, state);
                     continue;
                 }
             }
         }
-        return (delete source[name]), $;
+        return (delete self[name]), $;
     };
 
     if (isArray(state.with)) {
         for (let i = 0, j = toCount(state.with); i < j; ++i) {
             let value = state.with[i];
-            // `const Extension = function (source, state = {}) {}`
+            if (isString(value)) {
+                value = TextEditor[value];
+            }
+            // `const Extension = function (self, state = {}) {}`
             if (isFunction(value)) {
-                value.call($, source, state);
+                value.call($, self, state);
                 continue;
             }
-            // `const Extension = {attach: function (source, state = {}) {}, detach: function (source, state = {}) {}}`
+            // `const Extension = {attach: function (self, state = {}) {}, detach: function (self, state = {}) {}}`
             if (isObject(value) && isFunction(value.attach)) {
-                value.attach.call($, source, state);
+                value.attach.call($, self, state);
                 continue;
             }
         }
