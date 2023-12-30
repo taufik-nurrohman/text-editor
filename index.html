@@ -8,11 +8,19 @@
     <title>Text Editor 4.0.1</title>
     <link href="../layout/index.min.css" rel="stylesheet">
     <style>
+      :root {
+        border-top: 5px solid #00f;
+      }
+
       [role='group'] button {
         min-width: 2.5rem;
       }
 
       @media (min-width: 45rem) {
+        :root {
+          padding-bottom: 3rem;
+          padding-top: 3rem;
+        }
         body > * {
           margin-left: auto;
           margin-right: auto;
@@ -30,7 +38,7 @@
     </header>
     <main>
       <p>It contains very sufficient methods to manipulate the existing text selection range data without providing unnecessary features. This keeps the file size small and the learning curve low, so you can fully focus on the results.</p>
-      <p><textarea spellcheck="false" style="display:block;width:100%;height:6em;box-sizing:border-box;">Lorem ipsum dolor sit amet.</textarea></p>
+      <p><textarea spellcheck="false" style="display:block;width:100%;">Lorem ipsum dolor sit amet.</textarea></p>
       <p role="group"><button onclick="editor.wrap('&lt;b&gt;', '&lt;/b&gt;');"><b>B</b></button> <button onclick="editor.wrap('&lt;i&gt;', '&lt;/i&gt;');"><i>I</i></button> <button onclick="editor.insert('😀', -1, true);">&#x263A;</button></p>
       <h2>Usage</h2>
       <h3>Browser</h3>
@@ -266,8 +274,9 @@ console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start
       <h3>List of Extensions</h3>
       <ul>
         <li><a href="../text-editor.history/index.html" target="_blank">History Feature</a></li>
+        <li><a href="../text-editor.key/index.html" target="_blank">Key(board) Feature</a></li>
         <li><a href="../text-editor.rect/index.html" target="_blank">Rect Feature</a></li>
-        <li><a href="../text-editor.source/index.html" target="_blank">Source Code Editor</a></li>
+        <li><a href="../text-editor.source/index.html" target="_blank">Generic Source Code Editor</a></li>
         <li><a href="../text-editor.source-x-m-l/index.html" target="_blank">XML Source Code Editor</a></li>
         <li><a href="../text-editor.source-h-t-m-l/index.html" target="_blank">HTML Source Code Editor</a></li>
         <li><a href="../text-editor.source-markdown/index.html" target="_blank">Markdown Source Code Editor</a></li>

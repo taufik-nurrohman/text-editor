@@ -12,11 +12,19 @@ block script
 
 block style
   style
+    | :root {
+    |   border-top: 5px solid #00f;
+    | }
+    |
     | [role='group'] button {
     |   min-width: 2.5rem;
     | }
     |
     | @media (min-width: 45rem) {
+    |   :root {
+    |     padding-bottom: 3rem;
+    |     padding-top: 3rem;
+    |   }
     |   body > * {
     |     margin-left: auto;
     |     margin-right: auto;
@@ -35,9 +43,7 @@ block content
     p
       textarea(spellcheck='false' style={
         'display': 'block',
-        'width': '100%',
-        'height': '6em',
-        'box-sizing': 'border-box'
+        'width': '100%'
       }) Lorem ipsum dolor sit amet.
     p(role='group')
       button(onclick='editor.wrap(\'<b>\', \'</b>\');'): b B
@@ -295,8 +301,9 @@ block content
     h3 List of Extensions
     ul
       li: a(href='../text-editor.history/index.html' target='_blank') History Feature
+      li: a(href='../text-editor.key/index.html' target='_blank') Key(board) Feature
       li: a(href='../text-editor.rect/index.html' target='_blank') Rect Feature
-      li: a(href='../text-editor.source/index.html' target='_blank') Source Code Editor
+      li: a(href='../text-editor.source/index.html' target='_blank') Generic Source Code Editor
       li: a(href='../text-editor.source-x-m-l/index.html' target='_blank') XML Source Code Editor
       li: a(href='../text-editor.source-h-t-m-l/index.html' target='_blank') HTML Source Code Editor
       li: a(href='../text-editor.source-markdown/index.html' target='_blank') Markdown Source Code Editor
