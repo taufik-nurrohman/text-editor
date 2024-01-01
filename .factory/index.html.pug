@@ -140,7 +140,7 @@ block content
       |     console.log(TextEditor.instances[key]);
       | }
     h3: code TextEditor.state
-    p This property stores the initial values of #[code editor.state].
+    p Return the default values of #[code editor.state].
     pre: code
       | const editor = new TextEditor(document.querySelector('textarea'), {
       |     foo: ['bar', 'baz', 'qux']
@@ -303,9 +303,9 @@ block content
       li: a(href='../text-editor.source-x-m-l/index.html' target='_blank') XML Source Code Editor
       li: a(href='../text-editor.source-h-t-m-l/index.html' target='_blank') HTML Source Code Editor
       li: a(href='../text-editor.source-markdown/index.html' target='_blank') Markdown Source Code Editor
-      li BBCode Editor
-      li HTML Editor
-      li Markdown Editor
+      li: a(aria-disabled='true') BBCode Editor
+      li: a(aria-disabled='true') HTML Editor
+      li: a(aria-disabled='true') Markdown Editor
     h2 License
     p Use it for free, pay if you get paid. So, you&rsquo;ve just benefited financially after using this project? It&rsquo;s a good idea to #[a(href='https://paypal.me/tatautaufik' target='_blank') share a little financial support] with this open source project too. Your support will motivate me to do any further development, as well as to provide voluntary support to overcome problems related to this project.
     p Thank you! ❤️

@@ -134,7 +134,7 @@ const editor = new TextEditor(document.querySelector('textarea'));</code></pre>
     console.log(TextEditor.instances[key]);
 }</code></pre>
       <h3><code>TextEditor.state</code></h3>
-      <p>This property stores the initial values of <code>editor.state</code>.</p>
+      <p>Return the default values of <code>editor.state</code>.</p>
       <pre><code>const editor = new TextEditor(document.querySelector('textarea'), {
     foo: ['bar', 'baz', 'qux']
 });
@@ -276,9 +276,9 @@ console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start
         <li><a href="../text-editor.source-x-m-l/index.html" target="_blank">XML Source Code Editor</a></li>
         <li><a href="../text-editor.source-h-t-m-l/index.html" target="_blank">HTML Source Code Editor</a></li>
         <li><a href="../text-editor.source-markdown/index.html" target="_blank">Markdown Source Code Editor</a></li>
-        <li>BBCode Editor</li>
-        <li>HTML Editor</li>
-        <li>Markdown Editor</li>
+        <li><a aria-disabled="true">BBCode Editor</a></li>
+        <li><a aria-disabled="true">HTML Editor</a></li>
+        <li><a aria-disabled="true">Markdown Editor</a></li>
       </ul>
       <h2>License</h2>
       <p>Use it for free, pay if you get paid. So, you&rsquo;ve just benefited financially after using this project? It&rsquo;s a good idea to <a href="https://paypal.me/tatautaufik" target="_blank">share a little financial support</a> with this open source project too. Your support will motivate me to do any further development, as well as to provide voluntary support to overcome problems related to this project.</p>
@@ -286,7 +286,7 @@ console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start
     </main>
     <footer>
       <hr>
-      <p>&copy; 2023 <a href="/">Taufik Nurrohman</a></p>
+      <p>&copy; 2024 <a href="/">Taufik Nurrohman</a></p>
     </footer>
     <script src="index.min.js"></script>
     <script>
