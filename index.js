@@ -118,8 +118,6 @@
         if (isPattern(pattern)) {
             return pattern;
         }
-        // No need to escape `/` in the pattern string
-        pattern = pattern.replace(/\//g, '\\/');
         return new RegExp(pattern, isSet(opt) ? opt : 'g');
     };
     var x = "!$^*()+=[]{}|:<>,.?/-";
