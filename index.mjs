@@ -50,7 +50,7 @@ function TextEditor(self, state = {}) {
     $.value = theValue();
 
     // Get value
-    $.get = () => !isDisabled() && trim(theValue()) || null;
+    $.get = () => !isDisabled() && theValue() || null;
 
     // Reset to the initial value
     $.let = () => ((self.value = $.value), $);
@@ -186,8 +186,13 @@ function TextEditor(self, state = {}) {
     };
 
     $.pull = (by, includeEmptyLines = true) => {
-        let {length, value} = $.$();
-        by = esc(isSet(by) ? by : state.tab);
+        let {before, end, length, start, value} = $.$();
+        by = isSet(by) ? by : state.tab;
+        if ("" !== before && '\n' !== before.slice(-1) && by !== before.slice(-toCount(by))) {
+            // Move cursor to the start of the line
+            $.select(start = start - toCount(before.split('\n').pop()), length ? end : start);
+        }
+        by = esc(by);
         if (length) {
             if (includeEmptyLines) {
                 return $.replace(toPattern('^' + by, 'gm'), "");
@@ -203,8 +208,12 @@ function TextEditor(self, state = {}) {
     };
 
     $.push = (by, includeEmptyLines = false) => {
-        let {length} = $.$();
+        let {before, end, length, start} = $.$();
         by = isSet(by) ? by : state.tab;
+        if ("" !== before && '\n' !== before.slice(-1) && by !== before.slice(-toCount(by))) {
+            // Move cursor to the start of the line
+            $.select(start = start - toCount(before.split('\n').pop()), length ? end : start);
+        }
         if (length) {
             return $.replace(toPattern('^' + (includeEmptyLines ? "" : '(?!$)'), 'gm'), by);
         }

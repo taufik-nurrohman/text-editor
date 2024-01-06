@@ -167,7 +167,7 @@
         $.value = theValue();
         // Get value
         $.get = function () {
-            return !isDisabled() && trim(theValue()) || null;
+            return !isDisabled() && theValue() || null;
         };
         // Reset to the initial value
         $.let = function () {
@@ -324,9 +324,17 @@
                 includeEmptyLines = true;
             }
             var _$$$6 = $.$(),
+                before = _$$$6.before,
+                end = _$$$6.end,
                 length = _$$$6.length,
+                start = _$$$6.start,
                 value = _$$$6.value;
-            by = esc(isSet(by) ? by : state.tab);
+            by = isSet(by) ? by : state.tab;
+            if ("" !== before && '\n' !== before.slice(-1) && by !== before.slice(-toCount(by))) {
+                // Move cursor to the start of the line
+                $.select(start = start - toCount(before.split('\n').pop()), length ? end : start);
+            }
+            by = esc(by);
             if (length) {
                 if (includeEmptyLines) {
                     return $.replace(toPattern('^' + by, 'gm'), "");
@@ -345,8 +353,15 @@
                 includeEmptyLines = false;
             }
             var _$$$7 = $.$(),
-                length = _$$$7.length;
+                before = _$$$7.before,
+                end = _$$$7.end,
+                length = _$$$7.length,
+                start = _$$$7.start;
             by = isSet(by) ? by : state.tab;
+            if ("" !== before && '\n' !== before.slice(-1) && by !== before.slice(-toCount(by))) {
+                // Move cursor to the start of the line
+                $.select(start = start - toCount(before.split('\n').pop()), length ? end : start);
+            }
             if (length) {
                 return $.replace(toPattern('^' + (includeEmptyLines ? "" : '(?!$)'), 'gm'), by);
             }
