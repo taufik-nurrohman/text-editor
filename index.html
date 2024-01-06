@@ -7,23 +7,6 @@
     <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
     <title>Text Editor 4.0.1</title>
     <link href="../layout/index.min.css" rel="stylesheet">
-    <style>
-      [role='group'] button {
-        min-width: 2.5rem;
-      }
-
-      @media (min-width: 45rem) {
-        :root {
-          padding-bottom: 3rem;
-          padding-top: 3rem;
-        }
-        body > * {
-          margin-left: auto;
-          margin-right: auto;
-          max-width: 45rem;
-        }
-      }
-    </style>
   </head>
   <body>
     <p role="alert">Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
@@ -35,7 +18,7 @@
     <main>
       <p>It contains very sufficient methods to manipulate the existing text selection range data without providing unnecessary features. This keeps the file size small and the learning curve low, so you can fully focus on the results.</p>
       <p><textarea spellcheck="false" style="display:block;width:100%;">Lorem ipsum dolor sit amet.</textarea></p>
-      <p role="group"><button onclick="editor.wrap('&lt;b&gt;', '&lt;/b&gt;');"><b>B</b></button> <button onclick="editor.wrap('&lt;i&gt;', '&lt;/i&gt;');"><i>I</i></button> <button onclick="editor.insert('😀', -1, true);">&#x263A;</button></p>
+      <p role="group"><button onclick="editor.wrap('&lt;b&gt;', '&lt;/b&gt;');"><b>B</b></button> <button onclick="editor.wrap('&lt;i&gt;', '&lt;/i&gt;');"><i>I</i></button> <button onclick="editor.insert('❤', -1, true);">&#10084;</button></p>
       <h2>Usage</h2>
       <h3>Browser</h3>
       <pre><code>&lt;!DOCTYPE html&gt;
@@ -88,86 +71,46 @@ const editor = new TextEditor(document.querySelector('textarea'));</code></pre>
         <li><a href="test/trim.html" target="_blank">Trim Selection</a></li>
         <li><a href="test/self.input.html" target="_blank">Using <code>&lt;input&gt;</code> Instead of <code>&lt;textarea&gt;</code></a></li>
       </ul>
-      <h2>Settings</h2>
+      <h2>Constructor</h2>
       <pre><code>const editor = new TextEditor(self, tab = '\t');</code></pre>
       <pre><code>const editor = new TextEditor(self, state = {
     tab: '\t',
     with: []
 });</code></pre>
-      <table border="1">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>self</code></td>
-            <td>The text area element.</td>
-          </tr>
-          <tr>
-            <td><code>tab</code></td>
-            <td>The default indent character for <code>editor.pull()</code> and <code>editor.push()</code> method.</td>
-          </tr>
-          <tr>
-            <td><code>state</code></td>
-            <td>The configuration data.</td>
-          </tr>
-          <tr>
-            <td><code>state.tab</code></td>
-            <td>The default indent character for <code>editor.pull()</code> and <code>editor.push()</code> method.</td>
-          </tr>
-          <tr>
-            <td><code>state.with</code></td>
-            <td>List of callable functions or objects containing an <code>attach()</code> method to be invoked each time the application is initialized. A very simple “plugin” system.</td>
-          </tr>
-        </tbody>
-      </table>
-      <h2>Methods and Properties</h2>
-      <h3><code>TextEditor.esc(string)</code></h3>
-      <p>Escape regular expression&rsquo;s special characters.</p>
-      <h3><code>TextEditor.instances</code></h3>
-      <p>Return the application instances.</p>
-      <pre><code>for (let key in TextEditor.instances) {
-    console.log(key);
-    console.log(TextEditor.instances[key]);
-}</code></pre>
-      <h3><code>TextEditor.state</code></h3>
-      <p>Return the default values of <code>editor.state</code>.</p>
-      <pre><code>const editor = new TextEditor(document.querySelector('textarea'), {
-    foo: ['bar', 'baz', 'qux']
-});
-
-console.log([TextEditor.state, editor.state]);</code></pre>
-      <h3><code>TextEditor.version</code></h3>
-      <p>Return the application version.</p>
-      <pre><code>let version = TextEditor.version,
-    major = version.split('.')[0];
-
-if (+major &lt; 3) { &hellip; }</code></pre>
-      <h3><code>TextEditor.x</code></h3>
-      <p>List of regular expression characters to be escaped.</p>
-      <h3><code>editor.blur()</code></h3>
+      <h2>Parameters</h2>
+      <h3><code>self</code></h3>
+      <p>The text area element.</p>
+      <h3><code>tab</code></h3>
+      <p>The default indent character for <code>editor.pull()</code> and <code>editor.push()</code> method.</p>
+      <h3><code>state</code></h3>
+      <p>The configuration data.</p>
+      <h3><code>state.tab</code></h3>
+      <p>The default indent character for <code>editor.pull()</code> and <code>editor.push()</code> method.</p>
+      <h3><code>state.with</code></h3>
+      <p>List of callable functions or objects containing an <code>attach()</code> method to be invoked each time the application is initialized. A very simple “plugin” system.</p>
+      <h2>Methods</h2>
+      <h3>Instance Methods</h3>
+      <p>Instance methods are methods that are available through the results of a <code>TextEditor</code> construct.</p>
+      <h4><code>editor.blur()</code></h4>
       <p>Blur from the <code>&lt;textarea&gt;</code> element.</p>
-      <h3><code>editor.focus(mode = 0)</code></h3>
+      <h4><code>editor.focus(mode = 0)</code></h4>
       <p>Focus to the <code>&lt;textarea&gt;</code> element.</p>
       <pre><code>editor.focus(); // Focus to the last selection
 editor.focus(-1); // Focus to the start of text area value
 editor.focus(1); // Focus to the end of text area value
 editor.focus(true); // Select all</code></pre>
-      <h3><code>editor.get()</code></h3>
+      <h4><code>editor.get()</code></h4>
       <p>Get current value of the <code>&lt;textarea&gt;</code> element if not empty, otherwise, return <code>null</code>.</p>
-      <h3><code>editor.insert(string, mode = 0, clear = false)</code></h3>
+      <h4><code>editor.insert(string, mode = 0, clear = false)</code></h4>
       <p>Insert <var>string</var> to (replace) the current selection.</p>
       <pre><code>editor.insert(':)'); // Insert at selection (replace selection)
 editor.insert('&lt;b&gt;', -1); // Insert before selection
 editor.insert('&lt;/b&gt;', 1); // Insert after selection
 editor.insert(':)', -1, true); // Insert before selection and delete selection
 editor.insert(':)', 1, true); // Insert after selection and delete selection</code></pre>
-      <h3><code>editor.let()</code></h3>
+      <h4><code>editor.let()</code></h4>
       <p>Reset value to the initial value of the <code>&lt;textarea&gt;</code> element.</p>
-      <h3><code>editor.match(pattern, then)</code></h3>
+      <h4><code>editor.match(pattern, then)</code></h4>
       <p>Match current selection with the pattern provided.</p>
       <pre><code>if (editor.match(/^\s*:\w+:\s*$/)) {
     alert('Selection is detected as emoji!'); // &rarr; <a href="test/match.html" target="_blank">demo</a>
@@ -189,46 +132,32 @@ console.log(test[0] &amp;&amp; test[1] &amp;&amp; test[2]);</code></pre>
       <pre><code>editor.match([/:$/, /^\w+$/, /^:/], function (before, value, after) {
     console.log([before, value, after]); // &rarr; <a href="test/toggle.html" target="_blank">demo</a>
 });</code></pre>
-      <h3><code>editor.peel(open, close, wrap = false)</code></h3>
+      <h4><code>editor.peel(open, close, wrap = false)</code></h4>
       <p>Unwrap current selection from <var>open</var> and <var>close</var>.</p>
       <pre><code>editor.peel('&lt;', '&gt;'); // Remove `&lt;` before selection and `&gt;` after selection
 editor.peel('&lt;', '&gt;', true); // Remove `&lt;` at selection start and `&gt;` at selection end</code></pre>
-      <h3><code>editor.pull(by = editor.state.tab, includeEmptyLines = true)</code></h3>
+      <h4><code>editor.pull(by = editor.state.tab, includeEmptyLines = true)</code></h4>
       <p>Outdent current selection from <var>by</var>.</p>
       <pre><code>editor.pull(); // Outdent from `\t`
 editor.pull('****'); // Outdent from `****`</code></pre>
-      <h3><code>editor.push(by = editor.state.tab, includeEmptyLines = false)</code></h3>
+      <h4><code>editor.push(by = editor.state.tab, includeEmptyLines = false)</code></h4>
       <p>Indent current selection with <var>by</var>.</p>
       <pre><code>editor.push(); // Indent with `\t`
 editor.push('****'); // Indent with `****`</code></pre>
-      <h3><code>editor.replace(from, to, mode = 0)</code></h3>
+      <h4><code>editor.replace(from, to, mode = 0)</code></h4>
       <p>Replace current, before or after selection from <var>from</var> to <var>to</var>.</p>
       <pre><code>editor.replace(/&lt;.*?&gt;/g, ""); // Strip HTML tag(s) in selection
 editor.replace(/&lt;.*?&gt;/g, "", -1); // Strip HTML tag(s) before selection
 editor.replace(/&lt;.*?&gt;/g, "", 1); // Strip HTML tag(s) after selection</code></pre>
-      <h3><code>editor.select(...lot)</code></h3>
+      <h4><code>editor.select(...lot)</code></h4>
       <p>Set selection range.</p>
       <pre><code>editor.select(); // Is the same as `editor.focus()`
 editor.select(2); // Move caret to the index `2`
 editor.select(0, 2); // Select from range `0` to `2`
 editor.select(true); // Select all</code></pre>
-      <h3><code>editor.self</code></h3>
-      <p>Return the <code>&lt;textarea&gt;</code> element.</p>
-      <pre><code>editor.self.addEventListener('keydown', e =&gt; {
-    if (
-        (e.key &amp;&amp; 'Enter' === e.key) ||
-        (e.keyCode &amp;&amp; 13 === e.keyCode)
-    ) {
-        // Do something with `Enter` key!
-    }
-});</code></pre>
-      <h3><code>editor.set(value)</code></h3>
+      <h4><code>editor.set(value)</code></h4>
       <p>Set value to the <code>&lt;textarea&gt;</code> element.</p>
-      <h3><code>editor.source</code></h3>
-      <p>Alias of <code>editor.self</code> property.</p>
-      <h3><code>editor.state</code></h3>
-      <p>Return the text editor states if any.</p>
-      <h3><code>editor.trim(open = "", close = "", start = "", end = "", tidy = true)</code></h3>
+      <h4><code>editor.trim(open = "", close = "", start = "", end = "", tidy = true)</code></h4>
       <p>Trim current selection from white-spaces, and optionally insert characters at the specified points.</p>
       <pre><code>// `a&lt;open&gt;<mark>&lt;start&gt;b&lt;end&gt;</mark>&lt;close&gt;c`
 
@@ -238,22 +167,67 @@ editor.trim("", "", false, false); // Remove any white-space(s) before and after
 editor.trim(' ', ' '); // Force a space before and after selection
 editor.trim('\n\n', '\n\n'); // Force line-break before and after selection
 editor.trim('\n\n', '\n\n', "", "", false); // Ignore empty value before and after selection, just insert that `\n\n` away</code></pre>
-      <h3><code>editor.value</code></h3>
-      <p>Return the initial value of the <code>&lt;textarea&gt;</code> element.</p>
-      <h3><code>editor.wrap(open, close, wrap = false)</code></h3>
+      <h4><code>editor.wrap(open, close, wrap = false)</code></h4>
       <p>Wrap current selection with <var>open</var> and <var>close</var>.</p>
       <pre><code>editor.wrap('&lt;', '&gt;'); // Wrap with `&lt;` and `&gt;`
 editor.wrap('&lt;', '&gt;', true); // Wrap with `&lt;` and `&gt;` then select</code></pre>
-      <h3><code>editor.$()</code></h3>
+      <h4><code>editor.$()</code></h4>
       <p>Get current text selection data.</p>
       <pre><code>// `a<mark>b</mark>c`
 console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start":1,"value":"b"}`</code></pre>
+      <h3>Static Methods</h3>
+      <p>Static methods are methods that are directly available on the <code>TextEditor</code> object.</p>
+      <h4><code>TextEditor.esc(string)</code></h4>
+      <p>Escape regular expression&rsquo;s special characters.</p>
+      <h2>Properties</h2>
+      <h3>Instance Properties</h3>
+      <p>Instance properties are properties that are available through the results of a <code>TextEditor</code> construct.</p>
+      <h4><code>editor.self</code></h4>
+      <p>Return the <code>&lt;textarea&gt;</code> element.</p>
+      <pre><code>editor.self.addEventListener('keydown', e =&gt; {
+    if (
+        (e.key &amp;&amp; 'Enter' === e.key) ||
+        (e.keyCode &amp;&amp; 13 === e.keyCode)
+    ) {
+        // Do something with `Enter` key!
+    }
+});</code></pre>
+      <h4><code>editor.source</code></h4>
+      <p>Alias of <code>editor.self</code> property.</p>
+      <h4><code>editor.state</code></h4>
+      <p>Return the text editor states if any.</p>
+      <h4><code>editor.value</code></h4>
+      <p>Return the initial value of the <code>&lt;textarea&gt;</code> element.</p>
+      <h3>Static Properties</h3>
+      <p>Static properties are properties that are directly available on the <code>TextEditor</code> object.</p>
+      <h4><code>TextEditor.instances</code></h4>
+      <p>Return the application instances.</p>
+      <pre><code>for (let key in TextEditor.instances) {
+    console.log(key);
+    console.log(TextEditor.instances[key]);
+}</code></pre>
+      <h4><code>TextEditor.state</code></h4>
+      <p>Return the default values of <code>editor.state</code>.</p>
+      <pre><code>const editor = new TextEditor(document.querySelector('textarea'), {
+    foo: ['bar', 'baz', 'qux']
+});
+
+console.log([TextEditor.state, editor.state]);</code></pre>
+      <h4><code>TextEditor.version</code></h4>
+      <p>Return the application version.</p>
+      <pre><code>let version = TextEditor.version,
+    major = version.split('.')[0];
+
+if (+major &lt; 3) { &hellip; }</code></pre>
+      <h4><code>TextEditor.x</code></h4>
+      <p>List of regular expression characters to be escaped.</p>
       <h2>Extensions</h2>
       <h3>Anatomy of an Extension</h3>
       <p>Extension as a function:</p>
       <pre><code>function Extension(self, state = {}) {
-    this.editorMethod = function () {};
-    this.editorProperty = 1;
+    this.a = 1;
+    this.b = function () {};
+    return this;
 }</code></pre>
       <p>Extension as an object:</p>
       <pre><code>const Extension = {

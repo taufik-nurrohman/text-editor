@@ -10,24 +10,6 @@ block script
   script
     | const editor = new TextEditor(document.querySelector('textarea'));
 
-block style
-  style
-    | [role='group'] button {
-    |   min-width: 2.5rem;
-    | }
-    |
-    | @media (min-width: 45rem) {
-    |   :root {
-    |     padding-bottom: 3rem;
-    |     padding-top: 3rem;
-    |   }
-    |   body > * {
-    |     margin-left: auto;
-    |     margin-right: auto;
-    |     max-width: 45rem;
-    |   }
-    | }
-
 block content
   p(role='alert') Do you like this project? Please support my #[a(href='https://github.com/mecha-cms') Mecha CMS] project too. Thank you!
   header
@@ -46,7 +28,7 @@ block content
       = ' '
       button(onclick='editor.wrap(\'<i>\', \'</i>\');'): i I
       = ' '
-      button(onclick='editor.insert(\'😀\', -1, true);') &#x263A;
+      button(onclick='editor.insert(\'❤\', -1, true);') &#10084;
     h2 Usage
     h3 Browser
     pre: code
@@ -101,73 +83,39 @@ block content
       li: a(href='tweak/paste.html' target='_blank') Paste as Plain Text
       li: a(href='test/trim.html' target='_blank') Trim Selection
       li: a(href='test/self.input.html' target='_blank') Using #[code &lt;input&gt;] Instead of #[code &lt;textarea&gt;]
-    h2 Settings
+    h2 Constructor
     pre: code const editor = new TextEditor(self, tab = '\t');
     pre: code
       | const editor = new TextEditor(self, state = {
       |     tab: '\t',
       |     with: []
       | });
-    table(border='1')
-      thead
-        tr
-          th Name
-          th Description
-      tbody
-        tr
-          td: code self
-          td The text area element.
-        tr
-          td: code tab
-          td The default indent character for #[code editor.pull()] and #[code editor.push()] method.
-        tr
-          td: code state
-          td The configuration data.
-        tr
-          td: code state.tab
-          td The default indent character for #[code editor.pull()] and #[code editor.push()] method.
-        tr
-          td: code state.with
-          td List of callable functions or objects containing an #[code attach()] method to be invoked each time the application is initialized. A very simple “plugin” system.
-    h2 Methods and Properties
-    h3: code TextEditor.esc(string)
-    p Escape regular expression&rsquo;s special characters.
-    h3: code TextEditor.instances
-    p Return the application instances.
-    pre: code
-      | for (let key in TextEditor.instances) {
-      |     console.log(key);
-      |     console.log(TextEditor.instances[key]);
-      | }
-    h3: code TextEditor.state
-    p Return the default values of #[code editor.state].
-    pre: code
-      | const editor = new TextEditor(document.querySelector('textarea'), {
-      |     foo: ['bar', 'baz', 'qux']
-      | });
-      |
-      | console.log([TextEditor.state, editor.state]);
-    h3: code TextEditor.version
-    p Return the application version.
-    pre: code
-      | let version = TextEditor.version,
-      |     major = version.split('.')[0];
-      |
-      | if (+major &lt; 3) { &hellip; }
-    h3: code TextEditor.x
-    p List of regular expression characters to be escaped.
-    h3: code editor.blur()
+    h2 Parameters
+    h3: code self
+    p The text area element.
+    h3: code tab
+    p The default indent character for #[code editor.pull()] and #[code editor.push()] method.
+    h3: code state
+    p The configuration data.
+    h3: code state.tab
+    p The default indent character for #[code editor.pull()] and #[code editor.push()] method.
+    h3: code state.with
+    p List of callable functions or objects containing an #[code attach()] method to be invoked each time the application is initialized. A very simple “plugin” system.
+    h2 Methods
+    h3 Instance Methods
+    p Instance methods are methods that are available through the results of a #[code TextEditor] construct.
+    h4: code editor.blur()
     p Blur from the #[code &lt;textarea&gt;] element.
-    h3: code editor.focus(mode = 0)
+    h4: code editor.focus(mode = 0)
     p Focus to the #[code &lt;textarea&gt;] element.
     pre: code
       | editor.focus(); // Focus to the last selection
       | editor.focus(-1); // Focus to the start of text area value
       | editor.focus(1); // Focus to the end of text area value
       | editor.focus(true); // Select all
-    h3: code editor.get()
+    h4: code editor.get()
     p Get current value of the #[code &lt;textarea&gt;] element if not empty, otherwise, return #[code null].
-    h3: code editor.insert(string, mode = 0, clear = false)
+    h4: code editor.insert(string, mode = 0, clear = false)
     p Insert #[var string] to (replace) the current selection.
     pre: code
       | editor.insert(':)'); // Insert at selection (replace selection)
@@ -175,9 +123,9 @@ block content
       | editor.insert('&lt;/b&gt;', 1); // Insert after selection
       | editor.insert(':)', -1, true); // Insert before selection and delete selection
       | editor.insert(':)', 1, true); // Insert after selection and delete selection
-    h3: code editor.let()
+    h4: code editor.let()
     p Reset value to the initial value of the #[code &lt;textarea&gt;] element.
-    h3: code editor.match(pattern, then)
+    h4: code editor.match(pattern, then)
     p Match current selection with the pattern provided.
     pre: code
       | if (editor.match(/^\s*:\w+:\s*$/)) {
@@ -203,52 +151,37 @@ block content
       | editor.match([/:$/, /^\w+$/, /^:/], function (before, value, after) {
       |     console.log([before, value, after]); // &rarr; #[a(href='test/toggle.html' target='_blank') demo]
       | });
-    h3: code editor.peel(open, close, wrap = false)
+    h4: code editor.peel(open, close, wrap = false)
     p Unwrap current selection from #[var open] and #[var close].
     pre: code
       | editor.peel('&lt;', '&gt;'); // Remove `&lt;` before selection and `&gt;` after selection
       | editor.peel('&lt;', '&gt;', true); // Remove `&lt;` at selection start and `&gt;` at selection end
-    h3: code editor.pull(by = editor.state.tab, includeEmptyLines = true)
+    h4: code editor.pull(by = editor.state.tab, includeEmptyLines = true)
     p Outdent current selection from #[var by].
     pre: code
       | editor.pull(); // Outdent from `\t`
       | editor.pull('****'); // Outdent from `****`
-    h3: code editor.push(by = editor.state.tab, includeEmptyLines = false)
+    h4: code editor.push(by = editor.state.tab, includeEmptyLines = false)
     p Indent current selection with #[var by].
     pre: code
       | editor.push(); // Indent with `\t`
       | editor.push('****'); // Indent with `****`
-    h3: code editor.replace(from, to, mode = 0)
+    h4: code editor.replace(from, to, mode = 0)
     p Replace current, before or after selection from #[var from] to #[var to].
     pre: code
       | editor.replace(/&lt;.*?&gt;/g, ""); // Strip HTML tag(s) in selection
       | editor.replace(/&lt;.*?&gt;/g, "", -1); // Strip HTML tag(s) before selection
       | editor.replace(/&lt;.*?&gt;/g, "", 1); // Strip HTML tag(s) after selection
-    h3: code editor.select(...lot)
+    h4: code editor.select(...lot)
     p Set selection range.
     pre: code
       | editor.select(); // Is the same as `editor.focus()`
       | editor.select(2); // Move caret to the index `2`
       | editor.select(0, 2); // Select from range `0` to `2`
       | editor.select(true); // Select all
-    h3: code editor.self
-    p Return the #[code &lt;textarea&gt;] element.
-    pre: code
-      | editor.self.addEventListener('keydown', e =&gt; {
-      |     if (
-      |         (e.key &amp;&amp; 'Enter' === e.key) ||
-      |         (e.keyCode &amp;&amp; 13 === e.keyCode)
-      |     ) {
-      |         // Do something with `Enter` key!
-      |     }
-      | });
-    h3: code editor.set(value)
+    h4: code editor.set(value)
     p Set value to the #[code &lt;textarea&gt;] element.
-    h3: code editor.source
-    p Alias of #[code editor.self] property.
-    h3: code editor.state
-    p Return the text editor states if any.
-    h3: code editor.trim(open = "", close = "", start = "", end = "", tidy = true)
+    h4: code editor.trim(open = "", close = "", start = "", end = "", tidy = true)
     p Trim current selection from white-spaces, and optionally insert characters at the specified points.
     pre: code
       | // `a&lt;open&gt;#[mark &lt;start&gt;b&lt;end&gt;]&lt;close&gt;c`
@@ -259,25 +192,74 @@ block content
       | editor.trim(' ', ' '); // Force a space before and after selection
       | editor.trim('\n\n', '\n\n'); // Force line-break before and after selection
       | editor.trim('\n\n', '\n\n', "", "", false); // Ignore empty value before and after selection, just insert that `\n\n` away
-    h3: code editor.value
-    p Return the initial value of the #[code &lt;textarea&gt;] element.
-    h3: code editor.wrap(open, close, wrap = false)
+    h4: code editor.wrap(open, close, wrap = false)
     p Wrap current selection with #[var open] and #[var close].
     pre: code
       | editor.wrap('&lt;', '&gt;'); // Wrap with `&lt;` and `&gt;`
       | editor.wrap('&lt;', '&gt;', true); // Wrap with `&lt;` and `&gt;` then select
-    h3: code editor.$()
+    h4: code editor.$()
     p Get current text selection data.
     pre: code
       | // `a#[mark b]c`
       | console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start":1,"value":"b"}`
+    h3 Static Methods
+    p Static methods are methods that are directly available on the #[code TextEditor] object.
+    h4: code TextEditor.esc(string)
+    p Escape regular expression&rsquo;s special characters.
+    h2 Properties
+    h3 Instance Properties
+    p Instance properties are properties that are available through the results of a #[code TextEditor] construct.
+    h4: code editor.self
+    p Return the #[code &lt;textarea&gt;] element.
+    pre: code
+      | editor.self.addEventListener('keydown', e =&gt; {
+      |     if (
+      |         (e.key &amp;&amp; 'Enter' === e.key) ||
+      |         (e.keyCode &amp;&amp; 13 === e.keyCode)
+      |     ) {
+      |         // Do something with `Enter` key!
+      |     }
+      | });
+    h4: code editor.source
+    p Alias of #[code editor.self] property.
+    h4: code editor.state
+    p Return the text editor states if any.
+    h4: code editor.value
+    p Return the initial value of the #[code &lt;textarea&gt;] element.
+    h3 Static Properties
+    p Static properties are properties that are directly available on the #[code TextEditor] object.
+    h4: code TextEditor.instances
+    p Return the application instances.
+    pre: code
+      | for (let key in TextEditor.instances) {
+      |     console.log(key);
+      |     console.log(TextEditor.instances[key]);
+      | }
+    h4: code TextEditor.state
+    p Return the default values of #[code editor.state].
+    pre: code
+      | const editor = new TextEditor(document.querySelector('textarea'), {
+      |     foo: ['bar', 'baz', 'qux']
+      | });
+      |
+      | console.log([TextEditor.state, editor.state]);
+    h4: code TextEditor.version
+    p Return the application version.
+    pre: code
+      | let version = TextEditor.version,
+      |     major = version.split('.')[0];
+      |
+      | if (+major &lt; 3) { &hellip; }
+    h4: code TextEditor.x
+    p List of regular expression characters to be escaped.
     h2 Extensions
     h3 Anatomy of an Extension
     p Extension as a function:
     pre: code
       | function Extension(self, state = {}) {
-      |     this.editorMethod = function () {};
-      |     this.editorProperty = 1;
+      |     this.a = 1;
+      |     this.b = function () {};
+      |     return this;
       | }
     p Extension as an object:
     pre: code
