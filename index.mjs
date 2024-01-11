@@ -261,7 +261,9 @@ function TextEditor(self, state = {}) {
             }
         }
         delete TextEditor.instances[self.id || self.name || toObjectCount(TextEditor.instances) - 1];
-        delete self[name];
+        for (let key in $) {
+            delete $[key];
+        }
         return $;
     };
 

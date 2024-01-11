@@ -413,7 +413,9 @@
                 }
             }
             delete TextEditor.instances[self.id || self.name || toObjectCount(TextEditor.instances) - 1];
-            delete self[name];
+            for (var key in $) {
+                delete $[key];
+            }
             return $;
         };
         if (isArray(state.with)) {
