@@ -395,29 +395,6 @@
             if (false !== end) value = trim(value, 1);
             return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
         };
-        // Destructor
-        $.pop = function () {
-            if (!self[name]) {
-                return $; // Already ejected!
-            }
-            if (isArray(state.with)) {
-                for (var i = 0, j = toCount(state.with); i < j; ++i) {
-                    var value = state.with[i];
-                    if (isString(value)) {
-                        value = TextEditor[value];
-                    }
-                    if (isObject(value) && isFunction(value.detach)) {
-                        value.detach.call($, self, state);
-                        continue;
-                    }
-                }
-            }
-            delete TextEditor.instances[self.id || self.name || toObjectCount(TextEditor.instances) - 1];
-            for (var key in $) {
-                delete $[key];
-            }
-            return $;
-        };
         if (isArray(state.with)) {
             for (var i = 0, j = toCount(state.with); i < j; ++i) {
                 var value = state.with[i];
@@ -440,6 +417,41 @@
     }
     TextEditor.esc = esc;
     TextEditor.instances = {};
+    TextEditor.get = function (self) {
+        return self[name] || null;
+    };
+    TextEditor.let = function (self) {
+        var $ = self[name];
+        if (!$) {
+            return false;
+        }
+        var state = $.state;
+        if (isArray(state.with)) {
+            for (var i = 0, j = toCount(state.with); i < j; ++i) {
+                var value = state.with[i];
+                if (isString(value)) {
+                    value = TextEditor[value];
+                }
+                if (isObject(value) && isFunction(value.detach)) {
+                    value.detach.call($, self, state);
+                    continue;
+                }
+            }
+        }
+        delete TextEditor.instances[self.id || self.name || toObjectCount(TextEditor.instances) - 1];
+        delete self[name];
+        for (var key in $) {
+            delete $[key];
+        }
+        return true;
+    };
+    TextEditor.set = function (self, state) {
+        if (state === void 0) {
+            state = {};
+        }
+        var $ = self[name];
+        return $ || new TextEditor(self, state);
+    };
     TextEditor.state = {
         'tab': '\t',
         'with': []

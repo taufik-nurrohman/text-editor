@@ -205,6 +205,18 @@ block content
     p Static methods are methods that are directly available on the #[code TextEditor] object.
     h4: code TextEditor.esc(string)
     p Escape regular expression&rsquo;s special characters.
+    h4: code TextEditor.get(self)
+    p Get current editor instance from the text area.
+    pre: code
+      | console.log(TextEditor.get(document.querySelector('textarea')));
+    h4: code TextEditor.let(self)
+    p Destroy and remove current editor instance from the text area.
+    pre: code
+      | TextEditor.let(document.querySelector('textarea'));
+    h4: code TextEditor.set(self, state = {})
+    p Create a new editor instance.
+    pre: code
+      | const editor = TextEditor.set(document.querySelector('textarea'));
     h2 Properties
     h3 Instance Properties
     p Instance properties are properties that are available through the results of a #[code TextEditor] construct.

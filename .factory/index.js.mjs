@@ -243,30 +243,6 @@ function TextEditor(self, state = {}) {
         return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
     };
 
-    // Destructor
-    $.pop = () => {
-        if (!self[name]) {
-            return $; // Already ejected!
-        }
-        if (isArray(state.with)) {
-            for (let i = 0, j = toCount(state.with); i < j; ++i) {
-                let value = state.with[i];
-                if (isString(value)) {
-                    value = TextEditor[value];
-                }
-                if (isObject(value) && isFunction(value.detach)) {
-                    value.detach.call($, self, state);
-                    continue;
-                }
-            }
-        }
-        delete TextEditor.instances[self.id || self.name || toObjectCount(TextEditor.instances) - 1];
-        for (let key in $) {
-            delete $[key];
-        }
-        return $;
-    };
-
     if (isArray(state.with)) {
         for (let i = 0, j = toCount(state.with); i < j; ++i) {
             let value = state.with[i];
@@ -293,6 +269,41 @@ function TextEditor(self, state = {}) {
 TextEditor.esc = esc;
 
 TextEditor.instances = {};
+
+TextEditor.get = self => {
+    return self[name] || null;
+};
+
+TextEditor.let = self => {
+    let $ = self[name];
+    if (!$) {
+        return false;
+    }
+    let state = $.state;
+    if (isArray(state.with)) {
+        for (let i = 0, j = toCount(state.with); i < j; ++i) {
+            let value = state.with[i];
+            if (isString(value)) {
+                value = TextEditor[value];
+            }
+            if (isObject(value) && isFunction(value.detach)) {
+                value.detach.call($, self, state);
+                continue;
+            }
+        }
+    }
+    delete TextEditor.instances[self.id || self.name || toObjectCount(TextEditor.instances) - 1];
+    delete self[name];
+    for (let key in $) {
+        delete $[key];
+    }
+    return true;
+};
+
+TextEditor.set = (self, state = {}) => {
+    let $ = self[name];
+    return $ || new TextEditor(self, state);
+};
 
 TextEditor.state = {
     'tab': '\t',

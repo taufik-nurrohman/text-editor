@@ -178,6 +178,15 @@ console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start
       <p>Static methods are methods that are directly available on the <code>TextEditor</code> object.</p>
       <h4><code>TextEditor.esc(string)</code></h4>
       <p>Escape regular expression&rsquo;s special characters.</p>
+      <h4><code>TextEditor.get(self)</code></h4>
+      <p>Get current editor instance from the text area.</p>
+      <pre><code>console.log(TextEditor.get(document.querySelector('textarea')));</code></pre>
+      <h4><code>TextEditor.let(self)</code></h4>
+      <p>Destroy and remove current editor instance from the text area.</p>
+      <pre><code>TextEditor.let(document.querySelector('textarea'));</code></pre>
+      <h4><code>TextEditor.set(self, state = {})</code></h4>
+      <p>Create a new editor instance.</p>
+      <pre><code>const editor = TextEditor.set(document.querySelector('textarea'));</code></pre>
       <h2>Properties</h2>
       <h3>Instance Properties</h3>
       <p>Instance properties are properties that are available through the results of a <code>TextEditor</code> construct.</p>
