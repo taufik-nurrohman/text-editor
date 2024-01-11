@@ -260,7 +260,9 @@ function TextEditor(self, state = {}) {
                 }
             }
         }
-        return (delete self[name]), $;
+        delete TextEditor.instances[self.id || self.name || toObjectCount(TextEditor.instances) - 1];
+        delete self[name];
+        return $;
     };
 
     if (isArray(state.with)) {
@@ -307,7 +309,7 @@ TextEditor.S = function (a, b, c) {
     t.toString = () => d;
 };
 
-TextEditor.version = '4.0.1';
+TextEditor.version = '4.0.2';
 
 TextEditor.x = x;
 

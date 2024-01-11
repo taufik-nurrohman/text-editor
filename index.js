@@ -412,7 +412,9 @@
                     }
                 }
             }
-            return delete self[name], $;
+            delete TextEditor.instances[self.id || self.name || toObjectCount(TextEditor.instances) - 1];
+            delete self[name];
+            return $;
         };
         if (isArray(state.with)) {
             for (var i = 0, j = toCount(state.with); i < j; ++i) {
@@ -453,7 +455,7 @@
             return d;
         };
     };
-    TextEditor.version = '4.0.1';
+    TextEditor.version = '4.0.2';
     TextEditor.x = x;
     return TextEditor;
 }));
