@@ -135,15 +135,17 @@
             }
             if (isSet(hooks[name])) {
                 if (isSet(then)) {
-                    for (var i = 0, _j = hooks[name].length; i < _j; ++i) {
-                        if (then === hooks[name][i]) {
-                            hooks[name].splice(i, 1);
-                            break;
-                        }
-                    }
+                    var j = hooks[name].length;
                     // Clean-up empty hook(s)
                     if (0 === j) {
                         delete hooks[name];
+                    } else {
+                        for (var i = 0; i < j; ++i) {
+                            if (then === hooks[name][i]) {
+                                hooks[name].splice(i, 1);
+                                break;
+                            }
+                        }
                     }
                 } else {
                     delete hooks[name];
