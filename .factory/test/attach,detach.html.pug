@@ -1,0 +1,26 @@
+extends ../_index.pug
+
+block state
+  - const title = 'Text Editor'
+  - const scripts = ['../index.min.js']
+
+block script
+  script
+    | const editor = new TextEditor(document.querySelector('textarea'), {
+    |     with: [{
+    |         attach: function () {},
+    |         detach: function () {}
+    |     }]
+    | });
+
+block content
+  main
+    p: textarea(spellcheck='false') abcdef
+    p
+      button(onclick='return editor.wrap(\'<b>\', \'</b>\'), false;'): b B
+      = ' '
+      button(onclick='return editor.wrap(\'<i>\', \'</i>\'), false;'): i I
+    p
+      button(onclick='return editor.detach(), (this.disabled = true), (this.nextElementSibling.disabled = false), console.log(editor), false;') Detach
+      = ' '
+      button(disabled onclick='return editor.attach(), (this.disabled = true), (this.previousElementSibling.disabled = false), console.log(editor), false;') Attach

@@ -82,6 +82,7 @@ block content
       li: a(href='tweak/paste.html' target='_blank') Paste as Plain Text
       li: a(href='test/trim.html' target='_blank') Trim Selection
       li: a(href='test/self.input.html' target='_blank') Using #[code &lt;input&gt;] Instead of #[code &lt;textarea&gt;]
+      li: a(href='test/attach,detach.html' target='_blank') Attach, Detach
     h2 Constructor
     pre: code const editor = new TextEditor(self, tab = '\t');
     pre: code
@@ -103,6 +104,10 @@ block content
     h2 Methods
     h3 Instance Methods
     p Instance methods are methods that are available through the results of a #[code TextEditor] construct.
+    h4: code editor.attach()
+    p Re-initialize the application and its extensions after it has been detached.
+    pre: code
+      | editor.attach();
     h4: code editor.blur()
     p Blur from the #[code &lt;textarea&gt;] element.
     h4: code editor.focus(mode = 0)
@@ -112,6 +117,10 @@ block content
       | editor.focus(-1); // Focus to the start of text area value
       | editor.focus(1); // Focus to the end of text area value
       | editor.focus(true); // Select all
+    h4: code editor.detach()
+    p Remove all methods and properties of the application (except for the #[code attach()] method) and execute the #[code detach()] method of the extensions, if they are present.
+    pre: code
+      | editor.detach();
     h4: code editor.get()
     p Get current value of the #[code &lt;textarea&gt;] element if not empty, otherwise, return #[code null].
     h4: code editor.insert(string, mode = 0, clear = false)
@@ -128,7 +137,7 @@ block content
     p Match current selection with the pattern provided.
     pre: code
       | if (editor.match(/^\s*:\w+:\s*$/)) {
-      |     alert('Selection is detected as emoji!'); // &rarr; #[a(href='test/match.html' target='_blank') demo]
+      |     alert('Selection is detected as emoji!');
       | }
     p Do something with the current matched selection.
     pre: code
@@ -140,7 +149,7 @@ block content
       |
       | editor.match(/^\s*:\w+:\s*$/, function (m) {
       |     let exists = maps[m[0] = m[0] ? m[0].trim() : ""];
-      |     exists &amp;&amp; this.insert(exists); // &rarr; #[a(href='test/alter.html' target='_blank') demo]
+      |     exists &amp;&amp; this.insert(exists);
       | });
     p Match to the characters before selection, current selection and characters after selection.
     pre: code
@@ -148,19 +157,19 @@ block content
       | console.log(test[0] &amp;&amp; test[1] &amp;&amp; test[2]);
     pre: code
       | editor.match([/:$/, /^\w+$/, /^:/], function (before, value, after) {
-      |     console.log([before, value, after]); // &rarr; #[a(href='test/toggle.html' target='_blank') demo]
+      |     console.log([before, value, after]);
       | });
     h4: code editor.peel(open, close, wrap = false)
     p Unwrap current selection from #[var open] and #[var close].
     pre: code
       | editor.peel('&lt;', '&gt;'); // Remove `&lt;` before selection and `&gt;` after selection
       | editor.peel('&lt;', '&gt;', true); // Remove `&lt;` at selection start and `&gt;` at selection end
-    h4: code editor.pull(by = editor.state.tab, includeEmptyLines = true)
+    h4: code editor.pull(by = editor.state.tab, withEmptyLines = true)
     p Outdent current selection from #[var by].
     pre: code
       | editor.pull(); // Outdent from `\t`
       | editor.pull('****'); // Outdent from `****`
-    h4: code editor.push(by = editor.state.tab, includeEmptyLines = false)
+    h4: code editor.push(by = editor.state.tab, withEmptyLines = false)
     p Indent current selection with #[var by].
     pre: code
       | editor.push(); // Indent with `\t`
@@ -205,18 +214,6 @@ block content
     p Static methods are methods that are directly available on the #[code TextEditor] object.
     h4: code TextEditor.esc(string)
     p Escape regular expression&rsquo;s special characters.
-    h4: code TextEditor.get(self)
-    p Get current editor instance from the text area.
-    pre: code
-      | console.log(TextEditor.get(document.querySelector('textarea')));
-    h4: code TextEditor.let(self)
-    p Destroy and remove current editor instance from the text area.
-    pre: code
-      | TextEditor.let(document.querySelector('textarea'));
-    h4: code TextEditor.set(self, state = {})
-    p Create a new editor instance.
-    pre: code
-      | const editor = TextEditor.set(document.querySelector('textarea'));
     h2 Properties
     h3 Instance Properties
     p Instance properties are properties that are available through the results of a #[code TextEditor] construct.
@@ -239,13 +236,6 @@ block content
     p Return the initial value of the #[code &lt;textarea&gt;] element.
     h3 Static Properties
     p Static properties are properties that are directly available on the #[code TextEditor] object.
-    h4: code TextEditor.instances
-    p Return the application instances.
-    pre: code
-      | for (let key in TextEditor.instances) {
-      |     console.log(key);
-      |     console.log(TextEditor.instances[key]);
-      | }
     h4: code TextEditor.state
     p Return the default values of #[code editor.state].
     pre: code
@@ -289,13 +279,13 @@ block content
       | });
     h3 List of Extensions
     ul
-      li: a(href='../text-editor.history/index.html' target='_blank') History Feature
-      li: a(href='../text-editor.key/index.html' target='_blank') Key(board) Feature
-      li: a(href='../text-editor.rect/index.html' target='_blank') Rect Feature
-      li: a(href='../text-editor.source/index.html' target='_blank') Generic Source Code Editor
-      li: a(href='../text-editor.source-x-m-l/index.html' target='_blank') XML Source Code Editor
-      li: a(href='../text-editor.source-h-t-m-l/index.html' target='_blank') HTML Source Code Editor
-      li: a(href='../text-editor.source-markdown/index.html' target='_blank') Markdown Source Code Editor
+      li: a(href='../text-editor.history/index.html') History Feature
+      li: a(href='../text-editor.key/index.html') Key(board) Feature
+      li: a(href='../text-editor.rect/index.html') Rect Feature
+      li: a(href='../text-editor.source/index.html') Generic Source Code Editor
+      li: a(href='../text-editor.source-x-m-l/index.html') XML Source Code Editor
+      li: a(href='../text-editor.source-h-t-m-l/index.html') HTML Source Code Editor
+      li: a(href='../text-editor.source-markdown/index.html') Markdown Source Code Editor
       li: a(aria-disabled='true') BBCode Editor
       li: a(aria-disabled='true') HTML Editor
       li: a(aria-disabled='true') Markdown Editor
