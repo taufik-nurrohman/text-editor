@@ -42,8 +42,14 @@
     var isInstance = function isInstance(x, of) {
         return x && isSet(of) && x instanceof of ;
     };
+    var isInteger = function isInteger(x) {
+        return isNumber(x) && 0 === x % 1;
+    };
     var isNull = function isNull(x) {
         return null === x;
+    };
+    var isNumber = function isNumber(x) {
+        return 'number' === typeof x;
     };
     var isObject = function isObject(x, isPlain) {
         if (isPlain === void 0) {
@@ -347,7 +353,9 @@
                     length = _$$$3.length,
                     start = _$$$3.start,
                     value = _$$$3.value;
-                by = isSet(by) ? by : state.tab;
+                if (isInteger(by = isSet(by) ? by : state.tab)) {
+                    by = ' '.repeat(by);
+                }
                 if ("" !== before && '\n' !== before.slice(-1) && by !== before.slice(-toCount(by))) {
                     // Move cursor to the start of the line
                     $.select(start = start - toCount(before.split('\n').pop()), length ? end : start);
@@ -375,7 +383,9 @@
                     end = _$$$4.end,
                     length = _$$$4.length,
                     start = _$$$4.start;
-                by = isSet(by) ? by : state.tab;
+                if (isInteger(by = isSet(by) ? by : state.tab)) {
+                    by = ' '.repeat(by);
+                }
                 if ("" !== before && '\n' !== before.slice(-1) && by !== before.slice(-toCount(by))) {
                     // Move cursor to the start of the line
                     $.select(start = start - toCount(before.split('\n').pop()), length ? end : start);

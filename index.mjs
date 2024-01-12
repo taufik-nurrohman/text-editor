@@ -2,7 +2,7 @@ import {B, D, H, R, W} from '@taufik-nurrohman/document';
 import {esc, fromPattern, toPattern, x} from '@taufik-nurrohman/pattern';
 import {fromStates} from '@taufik-nurrohman/from';
 import {hook} from '@taufik-nurrohman/hook';
-import {isArray, isFunction, isInstance, isObject, isSet, isString} from '@taufik-nurrohman/is';
+import {isArray, isFunction, isInstance, isInteger, isObject, isSet, isString} from '@taufik-nurrohman/is';
 import {offEvent, onEvent} from '@taufik-nurrohman/event';
 import {toCount, toObjectCount} from '@taufik-nurrohman/to';
 
@@ -151,7 +151,9 @@ function TextEditor(self, state = {}) {
         };
         $.pull = (by, withEmptyLines = true) => {
             let {before, end, length, start, value} = $.$();
-            by = isSet(by) ? by : state.tab;
+            if (isInteger(by = isSet(by) ? by : state.tab)) {
+                by = ' '.repeat(by);
+            }
             if ("" !== before && '\n' !== before.slice(-1) && by !== before.slice(-toCount(by))) {
                 // Move cursor to the start of the line
                 $.select(start = start - toCount(before.split('\n').pop()), length ? end : start);
@@ -172,7 +174,9 @@ function TextEditor(self, state = {}) {
         };
         $.push = (by, withEmptyLines = false) => {
             let {before, end, length, start} = $.$();
-            by = isSet(by) ? by : state.tab;
+            if (isInteger(by = isSet(by) ? by : state.tab)) {
+                by = ' '.repeat(by);
+            }
             if ("" !== before && '\n' !== before.slice(-1) && by !== before.slice(-toCount(by))) {
                 // Move cursor to the start of the line
                 $.select(start = start - toCount(before.split('\n').pop()), length ? end : start);
