@@ -230,7 +230,6 @@
             isReadOnly = function isReadOnly() {
                 return self.readOnly;
             },
-            theEvent,
             theValue = function theValue() {
                 return self.value.replace(/\r/g, "");
             },
@@ -238,7 +237,7 @@
         $.attach = function () {
             var _hook = hook($),
                 fire = _hook.fire;
-            theEvent || (theEvent = function theEvent(e) {
+            var theEvent = function theEvent(e) {
                 var type = e.type,
                     value = theValue();
                 if (value !== theValuePrevious) {
@@ -246,7 +245,7 @@
                     fire('change', [e]);
                 }
                 fire(events[type] || type, [e]);
-            });
+            };
             $.$ = function () {
                 return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue());
             };

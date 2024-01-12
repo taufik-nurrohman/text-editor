@@ -48,13 +48,12 @@ function TextEditor(self, state = {}) {
     let any = /^([\s\S]*?)$/, // Any character(s)
         isDisabled = () => self.disabled,
         isReadOnly = () => self.readOnly,
-        theEvent,
         theValue = () => self.value.replace(/\r/g, ""),
         theValuePrevious = theValue();
 
     $.attach = () => {
-        let {fire} = hook($);
-        theEvent || (theEvent = e => {
+        const {fire} = hook($);
+        const theEvent = e => {
             let type = e.type,
                 value = theValue();
             if (value !== theValuePrevious) {
@@ -62,7 +61,7 @@ function TextEditor(self, state = {}) {
                 fire('change', [e]);
             }
             fire(events[type] || type, [e]);
-        });
+        };
         $.$ = () => {
             return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue());
         };
