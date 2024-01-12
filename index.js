@@ -116,6 +116,86 @@
     };
     var x = "!$^*()+=[]{}|:<>,.?/-";
 
+    function hook($) {
+        var hooks = {};
+
+        function fire(name, data) {
+            if (!isSet(hooks[name])) {
+                return $;
+            }
+            hooks[name].forEach(function (then) {
+                return then.apply($, data);
+            });
+            return $;
+        }
+
+        function off(name, then) {
+            if (!isSet(name)) {
+                return hooks = {}, $;
+            }
+            if (isSet(hooks[name])) {
+                if (isSet(then)) {
+                    for (var i = 0, _j = hooks[name].length; i < _j; ++i) {
+                        if (then === hooks[name][i]) {
+                            hooks[name].splice(i, 1);
+                            break;
+                        }
+                    }
+                    // Clean-up empty hook(s)
+                    if (0 === j) {
+                        delete hooks[name];
+                    }
+                } else {
+                    delete hooks[name];
+                }
+            }
+            return $;
+        }
+
+        function on(name, then) {
+            if (!isSet(hooks[name])) {
+                hooks[name] = [];
+            }
+            if (isSet(then)) {
+                hooks[name].push(then);
+            }
+            return $;
+        }
+        $.hooks = hooks;
+        $.fire = fire;
+        $.off = off;
+        $.on = on;
+        return $;
+    }
+    var offEvent = function offEvent(name, node, then) {
+        node.removeEventListener(name, then);
+    };
+    var onEvent = function onEvent(name, node, then, options) {
+        if (options === void 0) {
+            options = false;
+        }
+        node.addEventListener(name, then, options);
+    };
+    var events = {
+        blur: 0,
+        click: 0,
+        copy: 0,
+        cut: 0,
+        focus: 0,
+        input: 0,
+        keydown: 'key.down',
+        keyup: 'key.up',
+        mousedown: 'mouse.down',
+        mouseenter: 'mouse.enter',
+        mouseleave: 'mouse.exit',
+        mousemove: 'mouse.move',
+        mouseup: 'mouse.up',
+        paste: 0,
+        touchend: 'mouse.up',
+        touchmove: 'mouse.move',
+        touchstart: 'mouse.down'
+    };
+
     function trim(str, dir) {
         return (str || "")['trim' + (-1 === dir ? 'Left' : 1 === dir ? 'Right' : "")]();
     }
@@ -140,10 +220,23 @@
             isReadOnly = function isReadOnly() {
                 return self.readOnly;
             },
+            theEvent,
             theValue = function theValue() {
                 return self.value.replace(/\r/g, "");
-            };
+            },
+            theValuePrevious = theValue();
         $.attach = function () {
+            var _hook = hook($),
+                fire = _hook.fire;
+            theEvent || (theEvent = function theEvent(e) {
+                var type = e.type,
+                    value = theValue();
+                if (value !== theValuePrevious) {
+                    theValuePrevious = value;
+                    fire('change', [e]);
+                }
+                fire(events[type] || type, [e]);
+            });
             $.$ = function () {
                 return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue());
             };
@@ -151,6 +244,12 @@
                 return self.blur(), $;
             };
             $.detach = function () {
+                // Detach event(s)
+                theValuePrevious = theValue();
+                for (var event in events) {
+                    offEvent(event, self, theEvent);
+                }
+                // Detach extension(s)
                 if (isArray(state.with)) {
                     for (var i = 0, j = toCount(state.with); i < j; ++i) {
                         var value = state.with[i];
@@ -389,7 +488,11 @@
                 }
                 return $.set(before + open + value + close + after).select(before = toCount(before + open), before + toCount(value));
             };
-            // Apply extension(s)
+            // Attach event(s)
+            for (var event in events) {
+                onEvent(event, self, theEvent);
+            }
+            // Attach extension(s)
             if (isArray(state.with)) {
                 for (var i = 0, j = toCount(state.with); i < j; ++i) {
                     var value = state.with[i];

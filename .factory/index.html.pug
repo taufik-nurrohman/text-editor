@@ -110,6 +110,10 @@ block content
       | editor.attach();
     h4: code editor.blur()
     p Blur from the #[code &lt;textarea&gt;] element.
+    h4: code editor.fire(event, data)
+    p Fire an event.
+    pre: code
+      | editor.fire('change', []);
     h4: code editor.focus(mode = 0)
     p Focus to the #[code &lt;textarea&gt;] element.
     pre: code
@@ -159,6 +163,19 @@ block content
       | editor.match([/:$/, /^\w+$/, /^:/], function (before, value, after) {
       |     console.log([before, value, after]);
       | });
+    h4: code editor.off(event, then)
+    p Remove an event.
+    pre: code
+      | editor.off('click', onClick); // Remove `onClick` event from the `click` event container
+      | editor.off('click'); // Remove all events from the `click` event container
+    h4: code editor.on(event, then)
+    p Add an event.
+    pre: code
+      | function onClick(e) {
+      |     this.select(true); // Select all on click
+      | }
+      |
+      | editor.on('click', onClick);
     h4: code editor.peel(open, close, wrap = false)
     p Unwrap current selection from #[var open] and #[var close].
     pre: code
@@ -217,6 +234,10 @@ block content
     h2 Properties
     h3 Instance Properties
     p Instance properties are properties that are available through the results of a #[code TextEditor] construct.
+    h4: code editor.hooks
+    p Return the event containers and their contents.
+    pre: code
+      | console.log(editor.hooks);
     h4: code editor.self
     p Return the #[code &lt;textarea&gt;] element.
     pre: code

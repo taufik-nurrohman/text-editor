@@ -4,7 +4,9 @@
   "bugs": "https://github.com/taufik-nurrohman/text-editor/issues",
   "dependencies": {
     "@taufik-nurrohman/document": "*",
+    "@taufik-nurrohman/event": "*",
     "@taufik-nurrohman/from": "*",
+    "@taufik-nurrohman/hook": "*",
     "@taufik-nurrohman/pattern": "*",
     "@taufik-nurrohman/to": "*"
   },

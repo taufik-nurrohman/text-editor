@@ -1,8 +1,30 @@
 import {B, D, H, R, W} from '@taufik-nurrohman/document';
-import {fromStates} from '@taufik-nurrohman/from';
-import {isArray, isFunction, isInstance, isObject, isSet, isString} from '@taufik-nurrohman/is';
 import {esc, fromPattern, toPattern, x} from '@taufik-nurrohman/pattern';
+import {fromStates} from '@taufik-nurrohman/from';
+import {hook} from '@taufik-nurrohman/hook';
+import {isArray, isFunction, isInstance, isObject, isSet, isString} from '@taufik-nurrohman/is';
+import {offEvent, onEvent} from '@taufik-nurrohman/event';
 import {toCount, toObjectCount} from '@taufik-nurrohman/to';
+
+const events = {
+    blur: 0,
+    click: 0,
+    copy: 0,
+    cut: 0,
+    focus: 0,
+    input: 0,
+    keydown: 'key.down',
+    keyup: 'key.up',
+    mousedown: 'mouse.down',
+    mouseenter: 'mouse.enter',
+    mouseleave: 'mouse.exit',
+    mousemove: 'mouse.move',
+    mouseup: 'mouse.up',
+    paste: 0,
+    touchend: 'mouse.up',
+    touchmove: 'mouse.move',
+    touchstart: 'mouse.down'
+};
 
 function trim(str, dir) {
     return (str || "")['trim' + (-1 === dir ? 'Left' : 1 === dir ? 'Right' : "")]();
@@ -24,14 +46,32 @@ function TextEditor(self, state = {}) {
     let any = /^([\s\S]*?)$/, // Any character(s)
         isDisabled = () => self.disabled,
         isReadOnly = () => self.readOnly,
-        theValue = () => self.value.replace(/\r/g, "");
+        theEvent,
+        theValue = () => self.value.replace(/\r/g, ""),
+        theValuePrevious = theValue();
 
     $.attach = () => {
+        let {fire} = hook($);
+        theEvent || (theEvent = e => {
+            let type = e.type,
+                value = theValue();
+            if (value !== theValuePrevious) {
+                theValuePrevious = value;
+                fire('change', [e]);
+            }
+            fire(events[type] || type, [e]);
+        });
         $.$ = () => {
             return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue());
         };
         $.blur = () => (self.blur(), $);
         $.detach = () => {
+            // Detach event(s)
+            theValuePrevious = theValue();
+            for (let event in events) {
+                offEvent(event, self, theEvent);
+            }
+            // Detach extension(s)
             if (isArray(state.with)) {
                 for (let i = 0, j = toCount(state.with); i < j; ++i) {
                     let value = state.with[i];
@@ -221,7 +261,11 @@ function TextEditor(self, state = {}) {
             }
             return $.set(before + open + value + close + after).select(before = toCount(before + open), before + toCount(value));
         };
-        // Apply extension(s)
+        // Attach event(s)
+        for (let event in events) {
+            onEvent(event, self, theEvent);
+        }
+        // Attach extension(s)
         if (isArray(state.with)) {
             for (let i = 0, j = toCount(state.with); i < j; ++i) {
                 let value = state.with[i];
