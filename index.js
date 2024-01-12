@@ -199,9 +199,11 @@
         mousemove: 'mouse.move',
         mouseup: 'mouse.up',
         paste: 0,
+        scroll: 0,
         touchend: 'mouse.up',
         touchmove: 'mouse.move',
-        touchstart: 'mouse.down'
+        touchstart: 'mouse.down',
+        wheel: 'scroll'
     };
 
     function trim(str, dir) {
