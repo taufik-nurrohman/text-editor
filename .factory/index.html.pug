@@ -115,7 +115,7 @@ block content
     pre: code
       | editor.focus(); // Focus to the last selection
       | editor.focus(-1); // Focus to the start of text area value
-      | editor.focus(1); // Focus to the end of text area value
+      | editor.focus(+1); // Focus to the end of text area value
       | editor.focus(true); // Select all
     h4: code editor.detach()
     p Remove all methods and properties of the application (except for the #[code attach()] method) and execute the #[code detach()] method of the extensions, if they are present.
@@ -128,9 +128,9 @@ block content
     pre: code
       | editor.insert(':)'); // Insert at selection (replace selection)
       | editor.insert('&lt;b&gt;', -1); // Insert before selection
-      | editor.insert('&lt;/b&gt;', 1); // Insert after selection
+      | editor.insert('&lt;/b&gt;', +1); // Insert after selection
       | editor.insert(':)', -1, true); // Insert before selection and delete selection
-      | editor.insert(':)', 1, true); // Insert after selection and delete selection
+      | editor.insert(':)', +1, true); // Insert after selection and delete selection
     h4: code editor.let()
     p Reset value to the initial value of the #[code &lt;textarea&gt;] element.
     h4: code editor.match(pattern, then)
@@ -179,7 +179,7 @@ block content
     pre: code
       | editor.replace(/&lt;.*?&gt;/g, ""); // Strip HTML tag(s) in selection
       | editor.replace(/&lt;.*?&gt;/g, "", -1); // Strip HTML tag(s) before selection
-      | editor.replace(/&lt;.*?&gt;/g, "", 1); // Strip HTML tag(s) after selection
+      | editor.replace(/&lt;.*?&gt;/g, "", +1); // Strip HTML tag(s) after selection
     h4: code editor.select(...lot)
     p Set selection range.
     pre: code
