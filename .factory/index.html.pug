@@ -127,8 +127,8 @@ block content
       | editor.detach();
     h4: code editor.get()
     p Get current value of the #[code &lt;textarea&gt;] element if not empty, otherwise, return #[code null].
-    h4: code editor.insert(string, mode = 0, clear = false)
-    p Insert #[var string] to (replace) the current selection.
+    h4: code editor.insert(value, mode = 0, clear = false)
+    p Insert #[var value] to (replace) the current selection.
     pre: code
       | editor.insert(':)'); // Insert at selection (replace selection)
       | editor.insert('&lt;b&gt;', -1); // Insert before selection
@@ -229,7 +229,7 @@ block content
       | console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start":1,"value":"b"}`
     h3 Static Methods
     p Static methods are methods that are directly available on the #[code TextEditor] object.
-    h4: code TextEditor.esc(string)
+    h4: code TextEditor.esc(value)
     p Escape regular expression&rsquo;s special characters.
     h2 Properties
     h3 Instance Properties

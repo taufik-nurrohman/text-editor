@@ -110,8 +110,8 @@ editor.focus(true); // Select all</code></pre>
       <pre><code>editor.detach();</code></pre>
       <h4><code>editor.get()</code></h4>
       <p>Get current value of the <code>&lt;textarea&gt;</code> element if not empty, otherwise, return <code>null</code>.</p>
-      <h4><code>editor.insert(string, mode = 0, clear = false)</code></h4>
-      <p>Insert <var>string</var> to (replace) the current selection.</p>
+      <h4><code>editor.insert(value, mode = 0, clear = false)</code></h4>
+      <p>Insert <var>value</var> to (replace) the current selection.</p>
       <pre><code>editor.insert(':)'); // Insert at selection (replace selection)
 editor.insert('&lt;b&gt;', -1); // Insert before selection
 editor.insert('&lt;/b&gt;', +1); // Insert after selection
@@ -197,7 +197,7 @@ editor.wrap('&lt;', '&gt;', true); // Wrap with `&lt;` and `&gt;` then select</c
 console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start":1,"value":"b"}`</code></pre>
       <h3>Static Methods</h3>
       <p>Static methods are methods that are directly available on the <code>TextEditor</code> object.</p>
-      <h4><code>TextEditor.esc(string)</code></h4>
+      <h4><code>TextEditor.esc(value)</code></h4>
       <p>Escape regular expression&rsquo;s special characters.</p>
       <h2>Properties</h2>
       <h3>Instance Properties</h3>
