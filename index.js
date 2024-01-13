@@ -211,9 +211,6 @@
     }
 
     function TextEditor(self, state) {
-        if (state === void 0) {
-            state = {};
-        }
         var $ = this;
         if (!self) {
             return $;
@@ -222,30 +219,30 @@
         if (!isInstance($, TextEditor)) {
             return new TextEditor(self, state);
         }
-        var any = /^([\s\S]*?)$/,
-            // Any character(s)
-            isDisabled = function isDisabled() {
-                return self.disabled;
-            },
-            isReadOnly = function isReadOnly() {
-                return self.readOnly;
-            },
-            theValue = function theValue() {
-                return self.value.replace(/\r/g, "");
-            },
-            theValuePrevious = theValue();
-        $.attach = function () {
+        $.attach = function (self, state) {
             var _hook = hook($),
                 fire = _hook.fire;
-            var theEvent = function theEvent(e) {
-                var type = e.type,
-                    value = theValue();
-                if (value !== theValuePrevious) {
-                    theValuePrevious = value;
-                    fire('change', [e]);
-                }
-                fire(events[type] || type, [e]);
-            };
+            var any = /^([\s\S]*?)$/,
+                // Any character(s)
+                isDisabled = function isDisabled() {
+                    return self.disabled;
+                },
+                isReadOnly = function isReadOnly() {
+                    return self.readOnly;
+                },
+                theEvent = function theEvent(e) {
+                    var type = e.type,
+                        value = theValue();
+                    if (value !== theValuePrevious) {
+                        theValuePrevious = value;
+                        fire('change', [e]);
+                    }
+                    fire(events[type] || type, [e]);
+                },
+                theValue = function theValue() {
+                    return self.value.replace(/\r/g, "");
+                },
+                theValuePrevious = theValue();
             $.$ = function () {
                 return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue());
             };
@@ -459,7 +456,7 @@
                 }
                 return self.value = value, $;
             };
-            $.state = state = fromStates({}, TextEditor.state, isString(state) ? {
+            $.state = state = fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
                 tab: state
             } : state || {});
             $.trim = function (open, close, start, end, tidy) {
@@ -526,7 +523,7 @@
             }
             return $;
         };
-        return $.attach();
+        return $.attach(self, state);
     }
     TextEditor.esc = esc;
     TextEditor.state = {

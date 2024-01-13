@@ -32,7 +32,7 @@ function trim(str, dir) {
     return (str || "")['trim' + (-1 === dir ? 'Left' : 1 === dir ? 'Right' : "")]();
 }
 
-function TextEditor(self, state = {}) {
+function TextEditor(self, state) {
 
     const $ = this;
 
@@ -45,23 +45,22 @@ function TextEditor(self, state = {}) {
         return new TextEditor(self, state);
     }
 
-    let any = /^([\s\S]*?)$/, // Any character(s)
-        isDisabled = () => self.disabled,
-        isReadOnly = () => self.readOnly,
-        theValue = () => self.value.replace(/\r/g, ""),
-        theValuePrevious = theValue();
-
-    $.attach = () => {
+    $.attach = (self, state) => {
         const {fire} = hook($);
-        const theEvent = e => {
-            let type = e.type,
-                value = theValue();
-            if (value !== theValuePrevious) {
-                theValuePrevious = value;
-                fire('change', [e]);
-            }
-            fire(events[type] || type, [e]);
-        };
+        let any = /^([\s\S]*?)$/, // Any character(s)
+            isDisabled = () => self.disabled,
+            isReadOnly = () => self.readOnly,
+            theEvent = e => {
+                let type = e.type,
+                    value = theValue();
+                if (value !== theValuePrevious) {
+                    theValuePrevious = value;
+                    fire('change', [e]);
+                }
+                fire(events[type] || type, [e]);
+            },
+            theValue = () => self.value.replace(/\r/g, ""),
+            theValuePrevious = theValue();
         $.$ = () => {
             return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue());
         };
@@ -233,7 +232,7 @@ function TextEditor(self, state = {}) {
             }
             return (self.value = value), $;
         };
-        $.state = state = fromStates({}, TextEditor.state, isString(state) ? {
+        $.state = state = fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
             tab: state
         } : (state || {}));
         $.trim = (open, close, start, end, tidy = true) => {
@@ -292,7 +291,7 @@ function TextEditor(self, state = {}) {
         return $;
     };
 
-    return $.attach();
+    return $.attach(self, state);
 
 }
 
