@@ -219,30 +219,30 @@
         if (!isInstance($, TextEditor)) {
             return new TextEditor(self, state);
         }
-        $.attach = function (self, state) {
+        var any = /^([\s\S]*?)$/,
+            // Any character(s)
+            isDisabled = function isDisabled() {
+                return self.disabled;
+            },
+            isReadOnly = function isReadOnly() {
+                return self.readOnly;
+            },
+            theValue = function theValue() {
+                return self.value.replace(/\r/g, "");
+            },
+            theValuePrevious = theValue();
+        $.attach = function () {
             var _hook = hook($),
                 fire = _hook.fire;
-            var any = /^([\s\S]*?)$/,
-                // Any character(s)
-                isDisabled = function isDisabled() {
-                    return self.disabled;
-                },
-                isReadOnly = function isReadOnly() {
-                    return self.readOnly;
-                },
-                theEvent = function theEvent(e) {
-                    var type = e.type,
-                        value = theValue();
-                    if (value !== theValuePrevious) {
-                        theValuePrevious = value;
-                        fire('change', [e]);
-                    }
-                    fire(events[type] || type, [e]);
-                },
-                theValue = function theValue() {
-                    return self.value.replace(/\r/g, "");
-                },
-                theValuePrevious = theValue();
+            var theEvent = function theEvent(e) {
+                var type = e.type,
+                    value = theValue();
+                if (value !== theValuePrevious) {
+                    theValuePrevious = value;
+                    fire('change', [e]);
+                }
+                fire(events[type] || type, [e]);
+            };
             $.$ = function () {
                 return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue());
             };
@@ -523,7 +523,7 @@
             }
             return $;
         };
-        return $.attach(self, state);
+        return $.attach();
     }
     TextEditor.esc = esc;
     TextEditor.state = {

@@ -45,22 +45,23 @@ function TextEditor(self, state) {
         return new TextEditor(self, state);
     }
 
-    $.attach = (self, state) => {
+    let any = /^([\s\S]*?)$/, // Any character(s)
+        isDisabled = () => self.disabled,
+        isReadOnly = () => self.readOnly,
+        theValue = () => self.value.replace(/\r/g, ""),
+        theValuePrevious = theValue();
+
+    $.attach = () => {
         const {fire} = hook($);
-        let any = /^([\s\S]*?)$/, // Any character(s)
-            isDisabled = () => self.disabled,
-            isReadOnly = () => self.readOnly,
-            theEvent = e => {
-                let type = e.type,
-                    value = theValue();
-                if (value !== theValuePrevious) {
-                    theValuePrevious = value;
-                    fire('change', [e]);
-                }
-                fire(events[type] || type, [e]);
-            },
-            theValue = () => self.value.replace(/\r/g, ""),
-            theValuePrevious = theValue();
+        const theEvent = e => {
+            let type = e.type,
+                value = theValue();
+            if (value !== theValuePrevious) {
+                theValuePrevious = value;
+                fire('change', [e]);
+            }
+            fire(events[type] || type, [e]);
+        };
         $.$ = () => {
             return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue());
         };
@@ -291,7 +292,7 @@ function TextEditor(self, state) {
         return $;
     };
 
-    return $.attach(self, state);
+    return $.attach();
 
 }
 
