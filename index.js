@@ -449,7 +449,7 @@
                 self.scrollTop = Y;
                 return W.scroll(x, y), $;
             };
-            $.self = $.source = self;
+            $.self = self;
             $.set = function (value) {
                 if (isDisabled() || isReadOnly()) {
                     return $;

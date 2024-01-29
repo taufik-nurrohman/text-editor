@@ -226,7 +226,7 @@ function TextEditor(self, state) {
             self.scrollTop = Y;
             return W.scroll(x, y), $;
         };
-        $.self = $.source = self;
+        $.self = self;
         $.set = value => {
             if (isDisabled() || isReadOnly()) {
                 return $;
