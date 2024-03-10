@@ -185,6 +185,15 @@
         }
         node.addEventListener(name, then, options);
     };
+    var isDisabled = function isDisabled(self) {
+            return self.disabled;
+        },
+        isReadOnly = function isReadOnly(self) {
+            return self.readOnly;
+        },
+        theValue = function theValue(self) {
+            return self.value.replace(/\r/g, "");
+        };
     var events = {
         blur: 0,
         click: 0,
@@ -210,11 +219,9 @@
     function trim(str, dir) {
         return (str || "")['trim' + (-1 === dir ? 'Left' : 1 === dir ? 'Right' : "")]();
     }
-    var isFirstTextEditorConstruct = 1;
 
     function TextEditor(self, state) {
         var $ = this;
-        var proto = $.constructor.prototype;
         if (!self) {
             return $;
         }
@@ -222,315 +229,11 @@
         if (!isInstance($, TextEditor)) {
             return new TextEditor(self, state);
         }
-        var any = /^([\s\S]*?)$/,
-            // Any character(s)
-            isDisabled = function isDisabled() {
-                return self.disabled;
-            },
-            isReadOnly = function isReadOnly() {
-                return self.readOnly;
-            },
-            theValue = function theValue() {
-                return self.value.replace(/\r/g, "");
-            },
-            theValuePrevious = theValue();
-        proto.attach = function (force) {
-            $.self = self;
-            $.state = state = fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
-                tab: state
-            } : state || {});
-            $.value = theValue();
-            var _hook = hook($),
-                fire = _hook.fire;
-            var theEvent = function theEvent(e) {
-                var type = e.type,
-                    value = theValue();
-                if (value !== theValuePrevious) {
-                    theValuePrevious = value;
-                    fire('change', [e]);
-                }
-                fire(events[type] || type, [e]);
-            };
-            isFirstTextEditorConstruct = 0;
-            if (!force) {
-                return $;
-            }
-            proto.$ = function () {
-                return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue());
-            };
-            proto.blur = function () {
-                return self.blur(), $;
-            };
-            proto.detach = function () {
-                // Detach event(s)
-                theValuePrevious = theValue();
-                for (var event in events) {
-                    offEvent(event, self, theEvent);
-                }
-                // Detach extension(s)
-                if (isArray(state.with)) {
-                    for (var i = 0, j = toCount(state.with); i < j; ++i) {
-                        var value = state.with[i];
-                        if (isString(value)) {
-                            value = TextEditor[value];
-                        }
-                        if (isObject(value) && isFunction(value.detach)) {
-                            value.detach.call($, self, state);
-                            continue;
-                        }
-                    }
-                }
-                for (var key in proto) {
-                    if ('attach' === key) {
-                        continue;
-                    }
-                    delete proto[key];
-                }
-                return $;
-            };
-            proto.focus = function (mode) {
-                var x, y;
-                if (-1 === mode) {
-                    x = y = 0; // Put caret at the start of the editor, scroll to the start of the editor
-                } else if (1 === mode) {
-                    x = toCount(theValue()); // Put caret at the end of the editor
-                    y = self.scrollHeight; // Scroll to the end of the editor
-                }
-                if (isSet(x) && isSet(y)) {
-                    self.selectionStart = self.selectionEnd = x;
-                    self.scrollTop = y;
-                }
-                return self.focus(), $;
-            };
-            proto.get = function () {
-                return !isDisabled() && theValue() || null;
-            };
-            proto.insert = function (value, mode, clear) {
-                var from = any;
-                if (clear) {
-                    $.replace(from, ""); // Force to delete selection on insert before/after?
-                }
-                if (-1 === mode) {
-                    // Insert before
-                    from = /$/;
-                } else if (1 === mode) {
-                    // Insert after
-                    from = /^/;
-                }
-                return $.replace(from, value, mode);
-            };
-            proto.let = function () {
-                return self.value = $.value, $;
-            };
-            proto.match = function (pattern, then) {
-                var _$$$ = $.$(),
-                    after = _$$$.after,
-                    before = _$$$.before,
-                    value = _$$$.value;
-                if (isArray(pattern)) {
-                    var _m = [before.match(pattern[0]), value.match(pattern[1]), after.match(pattern[2])];
-                    return isFunction(then) ? then.call($, _m[0] || [], _m[1] || [], _m[2] || []) : [!!_m[0], !!_m[1], !!_m[2]];
-                }
-                var m = value.match(pattern);
-                return isFunction(then) ? then.call($, m || []) : !!m;
-            };
-            proto.peel = function (open, close, wrap) {
-                var _$$$2 = $.$(),
-                    after = _$$$2.after,
-                    before = _$$$2.before,
-                    value = _$$$2.value;
-                open = esc(open);
-                close = esc(close);
-                var openPattern = toPattern(open + '$', ""),
-                    closePattern = toPattern('^' + close, "");
-                if (wrap) {
-                    return $.replace(toPattern('^' + open + '([\\s\\S]*?)' + close + '$', ""), '$1');
-                }
-                if (openPattern.test(before) && closePattern.test(after)) {
-                    before = before.replace(openPattern, "");
-                    after = after.replace(closePattern, "");
-                    return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
-                }
-                return $.select();
-            };
-            proto.pull = function (by, withEmptyLines) {
-                if (withEmptyLines === void 0) {
-                    withEmptyLines = true;
-                }
-                var _$$$3 = $.$(),
-                    before = _$$$3.before,
-                    end = _$$$3.end,
-                    length = _$$$3.length,
-                    start = _$$$3.start,
-                    value = _$$$3.value;
-                if (isInteger(by = isSet(by) ? by : state.tab)) {
-                    by = ' '.repeat(by);
-                }
-                if ("" !== before && '\n' !== before.slice(-1) && by !== before.slice(-toCount(by))) {
-                    // Move cursor to the start of the line
-                    $.select(start = start - toCount(before.split('\n').pop()), length ? end : start);
-                }
-                by = esc(by);
-                if (length) {
-                    if (withEmptyLines) {
-                        return $.replace(toPattern('^' + by, 'gm'), "");
-                    }
-                    return $.insert(value.split('\n').map(function (v) {
-                        if (toPattern('^(' + by + ')*$', "").test(v)) {
-                            return v;
-                        }
-                        return v.replace(toPattern('^' + by, ""), "");
-                    }).join('\n'));
-                }
-                return $.replace(toPattern(by + '$', ""), "", -1);
-            };
-            proto.push = function (by, withEmptyLines) {
-                if (withEmptyLines === void 0) {
-                    withEmptyLines = false;
-                }
-                var _$$$4 = $.$(),
-                    before = _$$$4.before,
-                    end = _$$$4.end,
-                    length = _$$$4.length,
-                    start = _$$$4.start;
-                if (isInteger(by = isSet(by) ? by : state.tab)) {
-                    by = ' '.repeat(by);
-                }
-                if ("" !== before && '\n' !== before.slice(-1) && by !== before.slice(-toCount(by))) {
-                    // Move cursor to the start of the line
-                    $.select(start = start - toCount(before.split('\n').pop()), length ? end : start);
-                }
-                if (length) {
-                    return $.replace(toPattern('^' + (withEmptyLines ? "" : '(?!$)'), 'gm'), by);
-                }
-                return $.insert(by, -1);
-            };
-            proto.replace = function (from, to, mode) {
-                var _$$$5 = $.$(),
-                    after = _$$$5.after,
-                    before = _$$$5.before,
-                    value = _$$$5.value;
-                if (-1 === mode) {
-                    // Replace before
-                    before = before.replace(from, to);
-                } else if (1 === mode) {
-                    // Replace after
-                    after = after.replace(from, to);
-                } else {
-                    // Replace value
-                    value = value.replace(from, to);
-                }
-                return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
-            };
-            proto.select = function () {
-                if (isDisabled() || isReadOnly()) {
-                    return self.focus(), $;
-                }
-                for (var _len = arguments.length, lot = new Array(_len), _key = 0; _key < _len; _key++) {
-                    lot[_key] = arguments[_key];
-                }
-                var count = toCount(lot),
-                    _$$$6 = $.$(),
-                    start = _$$$6.start,
-                    end = _$$$6.end,
-                    x,
-                    y,
-                    X,
-                    Y;
-                x = W.pageXOffset || R.scrollLeft || B.scrollLeft;
-                y = W.pageYOffset || R.scrollTop || B.scrollTop;
-                X = self.scrollLeft;
-                Y = self.scrollTop;
-                if (0 === count) {
-                    // Restore selection with `$.select()`
-                    lot[0] = start;
-                    lot[1] = end;
-                } else if (1 === count) {
-                    // Move caret position with `$.select(7)`
-                    if (true === lot[0]) {
-                        // Select all with `$.select(true)`
-                        return self.focus(), self.select(), $;
-                    }
-                    lot[1] = lot[0];
-                }
-                self.focus();
-                // Default `$.select(7, 100)`
-                self.selectionStart = lot[0];
-                self.selectionEnd = lot[1];
-                self.scrollLeft = X;
-                self.scrollTop = Y;
-                return W.scroll(x, y), $;
-            };
-            proto.set = function (value) {
-                if (isDisabled() || isReadOnly()) {
-                    return $;
-                }
-                return self.value = value, $;
-            };
-            proto.trim = function (open, close, start, end, tidy) {
-                if (tidy === void 0) {
-                    tidy = true;
-                }
-                if (null !== open && false !== open) {
-                    open = open || "";
-                }
-                if (null !== close && false !== close) {
-                    close = close || "";
-                }
-                if (null !== start && false !== start) {
-                    start = start || "";
-                }
-                if (null !== end && false !== end) {
-                    end = end || "";
-                }
-                var _$$$7 = $.$(),
-                    after = _$$$7.after,
-                    before = _$$$7.before,
-                    value = _$$$7.value,
-                    afterClean = trim(after, -1),
-                    beforeClean = trim(before, 1);
-                after = false !== close ? (afterClean || !tidy ? close : "") + trim(after, -1) : after;
-                before = false !== open ? trim(before, 1) + (beforeClean || !tidy ? open : "") : before;
-                if (false !== end) value = trim(value, 1);
-                if (false !== start) value = trim(value, -1);
-                return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
-            };
-            proto.wrap = function (open, close, wrap) {
-                var _$$$8 = $.$(),
-                    after = _$$$8.after,
-                    before = _$$$8.before,
-                    value = _$$$8.value;
-                if (wrap) {
-                    return $.replace(any, open + '$1' + close);
-                }
-                return $.set(before + open + value + close + after).select(before = toCount(before + open), before + toCount(value));
-            };
-            // Attach event(s)
-            for (var event in events) {
-                onEvent(event, self, theEvent);
-            }
-            // Attach extension(s)
-            if (isArray(state.with)) {
-                for (var i = 0, j = toCount(state.with); i < j; ++i) {
-                    var value = state.with[i];
-                    if (isString(value)) {
-                        value = TextEditor[value];
-                    }
-                    // `const Extension = function (self, state = {}) {}`
-                    if (isFunction(value)) {
-                        value.call($, self, state);
-                        continue;
-                    }
-                    // `const Extension = {attach: function (self, state = {}) {}, detach: function (self, state = {}) {}}`
-                    if (isObject(value) && isFunction(value.attach)) {
-                        value.attach.call($, self, state);
-                        continue;
-                    }
-                }
-            }
-            return $;
-        };
-        return $.attach(isFirstTextEditorConstruct);
+        hook($);
+        self._fire = $.fire;
+        return $.attach(self, fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
+            tab: state
+        } : state || {}));
     }
     TextEditor.esc = esc;
     TextEditor.state = {
@@ -550,7 +253,317 @@
             return d;
         };
     };
-    TextEditor.version = '4.0.2';
+    TextEditor.version = '4.0.3';
     TextEditor.x = x;
+    var proto = TextEditor.prototype;
+    var theEvent = function theEvent(e) {
+            var $ = this,
+                fire = $._fire,
+                type = e.type,
+                value = theValue(this);
+            if (value !== theValuePrevious) {
+                theValuePrevious = value;
+                fire('change', [e]);
+            }
+            fire(events[type] || type, [e]);
+        },
+        theValuePrevious;
+    proto.$ = function () {
+        var self = this.self;
+        return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue(self));
+    };
+    proto.attach = function (self, state) {
+        var $ = this;
+        $.self = self;
+        isSet(state) && ($.state = state);
+        $.value = theValue(self);
+        // Attach event(s)
+        for (var event in events) {
+            onEvent(event, self, theEvent);
+        }
+        // Attach extension(s)
+        if (isSet(state) && isArray(state.with)) {
+            for (var i = 0, j = toCount(state.with); i < j; ++i) {
+                var value = state.with[i];
+                if (isString(value)) {
+                    value = TextEditor[value];
+                }
+                // `const Extension = function (self, state = {}) {}`
+                if (isFunction(value)) {
+                    value.call($, self, state);
+                    continue;
+                }
+                // `const Extension = {attach: function (self, state = {}) {}, detach: function (self, state = {}) {}}`
+                if (isObject(value) && isFunction(value.attach)) {
+                    value.attach.call($, self, state);
+                    continue;
+                }
+            }
+        }
+        return $;
+    };
+    proto.blur = function () {
+        return this.self.blur(), this;
+    };
+    proto.detach = function () {
+        var $ = this,
+            self = $.self,
+            state = $.state;
+        // Detach event(s)
+        for (var event in events) {
+            offEvent(event, self, theEvent);
+        }
+        // Detach extension(s)
+        if (isArray(state.with)) {
+            for (var i = 0, j = toCount(state.with); i < j; ++i) {
+                var value = state.with[i];
+                if (isString(value)) {
+                    value = TextEditor[value];
+                }
+                if (isObject(value) && isFunction(value.detach)) {
+                    value.detach.call($, self, state);
+                    continue;
+                }
+            }
+        }
+        return $;
+    };
+    proto.focus = function (mode) {
+        var $ = this,
+            self = $.self,
+            x,
+            y;
+        if (-1 === mode) {
+            x = y = 0; // Put caret at the start of the editor, scroll to the start of the editor
+        } else if (1 === mode) {
+            x = toCount(theValue(self)); // Put caret at the end of the editor
+            y = self.scrollHeight; // Scroll to the end of the editor
+        }
+        if (isSet(x) && isSet(y)) {
+            self.selectionStart = self.selectionEnd = x;
+            self.scrollTop = y;
+        }
+        return self.focus(), $;
+    };
+    proto.get = function () {
+        var self = this.self;
+        return !isDisabled(self) && theValue(self) || null;
+    };
+    proto.insert = function (value, mode, clear) {
+        var $ = this,
+            from = /^([\s\S]*?)$/;
+        if (clear) {
+            $.replace(from, ""); // Force to delete selection on insert before/after?
+        }
+        if (-1 === mode) {
+            // Insert before
+            from = /$/;
+        } else if (1 === mode) {
+            // Insert after
+            from = /^/;
+        }
+        return $.replace(from, value, mode);
+    };
+    proto.let = function () {
+        var $ = this;
+        $.self.value = $.value;
+        return $;
+    };
+    proto.match = function (pattern, then) {
+        var $ = this,
+            _$$$ = $.$(),
+            after = _$$$.after,
+            before = _$$$.before,
+            value = _$$$.value;
+        if (isArray(pattern)) {
+            var _m = [before.match(pattern[0]), value.match(pattern[1]), after.match(pattern[2])];
+            return isFunction(then) ? then.call($, _m[0] || [], _m[1] || [], _m[2] || []) : [!!_m[0], !!_m[1], !!_m[2]];
+        }
+        var m = value.match(pattern);
+        return isFunction(then) ? then.call($, m || []) : !!m;
+    };
+    proto.peel = function (open, close, wrap) {
+        var $ = this,
+            _$$$2 = $.$(),
+            after = _$$$2.after,
+            before = _$$$2.before,
+            value = _$$$2.value;
+        open = esc(open);
+        close = esc(close);
+        var openPattern = toPattern(open + '$', ""),
+            closePattern = toPattern('^' + close, "");
+        if (wrap) {
+            return $.replace(toPattern('^' + open + '([\\s\\S]*?)' + close + '$', ""), '$1');
+        }
+        if (openPattern.test(before) && closePattern.test(after)) {
+            before = before.replace(openPattern, "");
+            after = after.replace(closePattern, "");
+            return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
+        }
+        return $.select();
+    };
+    proto.pull = function (by, withEmptyLines) {
+        if (withEmptyLines === void 0) {
+            withEmptyLines = true;
+        }
+        var $ = this,
+            state = $.state,
+            _$$$3 = $.$(),
+            before = _$$$3.before,
+            end = _$$$3.end,
+            length = _$$$3.length,
+            start = _$$$3.start,
+            value = _$$$3.value;
+        if (isInteger(by = isSet(by) ? by : state.tab)) {
+            by = ' '.repeat(by);
+        }
+        if ("" !== before && '\n' !== before.slice(-1) && by !== before.slice(-toCount(by))) {
+            // Move cursor to the start of the line
+            $.select(start = start - toCount(before.split('\n').pop()), length ? end : start);
+        }
+        by = esc(by);
+        if (length) {
+            if (withEmptyLines) {
+                return $.replace(toPattern('^' + by, 'gm'), "");
+            }
+            return $.insert(value.split('\n').map(function (v) {
+                if (toPattern('^(' + by + ')*$', "").test(v)) {
+                    return v;
+                }
+                return v.replace(toPattern('^' + by, ""), "");
+            }).join('\n'));
+        }
+        return $.replace(toPattern(by + '$', ""), "", -1);
+    };
+    proto.push = function (by, withEmptyLines) {
+        if (withEmptyLines === void 0) {
+            withEmptyLines = false;
+        }
+        var $ = this,
+            state = $.state,
+            _$$$4 = $.$(),
+            before = _$$$4.before,
+            end = _$$$4.end,
+            length = _$$$4.length,
+            start = _$$$4.start;
+        if (isInteger(by = isSet(by) ? by : state.tab)) {
+            by = ' '.repeat(by);
+        }
+        if ("" !== before && '\n' !== before.slice(-1) && by !== before.slice(-toCount(by))) {
+            // Move cursor to the start of the line
+            $.select(start = start - toCount(before.split('\n').pop()), length ? end : start);
+        }
+        if (length) {
+            return $.replace(toPattern('^' + (withEmptyLines ? "" : '(?!$)'), 'gm'), by);
+        }
+        return $.insert(by, -1);
+    };
+    proto.replace = function (from, to, mode) {
+        var $ = this,
+            _$$$5 = $.$(),
+            after = _$$$5.after,
+            before = _$$$5.before,
+            value = _$$$5.value;
+        if (-1 === mode) {
+            // Replace before
+            before = before.replace(from, to);
+        } else if (1 === mode) {
+            // Replace after
+            after = after.replace(from, to);
+        } else {
+            // Replace value
+            value = value.replace(from, to);
+        }
+        return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
+    };
+    proto.select = function () {
+        var $ = this,
+            self = $.self;
+        if (isDisabled(self) || isReadOnly(self)) {
+            return self.focus(), $;
+        }
+        for (var _len = arguments.length, lot = new Array(_len), _key = 0; _key < _len; _key++) {
+            lot[_key] = arguments[_key];
+        }
+        var count = toCount(lot),
+            _$$$6 = $.$(),
+            start = _$$$6.start,
+            end = _$$$6.end,
+            x,
+            y,
+            X,
+            Y;
+        x = W.pageXOffset || R.scrollLeft || B.scrollLeft;
+        y = W.pageYOffset || R.scrollTop || B.scrollTop;
+        X = self.scrollLeft;
+        Y = self.scrollTop;
+        if (0 === count) {
+            // Restore selection with `$.select()`
+            lot[0] = start;
+            lot[1] = end;
+        } else if (1 === count) {
+            // Move caret position with `$.select(7)`
+            if (true === lot[0]) {
+                // Select all with `$.select(true)`
+                return self.focus(), self.select(), $;
+            }
+            lot[1] = lot[0];
+        }
+        self.focus();
+        // Default `$.select(7, 100)`
+        self.selectionStart = lot[0];
+        self.selectionEnd = lot[1];
+        self.scrollLeft = X;
+        self.scrollTop = Y;
+        return W.scroll(x, y), $;
+    };
+    proto.set = function (value) {
+        var $ = this,
+            self = $.self;
+        if (isDisabled(self) || isReadOnly(self)) {
+            return $;
+        }
+        return self.value = value, $;
+    };
+    proto.trim = function (open, close, start, end, tidy) {
+        if (tidy === void 0) {
+            tidy = true;
+        }
+        if (null !== open && false !== open) {
+            open = open || "";
+        }
+        if (null !== close && false !== close) {
+            close = close || "";
+        }
+        if (null !== start && false !== start) {
+            start = start || "";
+        }
+        if (null !== end && false !== end) {
+            end = end || "";
+        }
+        var $ = this,
+            _$$$7 = $.$(),
+            after = _$$$7.after,
+            before = _$$$7.before,
+            value = _$$$7.value,
+            afterClean = trim(after, -1),
+            beforeClean = trim(before, 1);
+        after = false !== close ? (afterClean || !tidy ? close : "") + trim(after, -1) : after;
+        before = false !== open ? trim(before, 1) + (beforeClean || !tidy ? open : "") : before;
+        if (false !== end) value = trim(value, 1);
+        if (false !== start) value = trim(value, -1);
+        return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
+    };
+    proto.wrap = function (open, close, wrap) {
+        var $ = this,
+            _$$$8 = $.$(),
+            after = _$$$8.after,
+            before = _$$$8.before,
+            value = _$$$8.value;
+        if (wrap) {
+            return $.replace(/^([\s\S]*?)$/, open + '$1' + close);
+        }
+        return $.set(before + open + value + close + after).select(before = toCount(before + open), before + toCount(value));
+    };
     return TextEditor;
 }));

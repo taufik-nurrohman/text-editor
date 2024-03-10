@@ -5,13 +5,13 @@
     <meta content="#000" name="theme-color">
     <meta content="width=device-width" name="viewport">
     <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
-    <title>Text Editor 4.0.2</title>
+    <title>Text Editor 4.0.3</title>
     <link href="../layout/index.min.css" rel="stylesheet">
   </head>
   <body>
     <p role="alert">Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
     <header>
-      <h1>Text Editor 4.0.2</h1>
+      <h1>Text Editor 4.0.3</h1>
       <p>Text Editor is a simple JavaScript application that aims to provide accessibility enhancements to the native HTML <code>&lt;textarea&gt;</code> elements, allowing users to control and manipulate their data in the text editor as they wish. It contains very sufficient methods to manipulate the existing text selection range data without providing unnecessary features. This keeps the file size small and the learning curve low, so you can fully focus on the results.</p>
       <hr>
     </header>
@@ -91,9 +91,9 @@ const editor = new TextEditor(document.querySelector('textarea'));</code></pre>
       <h2>Methods</h2>
       <h3>Instance Methods</h3>
       <p>Instance methods are methods that are available through the results of a <code>TextEditor</code> construct.</p>
-      <h4><code>editor.attach()</code></h4>
+      <h4><code>editor.attach(self, state)</code></h4>
       <p>Re-initialize the application and its extensions after it has been detached.</p>
-      <pre><code>editor.attach();</code></pre>
+      <pre><code>editor.attach(editor.self);</code></pre>
       <h4><code>editor.blur()</code></h4>
       <p>Blur from the <code>&lt;textarea&gt;</code> element.</p>
       <h4><code>editor.fire(event, data)</code></h4>

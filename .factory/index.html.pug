@@ -104,10 +104,10 @@ block content
     h2 Methods
     h3 Instance Methods
     p Instance methods are methods that are available through the results of a #[code TextEditor] construct.
-    h4: code editor.attach()
+    h4: code editor.attach(self, state)
     p Re-initialize the application and its extensions after it has been detached.
     pre: code
-      | editor.attach();
+      | editor.attach(editor.self);
     h4: code editor.blur()
     p Blur from the #[code &lt;textarea&gt;] element.
     h4: code editor.fire(event, data)
