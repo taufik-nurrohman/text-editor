@@ -197,7 +197,7 @@ $$.get = function () {
     let $ = this,
         {_active, self} = $;
     if (!_active) {
-        return null;
+        return false;
     }
     return !isDisabled(self) && theValue(self) || null;
 };

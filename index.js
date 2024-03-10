@@ -365,7 +365,7 @@
             _active = $._active,
             self = $.self;
         if (!_active) {
-            return null;
+            return false;
         }
         return !isDisabled(self) && theValue(self) || null;
     };
