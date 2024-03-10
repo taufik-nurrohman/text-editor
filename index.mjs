@@ -6,10 +6,6 @@ import {isArray, isFunction, isInstance, isInteger, isObject, isSet, isString} f
 import {offEvent, onEvent} from '@taufik-nurrohman/event';
 import {toCount, toObjectCount} from '@taufik-nurrohman/to';
 
-let isDisabled = self => self.disabled,
-    isReadOnly = self => self.readOnly,
-    theValue = self => self.value.replace(/\r/g, "");
-
 const events = {
     blur: 0,
     click: 0,
@@ -32,6 +28,18 @@ const events = {
     wheel: 'scroll'
 };
 
+function isDisabled(self) {
+    return self.disabled;
+}
+
+function isReadOnly(self) {
+    return self.readOnly;
+}
+
+function theValue(self) {
+    return self.value.replace(/\r/g, "");
+}
+
 function trim(str, dir) {
     return (str || "")['trim' + (-1 === dir ? 'Left' : 1 === dir ? 'Right' : "")]();
 }
@@ -49,9 +57,7 @@ function TextEditor(self, state) {
         return new TextEditor(self, state);
     }
 
-    hook($);
-
-    self._fire = $.fire;
+    self['#TextEditor'] = hook($);
 
     return $.attach(self, fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
         tab: state
@@ -78,36 +84,37 @@ TextEditor.S = function (a, b, c) {
     t.toString = () => d;
 };
 
-TextEditor.version = '4.0.3';
+TextEditor.version = '4.1.0';
 
 TextEditor.x = x;
 
-const proto = TextEditor.prototype;
+let theValuePrevious;
 
-let theEvent = function (e) {
-        let $ = this,
-            fire = $._fire,
-            type = e.type,
-            value = theValue(this);
-        if (value !== theValuePrevious) {
-            theValuePrevious = value;
-            fire('change', [e]);
-        }
-        fire(events[type] || type, [e]);
-    },
-    theValuePrevious;
+function theEvent(e) {
+    let self = this,
+        $ = self['#TextEditor'],
+        type = e.type,
+        value = theValue(self);
+    if (value !== theValuePrevious) {
+        theValuePrevious = value;
+        $.fire('change', [e]);
+    }
+    $.fire(events[type] || type, [e]);
+}
 
-proto.$ = function () {
+const $$ = TextEditor.prototype;
+
+$$.$ = function () {
     let {self} = this;
     return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue(self));
 };
 
-proto.attach = function (self, state) {
+$$.attach = function (self, state) {
     let $ = this;
-    $.active = true;
+    $._active = true;
+    $._value = theValue(self);
     $.self = self;
     isSet(state) && ($.state = state);
-    $.value = theValue(self);
     // Attach event(s)
     for (let event in events) {
         onEvent(event, self, theEvent);
@@ -134,19 +141,19 @@ proto.attach = function (self, state) {
     return $;
 };
 
-proto.blur = function () {
+$$.blur = function () {
     let $ = this,
-        {active, self} = $;
-    if (!active) {
+        {_active, self} = $;
+    if (!_active) {
         return $;
     }
     return self.blur(), $;
 };
 
-proto.detach = function () {
+$$.detach = function () {
     let $ = this,
         {self, state} = $;
-    $.active = false;
+    $._active = false;
     // Detach event(s)
     for (let event in events) {
         offEvent(event, self, theEvent);
@@ -167,10 +174,10 @@ proto.detach = function () {
     return $;
 };
 
-proto.focus = function (mode) {
+$$.focus = function (mode) {
     let $ = this,
-        {active, self} = $, x, y;
-    if (!active) {
+        {_active, self} = $, x, y;
+    if (!_active) {
         return $;
     }
     if (-1 === mode) {
@@ -186,19 +193,19 @@ proto.focus = function (mode) {
     return self.focus(), $;
 };
 
-proto.get = function () {
+$$.get = function () {
     let $ = this,
-        {active, self} = $;
-    if (!active) {
+        {_active, self} = $;
+    if (!_active) {
         return null;
     }
     return !isDisabled(self) && theValue(self) || null;
 };
 
-proto.insert = function (value, mode, clear) {
+$$.insert = function (value, mode, clear) {
     let $ = this,
-        from = /^([\s\S]*?)$/;
-    if (!$.active) {
+        from = /^[\s\S]*?$/;
+    if (!$._active) {
         return $;
     }
     if (clear) {
@@ -212,16 +219,16 @@ proto.insert = function (value, mode, clear) {
     return $.replace(from, value, mode);
 };
 
-proto.let = function () {
+$$.let = function () {
     let $ = this,
-        {active, self} = $;
-    if (!active) {
+        {_active, self} = $;
+    if (!_active) {
         return $;
     }
-    return (self.value = $.value), $;
+    return (self.value = $._value), $;
 };
 
-proto.match = function (pattern, then) {
+$$.match = function (pattern, then) {
     let $ = this,
         {after, before, value} = $.$();
     if (isArray(pattern)) {
@@ -236,7 +243,7 @@ proto.match = function (pattern, then) {
     return isFunction(then) ? then.call($, m || []) : !!m;
 };
 
-proto.peel = function (open, close, wrap) {
+$$.peel = function (open, close, wrap) {
     let $ = this,
         {after, before, value} = $.$();
     open = esc(open);
@@ -254,7 +261,7 @@ proto.peel = function (open, close, wrap) {
     return $.select();
 };
 
-proto.pull = function (by, withEmptyLines = true) {
+$$.pull = function (by, withEmptyLines = true) {
     let $ = this,
         {state} = $,
         {before, end, length, start, value} = $.$();
@@ -280,7 +287,7 @@ proto.pull = function (by, withEmptyLines = true) {
     return $.replace(toPattern(by + '$', ""), "", -1);
 };
 
-proto.push = function (by, withEmptyLines = false) {
+$$.push = function (by, withEmptyLines = false) {
     let $ = this,
         {state} = $,
         {before, end, length, start} = $.$();
@@ -297,7 +304,7 @@ proto.push = function (by, withEmptyLines = false) {
     return $.insert(by, -1);
 };
 
-proto.replace = function (from, to, mode) {
+$$.replace = function (from, to, mode) {
     let $ = this,
         {after, before, value} = $.$();
     if (-1 === mode) { // Replace before
@@ -310,10 +317,10 @@ proto.replace = function (from, to, mode) {
     return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
 };
 
-proto.select = function (...lot) {
+$$.select = function (...lot) {
     let $ = this,
-        {active, self} = $;
-    if (!active) {
+        {_active, self} = $;
+    if (!_active) {
         return $;
     }
     if (isDisabled(self) || isReadOnly(self)) {
@@ -344,10 +351,10 @@ proto.select = function (...lot) {
     return W.scroll(x, y), $;
 };
 
-proto.set = function (value) {
+$$.set = function (value) {
     let $ = this,
-        {active, self} = $;
-    if (!active) {
+        {_active, self} = $;
+    if (!_active) {
         return $;
     }
     if (isDisabled(self) || isReadOnly(self)) {
@@ -356,7 +363,7 @@ proto.set = function (value) {
     return (self.value = value), $;
 };
 
-proto.trim = function (open, close, start, end, tidy = true) {
+$$.trim = function (open, close, start, end, tidy = true) {
     if (null !== open && false !== open) {
         open = open || "";
     }
@@ -380,13 +387,22 @@ proto.trim = function (open, close, start, end, tidy = true) {
     return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
 };
 
-proto.wrap = function (open, close, wrap) {
+$$.wrap = function (open, close, wrap) {
     let $ = this,
         {after, before, value} = $.$();
     if (wrap) {
-        return $.replace(/^([\s\S]*?)$/, open + '$1' + close);
+        return $.replace(/^[\s\S]*?$/, open + '$&' + close);
     }
     return $.set(before + open + value + close + after).select(before = toCount(before + open), before + toCount(value));
 };
+
+Object.defineProperty($$, 'value', {
+    get: function () {
+        return this.self.value;
+    },
+    set: function (value) {
+        this.self.value = value;
+    }
+});
 
 export default TextEditor;

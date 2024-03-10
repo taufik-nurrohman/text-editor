@@ -118,14 +118,17 @@
         if (isPattern(pattern)) {
             return pattern;
         }
+        // No need to escape `/` in the pattern string
+        pattern = pattern.replace(/\//g, '\\/');
         return new RegExp(pattern, isSet(opt) ? opt : 'g');
     };
     var x = "!$^*()+=[]{}|:<>,.?/-";
 
     function hook($) {
-        var hooks = {};
-
-        function fire(name, data) {
+        var constructor = $.constructor.prototype;
+        constructor.fire = function (name, data) {
+            var $ = this,
+                hooks = $.hooks;
             if (!isSet(hooks[name])) {
                 return $;
             }
@@ -133,9 +136,10 @@
                 return then.apply($, data);
             });
             return $;
-        }
-
-        function off(name, then) {
+        };
+        constructor.off = function (name, then) {
+            var $ = this,
+                hooks = $.hooks;
             if (!isSet(name)) {
                 return hooks = {}, $;
             }
@@ -158,9 +162,10 @@
                 }
             }
             return $;
-        }
-
-        function on(name, then) {
+        };
+        constructor.on = function (name, then) {
+            var $ = this,
+                hooks = $.hooks;
             if (!isSet(hooks[name])) {
                 hooks[name] = [];
             }
@@ -168,13 +173,8 @@
                 hooks[name].push(then);
             }
             return $;
-        }
-        var proto = $.constructor.prototype;
-        $.hooks = hooks;
-        proto.fire = fire;
-        proto.off = off;
-        proto.on = on;
-        return $;
+        };
+        return $.hooks = {}, $;
     }
     var offEvent = function offEvent(name, node, then) {
         node.removeEventListener(name, then);
@@ -185,15 +185,6 @@
         }
         node.addEventListener(name, then, options);
     };
-    var isDisabled = function isDisabled(self) {
-            return self.disabled;
-        },
-        isReadOnly = function isReadOnly(self) {
-            return self.readOnly;
-        },
-        theValue = function theValue(self) {
-            return self.value.replace(/\r/g, "");
-        };
     var events = {
         blur: 0,
         click: 0,
@@ -216,6 +207,18 @@
         wheel: 'scroll'
     };
 
+    function isDisabled(self) {
+        return self.disabled;
+    }
+
+    function isReadOnly(self) {
+        return self.readOnly;
+    }
+
+    function theValue(self) {
+        return self.value.replace(/\r/g, "");
+    }
+
     function trim(str, dir) {
         return (str || "")['trim' + (-1 === dir ? 'Left' : 1 === dir ? 'Right' : "")]();
     }
@@ -229,8 +232,7 @@
         if (!isInstance($, TextEditor)) {
             return new TextEditor(self, state);
         }
-        hook($);
-        self._fire = $.fire;
+        self['#TextEditor'] = hook($);
         return $.attach(self, fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
             tab: state
         } : state || {}));
@@ -253,31 +255,32 @@
             return d;
         };
     };
-    TextEditor.version = '4.0.3';
+    TextEditor.version = '4.1.0';
     TextEditor.x = x;
-    var proto = TextEditor.prototype;
-    var theEvent = function theEvent(e) {
-            var $ = this,
-                fire = $._fire,
-                type = e.type,
-                value = theValue(this);
-            if (value !== theValuePrevious) {
-                theValuePrevious = value;
-                fire('change', [e]);
-            }
-            fire(events[type] || type, [e]);
-        },
-        theValuePrevious;
-    proto.$ = function () {
+    var theValuePrevious;
+
+    function theEvent(e) {
+        var self = this,
+            $ = self['#TextEditor'],
+            type = e.type,
+            value = theValue(self);
+        if (value !== theValuePrevious) {
+            theValuePrevious = value;
+            $.fire('change', [e]);
+        }
+        $.fire(events[type] || type, [e]);
+    }
+    var $$ = TextEditor.prototype;
+    $$.$ = function () {
         var self = this.self;
         return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue(self));
     };
-    proto.attach = function (self, state) {
+    $$.attach = function (self, state) {
         var $ = this;
-        $.active = true;
+        $._active = true;
+        $._value = theValue(self);
         $.self = self;
         isSet(state) && ($.state = state);
-        $.value = theValue(self);
         // Attach event(s)
         for (var event in events) {
             onEvent(event, self, theEvent);
@@ -303,20 +306,20 @@
         }
         return $;
     };
-    proto.blur = function () {
+    $$.blur = function () {
         var $ = this,
-            active = $.active,
+            _active = $._active,
             self = $.self;
-        if (!active) {
+        if (!_active) {
             return $;
         }
         return self.blur(), $;
     };
-    proto.detach = function () {
+    $$.detach = function () {
         var $ = this,
             self = $.self,
             state = $.state;
-        $.active = false;
+        $._active = false;
         // Detach event(s)
         for (var event in events) {
             offEvent(event, self, theEvent);
@@ -336,13 +339,13 @@
         }
         return $;
     };
-    proto.focus = function (mode) {
+    $$.focus = function (mode) {
         var $ = this,
-            active = $.active,
+            _active = $._active,
             self = $.self,
             x,
             y;
-        if (!active) {
+        if (!_active) {
             return $;
         }
         if (-1 === mode) {
@@ -357,19 +360,19 @@
         }
         return self.focus(), $;
     };
-    proto.get = function () {
+    $$.get = function () {
         var $ = this,
-            active = $.active,
+            _active = $._active,
             self = $.self;
-        if (!active) {
+        if (!_active) {
             return null;
         }
         return !isDisabled(self) && theValue(self) || null;
     };
-    proto.insert = function (value, mode, clear) {
+    $$.insert = function (value, mode, clear) {
         var $ = this,
-            from = /^([\s\S]*?)$/;
-        if (!$.active) {
+            from = /^[\s\S]*?$/;
+        if (!$._active) {
             return $;
         }
         if (clear) {
@@ -384,16 +387,16 @@
         }
         return $.replace(from, value, mode);
     };
-    proto.let = function () {
+    $$.let = function () {
         var $ = this,
-            active = $.active,
+            _active = $._active,
             self = $.self;
-        if (!active) {
+        if (!_active) {
             return $;
         }
-        return self.value = $.value, $;
+        return self.value = $._value, $;
     };
-    proto.match = function (pattern, then) {
+    $$.match = function (pattern, then) {
         var $ = this,
             _$$$ = $.$(),
             after = _$$$.after,
@@ -406,7 +409,7 @@
         var m = value.match(pattern);
         return isFunction(then) ? then.call($, m || []) : !!m;
     };
-    proto.peel = function (open, close, wrap) {
+    $$.peel = function (open, close, wrap) {
         var $ = this,
             _$$$2 = $.$(),
             after = _$$$2.after,
@@ -426,7 +429,7 @@
         }
         return $.select();
     };
-    proto.pull = function (by, withEmptyLines) {
+    $$.pull = function (by, withEmptyLines) {
         if (withEmptyLines === void 0) {
             withEmptyLines = true;
         }
@@ -459,7 +462,7 @@
         }
         return $.replace(toPattern(by + '$', ""), "", -1);
     };
-    proto.push = function (by, withEmptyLines) {
+    $$.push = function (by, withEmptyLines) {
         if (withEmptyLines === void 0) {
             withEmptyLines = false;
         }
@@ -482,7 +485,7 @@
         }
         return $.insert(by, -1);
     };
-    proto.replace = function (from, to, mode) {
+    $$.replace = function (from, to, mode) {
         var $ = this,
             _$$$5 = $.$(),
             after = _$$$5.after,
@@ -500,11 +503,11 @@
         }
         return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
     };
-    proto.select = function () {
+    $$.select = function () {
         var $ = this,
-            active = $.active,
+            _active = $._active,
             self = $.self;
-        if (!active) {
+        if (!_active) {
             return $;
         }
         if (isDisabled(self) || isReadOnly(self)) {
@@ -545,11 +548,11 @@
         self.scrollTop = Y;
         return W.scroll(x, y), $;
     };
-    proto.set = function (value) {
+    $$.set = function (value) {
         var $ = this,
-            active = $.active,
+            _active = $._active,
             self = $.self;
-        if (!active) {
+        if (!_active) {
             return $;
         }
         if (isDisabled(self) || isReadOnly(self)) {
@@ -557,7 +560,7 @@
         }
         return self.value = value, $;
     };
-    proto.trim = function (open, close, start, end, tidy) {
+    $$.trim = function (open, close, start, end, tidy) {
         if (tidy === void 0) {
             tidy = true;
         }
@@ -586,16 +589,24 @@
         if (false !== start) value = trim(value, -1);
         return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
     };
-    proto.wrap = function (open, close, wrap) {
+    $$.wrap = function (open, close, wrap) {
         var $ = this,
             _$$$8 = $.$(),
             after = _$$$8.after,
             before = _$$$8.before,
             value = _$$$8.value;
         if (wrap) {
-            return $.replace(/^([\s\S]*?)$/, open + '$1' + close);
+            return $.replace(/^[\s\S]*?$/, open + '$&' + close);
         }
         return $.set(before + open + value + close + after).select(before = toCount(before + open), before + toCount(value));
     };
+    Object.defineProperty($$, 'value', {
+        get: function get() {
+            return this.self.value;
+        },
+        set: function set(value) {
+            this.self.value = value;
+        }
+    });
     return TextEditor;
 }));
