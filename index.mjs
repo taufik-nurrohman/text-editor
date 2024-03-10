@@ -32,9 +32,12 @@ function trim(str, dir) {
     return (str || "")['trim' + (-1 === dir ? 'Left' : 1 === dir ? 'Right' : "")]();
 }
 
+let isFirstTextEditorConstruct = 1;
+
 function TextEditor(self, state) {
 
     const $ = this;
+    const proto = $.constructor.prototype;
 
     if (!self) {
         return $;
@@ -51,7 +54,12 @@ function TextEditor(self, state) {
         theValue = () => self.value.replace(/\r/g, ""),
         theValuePrevious = theValue();
 
-    $.attach = () => {
+    proto.attach = force => {
+        $.self = self;
+        $.state = state = fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
+            tab: state
+        } : (state || {}));
+        $.value = theValue();
         const {fire} = hook($);
         const theEvent = e => {
             let type = e.type,
@@ -62,11 +70,15 @@ function TextEditor(self, state) {
             }
             fire(events[type] || type, [e]);
         };
-        $.$ = () => {
+        isFirstTextEditorConstruct = 0;
+        if (!force) {
+            return $;
+        }
+        proto.$ = () => {
             return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue());
         };
-        $.blur = () => (self.blur(), $);
-        $.detach = () => {
+        proto.blur = () => (self.blur(), $);
+        proto.detach = () => {
             // Detach event(s)
             theValuePrevious = theValue();
             for (let event in events) {
@@ -85,15 +97,15 @@ function TextEditor(self, state) {
                     }
                 }
             }
-            for (let key in $) {
+            for (let key in proto) {
                 if ('attach' === key) {
                     continue;
                 }
-                delete $[key];
+                delete proto[key];
             }
             return $;
         };
-        $.focus = mode => {
+        proto.focus = mode => {
             let x, y;
             if (-1 === mode) {
                 x = y = 0; // Put caret at the start of the editor, scroll to the start of the editor
@@ -107,8 +119,8 @@ function TextEditor(self, state) {
             }
             return self.focus(), $;
         };
-        $.get = () => !isDisabled() && theValue() || null;
-        $.insert = (value, mode, clear) => {
+        proto.get = () => !isDisabled() && theValue() || null;
+        proto.insert = (value, mode, clear) => {
             let from = any;
             if (clear) {
                 $.replace(from, ""); // Force to delete selection on insert before/after?
@@ -120,8 +132,8 @@ function TextEditor(self, state) {
             }
             return $.replace(from, value, mode);
         };
-        $.let = () => ((self.value = $.value), $);
-        $.match = (pattern, then) => {
+        proto.let = () => ((self.value = $.value), $);
+        proto.match = (pattern, then) => {
             let {after, before, value} = $.$();
             if (isArray(pattern)) {
                 let m = [
@@ -134,7 +146,7 @@ function TextEditor(self, state) {
             let m = value.match(pattern);
             return isFunction(then) ? then.call($, m || []) : !!m;
         };
-        $.peel = (open, close, wrap) => {
+        proto.peel = (open, close, wrap) => {
             let {after, before, value} = $.$();
             open = esc(open);
             close = esc(close);
@@ -150,7 +162,7 @@ function TextEditor(self, state) {
             }
             return $.select();
         };
-        $.pull = (by, withEmptyLines = true) => {
+        proto.pull = (by, withEmptyLines = true) => {
             let {before, end, length, start, value} = $.$();
             if (isInteger(by = isSet(by) ? by : state.tab)) {
                 by = ' '.repeat(by);
@@ -173,7 +185,7 @@ function TextEditor(self, state) {
             }
             return $.replace(toPattern(by + '$', ""), "", -1);
         };
-        $.push = (by, withEmptyLines = false) => {
+        proto.push = (by, withEmptyLines = false) => {
             let {before, end, length, start} = $.$();
             if (isInteger(by = isSet(by) ? by : state.tab)) {
                 by = ' '.repeat(by);
@@ -187,7 +199,7 @@ function TextEditor(self, state) {
             }
             return $.insert(by, -1);
         };
-        $.replace = (from, to, mode) => {
+        proto.replace = (from, to, mode) => {
             let {after, before, value} = $.$();
             if (-1 === mode) { // Replace before
                 before = before.replace(from, to);
@@ -198,7 +210,7 @@ function TextEditor(self, state) {
             }
             return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
         };
-        $.select = (...lot) => {
+        proto.select = (...lot) => {
             if (isDisabled() || isReadOnly()) {
                 return self.focus(), $;
             }
@@ -226,17 +238,13 @@ function TextEditor(self, state) {
             self.scrollTop = Y;
             return W.scroll(x, y), $;
         };
-        $.self = self;
-        $.set = value => {
+        proto.set = value => {
             if (isDisabled() || isReadOnly()) {
                 return $;
             }
             return (self.value = value), $;
         };
-        $.state = state = fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
-            tab: state
-        } : (state || {}));
-        $.trim = (open, close, start, end, tidy = true) => {
+        proto.trim = (open, close, start, end, tidy = true) => {
             if (null !== open && false !== open) {
                 open = open || "";
             }
@@ -258,8 +266,7 @@ function TextEditor(self, state) {
             if (false !== start) value = trim(value, -1);
             return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
         };
-        $.value = theValue();
-        $.wrap = (open, close, wrap) => {
+        proto.wrap = (open, close, wrap) => {
             let {after, before, value} = $.$();
             if (wrap) {
                 return $.replace(any, open + '$1' + close);
@@ -292,7 +299,7 @@ function TextEditor(self, state) {
         return $;
     };
 
-    return $.attach();
+    return $.attach(isFirstTextEditorConstruct);
 
 }
 

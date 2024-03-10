@@ -169,10 +169,11 @@
             }
             return $;
         }
+        var proto = $.constructor.prototype;
         $.hooks = hooks;
-        $.fire = fire;
-        $.off = off;
-        $.on = on;
+        proto.fire = fire;
+        proto.off = off;
+        proto.on = on;
         return $;
     }
     var offEvent = function offEvent(name, node, then) {
@@ -209,9 +210,11 @@
     function trim(str, dir) {
         return (str || "")['trim' + (-1 === dir ? 'Left' : 1 === dir ? 'Right' : "")]();
     }
+    var isFirstTextEditorConstruct = 1;
 
     function TextEditor(self, state) {
         var $ = this;
+        var proto = $.constructor.prototype;
         if (!self) {
             return $;
         }
@@ -231,7 +234,12 @@
                 return self.value.replace(/\r/g, "");
             },
             theValuePrevious = theValue();
-        $.attach = function () {
+        proto.attach = function (force) {
+            $.self = self;
+            $.state = state = fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
+                tab: state
+            } : state || {});
+            $.value = theValue();
             var _hook = hook($),
                 fire = _hook.fire;
             var theEvent = function theEvent(e) {
@@ -243,13 +251,17 @@
                 }
                 fire(events[type] || type, [e]);
             };
-            $.$ = function () {
+            isFirstTextEditorConstruct = 0;
+            if (!force) {
+                return $;
+            }
+            proto.$ = function () {
                 return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue());
             };
-            $.blur = function () {
+            proto.blur = function () {
                 return self.blur(), $;
             };
-            $.detach = function () {
+            proto.detach = function () {
                 // Detach event(s)
                 theValuePrevious = theValue();
                 for (var event in events) {
@@ -268,15 +280,15 @@
                         }
                     }
                 }
-                for (var key in $) {
+                for (var key in proto) {
                     if ('attach' === key) {
                         continue;
                     }
-                    delete $[key];
+                    delete proto[key];
                 }
                 return $;
             };
-            $.focus = function (mode) {
+            proto.focus = function (mode) {
                 var x, y;
                 if (-1 === mode) {
                     x = y = 0; // Put caret at the start of the editor, scroll to the start of the editor
@@ -290,10 +302,10 @@
                 }
                 return self.focus(), $;
             };
-            $.get = function () {
+            proto.get = function () {
                 return !isDisabled() && theValue() || null;
             };
-            $.insert = function (value, mode, clear) {
+            proto.insert = function (value, mode, clear) {
                 var from = any;
                 if (clear) {
                     $.replace(from, ""); // Force to delete selection on insert before/after?
@@ -307,10 +319,10 @@
                 }
                 return $.replace(from, value, mode);
             };
-            $.let = function () {
+            proto.let = function () {
                 return self.value = $.value, $;
             };
-            $.match = function (pattern, then) {
+            proto.match = function (pattern, then) {
                 var _$$$ = $.$(),
                     after = _$$$.after,
                     before = _$$$.before,
@@ -322,7 +334,7 @@
                 var m = value.match(pattern);
                 return isFunction(then) ? then.call($, m || []) : !!m;
             };
-            $.peel = function (open, close, wrap) {
+            proto.peel = function (open, close, wrap) {
                 var _$$$2 = $.$(),
                     after = _$$$2.after,
                     before = _$$$2.before,
@@ -341,7 +353,7 @@
                 }
                 return $.select();
             };
-            $.pull = function (by, withEmptyLines) {
+            proto.pull = function (by, withEmptyLines) {
                 if (withEmptyLines === void 0) {
                     withEmptyLines = true;
                 }
@@ -372,7 +384,7 @@
                 }
                 return $.replace(toPattern(by + '$', ""), "", -1);
             };
-            $.push = function (by, withEmptyLines) {
+            proto.push = function (by, withEmptyLines) {
                 if (withEmptyLines === void 0) {
                     withEmptyLines = false;
                 }
@@ -393,7 +405,7 @@
                 }
                 return $.insert(by, -1);
             };
-            $.replace = function (from, to, mode) {
+            proto.replace = function (from, to, mode) {
                 var _$$$5 = $.$(),
                     after = _$$$5.after,
                     before = _$$$5.before,
@@ -410,7 +422,7 @@
                 }
                 return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
             };
-            $.select = function () {
+            proto.select = function () {
                 if (isDisabled() || isReadOnly()) {
                     return self.focus(), $;
                 }
@@ -449,17 +461,13 @@
                 self.scrollTop = Y;
                 return W.scroll(x, y), $;
             };
-            $.self = self;
-            $.set = function (value) {
+            proto.set = function (value) {
                 if (isDisabled() || isReadOnly()) {
                     return $;
                 }
                 return self.value = value, $;
             };
-            $.state = state = fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
-                tab: state
-            } : state || {});
-            $.trim = function (open, close, start, end, tidy) {
+            proto.trim = function (open, close, start, end, tidy) {
                 if (tidy === void 0) {
                     tidy = true;
                 }
@@ -487,8 +495,7 @@
                 if (false !== start) value = trim(value, -1);
                 return $.set(before + value + after).select(before = toCount(before), before + toCount(value));
             };
-            $.value = theValue();
-            $.wrap = function (open, close, wrap) {
+            proto.wrap = function (open, close, wrap) {
                 var _$$$8 = $.$(),
                     after = _$$$8.after,
                     before = _$$$8.before,
@@ -523,7 +530,7 @@
             }
             return $;
         };
-        return $.attach();
+        return $.attach(isFirstTextEditorConstruct);
     }
     TextEditor.esc = esc;
     TextEditor.state = {
