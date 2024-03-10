@@ -218,7 +218,9 @@ console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start
       <h4><code>editor.state</code></h4>
       <p>Return the application states if any.</p>
       <h4><code>editor.value</code></h4>
-      <p>Return the initial value of the <code>&lt;textarea&gt;</code> element.</p>
+      <p>Proxy that passes to the <code>editor.self.value</code> property.</p>
+      <pre><code>console.log(editor.value); // Get editor value</code></pre>
+      <pre><code>editor.value = 'asdf'; // Set editor value</code></pre>
       <h3>Static Properties</h3>
       <p>Static properties are properties that are directly available on the <code>TextEditor</code> object.</p>
       <h4><code>TextEditor.state</code></h4>
@@ -277,7 +279,7 @@ if (+major &lt; 3) { &hellip; }</code></pre>
       <hr>
       <p>&copy; 2024 <a href="/">Taufik Nurrohman</a></p>
     </footer>
-    <script src="index.js"></script>
+    <script src="index.min.js"></script>
     <script>
       const editor = new TextEditor(document.querySelector('textarea'));
     </script>

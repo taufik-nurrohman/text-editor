@@ -252,7 +252,11 @@ block content
     h4: code editor.state
     p Return the application states if any.
     h4: code editor.value
-    p Return the initial value of the #[code &lt;textarea&gt;] element.
+    p Proxy that passes to the #[code editor.self.value] property.
+    pre: code
+      | console.log(editor.value); // Get editor value
+    pre: code
+      | editor.value = 'asdf'; // Set editor value
     h3 Static Properties
     p Static properties are properties that are directly available on the #[code TextEditor] object.
     h4: code TextEditor.state
