@@ -274,6 +274,7 @@
     };
     proto.attach = function (self, state) {
         var $ = this;
+        $.active = true;
         $.self = self;
         isSet(state) && ($.state = state);
         $.value = theValue(self);
@@ -303,12 +304,19 @@
         return $;
     };
     proto.blur = function () {
-        return this.self.blur(), this;
+        var $ = this,
+            active = $.active,
+            self = $.self;
+        if (!active) {
+            return $;
+        }
+        return self.blur(), $;
     };
     proto.detach = function () {
         var $ = this,
             self = $.self,
             state = $.state;
+        $.active = false;
         // Detach event(s)
         for (var event in events) {
             offEvent(event, self, theEvent);
@@ -330,9 +338,13 @@
     };
     proto.focus = function (mode) {
         var $ = this,
+            active = $.active,
             self = $.self,
             x,
             y;
+        if (!active) {
+            return $;
+        }
         if (-1 === mode) {
             x = y = 0; // Put caret at the start of the editor, scroll to the start of the editor
         } else if (1 === mode) {
@@ -346,12 +358,20 @@
         return self.focus(), $;
     };
     proto.get = function () {
-        var self = this.self;
+        var $ = this,
+            active = $.active,
+            self = $.self;
+        if (!active) {
+            return null;
+        }
         return !isDisabled(self) && theValue(self) || null;
     };
     proto.insert = function (value, mode, clear) {
         var $ = this,
             from = /^([\s\S]*?)$/;
+        if (!$.active) {
+            return $;
+        }
         if (clear) {
             $.replace(from, ""); // Force to delete selection on insert before/after?
         }
@@ -365,9 +385,13 @@
         return $.replace(from, value, mode);
     };
     proto.let = function () {
-        var $ = this;
-        $.self.value = $.value;
-        return $;
+        var $ = this,
+            active = $.active,
+            self = $.self;
+        if (!active) {
+            return $;
+        }
+        return self.value = $.value, $;
     };
     proto.match = function (pattern, then) {
         var $ = this,
@@ -478,7 +502,11 @@
     };
     proto.select = function () {
         var $ = this,
+            active = $.active,
             self = $.self;
+        if (!active) {
+            return $;
+        }
         if (isDisabled(self) || isReadOnly(self)) {
             return self.focus(), $;
         }
@@ -519,7 +547,11 @@
     };
     proto.set = function (value) {
         var $ = this,
+            active = $.active,
             self = $.self;
+        if (!active) {
+            return $;
+        }
         if (isDisabled(self) || isReadOnly(self)) {
             return $;
         }
