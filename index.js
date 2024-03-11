@@ -118,8 +118,6 @@
         if (isPattern(pattern)) {
             return pattern;
         }
-        // No need to escape `/` in the pattern string
-        pattern = pattern.replace(/\//g, '\\/');
         return new RegExp(pattern, isSet(opt) ? opt : 'g');
     };
     var x = "!$^*()+=[]{}|:<>,.?/-";
@@ -232,7 +230,7 @@
         if (!isInstance($, TextEditor)) {
             return new TextEditor(self, state);
         }
-        self['#TextEditor'] = hook($);
+        self['_' + TextEditor.name] = hook($);
         return $.attach(self, fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
             tab: state
         } : state || {}));
@@ -242,17 +240,17 @@
         'tab': '\t',
         'with': []
     };
-    TextEditor.S = function (a, b, c) {
-        var t = this,
-            d = c.slice(a, b);
-        t.after = c.slice(b);
-        t.before = c.slice(0, a);
-        t.end = b;
-        t.length = toCount(d);
-        t.start = a;
-        t.value = d;
-        t.toString = function () {
-            return d;
+    TextEditor.S = function (start, end, value) {
+        var $ = this,
+            current = value.slice(start, end);
+        $.after = value.slice(end);
+        $.before = value.slice(0, start);
+        $.end = end;
+        $.length = toCount(current);
+        $.start = start;
+        $.value = current;
+        $.toString = function () {
+            return current;
         };
     };
     TextEditor.version = '4.1.0';
@@ -261,7 +259,7 @@
 
     function theEvent(e) {
         var self = this,
-            $ = self['#TextEditor'],
+            $ = self['_' + TextEditor.name],
             type = e.type,
             value = theValue(self);
         if (value !== theValuePrevious) {
@@ -607,6 +605,9 @@
         set: function set(value) {
             this.self.value = value;
         }
+    });
+    Object.defineProperty($$.constructor, 'name', {
+        value: 'TextEditor'
     });
     return TextEditor;
 }));

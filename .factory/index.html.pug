@@ -28,7 +28,9 @@ block content
       button(onclick='editor.wrap(\'<i>\', \'</i>\');'): i I
       = ' '
       button(onclick='editor.insert(\'❤\', -1, true);') &#10084;
-    h2 Usage
+    h2#usage
+      a(href='#usage') #
+      = ' Usage'
     h3 Browser
     pre: code
       | &lt;!DOCTYPE html&gt;
@@ -58,7 +60,9 @@ block content
       | import TextEditor from '@taufik-nurrohman/text-editor';
       |
       | const editor = new TextEditor(document.querySelector('textarea'));
-    h2 Examples
+    h2#examples
+      a(href='#examples') #
+      = ' Examples'
     ul
       li: a(href='test.html' target='_blank') No Idea?
       li: a(href='test/self.html' target='_blank') Multiple Instances
@@ -83,14 +87,18 @@ block content
       li: a(href='test/trim.html' target='_blank') Trim Selection
       li: a(href='test/self.input.html' target='_blank') Using #[code &lt;input&gt;] Instead of #[code &lt;textarea&gt;]
       li: a(href='test/attach,detach.html' target='_blank') Attach, Detach
-    h2 Constructor
+    h2#constructor
+      a(href='#constructor') #
+      = ' Constructor'
     pre: code const editor = new TextEditor(self, tab = '\t');
     pre: code
       | const editor = new TextEditor(self, state = {
       |     tab: '\t',
       |     with: []
       | });
-    h2 Parameters
+    h2#parameters
+      a(href='#parameters') #
+      = ' Parameters'
     h3: code self
     p The text area element.
     h3: code tab
@@ -101,7 +109,9 @@ block content
     p The default indent character for #[code editor.pull()] and #[code editor.push()] method.
     h3: code state.with
     p List of callable functions or objects containing an #[code attach()] method to be invoked each time the application is initialized. A very simple “plugin” system.
-    h2 Methods
+    h2#methods
+      a(href='#methods') #
+      = ' Methods'
     h3 Instance Methods
     p Instance methods are methods that are available through the results of a #[code TextEditor] construct.
     h4: code editor.attach(self, state)
@@ -231,7 +241,9 @@ block content
     p Static methods are methods that are directly available on the #[code TextEditor] object.
     h4: code TextEditor.esc(value)
     p Escape regular expression&rsquo;s special characters.
-    h2 Properties
+    h2#properties
+     a(href='#properties') #
+     = ' Properties'
     h3 Instance Properties
     p Instance properties are properties that are available through the results of a #[code TextEditor] construct.
     h4: code editor.hooks
@@ -254,9 +266,9 @@ block content
     h4: code editor.value
     p Proxy that passes to the #[code editor.self.value] property.
     pre: code
-      | console.log(editor.value); // Get editor value
+      | console.log(editor.value); // Get text area value
     pre: code
-      | editor.value = 'asdf'; // Set editor value
+      | editor.value = 'asdf'; // Set text area value
     h3 Static Properties
     p Static properties are properties that are directly available on the #[code TextEditor] object.
     h4: code TextEditor.state
@@ -276,7 +288,9 @@ block content
       | if (+major &lt; 3) { &hellip; }
     h4: code TextEditor.x
     p List of regular expression characters to be escaped.
-    h2 Extensions
+    h2#extensions
+      a(href='#extensions') #
+      = ' Extensions'
     h3 Anatomy of an Extension
     p Extension as a function:
     pre: code
@@ -312,7 +326,9 @@ block content
       li: a(aria-disabled='true') BBCode Editor
       li: a(aria-disabled='true') HTML Editor
       li: a(aria-disabled='true') Markdown Editor
-    h2 License
+    h2#license
+      a(href='#license') #
+      = ' License'
     p Use it for free, pay if you get paid. So, you&rsquo;ve just benefited financially after using this project? It&rsquo;s a good idea to #[a(href='https://paypal.me/tatautaufik' target='_blank') share a little financial support] with this open source project too. Your support will motivate me to do any further development, as well as to provide voluntary support to overcome problems related to this project.
     p Thank you! ❤️
   footer

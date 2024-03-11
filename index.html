@@ -18,7 +18,7 @@
     <main>
       <p><textarea spellcheck="false" style="display:block;width:100%;">Lorem ipsum dolor sit amet.</textarea></p>
       <p role="group"><button onclick="editor.wrap('&lt;b&gt;', '&lt;/b&gt;');"><b>B</b></button> <button onclick="editor.wrap('&lt;i&gt;', '&lt;/i&gt;');"><i>I</i></button> <button onclick="editor.insert('❤', -1, true);">&#10084;</button></p>
-      <h2>Usage</h2>
+      <h2 id="usage"><a href="#usage">#</a> Usage</h2>
       <h3>Browser</h3>
       <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html dir="ltr"&gt;
@@ -45,7 +45,7 @@ const editor = new TextEditor(document.querySelector('textarea'));</code></pre>
       <pre><code>import TextEditor from '@taufik-nurrohman/text-editor';
 
 const editor = new TextEditor(document.querySelector('textarea'));</code></pre>
-      <h2>Examples</h2>
+      <h2 id="examples"><a href="#examples">#</a> Examples</h2>
       <ul>
         <li><a href="test.html" target="_blank">No Idea?</a></li>
         <li><a href="test/self.html" target="_blank">Multiple Instances</a></li>
@@ -71,13 +71,13 @@ const editor = new TextEditor(document.querySelector('textarea'));</code></pre>
         <li><a href="test/self.input.html" target="_blank">Using <code>&lt;input&gt;</code> Instead of <code>&lt;textarea&gt;</code></a></li>
         <li><a href="test/attach,detach.html" target="_blank">Attach, Detach</a></li>
       </ul>
-      <h2>Constructor</h2>
+      <h2 id="constructor"><a href="#constructor">#</a> Constructor</h2>
       <pre><code>const editor = new TextEditor(self, tab = '\t');</code></pre>
       <pre><code>const editor = new TextEditor(self, state = {
     tab: '\t',
     with: []
 });</code></pre>
-      <h2>Parameters</h2>
+      <h2 id="parameters"><a href="#parameters">#</a> Parameters</h2>
       <h3><code>self</code></h3>
       <p>The text area element.</p>
       <h3><code>tab</code></h3>
@@ -88,7 +88,7 @@ const editor = new TextEditor(document.querySelector('textarea'));</code></pre>
       <p>The default indent character for <code>editor.pull()</code> and <code>editor.push()</code> method.</p>
       <h3><code>state.with</code></h3>
       <p>List of callable functions or objects containing an <code>attach()</code> method to be invoked each time the application is initialized. A very simple “plugin” system.</p>
-      <h2>Methods</h2>
+      <h2 id="methods"><a href="#methods">#</a> Methods</h2>
       <h3>Instance Methods</h3>
       <p>Instance methods are methods that are available through the results of a <code>TextEditor</code> construct.</p>
       <h4><code>editor.attach(self, state)</code></h4>
@@ -199,7 +199,7 @@ console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start
       <p>Static methods are methods that are directly available on the <code>TextEditor</code> object.</p>
       <h4><code>TextEditor.esc(value)</code></h4>
       <p>Escape regular expression&rsquo;s special characters.</p>
-      <h2>Properties</h2>
+      <h2 id="properties"><a href="#properties">#</a> Properties</h2>
       <h3>Instance Properties</h3>
       <p>Instance properties are properties that are available through the results of a <code>TextEditor</code> construct.</p>
       <h4><code>editor.hooks</code></h4>
@@ -219,8 +219,8 @@ console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start
       <p>Return the application states if any.</p>
       <h4><code>editor.value</code></h4>
       <p>Proxy that passes to the <code>editor.self.value</code> property.</p>
-      <pre><code>console.log(editor.value); // Get editor value</code></pre>
-      <pre><code>editor.value = 'asdf'; // Set editor value</code></pre>
+      <pre><code>console.log(editor.value); // Get text area value</code></pre>
+      <pre><code>editor.value = 'asdf'; // Set text area value</code></pre>
       <h3>Static Properties</h3>
       <p>Static properties are properties that are directly available on the <code>TextEditor</code> object.</p>
       <h4><code>TextEditor.state</code></h4>
@@ -238,7 +238,7 @@ console.log([TextEditor.state, editor.state]);</code></pre>
 if (+major &lt; 3) { &hellip; }</code></pre>
       <h4><code>TextEditor.x</code></h4>
       <p>List of regular expression characters to be escaped.</p>
-      <h2>Extensions</h2>
+      <h2 id="extensions"><a href="#extensions">#</a> Extensions</h2>
       <h3>Anatomy of an Extension</h3>
       <p>Extension as a function:</p>
       <pre><code>function Extension(self, state = {}) {
@@ -271,7 +271,7 @@ if (+major &lt; 3) { &hellip; }</code></pre>
         <li><a aria-disabled="true">HTML Editor</a></li>
         <li><a aria-disabled="true">Markdown Editor</a></li>
       </ul>
-      <h2>License</h2>
+      <h2 id="license"><a href="#license">#</a> License</h2>
       <p>Use it for free, pay if you get paid. So, you&rsquo;ve just benefited financially after using this project? It&rsquo;s a good idea to <a href="https://paypal.me/tatautaufik" target="_blank">share a little financial support</a> with this open source project too. Your support will motivate me to do any further development, as well as to provide voluntary support to overcome problems related to this project.</p>
       <p>Thank you! ❤️</p>
     </main>

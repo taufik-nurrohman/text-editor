@@ -57,7 +57,7 @@ function TextEditor(self, state) {
         return new TextEditor(self, state);
     }
 
-    self['#TextEditor'] = hook($);
+    self['_' + TextEditor.name] = hook($);
 
     return $.attach(self, fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
         tab: state
@@ -72,16 +72,16 @@ TextEditor.state = {
     'with': []
 };
 
-TextEditor.S = function (a, b, c) {
-    let t = this,
-        d = c.slice(a, b);
-    t.after = c.slice(b);
-    t.before = c.slice(0, a);
-    t.end = b;
-    t.length = toCount(d);
-    t.start = a;
-    t.value = d;
-    t.toString = () => d;
+TextEditor.S = function (start, end, value) {
+    let $ = this,
+        current = value.slice(start, end);
+    $.after = value.slice(end);
+    $.before = value.slice(0, start);
+    $.end = end;
+    $.length = toCount(current);
+    $.start = start;
+    $.value = current;
+    $.toString = () => current;
 };
 
 TextEditor.version = '%(version)';
@@ -92,7 +92,7 @@ let theValuePrevious;
 
 function theEvent(e) {
     let self = this,
-        $ = self['#TextEditor'],
+        $ = self['_' + TextEditor.name],
         type = e.type,
         value = theValue(self);
     if (value !== theValuePrevious) {
@@ -403,6 +403,10 @@ Object.defineProperty($$, 'value', {
     set: function (value) {
         this.self.value = value;
     }
+});
+
+Object.defineProperty($$.constructor, 'name', {
+    value: 'TextEditor'
 });
 
 export default TextEditor;
