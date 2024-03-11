@@ -88,6 +88,10 @@ TextEditor.version = '%(version)';
 
 TextEditor.x = x;
 
+Object.defineProperty(TextEditor, 'name', {
+    value: 'TextEditor'
+});
+
 let theValuePrevious;
 
 function theEvent(e) {
@@ -403,10 +407,6 @@ Object.defineProperty($$, 'value', {
     set: function (value) {
         this.self.value = value;
     }
-});
-
-Object.defineProperty($$.constructor, 'name', {
-    value: 'TextEditor'
 });
 
 export default TextEditor;

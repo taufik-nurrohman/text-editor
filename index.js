@@ -253,8 +253,11 @@
             return current;
         };
     };
-    TextEditor.version = '4.1.0';
+    TextEditor.version = '4.1.1';
     TextEditor.x = x;
+    Object.defineProperty(TextEditor, 'name', {
+        value: 'TextEditor'
+    });
     var theValuePrevious;
 
     function theEvent(e) {
@@ -605,9 +608,6 @@
         set: function set(value) {
             this.self.value = value;
         }
-    });
-    Object.defineProperty($$.constructor, 'name', {
-        value: 'TextEditor'
     });
     return TextEditor;
 }));

@@ -84,9 +84,13 @@ TextEditor.S = function (start, end, value) {
     $.toString = () => current;
 };
 
-TextEditor.version = '4.1.0';
+TextEditor.version = '4.1.1';
 
 TextEditor.x = x;
+
+Object.defineProperty(TextEditor, 'name', {
+    value: 'TextEditor'
+});
 
 let theValuePrevious;
 
@@ -403,10 +407,6 @@ Object.defineProperty($$, 'value', {
     set: function (value) {
         this.self.value = value;
     }
-});
-
-Object.defineProperty($$.constructor, 'name', {
-    value: 'TextEditor'
 });
 
 export default TextEditor;

@@ -299,11 +299,16 @@ block content
       |     this.b = function () {};
       |     return this;
       | }
+      |
+      | Object.defineProperty(Extension, 'name', {
+      |     value: 'Extension'
+      | });
     p Extension as an object:
     pre: code
       | const Extension = {
-      |     attach: function (self, state = {}) {}
-      |     detach: function (self, state = {}) {}
+      |     attach: function (self, state = {}) {},
+      |     detach: function (self, state = {}) {},
+      |     name: 'Extension'
       | };
     h3 Usage of an Extension
     p As a core extension:
