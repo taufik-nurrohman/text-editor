@@ -57,7 +57,7 @@ function TextEditor(self, state) {
         return new TextEditor(self, state);
     }
 
-    self['_' + TextEditor.name] = hook($);
+    self['_' + TextEditor.name] = hook($, TextEditor.prototype);
 
     return $.attach(self, fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
         tab: state
@@ -84,7 +84,7 @@ TextEditor.S = function (start, end, value) {
     $.toString = () => current;
 };
 
-TextEditor.version = '4.1.1';
+TextEditor.version = '4.1.2';
 
 TextEditor.x = x;
 

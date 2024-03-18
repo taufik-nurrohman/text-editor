@@ -122,9 +122,9 @@
     };
     var x = "!$^*()+=[]{}|:<>,.?/-";
 
-    function hook($) {
-        var constructor = $.constructor.prototype;
-        constructor.fire = function (name, data) {
+    function hook($, $$) {
+        $$ = $$ || $;
+        $$.fire = function (name, data) {
             var $ = this,
                 hooks = $.hooks;
             if (!isSet(hooks[name])) {
@@ -135,7 +135,7 @@
             });
             return $;
         };
-        constructor.off = function (name, then) {
+        $$.off = function (name, then) {
             var $ = this,
                 hooks = $.hooks;
             if (!isSet(name)) {
@@ -161,7 +161,7 @@
             }
             return $;
         };
-        constructor.on = function (name, then) {
+        $$.on = function (name, then) {
             var $ = this,
                 hooks = $.hooks;
             if (!isSet(hooks[name])) {
@@ -230,7 +230,7 @@
         if (!isInstance($, TextEditor)) {
             return new TextEditor(self, state);
         }
-        self['_' + TextEditor.name] = hook($);
+        self['_' + TextEditor.name] = hook($, TextEditor.prototype);
         return $.attach(self, fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
             tab: state
         } : state || {}));
@@ -253,7 +253,7 @@
             return current;
         };
     };
-    TextEditor.version = '4.1.1';
+    TextEditor.version = '4.1.2';
     TextEditor.x = x;
     Object.defineProperty(TextEditor, 'name', {
         value: 'TextEditor'
