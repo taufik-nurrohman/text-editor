@@ -115,10 +115,12 @@ $$.$ = function () {
 
 $$.attach = function (self, state) {
     let $ = this;
+    self = self || $.self;
+    state = state || $.state;
     $._active = true;
     $._value = theValue(self);
     $.self = self;
-    isSet(state) && ($.state = state);
+    $.state = state;
     // Attach event(s)
     for (let event in events) {
         onEvent(event, self, theEvent);

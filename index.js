@@ -253,7 +253,7 @@
             return current;
         };
     };
-    TextEditor.version = '4.1.2';
+    TextEditor.version = '4.1.3';
     TextEditor.x = x;
     Object.defineProperty(TextEditor, 'name', {
         value: 'TextEditor'
@@ -278,10 +278,12 @@
     };
     $$.attach = function (self, state) {
         var $ = this;
+        self = self || $.self;
+        state = state || $.state;
         $._active = true;
         $._value = theValue(self);
         $.self = self;
-        isSet(state) && ($.state = state);
+        $.state = state;
         // Attach event(s)
         for (var event in events) {
             onEvent(event, self, theEvent);
