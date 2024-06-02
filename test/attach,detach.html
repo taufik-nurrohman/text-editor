@@ -10,7 +10,7 @@
     <main>
       <p><textarea spellcheck="false">abcdef</textarea></p>
       <p><button onclick="return editor.wrap('&lt;b&gt;', '&lt;/b&gt;'), false;"><b>B</b></button> <button onclick="return editor.wrap('&lt;i&gt;', '&lt;/i&gt;'), false;"><i>I</i></button></p>
-      <p><button onclick="return editor.detach(), (this.disabled = true), (this.nextElementSibling.disabled = false), console.log(editor), false;">Detach</button> <button disabled onclick="return editor.attach(editor.self), (this.disabled = true), (this.previousElementSibling.disabled = false), console.log(editor), false;">Attach</button></p>
+      <p><button onclick="return editor.detach(), (this.disabled = true), (this.nextElementSibling.disabled = false), console.log(editor), false;">Detach</button> <button disabled onclick="return editor.attach(), (this.disabled = true), (this.previousElementSibling.disabled = false), console.log(editor), false;">Attach</button></p>
     </main>
     <script src="../index.min.js"></script>
     <script>

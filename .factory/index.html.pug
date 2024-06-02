@@ -114,12 +114,21 @@ block content
       = ' Methods'
     h3 Instance Methods
     p Instance methods are methods that are available through the results of a #[code TextEditor] construct.
+    h4: code editor.$()
+    p Get current text selection data.
+    pre: code
+      | // `a#[mark b]c`
+      | console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start":1,"value":"b"}`
     h4: code editor.attach(self, state)
     p Re-initialize the application and its extensions after it has been detached.
     pre: code
-      | editor.attach(editor.self);
+      | editor.attach();
     h4: code editor.blur()
     p Blur from the #[code &lt;textarea&gt;] element.
+    h4: code editor.detach()
+    p Disable the application methods (except for the #[code attach()] method) and execute the #[code detach()] method of the extensions, if they are present.
+    pre: code
+      | editor.detach();
     h4: code editor.fire(event, data)
     p Fire an event.
     pre: code
@@ -131,10 +140,6 @@ block content
       | editor.focus(-1); // Focus to the start of text area value
       | editor.focus(+1); // Focus to the end of text area value
       | editor.focus(true); // Select all
-    h4: code editor.detach()
-    p Disable the application methods (except for the #[code attach()] method) and execute the #[code detach()] method of the extensions, if they are present.
-    pre: code
-      | editor.detach();
     h4: code editor.get()
     p Get current value of the #[code &lt;textarea&gt;] element if not empty, otherwise, return #[code null].
     h4: code editor.insert(value, mode = 0, clear = false)
@@ -232,11 +237,6 @@ block content
     pre: code
       | editor.wrap('&lt;', '&gt;'); // Wrap with `&lt;` and `&gt;`
       | editor.wrap('&lt;', '&gt;', true); // Wrap with `&lt;` and `&gt;` then select
-    h4: code editor.$()
-    p Get current text selection data.
-    pre: code
-      | // `a#[mark b]c`
-      | console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start":1,"value":"b"}`
     h3 Static Methods
     p Static methods are methods that are directly available on the #[code TextEditor] object.
     h4: code TextEditor.esc(value)

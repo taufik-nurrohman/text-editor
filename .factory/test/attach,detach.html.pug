@@ -23,4 +23,4 @@ block content
     p
       button(onclick='return editor.detach(), (this.disabled = true), (this.nextElementSibling.disabled = false), console.log(editor), false;') Detach
       = ' '
-      button(disabled onclick='return editor.attach(editor.self), (this.disabled = true), (this.previousElementSibling.disabled = false), console.log(editor), false;') Attach
+      button(disabled onclick='return editor.attach(), (this.disabled = true), (this.previousElementSibling.disabled = false), console.log(editor), false;') Attach

@@ -5,13 +5,13 @@
     <meta content="#000" name="theme-color">
     <meta content="width=device-width" name="viewport">
     <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
-    <title>Text Editor 4.1.3</title>
+    <title>Text Editor 4.1.4</title>
     <link href="../layout/index.min.css" rel="stylesheet">
   </head>
   <body>
     <p role="alert">Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
     <header>
-      <h1>Text Editor 4.1.3</h1>
+      <h1>Text Editor 4.1.4</h1>
       <p>Text Editor is a simple JavaScript application that aims to provide accessibility enhancements to the native HTML <code>&lt;textarea&gt;</code> elements, allowing users to control and manipulate their data in the text editor as they wish. It contains very sufficient methods to manipulate the existing text selection range data without providing unnecessary features. This keeps the file size small and the learning curve low, so you can fully focus on the results.</p>
       <hr>
     </header>
@@ -91,11 +91,18 @@ const editor = new TextEditor(document.querySelector('textarea'));</code></pre>
       <h2 id="methods"><a href="#methods">#</a> Methods</h2>
       <h3>Instance Methods</h3>
       <p>Instance methods are methods that are available through the results of a <code>TextEditor</code> construct.</p>
+      <h4><code>editor.$()</code></h4>
+      <p>Get current text selection data.</p>
+      <pre><code>// `a<mark>b</mark>c`
+console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start":1,"value":"b"}`</code></pre>
       <h4><code>editor.attach(self, state)</code></h4>
       <p>Re-initialize the application and its extensions after it has been detached.</p>
-      <pre><code>editor.attach(editor.self);</code></pre>
+      <pre><code>editor.attach();</code></pre>
       <h4><code>editor.blur()</code></h4>
       <p>Blur from the <code>&lt;textarea&gt;</code> element.</p>
+      <h4><code>editor.detach()</code></h4>
+      <p>Disable the application methods (except for the <code>attach()</code> method) and execute the <code>detach()</code> method of the extensions, if they are present.</p>
+      <pre><code>editor.detach();</code></pre>
       <h4><code>editor.fire(event, data)</code></h4>
       <p>Fire an event.</p>
       <pre><code>editor.fire('change', []);</code></pre>
@@ -105,9 +112,6 @@ const editor = new TextEditor(document.querySelector('textarea'));</code></pre>
 editor.focus(-1); // Focus to the start of text area value
 editor.focus(+1); // Focus to the end of text area value
 editor.focus(true); // Select all</code></pre>
-      <h4><code>editor.detach()</code></h4>
-      <p>Disable the application methods (except for the <code>attach()</code> method) and execute the <code>detach()</code> method of the extensions, if they are present.</p>
-      <pre><code>editor.detach();</code></pre>
       <h4><code>editor.get()</code></h4>
       <p>Get current value of the <code>&lt;textarea&gt;</code> element if not empty, otherwise, return <code>null</code>.</p>
       <h4><code>editor.insert(value, mode = 0, clear = false)</code></h4>
@@ -191,10 +195,6 @@ editor.trim('\n\n', '\n\n', "", "", false); // Ignore empty value before and aft
       <p>Wrap current selection with <var>open</var> and <var>close</var>.</p>
       <pre><code>editor.wrap('&lt;', '&gt;'); // Wrap with `&lt;` and `&gt;`
 editor.wrap('&lt;', '&gt;', true); // Wrap with `&lt;` and `&gt;` then select</code></pre>
-      <h4><code>editor.$()</code></h4>
-      <p>Get current text selection data.</p>
-      <pre><code>// `a<mark>b</mark>c`
-console.log(editor.$()); // `{"after":"c","before":"a","end":2,"length":1,"start":1,"value":"b"}`</code></pre>
       <h3>Static Methods</h3>
       <p>Static methods are methods that are directly available on the <code>TextEditor</code> object.</p>
       <h4><code>TextEditor.esc(value)</code></h4>
