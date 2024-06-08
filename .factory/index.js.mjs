@@ -1,4 +1,4 @@
-import {B, D, H, R, W} from '@taufik-nurrohman/document';
+import {B, D, H, R, W, getAttribute} from '@taufik-nurrohman/document';
 import {esc, fromPattern, toPattern, x} from '@taufik-nurrohman/pattern';
 import {fromStates} from '@taufik-nurrohman/from';
 import {hook} from '@taufik-nurrohman/hook';
@@ -28,16 +28,18 @@ const events = {
     wheel: 'scroll'
 };
 
+const name = 'TextEditor';
+
+function getValue(self) {
+    return (self.value || getAttribute(self, 'value') || "").replace(/\r/g, "");
+}
+
 function isDisabled(self) {
     return self.disabled;
 }
 
 function isReadOnly(self) {
     return self.readOnly;
-}
-
-function theValue(self) {
-    return self.value.replace(/\r/g, "");
 }
 
 function trim(str, dir) {
@@ -57,7 +59,7 @@ function TextEditor(self, state) {
         return new TextEditor(self, state);
     }
 
-    self['_' + TextEditor.name] = hook($, TextEditor.prototype);
+    self['_' + name] = hook($, TextEditor.prototype);
 
     return $.attach(self, fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
         tab: state
@@ -89,16 +91,16 @@ TextEditor.version = '%(version)';
 TextEditor.x = x;
 
 Object.defineProperty(TextEditor, 'name', {
-    value: 'TextEditor'
+    value: name
 });
 
 let theValuePrevious;
 
 function theEvent(e) {
     let self = this,
-        $ = self['_' + TextEditor.name],
+        $ = self['_' + name],
         type = e.type,
-        value = theValue(self);
+        value = getValue(self);
     if (value !== theValuePrevious) {
         theValuePrevious = value;
         $.fire('change', [e]);
@@ -110,15 +112,15 @@ const $$ = TextEditor.prototype;
 
 $$.$ = function () {
     let {self} = this;
-    return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue(self));
+    return new TextEditor.S(self.selectionStart, self.selectionEnd, getValue(self));
 };
 
 $$.attach = function (self, state) {
     let $ = this;
     self = self || $.self;
     state = state || $.state;
-    $._active = true;
-    $._value = theValue(self);
+    $._active = !isDisabled(self) && !isReadOnly(self);
+    $._value = getValue(self);
     $.self = self;
     $.state = state;
     // Attach event(s)
@@ -148,12 +150,7 @@ $$.attach = function (self, state) {
 };
 
 $$.blur = function () {
-    let $ = this,
-        {_active, self} = $;
-    if (!_active) {
-        return $;
-    }
-    return self.blur(), $;
+    return this.self.blur();
 };
 
 $$.detach = function () {
@@ -184,12 +181,12 @@ $$.focus = function (mode) {
     let $ = this,
         {_active, self} = $, x, y;
     if (!_active) {
-        return $;
+        return self.focus(), $;
     }
     if (-1 === mode) {
         x = y = 0; // Put caret at the start of the editor, scroll to the start of the editor
     } else if (1 === mode) {
-        x = toCount(theValue(self)); // Put caret at the end of the editor
+        x = toCount(getValue(self)); // Put caret at the end of the editor
         y = self.scrollHeight; // Scroll to the end of the editor
     }
     if (isSet(x) && isSet(y)) {
@@ -205,7 +202,7 @@ $$.get = function () {
     if (!_active) {
         return false;
     }
-    return !isDisabled(self) && theValue(self) || null;
+    return !isDisabled(self) && getValue(self) || null;
 };
 
 $$.insert = function (value, mode, clear) {
@@ -327,9 +324,6 @@ $$.select = function (...lot) {
     let $ = this,
         {_active, self} = $;
     if (!_active) {
-        return $;
-    }
-    if (isDisabled(self) || isReadOnly(self)) {
         return self.focus(), $;
     }
     let count = toCount(lot),
@@ -361,9 +355,6 @@ $$.set = function (value) {
     let $ = this,
         {_active, self} = $;
     if (!_active) {
-        return $;
-    }
-    if (isDisabled(self) || isReadOnly(self)) {
         return $;
     }
     return (self.value = value), $;

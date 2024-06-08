@@ -12,11 +12,11 @@ block content
   main
     p: textarea(spellcheck='false') abcdef
     p
-      button(onclick='editor.wrap(\'*\', \'*\');'): b B
+      button(onclick='editor.wrap(\'*\', \'*\').focus();'): b B
       = ' '
-      button(onclick='editor.wrap(\'_\', \'_\');'): i I
+      button(onclick='editor.wrap(\'_\', \'_\').focus();'): i I
     p
       label
-        input(onchange='editor.self.readOnly = !editor.self.readOnly;' type='checkbox')
+        input(onchange='editor.self.readOnly = !editor.self.readOnly; editor.detach().attach();' type='checkbox')
         = ' '
         span Read Only

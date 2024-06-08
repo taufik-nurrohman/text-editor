@@ -51,6 +51,9 @@
     var isNumber = function isNumber(x) {
         return 'number' === typeof x;
     };
+    var isNumeric = function isNumeric(x) {
+        return /^-?(?:\d*.)?\d+$/.test(x + "");
+    };
     var isObject = function isObject(x, isPlain) {
         if (isPlain === void 0) {
             isPlain = true;
@@ -68,6 +71,38 @@
     };
     var toCount = function toCount(x) {
         return x.length;
+    };
+    var toNumber = function toNumber(x, base) {
+        if (base === void 0) {
+            base = 10;
+        }
+        return base ? parseInt(x, base) : parseFloat(x);
+    };
+    var toValue = function toValue(x) {
+        if (isArray(x)) {
+            return x.map(function (v) {
+                return toValue(v);
+            });
+        }
+        if (isNumeric(x)) {
+            return toNumber(x);
+        }
+        if (isObject(x)) {
+            for (var k in x) {
+                x[k] = toValue(x[k]);
+            }
+            return x;
+        }
+        if ('false' === x) {
+            return false;
+        }
+        if ('null' === x) {
+            return null;
+        }
+        if ('true' === x) {
+            return true;
+        }
+        return x;
     };
     var fromStates = function fromStates() {
         for (var _len = arguments.length, lot = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -105,6 +140,19 @@
     var W = window;
     var B = D.body;
     var R = D.documentElement;
+    var getAttribute = function getAttribute(node, attribute, parseValue) {
+        if (parseValue === void 0) {
+            parseValue = true;
+        }
+        if (!hasAttribute(node, attribute)) {
+            return null;
+        }
+        var value = node.getAttribute(attribute);
+        return parseValue ? toValue(value) : value;
+    };
+    var hasAttribute = function hasAttribute(node, attribute) {
+        return node.hasAttribute(attribute);
+    };
     var esc = function esc(pattern, extra) {
         if (extra === void 0) {
             extra = "";
@@ -204,6 +252,11 @@
         touchstart: 'mouse.down',
         wheel: 'scroll'
     };
+    var name = 'TextEditor';
+
+    function getValue(self) {
+        return (self.value || getAttribute(self, 'value') || "").replace(/\r/g, "");
+    }
 
     function isDisabled(self) {
         return self.disabled;
@@ -211,10 +264,6 @@
 
     function isReadOnly(self) {
         return self.readOnly;
-    }
-
-    function theValue(self) {
-        return self.value.replace(/\r/g, "");
     }
 
     function trim(str, dir) {
@@ -230,7 +279,7 @@
         if (!isInstance($, TextEditor)) {
             return new TextEditor(self, state);
         }
-        self['_' + TextEditor.name] = hook($, TextEditor.prototype);
+        self['_' + name] = hook($, TextEditor.prototype);
         return $.attach(self, fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
             tab: state
         } : state || {}));
@@ -253,18 +302,18 @@
             return current;
         };
     };
-    TextEditor.version = '4.1.4';
+    TextEditor.version = '4.1.5';
     TextEditor.x = x;
     Object.defineProperty(TextEditor, 'name', {
-        value: 'TextEditor'
+        value: name
     });
     var theValuePrevious;
 
     function theEvent(e) {
         var self = this,
-            $ = self['_' + TextEditor.name],
+            $ = self['_' + name],
             type = e.type,
-            value = theValue(self);
+            value = getValue(self);
         if (value !== theValuePrevious) {
             theValuePrevious = value;
             $.fire('change', [e]);
@@ -274,14 +323,14 @@
     var $$ = TextEditor.prototype;
     $$.$ = function () {
         var self = this.self;
-        return new TextEditor.S(self.selectionStart, self.selectionEnd, theValue(self));
+        return new TextEditor.S(self.selectionStart, self.selectionEnd, getValue(self));
     };
     $$.attach = function (self, state) {
         var $ = this;
         self = self || $.self;
         state = state || $.state;
-        $._active = true;
-        $._value = theValue(self);
+        $._active = !isDisabled(self) && !isReadOnly(self);
+        $._value = getValue(self);
         $.self = self;
         $.state = state;
         // Attach event(s)
@@ -310,13 +359,7 @@
         return $;
     };
     $$.blur = function () {
-        var $ = this,
-            _active = $._active,
-            self = $.self;
-        if (!_active) {
-            return $;
-        }
-        return self.blur(), $;
+        return this.self.blur();
     };
     $$.detach = function () {
         var $ = this,
@@ -349,12 +392,12 @@
             x,
             y;
         if (!_active) {
-            return $;
+            return self.focus(), $;
         }
         if (-1 === mode) {
             x = y = 0; // Put caret at the start of the editor, scroll to the start of the editor
         } else if (1 === mode) {
-            x = toCount(theValue(self)); // Put caret at the end of the editor
+            x = toCount(getValue(self)); // Put caret at the end of the editor
             y = self.scrollHeight; // Scroll to the end of the editor
         }
         if (isSet(x) && isSet(y)) {
@@ -370,7 +413,7 @@
         if (!_active) {
             return false;
         }
-        return !isDisabled(self) && theValue(self) || null;
+        return !isDisabled(self) && getValue(self) || null;
     };
     $$.insert = function (value, mode, clear) {
         var $ = this,
@@ -511,9 +554,6 @@
             _active = $._active,
             self = $.self;
         if (!_active) {
-            return $;
-        }
-        if (isDisabled(self) || isReadOnly(self)) {
             return self.focus(), $;
         }
         for (var _len = arguments.length, lot = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -556,9 +596,6 @@
             _active = $._active,
             self = $.self;
         if (!_active) {
-            return $;
-        }
-        if (isDisabled(self) || isReadOnly(self)) {
             return $;
         }
         return self.value = value, $;
