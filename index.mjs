@@ -1,4 +1,4 @@
-import {B, D, H, R, W, getAttribute} from '@taufik-nurrohman/document';
+import {B, D, H, R, W, getAttribute, hasClass, letClass, setClass} from '@taufik-nurrohman/document';
 import {esc, fromPattern, toPattern, x} from '@taufik-nurrohman/pattern';
 import {fromStates} from '@taufik-nurrohman/from';
 import {hook} from '@taufik-nurrohman/hook';
@@ -70,6 +70,7 @@ function TextEditor(self, state) {
 TextEditor.esc = esc;
 
 TextEditor.state = {
+    'n': 'text-editor',
     'tab': '\t',
     'with': []
 };
@@ -119,6 +120,9 @@ $$.attach = function (self, state) {
     let $ = this;
     self = self || $.self;
     state = state || $.state;
+    if (hasClass(self, state.n + '__self')) {
+        return $;
+    }
     $._active = !isDisabled(self) && !isReadOnly(self);
     $._value = getValue(self);
     $.self = self;
@@ -127,6 +131,7 @@ $$.attach = function (self, state) {
     for (let event in events) {
         onEvent(event, self, theEvent);
     }
+    setClass(self, state.n + '__self');
     // Attach extension(s)
     if (isSet(state) && isArray(state.with)) {
         for (let i = 0, j = toCount(state.with); i < j; ++i) {
@@ -156,11 +161,15 @@ $$.blur = function () {
 $$.detach = function () {
     let $ = this,
         {self, state} = $;
+    if (!hasClass(self, state.n + '__self')) {
+        return $;
+    }
     $._active = false;
     // Detach event(s)
     for (let event in events) {
         offEvent(event, self, theEvent);
     }
+    letClass(self, state.n + '__self');
     // Detach extension(s)
     if (isArray(state.with)) {
         for (let i = 0, j = toCount(state.with); i < j; ++i) {

@@ -153,6 +153,15 @@
     var hasAttribute = function hasAttribute(node, attribute) {
         return node.hasAttribute(attribute);
     };
+    var hasClass = function hasClass(node, value) {
+        return node.classList.contains(value);
+    };
+    var letClass = function letClass(node, value) {
+        return node.classList.remove(value), node;
+    };
+    var setClass = function setClass(node, value) {
+        return node.classList.add(value), node;
+    };
     var esc = function esc(pattern, extra) {
         if (extra === void 0) {
             extra = "";
@@ -286,6 +295,7 @@
     }
     TextEditor.esc = esc;
     TextEditor.state = {
+        'n': 'text-editor',
         'tab': '\t',
         'with': []
     };
@@ -329,6 +339,9 @@
         var $ = this;
         self = self || $.self;
         state = state || $.state;
+        if (hasClass(self, state.n + '__self')) {
+            return $;
+        }
         $._active = !isDisabled(self) && !isReadOnly(self);
         $._value = getValue(self);
         $.self = self;
@@ -337,6 +350,7 @@
         for (var event in events) {
             onEvent(event, self, theEvent);
         }
+        setClass(self, state.n + '__self');
         // Attach extension(s)
         if (isSet(state) && isArray(state.with)) {
             for (var i = 0, j = toCount(state.with); i < j; ++i) {
@@ -365,11 +379,15 @@
         var $ = this,
             self = $.self,
             state = $.state;
+        if (!hasClass(self, state.n + '__self')) {
+            return $;
+        }
         $._active = false;
         // Detach event(s)
         for (var event in events) {
             offEvent(event, self, theEvent);
         }
+        letClass(self, state.n + '__self');
         // Detach extension(s)
         if (isArray(state.with)) {
             for (var i = 0, j = toCount(state.with); i < j; ++i) {
