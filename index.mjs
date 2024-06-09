@@ -119,7 +119,12 @@ $$.$ = function () {
 $$.attach = function (self, state) {
     let $ = this;
     self = self || $.self;
-    state = state || $.state;
+    if (state && (isInteger(state) || isString(state))) {
+        state = {
+            tab: state
+        };
+    }
+    state = fromStates({}, $.state, state || {});
     if (hasClass(self, state.n + '__self')) {
         return $;
     }
