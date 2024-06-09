@@ -326,7 +326,7 @@
             value = getValue(self);
         if (value !== theValuePrevious) {
             theValuePrevious = value;
-            $.fire('change', [e]);
+            $.fire('change');
         }
         $.fire(events[type] || type, [e]);
     }
