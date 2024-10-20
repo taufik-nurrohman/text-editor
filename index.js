@@ -181,51 +181,51 @@
 
     function hook($, $$) {
         $$ = $$ || $;
-        $$.fire = function (name, data) {
+        $$.fire = function (event, data, that) {
             var $ = this,
                 hooks = $.hooks;
-            if (!isSet(hooks[name])) {
+            if (!isSet(hooks[event])) {
                 return $;
             }
-            hooks[name].forEach(function (then) {
-                return then.apply($, data);
+            hooks[event].forEach(function (then) {
+                return then.apply(that || $, data);
             });
             return $;
         };
-        $$.off = function (name, then) {
+        $$.off = function (event, then) {
             var $ = this,
                 hooks = $.hooks;
-            if (!isSet(name)) {
+            if (!isSet(event)) {
                 return hooks = {}, $;
             }
-            if (isSet(hooks[name])) {
+            if (isSet(hooks[event])) {
                 if (isSet(then)) {
-                    var j = hooks[name].length;
+                    var j = hooks[event].length;
                     // Clean-up empty hook(s)
                     if (0 === j) {
-                        delete hooks[name];
+                        delete hooks[event];
                     } else {
                         for (var i = 0; i < j; ++i) {
-                            if (then === hooks[name][i]) {
-                                hooks[name].splice(i, 1);
+                            if (then === hooks[event][i]) {
+                                hooks[event].splice(i, 1);
                                 break;
                             }
                         }
                     }
                 } else {
-                    delete hooks[name];
+                    delete hooks[event];
                 }
             }
             return $;
         };
-        $$.on = function (name, then) {
+        $$.on = function (event, then) {
             var $ = this,
                 hooks = $.hooks;
-            if (!isSet(hooks[name])) {
-                hooks[name] = [];
+            if (!isSet(hooks[event])) {
+                hooks[event] = [];
             }
             if (isSet(then)) {
-                hooks[name].push(then);
+                hooks[event].push(then);
             }
             return $;
         };
@@ -312,7 +312,7 @@
             return current;
         };
     };
-    TextEditor.version = '4.1.5';
+    TextEditor.version = '4.1.6';
     TextEditor.x = x;
     Object.defineProperty(TextEditor, 'name', {
         value: name
