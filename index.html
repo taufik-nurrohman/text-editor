@@ -5,7 +5,7 @@
     <meta content="#000" name="theme-color">
     <meta content="width=device-width" name="viewport">
     <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
-    <title>Text Editor 4.1.7</title>
+    <title>Text Editor 4.2.0</title>
     <link href="../layout/index.min.css" rel="stylesheet">
     <style>
       body {
@@ -19,7 +19,7 @@
     <p role="alert">Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
     <header>
       <hgroup>
-        <h1>Text Editor 4.1.7</h1>
+        <h1>Text Editor 4.2.0</h1>
         <p>Text Editor is a simple JavaScript application that aims to provide accessibility enhancements to the native HTML <code>&lt;textarea&gt;</code> elements, allowing users to control and manipulate their data in the text editor as they wish. It contains very sufficient methods to manipulate the existing text selection range data without providing unnecessary features. This keeps the file size small and the learning curve low, so you can fully focus on the results.</p>
       </hgroup>
     </header>
@@ -213,6 +213,14 @@ editor.wrap('&lt;', '&gt;', true); // Wrap with `&lt;` and `&gt;` then select</c
       <p>Static methods are methods that are directly available on the <code>TextEditor</code> object.</p>
       <h4><code>TextEditor.esc(value)</code></h4>
       <p>Escapes regular expression&rsquo;s special characters.</p>
+      <h4><code>TextEditor.from(self, state)</code></h4>
+      <p>Creates a <code>TextEditor</code> instance.</p>
+      <pre><code>const editor = TextEditor.from(document.querySelector('textarea'));</code></pre>
+      <h4><code>TextEditor.of(self)</code></h4>
+      <p>Gets <code>TextEditor</code> instance of an element.</p>
+      <pre><code>document.querySelectorAll('textarea').forEach(self => {
+    const editor = TextEditor.of(self);
+});</code></pre>
       <h2 id="properties"><a href="#properties">#</a> Properties</h2>
       <h3>Instance Properties</h3>
       <p>Instance properties are properties that are available through the results of a <code>TextEditor</code> construct.</p>

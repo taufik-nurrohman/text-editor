@@ -257,6 +257,16 @@ block content
     p Static methods are methods that are directly available on the #[code TextEditor] object.
     h4: code TextEditor.esc(value)
     p Escapes regular expression&rsquo;s special characters.
+    h4: code TextEditor.from(self, state)
+    p Creates a #[code TextEditor] instance.
+    pre: code
+      | const editor = TextEditor.from(document.querySelector('textarea'));
+    h4: code TextEditor.of(self)
+    p Gets #[code TextEditor] instance of an element.
+    pre: code
+      | document.querySelectorAll('textarea').forEach(self => {
+      |     const editor = TextEditor.of(self);
+      | });
     h2#properties
      a(href='#properties') #
      = ' Properties'

@@ -51,9 +51,6 @@
     var isNumber = function isNumber(x) {
         return 'number' === typeof x;
     };
-    var isNumeric = function isNumeric(x) {
-        return /^-?(?:\d*.)?\d+$/.test(x + "");
-    };
     var isObject = function isObject(x, isPlain) {
         if (isPlain === void 0) {
             isPlain = true;
@@ -71,38 +68,6 @@
     };
     var toCount = function toCount(x) {
         return x.length;
-    };
-    var toNumber = function toNumber(x, base) {
-        if (base === void 0) {
-            base = 10;
-        }
-        return base ? parseInt(x, base) : parseFloat(x);
-    };
-    var toValue = function toValue(x) {
-        if (isArray(x)) {
-            return x.map(function (v) {
-                return toValue(v);
-            });
-        }
-        if (isNumeric(x)) {
-            return toNumber(x);
-        }
-        if (isObject(x)) {
-            for (var k in x) {
-                x[k] = toValue(x[k]);
-            }
-            return x;
-        }
-        if ('false' === x) {
-            return false;
-        }
-        if ('null' === x) {
-            return null;
-        }
-        if ('true' === x) {
-            return true;
-        }
-        return x;
     };
     var fromStates = function fromStates() {
         for (var _len = arguments.length, lot = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -140,19 +105,6 @@
     var W = window;
     var B = D.body;
     var R = D.documentElement;
-    var getAttribute = function getAttribute(node, attribute, parseValue) {
-        if (parseValue === void 0) {
-            parseValue = true;
-        }
-        if (!hasAttribute(node, attribute)) {
-            return null;
-        }
-        var value = node.getAttribute(attribute);
-        return parseValue ? toValue(value) : value;
-    };
-    var hasAttribute = function hasAttribute(node, attribute) {
-        return node.hasAttribute(attribute);
-    };
     var hasClass = function hasClass(node, value) {
         return node.classList.contains(value);
     };
@@ -262,9 +214,14 @@
         wheel: 'scroll'
     };
     var name = 'TextEditor';
+    var references = new WeakMap();
+
+    function getReference(key) {
+        return references.get(key);
+    }
 
     function getValue(self) {
-        return (self.value || getAttribute(self, 'value') || "").replace(/\r/g, "");
+        return (self.value || "").replace(/\r/g, "");
     }
 
     function isDisabled(self) {
@@ -273,6 +230,10 @@
 
     function isReadOnly(self) {
         return self.readOnly;
+    }
+
+    function setReference(key, value) {
+        return references.set(key, value);
     }
 
     function trim(str, dir) {
@@ -288,12 +249,16 @@
         if (!isInstance($, TextEditor)) {
             return new TextEditor(self, state);
         }
-        self['_' + name] = hook($, TextEditor.prototype);
+        setReference(self, hook($, TextEditor.prototype));
         return $.attach(self, fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
             tab: state
         } : state || {}));
     }
     TextEditor.esc = esc;
+    TextEditor.from = function (self, state) {
+        return new TextEditor(self, state);
+    };
+    TextEditor.of = getReference;
     TextEditor.state = {
         'n': 'text-editor',
         'tab': '\t',
@@ -312,7 +277,7 @@
             return current;
         };
     };
-    TextEditor.version = '4.1.7';
+    TextEditor.version = '4.2.0';
     TextEditor.x = x;
     Object.defineProperty(TextEditor, 'name', {
         value: name
@@ -321,7 +286,7 @@
 
     function theEvent(e) {
         var self = this,
-            $ = self['_' + name],
+            $ = getReference(self),
             type = e.type,
             value = getValue(self);
         if (value !== theValuePrevious) {

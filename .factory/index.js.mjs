@@ -29,9 +29,14 @@ const events = {
 };
 
 const name = 'TextEditor';
+const references = new WeakMap;
+
+function getReference(key) {
+    return references.get(key);
+}
 
 function getValue(self) {
-    return (self.value || getAttribute(self, 'value') || "").replace(/\r/g, "");
+    return (self.value || "").replace(/\r/g, "");
 }
 
 function isDisabled(self) {
@@ -40,6 +45,10 @@ function isDisabled(self) {
 
 function isReadOnly(self) {
     return self.readOnly;
+}
+
+function setReference(key, value) {
+    return references.set(key, value);
 }
 
 function trim(str, dir) {
@@ -59,7 +68,7 @@ function TextEditor(self, state) {
         return new TextEditor(self, state);
     }
 
-    self['_' + name] = hook($, TextEditor.prototype);
+    setReference(self, hook($, TextEditor.prototype));
 
     return $.attach(self, fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
         tab: state
@@ -68,6 +77,12 @@ function TextEditor(self, state) {
 }
 
 TextEditor.esc = esc;
+
+TextEditor.from = function (self, state) {
+    return new TextEditor(self, state);
+};
+
+TextEditor.of = getReference;
 
 TextEditor.state = {
     'n': 'text-editor',
@@ -99,7 +114,7 @@ let theValuePrevious;
 
 function theEvent(e) {
     let self = this,
-        $ = self['_' + name],
+        $ = getReference(self),
         type = e.type,
         value = getValue(self);
     if (value !== theValuePrevious) {
