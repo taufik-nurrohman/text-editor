@@ -69,7 +69,7 @@
     var toCount = function toCount(x) {
         return x.length;
     };
-    var fromStates = function fromStates() {
+    var _fromStates = function fromStates() {
         for (var _len = arguments.length, lot = new Array(_len), _key = 0; _key < _len; _key++) {
             lot[_key] = arguments[_key];
         }
@@ -91,7 +91,7 @@
                     }
                     // Merge object recursive
                 } else if (isObject(out[k]) && isObject(lot[i][k])) {
-                    out[k] = fromStates({
+                    out[k] = _fromStates({
                         /* Clone! */ }, out[k], lot[i][k]);
                     // Replace value
                 } else {
@@ -250,7 +250,7 @@
             return new TextEditor(self, state);
         }
         setReference(self, hook($, TextEditor.prototype));
-        return $.attach(self, fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
+        return $.attach(self, _fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
             tab: state
         } : state || {}));
     }
@@ -277,7 +277,7 @@
             return current;
         };
     };
-    TextEditor.version = '4.2.0';
+    TextEditor.version = '4.2.1';
     TextEditor.x = x;
     Object.defineProperty(TextEditor, 'name', {
         value: name
@@ -308,7 +308,7 @@
                 tab: state
             };
         }
-        state = fromStates({}, $.state, state || {});
+        state = _fromStates({}, $.state, state || {});
         if (hasClass(self, state.n + '__self')) {
             return $;
         }
