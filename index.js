@@ -27,15 +27,6 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = f() : typeof define === 'function' && define.amd ? define(f) : (g = typeof globalThis !== 'undefined' ? globalThis : g || self, g.TextEditor = f());
 })(this, (function () {
     'use strict';
-
-    function _typeof(o) {
-        "@babel/helpers - typeof";
-        return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
-            return typeof o;
-        } : function (o) {
-            return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-        }, _typeof(o);
-    }
     var hasValue = function hasValue(x, data) {
         return -1 !== data.indexOf(x);
     };
@@ -60,9 +51,11 @@
     var isNumber = function isNumber(x) {
         return 'number' === typeof x;
     };
-    var isObject = function isObject(x) {
-        var isPlain = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-        if ('object' !== _typeof(x)) {
+    var isObject = function isObject(x, isPlain) {
+        if (isPlain === void 0) {
+            isPlain = true;
+        }
+        if ('object' !== typeof x) {
             return false;
         }
         return isPlain ? isInstance(x, Object) : true;
@@ -121,8 +114,10 @@
     var setClass = function setClass(node, value) {
         return node.classList.add(value), node;
     };
-    var esc = function esc(pattern) {
-        var extra = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
+    var esc = function esc(pattern, extra) {
+        if (extra === void 0) {
+            extra = "";
+        }
         return pattern.replace(toPattern('[' + extra + x.replace(/./g, '\\$&') + ']'), '\\$&');
     };
     var isPattern = function isPattern(pattern) {
@@ -191,8 +186,10 @@
     var offEvent = function offEvent(name, node, then) {
         node.removeEventListener(name, then);
     };
-    var onEvent = function onEvent(name, node, then) {
-        var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+    var onEvent = function onEvent(name, node, then, options) {
+        if (options === void 0) {
+            options = false;
+        }
         node.addEventListener(name, then, options);
     };
     var events = {
@@ -280,7 +277,7 @@
             return current;
         };
     };
-    TextEditor.version = '4.2.1';
+    TextEditor.version = '4.2.2';
     TextEditor.x = x;
     Object.defineProperty(TextEditor, 'name', {
         value: name
@@ -466,8 +463,10 @@
         }
         return $.select();
     };
-    $$.pull = function (by) {
-        var withEmptyLines = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+    $$.pull = function (by, withEmptyLines) {
+        if (withEmptyLines === void 0) {
+            withEmptyLines = true;
+        }
         var $ = this,
             state = $.state,
             _$$$3 = $.$(),
@@ -497,8 +496,10 @@
         }
         return $.replace(toPattern(by + '$', ""), "", -1);
     };
-    $$.push = function (by) {
-        var withEmptyLines = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    $$.push = function (by, withEmptyLines) {
+        if (withEmptyLines === void 0) {
+            withEmptyLines = false;
+        }
         var $ = this,
             state = $.state,
             _$$$4 = $.$(),
@@ -587,8 +588,10 @@
         }
         return self.value = value, $;
     };
-    $$.trim = function (open, close, start, end) {
-        var tidy = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
+    $$.trim = function (open, close, start, end, tidy) {
+        if (tidy === void 0) {
+            tidy = true;
+        }
         if (null !== open && false !== open) {
             open = open || "";
         }
