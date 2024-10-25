@@ -32,7 +32,7 @@ const name = 'TextEditor';
 const references = new WeakMap;
 
 function getReference(key) {
-    return getValueInMap(key, references);
+    return getValueInMap(key, references) || null;
 }
 
 function getValue(self) {
@@ -53,6 +53,10 @@ function isReadOnly(self) {
 
 function setReference(key, value) {
     return setValueInMap(key, value, references);
+}
+
+function setValue(self, value) {
+    self.value = value;
 }
 
 function setValueInMap(k, v, map) {
@@ -265,7 +269,7 @@ $$.let = function () {
     if (!_active) {
         return $;
     }
-    return (self.value = $._value), $;
+    return setValue(self, $._value), $;
 };
 
 $$.match = function (pattern, then) {
@@ -394,7 +398,7 @@ $$.set = function (value) {
     if (!_active) {
         return $;
     }
-    return (self.value = value), $;
+    return setValue(self, value), $;
 };
 
 $$.trim = function (open, close, start, end, tidy = true) {
@@ -432,10 +436,10 @@ $$.wrap = function (open, close, wrap) {
 
 Object.defineProperty($$, 'value', {
     get: function () {
-        return this.self.value;
+        return getValue(this.self);
     },
     set: function (value) {
-        this.self.value = value;
+        setValue(this.self, value);
     }
 });
 

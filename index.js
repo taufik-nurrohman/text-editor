@@ -240,6 +240,10 @@
         return setValueInMap(key, value, references);
     }
 
+    function setValue(self, value) {
+        self.value = value;
+    }
+
     function setValueInMap(k, v, map) {
         return map.set(k, v);
     }
@@ -436,7 +440,7 @@
         if (!_active) {
             return $;
         }
-        return self.value = $._value, $;
+        return setValue(self, $._value), $;
     };
     $$.match = function (pattern, then) {
         var $ = this,
@@ -594,7 +598,7 @@
         if (!_active) {
             return $;
         }
-        return self.value = value, $;
+        return setValue(self, value), $;
     };
     $$.trim = function (open, close, start, end, tidy) {
         if (tidy === void 0) {
@@ -638,10 +642,10 @@
     };
     Object.defineProperty($$, 'value', {
         get: function get() {
-            return this.self.value;
+            return getValue(this.self);
         },
         set: function set(value) {
-            this.self.value = value;
+            setValue(this.self, value);
         }
     });
     return TextEditor;
