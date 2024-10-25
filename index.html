@@ -60,7 +60,7 @@ const editor = new TextEditor(document.querySelector('textarea'));</code></pre>
         <li><a href="test/attach,detach.html" target="_blank">Attach, Detach</a></li>
         <li><a href="test/blur,focus.html" target="_blank">Focus, Blur Events</a></li>
         <li><a href="test/disabled.html" target="_blank">Disabled Text Area</a></li>
-        <li><a href="test/get,let,set.html" target="_blank">Set, Get and Let Value</a></li>
+        <li><a href="test/get,let,set.html" target="_blank">Set, Get, and Let Value</a></li>
         <li><a href="test/insert.html" target="_blank">Insert Selection</a></li>
         <li><a href="test/match.html" target="_blank">Match Selection</a></li>
         <li><a href="test/peel,wrap.html" target="_blank">Wrap, Peel Selection</a></li>
@@ -150,7 +150,7 @@ editor.match(/^\s*:\w+:\s*$/, function (m) {
     let exists = maps[m[0] = m[0] ? m[0].trim() : ""];
     exists &amp;&amp; this.insert(exists);
 });</code></pre>
-      <p>Matches to the characters before selection, current selection and characters after selection.</p>
+      <p>Matches to the characters before selection, current selection, and characters after selection.</p>
       <pre><code>let test = editor.match([/:$/, /^\w+$/, /^:/]);
 console.log(test[0] &amp;&amp; test[1] &amp;&amp; test[2]);</code></pre>
       <pre><code>editor.match([/:$/, /^\w+$/, /^:/], function (before, value, after) {
