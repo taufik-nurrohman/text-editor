@@ -85,8 +85,8 @@ block script
     |
     | editor.record(); // Record the initial value
     |
-    | editor.self.addEventListener('click', () => clear());
-    | editor.self.addEventListener('keydown', e => {
+    | editor.on('click', () => clear());
+    | editor.on('key.down', e => {
     |     let key = e.key,
     |         keyCode = e.keyCode,
     |         keyIsControl = e.ctrlKey,

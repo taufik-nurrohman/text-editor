@@ -8,8 +8,12 @@ block script
   script
     | const editor = new TextEditor(document.querySelector('textarea'), {
     |     with: [{
-    |         attach: function () {},
-    |         detach: function () {}
+    |         attach: function () {
+    |             console.log('attach from extension');
+    |         },
+    |         detach: function () {
+    |             console.log('detach from extension');
+    |         }
     |     }]
     | });
 

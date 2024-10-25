@@ -201,27 +201,31 @@
         input: 0,
         keydown: 'key.down',
         keyup: 'key.up',
-        mousedown: 'mouse.down',
-        mouseenter: 'mouse.enter',
-        mouseleave: 'mouse.exit',
-        mousemove: 'mouse.move',
-        mouseup: 'mouse.up',
+        mousedown: 'caret.down',
+        mouseenter: 'caret.enter',
+        mouseleave: 'caret.exit',
+        mousemove: 'caret.move',
+        mouseup: 'caret.up',
         paste: 0,
         scroll: 0,
-        touchend: 'mouse.up',
-        touchmove: 'mouse.move',
-        touchstart: 'mouse.down',
+        touchend: 'caret.up',
+        touchmove: 'caret.move',
+        touchstart: 'caret.down',
         wheel: 'scroll'
     };
     var name = 'TextEditor';
     var references = new WeakMap();
 
     function getReference(key) {
-        return references.get(key);
+        return getValueInMap(key, references);
     }
 
     function getValue(self) {
         return (self.value || "").replace(/\r/g, "");
+    }
+
+    function getValueInMap(k, map) {
+        return map.get(k);
     }
 
     function isDisabled(self) {
@@ -233,7 +237,11 @@
     }
 
     function setReference(key, value) {
-        return references.set(key, value);
+        return setValueInMap(key, value, references);
+    }
+
+    function setValueInMap(k, v, map) {
+        return map.set(k, v);
     }
 
     function trim(str, dir) {
@@ -277,7 +285,7 @@
             return current;
         };
     };
-    TextEditor.version = '4.2.2';
+    TextEditor.version = '4.2.3';
     TextEditor.x = x;
     Object.defineProperty(TextEditor, 'name', {
         value: name
