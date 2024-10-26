@@ -114,7 +114,7 @@ TextEditor.S = function (start, end, value) {
     $.toString = () => current;
 };
 
-TextEditor.version = '4.2.3';
+TextEditor.version = '4.2.4';
 
 TextEditor.x = x;
 

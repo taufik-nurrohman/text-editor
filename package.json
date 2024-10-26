@@ -7,6 +7,7 @@
     "@taufik-nurrohman/event": "*",
     "@taufik-nurrohman/from": "*",
     "@taufik-nurrohman/hook": "*",
+    "@taufik-nurrohman/is": "*",
     "@taufik-nurrohman/pattern": "*",
     "@taufik-nurrohman/to": "*"
   },
@@ -44,5 +45,5 @@
   "scripts": {
     "pack": "pack --clean=false --from=.factory --js-format=umd --js-name=TextEditor --js-top='%(js.license)' --mjs=true --to=."
   },
-  "version": "4.2.3"
+  "version": "4.2.4"
 }
