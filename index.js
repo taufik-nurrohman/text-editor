@@ -295,7 +295,7 @@
             return current;
         };
     };
-    TextEditor.version = '4.2.4';
+    TextEditor.version = '4.2.5';
     TextEditor.x = x;
     Object.defineProperty(TextEditor, 'name', {
         value: name
