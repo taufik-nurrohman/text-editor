@@ -214,6 +214,7 @@
         mouseup: 'caret.up',
         paste: 0,
         scroll: 0,
+        select: 0,
         touchend: 'caret.up',
         touchmove: 'caret.move',
         touchstart: 'caret.down',
