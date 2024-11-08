@@ -17,13 +17,13 @@ block script
     | function replaceToEmoji() {
     |     editor.match(/^\s*:\w+:\s*$/, function (m) {
     |         console.log(m);
-    |         let exists = maps[m[0] = m[0] ? m[0].trim() : ""];
-    |         if (exists) {
-    |             this.insert(exists).trim(' ', ' ');
+    |         let exist = maps[m[0] = m[0] ? m[0].trim() : ""];
+    |         if (exist) {
+    |             this.insert(exist).trim(' ', ' ');
     |         } else if (m[0]) {
-    |             this.select();
-    |             alert('Could not replace \u201C' + m[0] + '\u201D to emoji.');
+    |             alert('Could not replace \u201C' + m[0] + '\u201D with emoji.');
     |         }
+    |         this.select();
     |     });
     | }
 

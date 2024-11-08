@@ -5,7 +5,7 @@
     <meta content="#000" name="theme-color">
     <meta content="width=device-width" name="viewport">
     <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
-    <title>Text Editor 4.2.5</title>
+    <title>Text Editor 4.2.6</title>
     <link href="../layout/index.min.css" rel="stylesheet">
     <style>
       body {
@@ -19,7 +19,7 @@
     <p role="alert">Do you like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
     <header>
       <hgroup>
-        <h1>Text Editor 4.2.5</h1>
+        <h1>Text Editor 4.2.6</h1>
         <p>Text Editor is a simple JavaScript application that aims to provide accessibility enhancements to the native HTML <code>&lt;textarea&gt;</code> elements, allowing users to control and manipulate their data in the text editor as they wish. It contains very sufficient methods to manipulate the existing text selection range data without providing unnecessary features. This keeps the file size small and the learning curve low, so you can fully focus on the results.</p>
       </hgroup>
     </header>
@@ -147,8 +147,8 @@ editor.insert(':)', +1, true); // Insert after selection and delete selection</c
 };
 
 editor.match(/^\s*:\w+:\s*$/, function (m) {
-    let exists = maps[m[0] = m[0] ? m[0].trim() : ""];
-    exists &amp;&amp; this.insert(exists);
+    let exist = maps[m[0] = m[0] ? m[0].trim() : ""];
+    exist &amp;&amp; this.insert(exist);
 });</code></pre>
       <p>Matches to the characters before selection, current selection, and characters after selection.</p>
       <pre><code>let test = editor.match([/:$/, /^\w+$/, /^:/]);
@@ -183,7 +183,7 @@ editor.pull('****'); // Outdent from `****`</code></pre>
       <pre><code>editor.push(); // Indent with `\t`
 editor.push('****'); // Indent with `****`</code></pre>
       <h4><code>editor.replace(from, to, mode = 0)</code></h4>
-      <p>Replaces current, before or after selection from <var>from</var> to <var>to</var>.</p>
+      <p>Replaces current, before, or after selection from <var>from</var> to <var>to</var>.</p>
       <pre><code>editor.replace(/&lt;.*?&gt;/g, ""); // Strip HTML tag(s) in selection
 editor.replace(/&lt;.*?&gt;/g, "", -1); // Strip HTML tag(s) before selection
 editor.replace(/&lt;.*?&gt;/g, "", +1); // Strip HTML tag(s) after selection</code></pre>

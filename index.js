@@ -282,7 +282,9 @@
         'tab': '\t',
         'with': []
     };
-    TextEditor.S = function (start, end, value) {
+    TextEditor.version = '4.2.6';
+    TextEditor.x = x;
+    var S = function S(start, end, value) {
         var $ = this,
             current = value.slice(start, end);
         $.after = value.slice(end);
@@ -291,12 +293,11 @@
         $.length = toCount(current);
         $.start = start;
         $.value = current;
-        $.toString = function () {
-            return current;
-        };
     };
-    TextEditor.version = '4.2.5';
-    TextEditor.x = x;
+    S.prototype.toString = function () {
+        return this.value;
+    };
+    TextEditor.S = S;
     Object.defineProperty(TextEditor, 'name', {
         value: name
     });
@@ -316,7 +317,7 @@
     var $$ = TextEditor.prototype;
     $$.$ = function () {
         var self = this.self;
-        return new TextEditor.S(self.selectionStart, self.selectionEnd, getValue(self));
+        return new S(self.selectionStart, self.selectionEnd, getValue(self));
     };
     $$.attach = function (self, state) {
         var $ = this;

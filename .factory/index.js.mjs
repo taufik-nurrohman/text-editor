@@ -102,7 +102,11 @@ TextEditor.state = {
     'with': []
 };
 
-TextEditor.S = function (start, end, value) {
+TextEditor.version = '%(version)';
+
+TextEditor.x = x;
+
+const S = function (start, end, value) {
     let $ = this,
         current = value.slice(start, end);
     $.after = value.slice(end);
@@ -111,12 +115,13 @@ TextEditor.S = function (start, end, value) {
     $.length = toCount(current);
     $.start = start;
     $.value = current;
-    $.toString = () => current;
 };
 
-TextEditor.version = '%(version)';
+S.prototype.toString = function () {
+    return this.value;
+};
 
-TextEditor.x = x;
+TextEditor.S = S;
 
 Object.defineProperty(TextEditor, 'name', {
     value: name
@@ -140,7 +145,7 @@ const $$ = TextEditor.prototype;
 
 $$.$ = function () {
     let {self} = this;
-    return new TextEditor.S(self.selectionStart, self.selectionEnd, getValue(self));
+    return new S(self.selectionStart, self.selectionEnd, getValue(self));
 };
 
 $$.attach = function (self, state) {

@@ -179,8 +179,8 @@ block content
       | };
       |
       | editor.match(/^\s*:\w+:\s*$/, function (m) {
-      |     let exists = maps[m[0] = m[0] ? m[0].trim() : ""];
-      |     exists &amp;&amp; this.insert(exists);
+      |     let exist = maps[m[0] = m[0] ? m[0].trim() : ""];
+      |     exist &amp;&amp; this.insert(exist);
       | });
     p Matches to the characters before selection, current selection, and characters after selection.
     pre: code
@@ -223,7 +223,7 @@ block content
       | editor.push(); // Indent with `\t`
       | editor.push('****'); // Indent with `****`
     h4: code editor.replace(from, to, mode = 0)
-    p Replaces current, before or after selection from #[var from] to #[var to].
+    p Replaces current, before, or after selection from #[var from] to #[var to].
     pre: code
       | editor.replace(/&lt;.*?&gt;/g, ""); // Strip HTML tag(s) in selection
       | editor.replace(/&lt;.*?&gt;/g, "", -1); // Strip HTML tag(s) before selection
