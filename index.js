@@ -199,6 +199,7 @@
         node.addEventListener(name, then, options);
     };
     var events = {
+        beforeinput: 'key.down',
         blur: 0,
         click: 0,
         copy: 0,
@@ -283,7 +284,7 @@
         'tab': '\t',
         'with': []
     };
-    TextEditor.version = '4.2.5';
+    TextEditor.version = '4.2.6';
     TextEditor.x = x;
     var S = function S(start, end, value) {
         var $ = this,
@@ -309,9 +310,13 @@
             $ = getReference(self),
             type = e.type,
             value = getValue(self);
+        if ('beforeinput' === type && isSet(e.data)) {
+            e.key = e.data;
+        }
+        $._event = e;
         if (value !== theValuePrevious) {
+            isString(theValuePrevious) && $.fire('change', [e]);
             theValuePrevious = value;
-            $.fire('change');
         }
         $.fire(events[type] || type, [e]);
     }
@@ -333,6 +338,7 @@
             return $;
         }
         $._active = !isDisabled(self) && !isReadOnly(self);
+        $._event = null;
         $._value = getValue(self);
         $.self = self;
         $.state = state;

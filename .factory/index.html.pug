@@ -9,6 +9,10 @@ block state
 block script
   script
     | const editor = new TextEditor(document.querySelector('textarea'));
+    |
+    | editor.on('change', function (e) {
+    |     console.log('Change with `' + e.type + '` event.');
+    | });
 
 block style
   style
