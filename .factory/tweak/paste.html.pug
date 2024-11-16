@@ -13,11 +13,11 @@ block script
     |         clipboard = e.clipboardData || window.clipboardData;
     |     if (clipboard) {
     |         e.preventDefault();
-    |         return this.insert(clipboard.getData('text').replace(/\s*<.*?>\s*/g, ' '));
+    |         return this.insert(clipboard.getData('text').replace(/\s*<.*?>\s*/g, '\u001a').replace(/\u001a+/g, ' '));
     |     }
     |     // Does not support Clipboard API, wait until the value is pasted, then strip the tag(s)!
     |     setTimeout(() => {
-    |         this.select(before.length, this.value.length - after.length).replace(/\s*<.*?>\s*/g, ' ');
+    |         this.select(before.length, this.value.length - after.length).replace(/\s*<.*?>\s*/g, '\u001a').replace(/\u001a+/g, ' ');
     |     }, 0);
     | });
 

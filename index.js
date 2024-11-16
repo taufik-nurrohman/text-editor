@@ -284,7 +284,7 @@
         'tab': '\t',
         'with': []
     };
-    TextEditor.version = '4.2.6';
+    TextEditor.version = '4.2.7';
     TextEditor.x = x;
     var S = function S(start, end, value) {
         var $ = this,
@@ -308,10 +308,11 @@
     function theEvent(e) {
         var self = this,
             $ = getReference(self),
-            type = e.type,
-            value = getValue(self);
-        if ('beforeinput' === type && isSet(e.data)) {
-            e.key = e.data;
+            value = getValue(self),
+            data = e.data,
+            type = e.type;
+        if ('beforeinput' === type && isString(data) && 1 === toCount(data)) {
+            e.key = data;
         }
         $._event = e;
         if (value !== theValuePrevious) {

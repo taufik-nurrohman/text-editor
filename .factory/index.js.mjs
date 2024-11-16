@@ -134,10 +134,10 @@ let theValuePrevious;
 function theEvent(e) {
     let self = this,
         $ = getReference(self),
-        type = e.type,
-        value = getValue(self);
-    if ('beforeinput' === type && isSet(e.data)) {
-        e.key = e.data;
+        value = getValue(self),
+        {data, type} = e;
+    if ('beforeinput' === type && isString(data) && 1 === toCount(data)) {
+        e.key = data;
     }
     $._event = e;
     if (value !== theValuePrevious) {
