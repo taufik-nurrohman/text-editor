@@ -82,7 +82,7 @@ function TextEditor(self, state) {
         return new TextEditor(self, state);
     }
 
-    setReference(self, hook($, TextEditor.prototype));
+    setReference(self, hook($, TextEditor._));
 
     return $.attach(self, fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
         tab: state
@@ -147,7 +147,7 @@ function theEvent(e) {
     $.fire(events[type] || type, [e]);
 }
 
-const $$ = TextEditor.prototype;
+const $$ = TextEditor._ = TextEditor.prototype;
 
 $$.$ = function () {
     let {self} = this;

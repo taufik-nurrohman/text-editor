@@ -269,7 +269,7 @@
         if (!isInstance($, TextEditor)) {
             return new TextEditor(self, state);
         }
-        setReference(self, hook($, TextEditor.prototype));
+        setReference(self, hook($, TextEditor._));
         return $.attach(self, _fromStates({}, TextEditor.state, isInteger(state) || isString(state) ? {
             tab: state
         } : state || {}));
@@ -284,7 +284,7 @@
         'tab': '\t',
         'with': []
     };
-    TextEditor.version = '4.2.7';
+    TextEditor.version = '4.2.8';
     TextEditor.x = x;
     var S = function S(start, end, value) {
         var $ = this,
@@ -321,7 +321,7 @@
         }
         $.fire(events[type] || type, [e]);
     }
-    var $$ = TextEditor.prototype;
+    var $$ = TextEditor._ = TextEditor.prototype;
     $$.$ = function () {
         var self = this.self;
         return new S(self.selectionStart, self.selectionEnd, getValue(self));

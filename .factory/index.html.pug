@@ -301,6 +301,16 @@ block content
       | editor.value = 'asdf'; // Set text area value
     h3 Static Properties
     p Static properties are properties available directly on the #[code TextEditor] object.
+    h4: code TextEditor._
+    p Alias for #[code TextEditor.prototype].
+    pre: code
+      | TextEditor._.selectAll = function () {
+      |     return this.select(true);
+      | };
+      |
+      | const editor = new TextEditor(document.querySelector('textarea'));
+      |
+      | editor.selectAll(); // Select all
     h4: code TextEditor.state
     p Returns the default values of #[code editor.state].
     pre: code
