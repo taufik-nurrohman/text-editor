@@ -135,10 +135,6 @@ function theEvent(e) {
         $ = getReference(self),
         value = getValue(self),
         {data, type} = e;
-    if ('beforeinput' === type && isString(data) && 1 === toCount(data)) {
-        e.key = data;
-        type = 'keydown';
-    }
     $._event = e;
     if (value !== theValuePrevious) {
         isString(theValuePrevious) && $.fire('change', [e]);
