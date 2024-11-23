@@ -199,12 +199,13 @@
         node.addEventListener(name, then, options);
     };
     var events = {
+        beforeinput: 'put.down',
         blur: 0,
         click: 0,
         copy: 0,
         cut: 0,
         focus: 0,
-        input: 0,
+        input: 'put.up',
         keydown: 'key.down',
         keyup: 'key.up',
         mousedown: 'caret.down',
