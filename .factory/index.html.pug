@@ -186,7 +186,7 @@ block content
       |     let exist = maps[m[0] = m[0] ? m[0].trim() : ""];
       |     exist &amp;&amp; this.insert(exist);
       | });
-    p Matches to the characters before selection, current selection, and characters after selection.
+    p Matches to the characters before selection, current selection, and after selection.
     pre: code
       | let test = editor.match([/:$/, /^\w+$/, /^:/]);
       | console.log(test[0] &amp;&amp; test[1] &amp;&amp; test[2]);

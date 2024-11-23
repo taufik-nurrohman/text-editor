@@ -150,7 +150,7 @@ editor.match(/^\s*:\w+:\s*$/, function (m) {
     let exist = maps[m[0] = m[0] ? m[0].trim() : ""];
     exist &amp;&amp; this.insert(exist);
 });</code></pre>
-      <p>Matches to the characters before selection, current selection, and characters after selection.</p>
+      <p>Matches to the characters before selection, current selection, and after selection.</p>
       <pre><code>let test = editor.match([/:$/, /^\w+$/, /^:/]);
 console.log(test[0] &amp;&amp; test[1] &amp;&amp; test[2]);</code></pre>
       <pre><code>editor.match([/:$/, /^\w+$/, /^:/], function (before, value, after) {
