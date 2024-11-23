@@ -199,7 +199,6 @@
         node.addEventListener(name, then, options);
     };
     var events = {
-        beforeinput: 'key.down',
         blur: 0,
         click: 0,
         copy: 0,
@@ -284,7 +283,7 @@
         'tab': '\t',
         'with': []
     };
-    TextEditor.version = '4.2.8';
+    TextEditor.version = '4.2.9';
     TextEditor.x = x;
     var S = function S(start, end, value) {
         var $ = this,
@@ -313,6 +312,7 @@
             type = e.type;
         if ('beforeinput' === type && isString(data) && 1 === toCount(data)) {
             e.key = data;
+            type = 'keydown';
         }
         $._event = e;
         if (value !== theValuePrevious) {

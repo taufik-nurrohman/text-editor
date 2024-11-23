@@ -7,7 +7,6 @@ import {offEvent, onEvent} from '@taufik-nurrohman/event';
 import {toCount, toObjectCount} from '@taufik-nurrohman/to';
 
 const events = {
-    beforeinput: 'key.down',
     blur: 0,
     click: 0,
     copy: 0,
@@ -138,6 +137,7 @@ function theEvent(e) {
         {data, type} = e;
     if ('beforeinput' === type && isString(data) && 1 === toCount(data)) {
         e.key = data;
+        type = 'keydown';
     }
     $._event = e;
     if (value !== theValuePrevious) {
