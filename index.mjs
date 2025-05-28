@@ -104,7 +104,7 @@ TextEditor.state = {
     'with': []
 };
 
-TextEditor.version = '4.2.9';
+TextEditor.version = '5.0.0';
 
 TextEditor.x = x;
 

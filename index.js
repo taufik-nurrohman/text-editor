@@ -2,7 +2,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright © 2024 Taufik Nurrohman <https://github.com/taufik-nurrohman>
+ * Copyright © 2025 Taufik Nurrohman <https://github.com/taufik-nurrohman>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the “Software”), to deal
@@ -27,9 +27,6 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = f() : typeof define === 'function' && define.amd ? define(f) : (g = typeof globalThis !== 'undefined' ? globalThis : g || self, g.TextEditor = f());
 })(this, (function () {
     'use strict';
-    var hasValue = function hasValue(x, data) {
-        return -1 !== data.indexOf(x);
-    };
     var isArray = function isArray(x) {
         return Array.isArray(x);
     };
@@ -55,7 +52,7 @@
         return null === x;
     };
     var isNumber = function isNumber(x) {
-        return 'number' === typeof x;
+        return 'number' === typeof x && !Number.isNaN(x);
     };
     var isObject = function isObject(x, isPlain) {
         if (isPlain === void 0) {
@@ -72,8 +69,8 @@
     var isString = function isString(x) {
         return 'string' === typeof x;
     };
-    var toCount = function toCount(x) {
-        return x.length;
+    var hasValue = function hasValue(x, data) {
+        return -1 !== data.indexOf(x);
     };
     var _fromStates = function fromStates() {
         for (var _len = arguments.length, lot = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -106,6 +103,25 @@
             }
         }
         return out;
+    };
+    var toCount = function toCount(x) {
+        return x.length;
+    };
+    var forEachArray = function forEachArray(array, at) {
+        for (var i = 0, j = toCount(array), v; i < j; ++i) {
+            v = at.call(array, array[i], i);
+            if (-1 === v) {
+                array.splice(i, 1);
+                continue;
+            }
+            if (0 === v) {
+                break;
+            }
+            if (1 === v) {
+                continue;
+            }
+        }
+        return array;
     };
     var D = document;
     var W = window;
@@ -145,26 +161,25 @@
             if (!isSet(hooks[event])) {
                 return $;
             }
-            hooks[event].forEach(function (then) {
-                return then.apply(that || $, data);
-            });
-            return $;
+            return forEachArray(hooks[event], function (v) {
+                v.apply(that || $, data);
+            }), $;
         };
-        $$.off = function (event, then) {
+        $$.off = function (event, task) {
             var $ = this,
                 hooks = $.hooks;
             if (!isSet(event)) {
                 return hooks = {}, $;
             }
             if (isSet(hooks[event])) {
-                if (isSet(then)) {
-                    var j = hooks[event].length;
+                if (isSet(task)) {
+                    var j = toCount(hooks[event]);
                     // Clean-up empty hook(s)
                     if (0 === j) {
                         delete hooks[event];
                     } else {
                         for (var i = 0; i < j; ++i) {
-                            if (then === hooks[event][i]) {
+                            if (task === hooks[event][i]) {
                                 hooks[event].splice(i, 1);
                                 break;
                             }
@@ -176,14 +191,14 @@
             }
             return $;
         };
-        $$.on = function (event, then) {
+        $$.on = function (event, task) {
             var $ = this,
                 hooks = $.hooks;
             if (!isSet(hooks[event])) {
                 hooks[event] = [];
             }
-            if (isSet(then)) {
-                hooks[event].push(then);
+            if (isSet(task)) {
+                hooks[event].push(task);
             }
             return $;
         };
@@ -284,7 +299,7 @@
         'tab': '\t',
         'with': []
     };
-    TextEditor.version = '4.2.9';
+    TextEditor.version = '5.0.0';
     TextEditor.x = x;
     var S = function S(start, end, value) {
         var $ = this,
