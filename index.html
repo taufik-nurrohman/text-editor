@@ -129,7 +129,7 @@ editor.insert('&lt;b&gt;', -1); // Insert before selection
 editor.insert('&lt;/b&gt;', +1); // Insert after selection
 editor.insert(':)', -1, true); // Insert before selection and delete selection
 editor.insert(':)', +1, true); // Insert after selection and delete selection</code></pre>
-      <h4 id="instance-method-match"><a aria-hidden="true" href="#instance-method-match">#</a> <code>editor.match(pattern, then)</code></h4>
+      <h4 id="instance-method-match"><a aria-hidden="true" href="#instance-method-match">#</a> <code>editor.match(pattern, task)</code></h4>
       <p>Matches current selection with the pattern provided.</p>
       <pre><code>if (editor.match(/^\s*:\w+:\s*$/)) {
     alert('Selection is detected as emoji!');
