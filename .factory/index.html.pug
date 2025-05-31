@@ -111,8 +111,9 @@ block content
       a(aria-hidden='true' href='#constructors') #
       = ' Constructors'
     h3#constructor-text-editor
-      a(aria-hidden='true' href='#constructor-tag-picker') #
-      = ' TagPicker(self, state)'
+      a(aria-hidden='true' href='#constructor-text-editor') #
+      = ' '
+      code TextEditor(self, state)
     pre: code const editor = new TextEditor(self, tab = '\t');
     pre: code
       | const editor = new TextEditor(self, state = {
