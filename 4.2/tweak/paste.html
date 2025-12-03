@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width" name="viewport">
+    <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
+    <title>Text Editor</title>
+  </head>
+  <body>
+    <main>
+      <P>Paste some text contains <abbr title="Hyper Text Markup Language">HTML</abbr> tags!</P>
+      <p><textarea cols="100" rows="20" spellcheck="false">Lorem ipsum dolor sit amet.</textarea></p>
+    </main>
+    <script src="../index.min.js"></script>
+    <script>
+      const editor = new TextEditor(document.querySelector('textarea'));
+      editor.on('paste', function (e) {
+          let {
+              after,
+              before
+          } = this.$(),
+              clipboard = e.clipboardData || window.clipboardData;
+          if (clipboard) {
+              e.preventDefault();
+              return this.insert(clipboard.getData('text').replace(/\s*<.*?>\s*/g, '\u001a').replace(/\u001a+/g, ' '));
+          }
+          // Does not support Clipboard API, wait until the value is pasted, then strip the tag(s)!
+          setTimeout(() => {
+              this.select(before.length, this.value.length - after.length).replace(/\s*<.*?>\s*/g, '\u001a').replace(/\u001a+/g, ' ');
+          }, 0);
+      });
+    </script>
+  </body>
+</html>

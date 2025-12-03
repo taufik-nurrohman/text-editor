@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width" name="viewport">
+    <meta content="A text selection range API written in pure JavaScript, for modern browsers." name="description">
+    <title>Text Editor</title>
+  </head>
+  <body>
+    <main>
+      <p><textarea spellcheck="false">abcdef</textarea></p>
+      <p><button onclick="toggle('b');">Toggle Bold</button> <button onclick="toggleBlocks();">Toggle Blocks</button> <button onclick="toggleCodes();">Toggle Code</button></p>
+    </main>
+    <script src="../index.min.js"></script>
+    <script>
+      const editor = new TextEditor(document.querySelector('textarea'));
+
+      function toggle(name) {
+          let patternBefore = new RegExp('<' + name + '(?:\\s[^>]*)?>$'),
+              patternAfter = new RegExp('^<\\/' + name + '>');
+          editor.match([patternBefore, /.*/, patternAfter], function (before, value, after) {
+              if (before[0] && after[0]) {
+                  this.replace(patternBefore, "", -1);
+                  this.replace(patternAfter, "", 1);
+              } else {
+                  this.wrap('<' + name + '>', '</' + name + '>');
+              }
+          });
+      }
+
+      function toggleBlocks() {
+          let patternBefore = /<(?:p|h([1-6]))(\s[^>]*)?>$/,
+              patternAfter = /^<\/(?:p|h[1-6])>/;
+          editor.match([patternBefore, /.*/, patternAfter], function (before, value, after) {
+              let h = +(before[1] || 0),
+                  attr = before[2] || "";
+              // ``
+              this.replace(patternBefore, "", -1);
+              this.replace(patternAfter, "", 1);
+              if (!h) {
+                  // `<h1>`
+                  this.wrap('<h1' + attr + '>', '</h1>');
+              } else {
+                  ++h;
+                  if (h > 6) {
+                      // `<p>`
+                      this.wrap('<p' + attr + '>', '</p>');
+                  } else {
+                      // `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`
+                      this.wrap('<h' + h + attr + '>', '</h' + h + '>');
+                  }
+              }
+          });
+      }
+
+      function toggleCodes() {
+          let patternBefore = /<(?:pre|code)(?:\s[^>]*)?>(?:\s*<code(?:\s[^>]*)?>)?$/,
+              patternAfter = /^(?:<\/code>\s*)?<\/(?:pre|code)>/;
+          editor.match([patternBefore, /.*/, patternAfter], function (before, value, after) {
+              // ``
+              this.replace(patternBefore, "", -1);
+              this.replace(patternAfter, "", 1);
+              if (after[0]) {
+                  // ``
+                  if (/^(?:<\/code>\s*)?<\/pre>/.test(after[0])) {
+                      this.insert(decode(editor.$().value));
+                      // `<pre><code> … </code></pre>`
+                  } else if (after[0].slice(0, 7) === '</code>') {
+                      this.wrap('<pre><code>', '</code></pre>');
+                  }
+                  // `<code> … </code>`
+              } else {
+                  this.wrap('<code>', '</code>').insert(encode(editor.$().value));
+              }
+          });
+      }
+
+      function encode(x) {
+          return x.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function decode(x) {
+          return x.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+      }
+    </script>
+  </body>
+</html>
